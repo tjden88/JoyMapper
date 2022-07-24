@@ -4,11 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoyMapper"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         PreviewKeyDown="AddPattern_OnPreviewKeyDown"
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="AddPattern" Height="450" Width="800">
+        Title="Добавление паттерна" Height="459" Width="578">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:EventTrigger.Actions>
+                <b:InvokeCommandAction Command="{Binding AttachJoyButtonCommand}"/>
+            </b:EventTrigger.Actions>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -22,9 +30,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="10" TextBlock.FontWeight="Bold">
-            <TextBlock Text="Кнопка джойстика:"></TextBlock>
-            <TextBlock Text=""></TextBlock>
-            <TextBlock Text="-не определено-"></TextBlock>
+            <TextBlock VerticalAlignment="Center" Text="Кнопка джойстика:"></TextBlock>
+            <TextBlock Name="JoyNameText" VerticalAlignment="Center"  Text="" Margin="5,0"></TextBlock>
+            <TextBlock Name="JoyBtnNumberText" VerticalAlignment="Center" Text="-не определено-"></TextBlock>
+            <Button Command="{Binding AttachJoyButtonCommand}" Margin="10" Padding="10,2" Content="Определить кнопку"></Button>
         </StackPanel>
         <Separator Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"/>
         <GroupBox Grid.Row="2" Grid.Column="0" Header="Комбинация клавиш при нажатии">
@@ -45,6 +54,10 @@
                 <ListBox ItemsSource="{Binding ReleaseKeyBindings}"/>
             </DockPanel>
         </GroupBox>
-        <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Content="Сохранить" Margin="10" Click="ButtonSave_Click"></Button>
+        <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
+            <TextBlock VerticalAlignment="Center" Text="Имя паттерна: "></TextBlock>
+            <TextBox Name="PatternNameText" Width="200" VerticalAlignment="Center"></TextBox>
+            <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click"></Button>
+        </DockPanel>
     </Grid>
 </Window>

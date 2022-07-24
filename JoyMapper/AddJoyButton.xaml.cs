@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using JoyMapper.Models;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 
@@ -24,8 +22,8 @@ namespace JoyMapper
         }
 
 
-        private string JoyName { get; set; }
-        private int JoyKey { get; set; }
+        public string JoyName { get; set; }
+        public int JoyKey { get; set; }
 
         private bool _Accepted;
 

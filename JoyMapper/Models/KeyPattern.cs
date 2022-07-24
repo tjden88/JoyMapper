@@ -6,7 +6,7 @@ namespace JoyMapper.Models
     {
         public string Name { get; set; }
 
-        public int JoyId { get; set; }
+        public string JoyName { get; set; }
 
         public int JoyKey { get; set; }
 
