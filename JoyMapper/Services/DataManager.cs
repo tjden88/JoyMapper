@@ -12,38 +12,52 @@ namespace JoyMapper.Services
     /// </summary>
     internal class DataManager
     {
+        private class Data
+        {
+            public List<Profile> Profiles { get; set; } = new();
+
+            public List<KeyPattern> KeyPatterns { get; set; } = new();
+        }
+
         private readonly string _SettingsFileName = Path.Combine(Environment.CurrentDirectory, "Config.json");
 
-        private List<Profile> _Profiles ;
+        private Data _ProfilesData;
+        private Data ProfilesData => _ProfilesData ??= LoadData();
 
-        public List<Profile> Profiles => _Profiles ??= LoadProfiles();
+        public List<Profile> Profiles => ProfilesData.Profiles;
+        public List<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns;
 
 
-        public List<Profile> LoadProfiles()
+        private Data LoadData()
         {
             if (!File.Exists(_SettingsFileName))
-                return new List<Profile>();
+                return new Data();
             try
             {
-                return JsonSerializer.Deserialize<List<Profile>>(_SettingsFileName);
+                return JsonSerializer.Deserialize<Data>(_SettingsFileName);
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Ошибка загрузки профилей");
-                return new List<Profile>();
+                MessageBox.Show(e.Message, "Ошибка загрузки данных");
+                return new Data();
             }
         }
 
-        public void SaveProfiles()
+        public void SaveData()
         {
             try
             {
-                var serialized = JsonSerializer.Serialize(Profiles);
+                var data = new Data
+                {
+                    KeyPatterns = KeyPatterns,
+                    Profiles = Profiles
+                };
+                var serialized = JsonSerializer.Serialize(data);
                 File.WriteAllText(_SettingsFileName, serialized);
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Ошибка при сохраниении профилей");
+                MessageBox.Show(e.Message, "Ошибка при сохраниении данных");
             }
         }
 
