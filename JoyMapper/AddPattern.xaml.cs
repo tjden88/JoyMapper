@@ -194,6 +194,9 @@ namespace JoyMapper
                 ReleaseKeyBindings = ReleaseKeyBindings.ToList(),
                 Name = name,
             };
+            App.DataManager.KeyPatterns.Add(pattern);
+            App.DataManager.SaveData();
+            DialogResult = true;
         }
 
         #region Command AttachJoyButtonCommand - Определить кнопку джойстика
