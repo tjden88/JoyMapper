@@ -38,13 +38,41 @@ namespace JoyMapper
 
         #endregion
 
+        #region IsReleaseRecorded : bool - Нажата ли кнопка записи при отпускании
+
+        /// <summary>Нажата ли кнопка записи при отпускании</summary>
+        private bool _IsReleaseRecorded;
+
+        /// <summary>Нажата ли кнопка записи при отпускании</summary>
+        public bool IsReleaseRecorded
+        {
+            get => _IsReleaseRecorded;
+            set
+            {
+                if (Equals(value, _IsReleaseRecorded)) return;
+                _IsReleaseRecorded = value;
+                RecordReleaseButton.Content = value
+                    ? "Остановить запись"
+                    : "Начать запись";
+            }
+        }
+
+        #endregion
+
+
+
 
         public ObservableCollection<KeyboardKeyBinding> PressKeyBindings { get; set; } = new();
+        public ObservableCollection<KeyboardKeyBinding> ReleaseKeyBindings { get; set; } = new();
 
 
         private void ButtonPressRecord_Click(object sender, RoutedEventArgs e)
         {
             IsPressRecorded = !IsPressRecorded;
+        }
+        private void ButtonReleaseRecord_Click(object sender, RoutedEventArgs e)
+        {
+            IsReleaseRecorded = !IsReleaseRecorded;
         }
 
         private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -55,13 +83,15 @@ namespace JoyMapper
                     IsPress = true,
                     KeyCode = e.Key
                 });
+
+            if (IsReleaseRecorded && !e.IsRepeat)
+                ReleaseKeyBindings.Add(new KeyboardKeyBinding()
+                {
+                    IsPress = true,
+                    KeyCode = e.Key
+                });
         }
 
-        private void ButtonClearPress_Click(object sender, RoutedEventArgs e)
-        {
-            IsPressRecorded = false;
-            PressKeyBindings.Clear();
-        }
 
         private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
@@ -71,6 +101,26 @@ namespace JoyMapper
                     IsPress = false,
                     KeyCode = e.Key
                 });
+
+            if (IsReleaseRecorded)
+                ReleaseKeyBindings.Add(new KeyboardKeyBinding()
+                {
+                    IsPress = false,
+                    KeyCode = e.Key
+                });
         }
+
+        private void ButtonClearPress_Click(object sender, RoutedEventArgs e)
+        {
+            IsPressRecorded = false;
+            PressKeyBindings.Clear();
+        }
+
+        private void ButtonClearRelease_Click(object sender, RoutedEventArgs e)
+        {
+            IsReleaseRecorded = false;
+            ReleaseKeyBindings.Clear();
+        }
+
     }
 }
