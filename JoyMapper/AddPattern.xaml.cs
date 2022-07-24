@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
+using JoyMapper.Models;
 
 namespace JoyMapper
 {
@@ -35,7 +38,9 @@ namespace JoyMapper
 
         #endregion
 
-        
+
+        public ObservableCollection<KeyboardKeyBinding> PressKeyBindings { get; set; } = new();
+
 
         private void ButtonPressRecord_Click(object sender, RoutedEventArgs e)
         {
@@ -44,8 +49,28 @@ namespace JoyMapper
 
         private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (IsPressRecorded && !e.IsRepeat)
+                PressKeyBindings.Add(new KeyboardKeyBinding()
+                {
+                    IsPress = true,
+                    KeyCode = e.Key
+                });
+        }
+
+        private void ButtonClearPress_Click(object sender, RoutedEventArgs e)
+        {
+            IsPressRecorded = false;
+            PressKeyBindings.Clear();
+        }
+
+        private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
+        {
             if (IsPressRecorded)
-                MessageBox.Show(e.Key.ToString());
+                PressKeyBindings.Add(new KeyboardKeyBinding()
+                {
+                    IsPress = false,
+                    KeyCode = e.Key
+                });
         }
     }
 }

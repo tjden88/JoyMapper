@@ -10,7 +10,7 @@ namespace JoyMapper.Models
 
         public int JoyKey { get; set; }
 
-        public List<KeyBinding> PressKeyBindings { get; set; }
-        public List<KeyBinding> ReleaseKeyBindings { get; set; }
+        public List<KeyboardKeyBinding> PressKeyBindings { get; set; }
+        public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
     }
 }
