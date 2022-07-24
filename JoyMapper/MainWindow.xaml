@@ -4,13 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoyMapper"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:models="clr-namespace:JoyMapper.Models"
         mc:Ignorable="d"
         Title="JoyMapper" Height="450" Width="800">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:EventTrigger.Actions>
+                <b:InvokeCommandAction Command="{Binding LoadProfilesCommand}"/>
+            </b:EventTrigger.Actions>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <d:Window.DataContext>
         <local:MainWindowViewModel/>
     </d:Window.DataContext>
     <TabControl>
-        <TabItem Header="Профили"/>
+        <TabItem Header="Профили">
+            <ListBox ItemsSource="{Binding Profiles}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:Profile}">
+                        <Button Margin="10" Padding="10" Content="{Binding Name}"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.StartProfileCommand}"
+                                CommandParameter="{Binding}">
+                            <Button.Effect>
+                                <DropShadowEffect></DropShadowEffect>
+                            </Button.Effect>
+                        </Button>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
         <TabItem Header="Настройка"/>
         <TabItem Header="Debug">
             <ListBox ItemsSource="{Binding JoyDevices}" DisplayMemberPath="Name"></ListBox>
