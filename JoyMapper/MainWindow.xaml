@@ -8,6 +8,12 @@
         xmlns:models="clr-namespace:JoyMapper.Models"
         mc:Ignorable="d"
         Title="JoyMapper" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
@@ -20,19 +26,27 @@
     </d:Window.DataContext>
     <TabControl>
         <TabItem Header="Профили">
-            <ListBox ItemsSource="{Binding Profiles}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:Profile}">
-                        <Button Margin="10" Padding="10" Content="{Binding Name}"
-                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.StartProfileCommand}"
-                                CommandParameter="{Binding}">
-                            <Button.Effect>
-                                <DropShadowEffect></DropShadowEffect>
-                            </Button.Effect>
-                        </Button>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <DockPanel>
+                <UniformGrid DockPanel.Dock="Top" Columns="3" HorizontalAlignment="Left">
+                    <Button Content="Создать" />
+                    <Button Content="Сделать копию" />
+                    <Button Content="Удалить" />
+                </UniformGrid>
+
+                <ListBox ItemsSource="{Binding Profiles}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:Profile}">
+                            <Button Content="{Binding Name}"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.StartProfileCommand}"
+                                    CommandParameter="{Binding}">
+                                <Button.Effect>
+                                    <DropShadowEffect></DropShadowEffect>
+                                </Button.Effect>
+                            </Button>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
         </TabItem>
         <TabItem Header="Настройка"/>
         <TabItem Header="Debug">

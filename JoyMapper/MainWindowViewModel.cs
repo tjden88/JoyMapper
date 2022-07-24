@@ -62,6 +62,23 @@ namespace JoyMapper
 
         #endregion
 
+
+        #region SelectedProfile : Profile - Выбранный профиль
+
+        /// <summary>Выбранный профиль</summary>
+        private Profile _SelectedProfile;
+
+        /// <summary>Выбранный профиль</summary>
+        public Profile SelectedProfile
+        {
+            get => _SelectedProfile;
+            set => Set(ref _SelectedProfile, value);
+        }
+
+        #endregion
+
+        
+
         #endregion
 
 
@@ -101,6 +118,48 @@ namespace JoyMapper
         private void OnStartProfileCommandExecuted(object p)
         {
             var profile = (Profile)p;
+        }
+
+        #endregion
+
+
+        #region Command CreateProfileCommand - Создать профиль
+
+        /// <summary>Создать профиль</summary>
+        private Command _CreateProfileCommand;
+
+        /// <summary>Создать профиль</summary>
+        public Command CreateProfileCommand => _CreateProfileCommand
+            ??= new Command(OnCreateProfileCommandExecuted, CanCreateProfileCommandExecute, "Создать профиль");
+
+        /// <summary>Проверка возможности выполнения - Создать профиль</summary>
+        private bool CanCreateProfileCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Создать профиль</summary>
+        private void OnCreateProfileCommandExecuted()
+        {
+            
+        }
+
+        #endregion
+
+
+        #region Command DeleteProfileCommand - Удалить профиль
+
+        /// <summary>Удалить профиль</summary>
+        private Command _DeleteProfileCommand;
+
+        /// <summary>Удалить профиль</summary>
+        public Command DeleteProfileCommand => _DeleteProfileCommand
+            ??= new Command(OnDeleteProfileCommandExecuted, CanDeleteProfileCommandExecute, "Удалить профиль");
+
+        /// <summary>Проверка возможности выполнения - Удалить профиль</summary>
+        private bool CanDeleteProfileCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Удалить профиль</summary>
+        private void OnDeleteProfileCommandExecuted()
+        {
+            
         }
 
         #endregion
