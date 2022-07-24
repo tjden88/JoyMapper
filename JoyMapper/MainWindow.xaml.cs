@@ -15,5 +15,11 @@ namespace JoyMapper
             InitializeComponent();
             DataContext = ViewModel;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var wnd = new AddPattern();
+            wnd.Show();
+        }
     }
 }

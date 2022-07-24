@@ -33,18 +33,8 @@
                     <Button Content="Удалить" />
                 </UniformGrid>
 
-                <ListBox ItemsSource="{Binding Profiles}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:Profile}">
-                            <Button Content="{Binding Name}"
-                                    Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.StartProfileCommand}"
-                                    CommandParameter="{Binding}">
-                                <Button.Effect>
-                                    <DropShadowEffect></DropShadowEffect>
-                                </Button.Effect>
-                            </Button>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+                <ListBox>
+                    <Button Content="Button" Height="55" Width="118" Click="Button_Click"/>
                 </ListBox>
             </DockPanel>
         </TabItem>
