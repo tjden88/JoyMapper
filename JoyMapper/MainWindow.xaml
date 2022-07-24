@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="JoyMapper" Height="450" Width="800">
     <TabControl>
-        <TabItem Header="Запуск"/>
+        <TabItem Header="Профили"/>
         <TabItem Header="Настройка"/>
 
     </TabControl>
