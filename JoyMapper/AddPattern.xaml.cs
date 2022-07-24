@@ -122,5 +122,9 @@ namespace JoyMapper
             ReleaseKeyBindings.Clear();
         }
 
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -35,6 +35,7 @@
 
                 <ListBox>
                     <Button Content="Button" Height="55" Width="118" Click="Button_Click"/>
+                    <Button Content="Button" Height="55" Width="118" Click="Button2_Click"/>
                 </ListBox>
             </DockPanel>
         </TabItem>

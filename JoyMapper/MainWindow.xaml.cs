@@ -21,5 +21,11 @@ namespace JoyMapper
             var wnd = new AddPattern();
             wnd.Show();
         }
+
+        private void Button2_Click(object sender, RoutedEventArgs e)
+        {
+            var wnd = new AddJoyButton() {Owner = this};
+            var result = wnd.ShowDialog();
+        }
     }
 }
