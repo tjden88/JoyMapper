@@ -1,8 +1,6 @@
-﻿using JoyMapper.Models.Base;
-
-namespace JoyMapper.Models
+﻿namespace JoyMapper.Models
 {
-    internal class JoyDevice : Entity
+    internal class JoyDevice
     {
         public string Name { get; set; }
     }
