@@ -285,9 +285,9 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать копию паттерна</summary>
         private void OnCopyPatternCommandExecuted()
         {
-            App.DataManager.AddKeyPattern(SelectedPattern);
-            LoadDataCommand.Execute();
-            SelectedPattern = KeyPatterns.Last();
+            var newPattern = App.DataManager.CopyKeyPattern(SelectedPattern.Id);
+            KeyPatterns.Add(newPattern);
+            SelectedPattern = newPattern;
         }
 
         #endregion

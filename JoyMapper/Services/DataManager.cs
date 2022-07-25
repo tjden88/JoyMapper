@@ -26,12 +26,13 @@ namespace JoyMapper.Services
         private Data _ProfilesData;
         private Data ProfilesData => _ProfilesData ??= LoadData();
 
-        public IEnumerable<Profile> Profiles => ProfilesData.Profiles;
-        public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns;
+        public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p=>p.Id);
+        public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns.OrderBy(p => p.Id);
 
 
 
         #region Public Methods
+
 
         /// <summary> Добавить профиль </summary>
         public void AddProfile(Profile profile)
@@ -46,6 +47,20 @@ namespace JoyMapper.Services
             SaveData();
         }
 
+
+        /// <summary>
+        /// Копировать профиль
+        /// </summary>
+        /// <param name="id">ID копируемого профиля</param>
+        /// <returns>Скопированный профиль</returns>
+        public Profile CopyProfile(int id)
+        {
+            var oldProf = Profiles.First(p => p.Id == id);
+
+            var newProfile = _DataSerializer.CopyObject(oldProf);
+            AddProfile(newProfile);
+            return newProfile;
+        }
 
 
         /// <summary> Удалить профиль </summary>
@@ -67,6 +82,20 @@ namespace JoyMapper.Services
             keyPattern.Id = nextId;
             ProfilesData.KeyPatterns.Add(keyPattern);
             SaveData();
+        }
+
+        /// <summary>
+        /// Копировать паттерн
+        /// </summary>
+        /// <param name="id">ID копируемого паттерна</param>
+        /// <returns>Скопированный паттерн</returns>
+        public KeyPattern CopyKeyPattern(int id)
+        {
+            var oldPattern = KeyPatterns.First(p => p.Id == id);
+
+            var newPattern = _DataSerializer.CopyObject(oldPattern);
+            AddKeyPattern(newPattern);
+            return newPattern;
         }
 
 
