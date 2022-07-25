@@ -63,12 +63,30 @@ namespace JoyMapper.Services
         }
 
 
+
+        /// <summary> Обновить паттерн (заменить по Id) </summary>
+        public void UpdateProfile(Profile profile)
+        {
+            var editProfile = ProfilesData.Profiles.FirstOrDefault(p => p.Id == profile.Id);
+            if (editProfile != null)
+            {
+                var index = ProfilesData.Profiles.IndexOf(editProfile);
+                ProfilesData.Profiles.Remove(editProfile);
+                ProfilesData.Profiles.Insert(index, profile);
+                SaveData();
+            }
+        }
+
+
         /// <summary> Удалить профиль </summary>
         public void RemoveProfile(int profileId)
         {
             ProfilesData.Profiles.Remove(ProfilesData.Profiles.FirstOrDefault(p => p.Id == profileId));
             SaveData();
         }
+
+
+
 
 
         /// <summary> Добавить паттерн </summary>
@@ -83,6 +101,7 @@ namespace JoyMapper.Services
             ProfilesData.KeyPatterns.Add(keyPattern);
             SaveData();
         }
+
 
         /// <summary>
         /// Копировать паттерн

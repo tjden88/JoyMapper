@@ -186,12 +186,53 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Копировать профиль</summary>
         private void OnCopyProfileCommandExecuted()
         {
-            App.DataManager.AddProfile(SelectedProfile);
-            LoadDataCommand.Execute();
-            SelectedProfile = Profiles.Last();
+            var prof = App.DataManager.CopyProfile(SelectedProfile.Id);
+            Profiles.Add(prof);
+            SelectedProfile = prof;
         }
 
         #endregion
+
+
+        #region Command EditProfileCommand - Редактировать профиль
+
+        /// <summary>Редактировать профиль</summary>
+        private Command _EditProfileCommand;
+
+        /// <summary>Редактировать профиль</summary>
+        public Command EditProfileCommand => _EditProfileCommand
+            ??= new Command(OnEditProfileCommandExecuted, CanEditProfileCommandExecute, "Редактировать профиль");
+
+        /// <summary>Проверка возможности выполнения - Редактировать профиль</summary>
+        private bool CanEditProfileCommandExecute() => SelectedProfile != null;
+
+        /// <summary>Логика выполнения - Редактировать профиль</summary>
+        private void OnEditProfileCommandExecuted()
+        {
+            var vm = new ProfileEditWindowViewModel(SelectedProfile.Id);
+            var wnd = new ProfileEditWindow
+            {
+                Owner = Application.Current.MainWindow,
+                DataContext = vm
+            };
+            if (wnd.ShowDialog() != true) return;
+
+            var profile = new Profile
+            {
+                Name = vm.Name,
+                KeyPatternsIds = vm.SelectedPatterns
+                    .Where(p => p.IsSelected)
+                    .Select(p => p.PatternId)
+                    .ToList(),
+                Id=vm.Id,
+            };
+
+            App.DataManager.UpdateProfile(profile);
+            LoadDataCommand.Execute();
+        }
+
+        #endregion
+
 
         #region Command DeleteProfileCommand - Удалить профиль
 
