@@ -2,7 +2,7 @@
 
 namespace JoyMapper.ViewModels
 {
-    internal class SelectedPatternViewModel : ViewModel
+    public class SelectedPatternViewModel : ViewModel
     {
 
         #region PatternId : int - ИД паттерна
