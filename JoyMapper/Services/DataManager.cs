@@ -35,7 +35,11 @@ namespace JoyMapper.Services
 
         public void AddProfile(Profile profile)
         {
-            var nextId = Profiles.Max(p => p.Id) + 1;
+            var nextId = Profiles
+                .Select(p => p.Id)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
             profile.Id = nextId;
             ProfilesData.Profiles.Add(profile);
             SaveData();
@@ -43,7 +47,11 @@ namespace JoyMapper.Services
 
         public void AddKeyPattern(KeyPattern keyPattern)
         {
-            var nextId = KeyPatterns.Max(p => p.Id) + 1;
+            var nextId = KeyPatterns
+                .Select(p => p.Id)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
             keyPattern.Id = nextId;
             ProfilesData.KeyPatterns.Add(keyPattern);
             SaveData();
@@ -52,7 +60,7 @@ namespace JoyMapper.Services
 
         public void RemoveProfile(int profileId)
         {
-            ProfilesData.Profiles.Remove(ProfilesData.Profiles.FirstOrDefault(p=> p.Id == profileId));
+            ProfilesData.Profiles.Remove(ProfilesData.Profiles.FirstOrDefault(p => p.Id == profileId));
             SaveData();
         }
 
@@ -77,7 +85,8 @@ namespace JoyMapper.Services
                 return new Data();
             try
             {
-                return JsonSerializer.Deserialize<Data>(_SettingsFileName);
+                string jsonString = File.ReadAllText(_SettingsFileName);
+                return JsonSerializer.Deserialize<Data>(jsonString);
             }
             catch (Exception e)
             {
@@ -95,7 +104,9 @@ namespace JoyMapper.Services
                     KeyPatterns = KeyPatterns.ToList(),
                     Profiles = Profiles.ToList()
                 };
-                var serialized = JsonSerializer.Serialize(data);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                var serialized = JsonSerializer.Serialize(data, options);
+
                 File.WriteAllText(_SettingsFileName, serialized, Encoding.UTF8);
             }
             catch (Exception e)

@@ -71,7 +71,7 @@ namespace JoyMapper
         private bool CanLoadProfilesCommandExecute() => true;
 
         /// <summary>Логика выполнения - Загрузить профили</summary>
-        private void OnLoadProfilesCommandExecuted() => Profiles = App.DataManager.Profiles;
+        private void OnLoadProfilesCommandExecuted() => Profiles = App.DataManager.Profiles.ToList();
 
         #endregion
 
