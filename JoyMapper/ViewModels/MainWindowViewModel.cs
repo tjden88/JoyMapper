@@ -3,10 +3,11 @@ using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
+using JoyMapper.Views;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
-namespace JoyMapper
+namespace JoyMapper.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {

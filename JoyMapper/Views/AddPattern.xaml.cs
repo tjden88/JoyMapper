@@ -4,7 +4,7 @@ using System.Windows.Input;
 using JoyMapper.Models;
 using WPR.MVVM.Commands;
 
-namespace JoyMapper
+namespace JoyMapper.Views
 {
     /// <summary>
     /// Логика взаимодействия для AddPattern.xaml

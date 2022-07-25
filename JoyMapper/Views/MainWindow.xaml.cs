@@ -1,6 +1,7 @@
 ﻿using System.Windows;
+using JoyMapper.ViewModels;
 
-namespace JoyMapper
+namespace JoyMapper.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

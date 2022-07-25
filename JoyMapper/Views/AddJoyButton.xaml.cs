@@ -7,7 +7,7 @@ using System.Windows.Input;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 
-namespace JoyMapper
+namespace JoyMapper.Views
 {
     /// <summary>
     /// Логика взаимодействия для AddJoyButton.xaml

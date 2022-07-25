@@ -1,4 +1,4 @@
-﻿<Window x:Class="JoyMapper.ProfileEditWindow"
+﻿<Window x:Class="JoyMapper.Views.ProfileEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,8 +24,8 @@
         <TextBox DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" Text="Выберите используемые паттерны:"/>
         <Grid Margin="0,10,0,0" DockPanel.Dock="Bottom" >
-            <Button Content="Добавить паттерн" HorizontalAlignment="Left" Command="{Binding AddPatternCommand}" Padding="10,3"></Button>
-            <Button Content="Сохранить" HorizontalAlignment="Right" Command="{Binding SaveProfileCommand}" Padding="10,3"></Button>
+            <Button Content="Добавить паттерн" HorizontalAlignment="Left" Command="{Binding AddPatternCommand}" Padding="10,3" />
+            <Button Content="Сохранить" HorizontalAlignment="Right" Command="{Binding SaveProfileCommand}" Padding="10,3" />
         </Grid>
         <ListBox ItemsSource="{Binding SelectedPatterns}">
             <ListBox.ItemTemplate>

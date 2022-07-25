@@ -1,9 +1,8 @@
-﻿<Window x:Class="JoyMapper.AddPattern"
+﻿<Window x:Class="JoyMapper.Views.AddPattern"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JoyMapper"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         PreviewKeyDown="AddPattern_OnPreviewKeyDown"
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
@@ -30,17 +29,17 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="10" TextBlock.FontWeight="Bold">
-            <TextBlock VerticalAlignment="Center" Text="Кнопка джойстика:"></TextBlock>
-            <TextBlock Name="JoyNameText" VerticalAlignment="Center"  Text="" Margin="5,0"></TextBlock>
-            <TextBlock Name="JoyBtnNumberText" VerticalAlignment="Center" Text="-не определено-"></TextBlock>
-            <Button Command="{Binding AttachJoyButtonCommand}" Margin="10" Padding="10,2" Content="Определить кнопку"></Button>
+            <TextBlock VerticalAlignment="Center" Text="Кнопка джойстика:" />
+            <TextBlock Name="JoyNameText" VerticalAlignment="Center"  Text="" Margin="5,0" />
+            <TextBlock Name="JoyBtnNumberText" VerticalAlignment="Center" Text="-не определено-" />
+            <Button Command="{Binding AttachJoyButtonCommand}" Margin="10" Padding="10,2" Content="Определить кнопку" />
         </StackPanel>
         <Separator Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"/>
         <GroupBox Grid.Row="2" Grid.Column="0" Header="Комбинация клавиш при нажатии">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                    <Button Name="RecordPressButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonPressRecord_Click"></Button>
-                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearPress_Click"></Button>
+                    <Button Name="RecordPressButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonPressRecord_Click" />
+                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearPress_Click" />
                 </StackPanel>
                 <ListBox Name="PressKeyBindingsList" ItemsSource="{Binding PressKeyBindings}"/>
             </DockPanel>
@@ -48,16 +47,16 @@
         <GroupBox Grid.Row="2" Grid.Column="1" Header="Действия клавиш при отпускании">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                    <Button Name="RecordReleaseButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonReleaseRecord_Click"></Button>
-                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearRelease_Click"></Button>
+                    <Button Name="RecordReleaseButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonReleaseRecord_Click" />
+                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearRelease_Click" />
                 </StackPanel>
                 <ListBox Name="ReleaseKeyBindingsList" ItemsSource="{Binding ReleaseKeyBindings}"/>
             </DockPanel>
         </GroupBox>
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
-            <TextBlock VerticalAlignment="Center" Text="Имя паттерна: "></TextBlock>
-            <TextBox Name="PatternNameText" Width="200" VerticalAlignment="Center"></TextBox>
-            <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click"></Button>
+            <TextBlock VerticalAlignment="Center" Text="Имя паттерна: " />
+            <TextBox Name="PatternNameText" Width="200" VerticalAlignment="Center" />
+            <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click" />
         </DockPanel>
     </Grid>
 </Window>

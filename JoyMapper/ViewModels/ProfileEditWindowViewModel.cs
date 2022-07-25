@@ -4,11 +4,10 @@ using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
-using JoyMapper.ViewModels;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
-namespace JoyMapper
+namespace JoyMapper.ViewModels
 {
     internal class ProfileEditWindowViewModel : WindowViewModel
     {
@@ -42,7 +41,7 @@ namespace JoyMapper
 
         #endregion
 
-        
+
         #region Name : string - Имя профиля
 
         /// <summary>Имя профиля</summary>
@@ -158,8 +157,8 @@ namespace JoyMapper
         private void OnAddPatternCommandExecuted()
         {
             var added = _PatternService.AddPattern();
-            if(added == null) return;
-            
+            if (added == null) return;
+
             SelectedPatterns.Add(new SelectedPatternViewModel
             {
                 PatternName = added.Name,
@@ -169,6 +168,6 @@ namespace JoyMapper
         }
 
         #endregion
-        
+
     }
 }
