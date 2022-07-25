@@ -24,7 +24,7 @@
         <TextBox DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" Text="Выберите используемые паттерны:"/>
         <Grid Margin="0,10,0,0" DockPanel.Dock="Bottom" >
-            <Button Content="Добавить паттерн" HorizontalAlignment="Left" Command="{Binding SaveProfileCommand}" Padding="10,3"></Button>
+            <Button Content="Добавить паттерн" HorizontalAlignment="Left" Command="{Binding AddPatternCommand}" Padding="10,3"></Button>
             <Button Content="Сохранить" HorizontalAlignment="Right" Command="{Binding SaveProfileCommand}" Padding="10,3"></Button>
         </Grid>
         <ListBox ItemsSource="{Binding SelectedPatterns}">

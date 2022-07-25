@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
+using JoyMapper.Services;
 using JoyMapper.ViewModels;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -11,6 +12,8 @@ namespace JoyMapper
 {
     internal class ProfileEditWindowViewModel : WindowViewModel
     {
+        private readonly PatternService _PatternService = new();
+
         public ProfileEditWindowViewModel()
         {
             Title = "Добавление профиля";
@@ -134,6 +137,35 @@ namespace JoyMapper
             }
 
             wnd.DialogResult = true;
+        }
+
+        #endregion
+
+
+        #region Command AddPatternCommand - Добавить паттерн
+
+        /// <summary>Добавить паттерн</summary>
+        private Command _AddPatternCommand;
+
+        /// <summary>Добавить паттерн</summary>
+        public Command AddPatternCommand => _AddPatternCommand
+            ??= new Command(OnAddPatternCommandExecuted, CanAddPatternCommandExecute, "Добавить паттерн");
+
+        /// <summary>Проверка возможности выполнения - Добавить паттерн</summary>
+        private bool CanAddPatternCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Добавить паттерн</summary>
+        private void OnAddPatternCommandExecuted()
+        {
+            var added = _PatternService.AddPattern();
+            if(added == null) return;
+            
+            SelectedPatterns.Add(new SelectedPatternViewModel
+            {
+                PatternName = added.Name,
+                IsSelected = true,
+                PatternId = added.Id
+            });
         }
 
         #endregion

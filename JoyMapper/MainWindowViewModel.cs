@@ -65,7 +65,7 @@ namespace JoyMapper
 
         #endregion
 
-     
+
         #region SelectedPattern : KeyPattern - Выбранный паттерн
 
         /// <summary>Выбранный паттерн</summary>
@@ -80,13 +80,13 @@ namespace JoyMapper
 
         #endregion
 
-        
+
 
         #endregion
 
 
         #region Commands
-        
+
         #region Command LoadDataCommand - Загрузить данные
 
         /// <summary>Загрузить данные</summary>
@@ -102,8 +102,8 @@ namespace JoyMapper
         /// <summary>Логика выполнения - Загрузить данные</summary>
         private void OnLoadProfilesCommandExecuted()
         {
-            Profiles = App.DataManager.Profiles.ToList();
-            KeyPatterns = App.DataManager.KeyPatterns.ToList();
+            Profiles = new(App.DataManager.Profiles);
+            KeyPatterns = new(App.DataManager.KeyPatterns);
         }
 
         #endregion
@@ -151,7 +151,7 @@ namespace JoyMapper
                 Owner = Application.Current.MainWindow,
                 DataContext = vm
             };
-            if( wnd.ShowDialog() != true) return;
+            if (wnd.ShowDialog() != true) return;
 
             var profile = new Profile
             {
@@ -186,7 +186,7 @@ namespace JoyMapper
         /// <summary>Логика выполнения - Удалить профиль</summary>
         private void OnDeleteProfileCommandExecuted()
         {
-            
+
         }
 
         #endregion
