@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using JoyMapper.Models;
 using WPR.MVVM.Commands;
@@ -255,5 +256,17 @@ namespace JoyMapper.Views
         }
 
         #endregion
+
+        private void RemovePressCommand_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (Button) sender;
+            PressKeyBindings.Remove((KeyboardKeyBinding) btn.Tag);
+        }
+
+        private void RemoveReleaseCommand_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            ReleaseKeyBindings.Remove((KeyboardKeyBinding)btn.Tag);
+        }
     }
 }

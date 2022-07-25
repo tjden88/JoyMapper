@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:models="clr-namespace:JoyMapper.Models"
         PreviewKeyDown="AddPattern_OnPreviewKeyDown"
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
         mc:Ignorable="d"
@@ -41,7 +42,23 @@
                     <Button Name="RecordPressButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonPressRecord_Click" />
                     <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearPress_Click" />
                 </StackPanel>
-                <ListBox Name="PressKeyBindingsList" ItemsSource="{Binding PressKeyBindings}"/>
+                <ListBox Name="PressKeyBindingsList" ItemsSource="{Binding PressKeyBindings}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
+                            <Grid Margin="5,0">
+                                <TextBlock Text="{Binding}"/>
+                                <Button HorizontalAlignment="Right" Width="20" VerticalAlignment="Center" Content="X" Foreground="Red"
+                                        Click="RemovePressCommand_Click"
+                                        Background="Transparent" BorderThickness="0" ToolTip="Удалить" Tag="{Binding}"></Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="2" Grid.Column="1" Header="Действия клавиш при отпускании">
@@ -50,7 +67,23 @@
                     <Button Name="RecordReleaseButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonReleaseRecord_Click" />
                     <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearRelease_Click" />
                 </StackPanel>
-                <ListBox Name="ReleaseKeyBindingsList" ItemsSource="{Binding ReleaseKeyBindings}"/>
+                <ListBox Name="ReleaseKeyBindingsList" ItemsSource="{Binding ReleaseKeyBindings}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
+                            <Grid Margin="5,0">
+                                <TextBlock Text="{Binding}"/>
+                                <Button HorizontalAlignment="Right" Width="20" VerticalAlignment="Center" Content="X" Foreground="Red"
+                                        Click="RemoveReleaseCommand_Click"
+                                        Background="Transparent" BorderThickness="0" ToolTip="Удалить" Tag="{Binding}"></Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </DockPanel>
         </GroupBox>
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
