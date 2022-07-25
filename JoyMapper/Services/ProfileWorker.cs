@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
+using JoyMapper.ViewModels;
 using SharpDX.DirectInput;
 
 namespace JoyMapper.Services
@@ -24,11 +25,9 @@ namespace JoyMapper.Services
         // Используемые в профиле джойстики
         private List<JoyState> _UsedInProfileJoystickStates;
 
-        // Текущий профиль
-        private Profile _ActiveProfile;
-
         // Активен ли трекинг
         private bool IsActive { get; set; }
+
 
         /// <summary> Запустить отслеживание </summary>
         public void Start(Profile profile)
@@ -36,8 +35,6 @@ namespace JoyMapper.Services
             if (IsActive)
                 Stop();
 
-
-            _ActiveProfile = profile;
 
             var keyPatterns = App.DataManager.KeyPatterns
                 .Where(p => profile.KeyPatternsIds.Contains(p.Id))
@@ -82,7 +79,6 @@ namespace JoyMapper.Services
 
             IsActive = true;
             Task.Run(Work);
-
         }
 
         /// <summary> Остановить отслеживание </summary>
@@ -107,6 +103,7 @@ namespace JoyMapper.Services
                 await Task.Delay(PollingDelay);
             }
         }
+
 
         private async Task SendCommands(List<KeyboardKeyBinding> keyBindings)
         {

@@ -9,6 +9,26 @@ namespace JoyMapper.ViewModels
 
         private readonly ProfileWorker _ProfileWorker = new();
 
+        public MainWindowViewModel()
+        {
+            AppLog.Report += s => LogText += $"{s}\n";
+        }
+       
+        #region LogText : string - Список лога
+
+        /// <summary>Список лога</summary>
+        private string _LogText = "";
+
+        /// <summary>Список лога</summary>
+        public string LogText
+        {
+            get => _LogText;
+            set => Set(ref _LogText, value);
+        }
+
+        #endregion
+
+
         #region IsProfileStarted : bool - Запущен ли профиль
 
         /// <summary>Запущен ли профиль</summary>
@@ -34,8 +54,6 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
-
 
         #region Command StartProfileCommand - Запустить профиль
 
@@ -58,6 +76,7 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
 
         #region Command StopProfileCommand - Остановить профиль
 

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JoyMapper.Models;
+using JoyMapper.Services;
 using SharpDX.DirectInput;
 
-namespace JoyMapper.Models
+namespace JoyMapper.ViewModels
 {
     /// <summary>
     /// Текущий статус отслеживаемого джойстика
@@ -59,6 +61,7 @@ namespace JoyMapper.Models
                         _IsFault = false;
                         Joystick.Dispose();
                         Joystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
+                        AppLog.LogMessage($"Устройство восстановлено - {Joystick.Information.InstanceName}");
                     }
                     else
                         return result;
@@ -82,6 +85,7 @@ namespace JoyMapper.Models
             catch (Exception e)
             {
                 Debug.WriteLine(e);
+                AppLog.LogMessage($"Ошибка опроса устройства - {Joystick.Information.InstanceName}");
                 _IsFault = true;
             }
 

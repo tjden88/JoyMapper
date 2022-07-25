@@ -86,11 +86,20 @@
 
         <!--Индикатор запущенного профиля-->
         <Border Background="LightGray" Visibility="{Binding IsProfileStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Margin="10" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
-                <Button Content="Остановить" FontSize="30" Foreground="RoyalBlue" Background="White" Padding="10"
-                        Command="{Binding StopProfileCommand}"/>
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+                    <TextBlock Margin="10" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
+                    <Button Content="Остановить" FontSize="30" Foreground="RoyalBlue" Background="White" Padding="10"
+                            Command="{Binding StopProfileCommand}"/>
+                </StackPanel>
+                <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBlock TextAlignment="Center" Text="{Binding LogText}" Foreground="Red" FontSize="16"></TextBlock>
+                </ScrollViewer>
+            </Grid>
         </Border>
     </Grid>
 </Window>
