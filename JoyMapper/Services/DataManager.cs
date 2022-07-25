@@ -90,9 +90,8 @@ namespace JoyMapper.Services
             ProfilesData.KeyPatterns.Remove(ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == patternId));
 
             foreach (var profile in Profiles)
-            {
-                var pattern = profile.KeyPatterns.Find(p => p.Id == patternId);
-                if (pattern != null) profile.KeyPatterns.Remove(pattern);
+            { 
+                profile.KeyPatternsIds.Remove(patternId);
             }
 
             SaveData();
