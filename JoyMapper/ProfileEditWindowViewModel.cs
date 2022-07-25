@@ -1,4 +1,10 @@
-﻿using WPR.MVVM.ViewModels;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using JoyMapper.Models;
+using JoyMapper.ViewModels;
+using WPR.MVVM.Commands;
+using WPR.MVVM.ViewModels;
 
 namespace JoyMapper
 {
@@ -6,9 +12,33 @@ namespace JoyMapper
     {
         public ProfileEditWindowViewModel()
         {
-            Title = "Редактирование профиля";
+            Title = "Добавление профиля";
         }
 
+        public ProfileEditWindowViewModel(int Id)
+        {
+            if (Id < 1)
+                throw new ArgumentOutOfRangeException(nameof(Id), "Неверный ID профиля!");
+
+            Title = "Редактирование профиля";
+            this.Id = Id;
+        }
+
+        #region Id : int - ID профиля (0 - новый профиль)
+
+        /// <summary>ID профиля (0 - новый профиль)</summary>
+        private int _Id;
+
+        /// <summary>ID профиля (0 - новый профиль)</summary>
+        public int Id
+        {
+            get => _Id;
+            set => Set(ref _Id, value);
+        }
+
+        #endregion
+
+        
         #region Name : string - Имя профиля
 
         /// <summary>Имя профиля</summary>
@@ -23,6 +53,55 @@ namespace JoyMapper
 
         #endregion
 
+
+        #region SelectedPatterns : ObservableCollection<SelectedPatternViewModel> - Список паттернов
+
+        /// <summary>Список паттернов</summary>
+        private ObservableCollection<SelectedPatternViewModel> _SelectedPatterns;
+
+        /// <summary>Список паттернов</summary>
+        public ObservableCollection<SelectedPatternViewModel> SelectedPatterns
+        {
+            get => _SelectedPatterns;
+            set => Set(ref _SelectedPatterns, value);
+        }
+
+        #endregion
+
+
+        #region Command LoadDataCommand - Загрузить данные профиля
+
+        /// <summary>Загрузить данные профиля</summary>
+        private Command _LoadDataCommand;
+
+        /// <summary>Загрузить данные профиля</summary>
+        public Command LoadDataCommand => _LoadDataCommand
+            ??= new Command(OnLoadDataCommandExecuted, CanLoadDataCommandExecute, "Загрузить данные профиля");
+
+        /// <summary>Проверка возможности выполнения - Загрузить данные профиля</summary>
+        private bool CanLoadDataCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Загрузить данные профиля</summary>
+        private void OnLoadDataCommandExecuted()
+        {
+            var allPatterns = App.DataManager.KeyPatterns;
+
+            var profile = Id > 0
+                ? App.DataManager.Profiles.First(pr => pr.Id == Id)
+                : new Profile();
+
+            var mapped = allPatterns.Select(p => new SelectedPatternViewModel
+            {
+                IsSelected = profile.KeyPatternsIds.Contains(p.Id),
+                PatternName = p.Name,
+                PatternId = p.Id
+            });
+
+            SelectedPatterns = new(mapped);
+            Name = profile.Name;
+        }
+
+        #endregion
         
     }
 }
