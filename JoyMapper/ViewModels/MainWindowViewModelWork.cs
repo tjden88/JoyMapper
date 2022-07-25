@@ -1,10 +1,13 @@
 ﻿using JoyMapper.Models;
+using JoyMapper.Services;
 using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
 {
     internal partial class MainWindowViewModel
     {
+
+        private readonly ProfileWorker _ProfileWorker = new();
 
         #region IsProfileStarted : bool - Запущен ли профиль
 
@@ -51,6 +54,7 @@ namespace JoyMapper.ViewModels
         {
             var profile = (Profile)p;
             ActiveProfile = profile;
+            _ProfileWorker.Start(profile);
         }
 
         #endregion
@@ -71,6 +75,7 @@ namespace JoyMapper.ViewModels
         private void OnStopProfileCommandExecuted()
         {
             ActiveProfile = null;
+            _ProfileWorker.Stop();
         }
 
         #endregion

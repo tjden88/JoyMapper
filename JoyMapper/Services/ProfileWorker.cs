@@ -16,7 +16,7 @@ namespace JoyMapper.Services
         private const int PollingDelay = 50;
 
         // задержка между командами ввода клавиатуры
-        private const int InputDelay = 20;
+        private const int InputDelay = 5;
 
 
         private readonly KeyboardSender _Sender = new();
@@ -80,6 +80,7 @@ namespace JoyMapper.Services
                 joyState.UpdateBtnStatus();
             }
 
+            IsActive = true;
             Task.Run(Work);
 
         }

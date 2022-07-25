@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using SharpDX.DirectInput;
 
 namespace JoyMapper.Models
@@ -9,6 +12,7 @@ namespace JoyMapper.Models
     internal class JoyState
     {
         private Joystick _Joystick;
+        private bool _IsFault; // Ошибка в опросе
 
         public record BtnState(int BtnNumber)
         {
@@ -43,19 +47,42 @@ namespace JoyMapper.Models
         public List<BtnState> GetDifferents()
         {
             var result = new List<BtnState>();
-            var joy = Joystick;
-            joy.Poll();
-            var state = joy.GetCurrentState().Buttons;
-
-
-            foreach (var btnState in BtnStates)
+            try
             {
-                var newBtnValue = state[btnState.BtnNumber - 1];
-                if (newBtnValue != btnState.IsPressed)
+                if (_IsFault) // была ошибка, пробуем переподключиться к джойстику
                 {
-                    result.Add(btnState);
-                    btnState.IsPressed = newBtnValue;
+                    var newJoy = new DirectInput()
+                        .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+                        .FirstOrDefault(d => d.InstanceName == Joystick.Information.InstanceName);
+                    if (newJoy != null)
+                    {
+                        _IsFault = false;
+                        Joystick.Dispose();
+                        Joystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
+                    }
+                    else
+                        return result;
                 }
+
+                var joy = Joystick;
+                joy.Poll();
+                var state = joy.GetCurrentState().Buttons;
+
+
+                foreach (var btnState in BtnStates)
+                {
+                    var newBtnValue = state[btnState.BtnNumber - 1];
+                    if (newBtnValue != btnState.IsPressed)
+                    {
+                        result.Add(btnState);
+                        btnState.IsPressed = newBtnValue;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                _IsFault = true;
             }
 
             return result;
@@ -64,13 +91,20 @@ namespace JoyMapper.Models
         /// <summary> Синхронизировать состояние кнопок </summary>
         public void UpdateBtnStatus()
         {
-            var joy = Joystick;
-            joy.Poll();
-            var state = joy.GetCurrentState().Buttons;
-            foreach (var btnState in BtnStates)
+            try
             {
-                var newBtnValue = state[btnState.BtnNumber - 1];
-                btnState.IsPressed = newBtnValue;
+                var joy = Joystick;
+                joy.Poll();
+                var state = joy.GetCurrentState().Buttons;
+                foreach (var btnState in BtnStates)
+                {
+                    var newBtnValue = state[btnState.BtnNumber - 1];
+                    btnState.IsPressed = newBtnValue;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
             }
         }
     }
