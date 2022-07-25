@@ -42,14 +42,20 @@ namespace JoyMapper.Services
 
             var usedJoyNames = keyPatterns
                 .Select(p => p.JoyName)
-                .Distinct();
+                .Distinct()
+                .ToArray();
 
             var usedJoysticks = new DirectInput()
                 .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
                 .Where(d => usedJoyNames.Contains(d.InstanceName))
                 .Select(d => new Joystick(new DirectInput(), d.InstanceGuid))
-                .ToList();
+                .ToArray();
 
+            if (usedJoysticks.Length < usedJoyNames.Length)
+            {
+                AppLog.LogMessage($"Найдено {usedJoysticks.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
+                                  $"Подключите нужные устройства и перезапустите профиль");
+            }
 
 
             _UsedInProfileJoystickStates = usedJoysticks

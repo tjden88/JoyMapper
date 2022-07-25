@@ -1,4 +1,5 @@
-﻿using JoyMapper.Models;
+﻿using System;
+using JoyMapper.Models;
 using JoyMapper.Services;
 using WPR.MVVM.Commands;
 
@@ -70,6 +71,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Запустить профиль</summary>
         private void OnStartProfileCommandExecuted(object p)
         {
+            LogText=string.Empty;
             var profile = (Profile)p;
             ActiveProfile = profile;
             _ProfileWorker.Start(profile);
