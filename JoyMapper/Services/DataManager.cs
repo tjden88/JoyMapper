@@ -86,9 +86,6 @@ namespace JoyMapper.Services
         }
 
 
-
-
-
         /// <summary> Добавить паттерн </summary>
         public void AddKeyPattern(KeyPattern keyPattern)
         {
