@@ -33,6 +33,7 @@ namespace JoyMapper.Services
 
         #region Public Methods
 
+        /// <summary> Добавить профиль </summary>
         public void AddProfile(Profile profile)
         {
             var nextId = Profiles
@@ -45,6 +46,17 @@ namespace JoyMapper.Services
             SaveData();
         }
 
+
+
+        /// <summary> Удалить профиль </summary>
+        public void RemoveProfile(int profileId)
+        {
+            ProfilesData.Profiles.Remove(ProfilesData.Profiles.FirstOrDefault(p => p.Id == profileId));
+            SaveData();
+        }
+
+
+        /// <summary> Добавить паттерн </summary>
         public void AddKeyPattern(KeyPattern keyPattern)
         {
             var nextId = KeyPatterns
@@ -58,13 +70,22 @@ namespace JoyMapper.Services
         }
 
 
-        public void RemoveProfile(int profileId)
+        /// <summary> Обновить паттерн (заменить по Id) </summary>
+        public void UpdateKeyPattern(KeyPattern pattern)
         {
-            ProfilesData.Profiles.Remove(ProfilesData.Profiles.FirstOrDefault(p => p.Id == profileId));
-            SaveData();
+            var editPattern = ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == pattern.Id);
+            if (editPattern != null)
+            {
+                var index = ProfilesData.KeyPatterns.IndexOf(editPattern);
+                ProfilesData.KeyPatterns.Remove(editPattern);
+                ProfilesData.KeyPatterns.Insert(index, pattern);
+                SaveData();
+            }
         }
 
-        public void RemovePattern(int patternId)
+
+        /// <summary> Удалить паттерн </summary>
+        public void RemoveKeyPattern(int patternId)
         {
             ProfilesData.KeyPatterns.Remove(ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == patternId));
 

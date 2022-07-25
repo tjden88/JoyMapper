@@ -42,7 +42,7 @@
                     <Button Name="RecordPressButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonPressRecord_Click"></Button>
                     <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearPress_Click"></Button>
                 </StackPanel>
-                <ListBox ItemsSource="{Binding PressKeyBindings}"/>
+                <ListBox Name="PressKeyBindingsList" ItemsSource="{Binding PressKeyBindings}"/>
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="2" Grid.Column="1" Header="Действия клавиш при отпускании">
@@ -51,7 +51,7 @@
                     <Button Name="RecordReleaseButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonReleaseRecord_Click"></Button>
                     <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearRelease_Click"></Button>
                 </StackPanel>
-                <ListBox ItemsSource="{Binding ReleaseKeyBindings}"/>
+                <ListBox Name="ReleaseKeyBindingsList" ItemsSource="{Binding ReleaseKeyBindings}"/>
             </DockPanel>
         </GroupBox>
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models;
@@ -39,6 +37,7 @@ namespace JoyMapper
         }
 
         #endregion
+
 
         #region IsReleaseRecorded : bool - Нажата ли кнопка записи при отпускании
 
@@ -101,12 +100,56 @@ namespace JoyMapper
 
         #endregion
 
-        
-        
 
-        
-        public ObservableCollection<KeyboardKeyBinding> PressKeyBindings { get; set; } = new();
-        public ObservableCollection<KeyboardKeyBinding> ReleaseKeyBindings { get; set; } = new();
+        #region Имя паттерна
+
+        /// <summary> Имя паттерна </summary>
+        public string PatternName
+        {
+            get => PatternNameText.Text.Trim();
+            set => PatternNameText.Text = value;
+        } 
+        #endregion
+
+
+        #region Type : ObservableCollection<KeyboardKeyBinding> - Кнопки клавиатуры при нажатии
+
+        /// <summary>Кнопки клавиатуры при нажатии</summary>
+        private ObservableCollection<KeyboardKeyBinding> _PressKeyBindings = new();
+
+        /// <summary>Кнопки клавиатуры при нажатии</summary>
+        public ObservableCollection<KeyboardKeyBinding> PressKeyBindings
+        {
+            get => _PressKeyBindings;
+            set
+            {
+                if (Equals(value, _PressKeyBindings)) return;
+                _PressKeyBindings = value;
+                PressKeyBindingsList.ItemsSource = value;
+            }
+        }
+
+        #endregion
+
+
+        #region Type : ObservableCollection<KeyboardKeyBinding> - Кнопки клавиатуры при отпускании
+
+        /// <summary>Кнопки клавиатуры при отпускании</summary>
+        private ObservableCollection<KeyboardKeyBinding> _ReleaseKeyBindings = new();
+
+        /// <summary>Кнопки клавиатуры при отпускании</summary>
+        public ObservableCollection<KeyboardKeyBinding> ReleaseKeyBindings
+        {
+            get => _ReleaseKeyBindings;
+            set
+            {
+                if (Equals(value, _ReleaseKeyBindings)) return;
+                _ReleaseKeyBindings = value;
+                ReleaseKeyBindingsList.ItemsSource = value;
+            }
+        }
+
+        #endregion
 
 
         private void ButtonPressRecord_Click(object sender, RoutedEventArgs e)
@@ -179,23 +222,13 @@ namespace JoyMapper
                 return;
             }
 
-            var name = PatternNameText.Text.Trim();
-            if (name.Length == 0)
+            if (string.IsNullOrEmpty(PatternName))
             {
                 MessageBox.Show("Введите имя паттерна");
                 return;
             }
 
-            var pattern = new KeyPattern()
-            {
-                JoyKey = JoyButton,
-                JoyName = JoyName,
-                PressKeyBindings = PressKeyBindings.ToList(),
-                ReleaseKeyBindings = ReleaseKeyBindings.ToList(),
-                Name = name,
-            };
-            App.DataManager.AddKeyPattern(pattern);
-            //DialogResult = true;
+            DialogResult = true;
         }
 
         #region Command AttachJoyButtonCommand - Определить кнопку джойстика

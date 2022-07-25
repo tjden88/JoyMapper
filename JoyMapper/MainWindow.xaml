@@ -17,7 +17,7 @@
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
-                <b:InvokeCommandAction Command="{Binding LoadProfilesCommand}"/>
+                <b:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
             </b:EventTrigger.Actions>
         </b:EventTrigger>
     </b:Interaction.Triggers>
@@ -27,21 +27,47 @@
     <TabControl>
         <TabItem Header="Профили">
             <DockPanel>
-                <UniformGrid DockPanel.Dock="Top" Columns="3" HorizontalAlignment="Left">
+                <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
                     <Button Content="Создать" />
                     <Button Content="Сделать копию" />
                     <Button Content="Удалить" />
                 </UniformGrid>
 
                 <ListBox>
-                    <Button Content="Button" Height="55" Width="118" Click="Button_Click"/>
-                    <Button Content="Button" Height="55" Width="118" Click="Button2_Click"/>
+                    
                 </ListBox>
             </DockPanel>
         </TabItem>
-        <TabItem Header="Настройка"/>
+        <TabItem Header="Паттерны">
+            <DockPanel>
+                <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
+                    <Button Content="Создать" Command="{Binding CreatePatternCommand}" />
+                    <Button Content="Сделать копию" Command="{Binding CopyPatternCommand}" />
+                    <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
+                    <Button Content="Удалить" Command="{Binding DeletePatternCommand}"/>
+                </UniformGrid>
+
+                <ListBox ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:KeyPattern}">
+                           <StackPanel Orientation="Vertical">
+                               <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
+                               <WrapPanel>
+                                    <TextBlock Margin="5" Text="{Binding JoyName}"/>
+                                   <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
+                               </WrapPanel>
+                           </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </TabItem>
         <TabItem Header="Debug">
-            <ListBox ItemsSource="{Binding JoyDevices}" DisplayMemberPath="Name"></ListBox>
+           <WrapPanel>
+               <Button Content="Button" Height="55" Width="118" Click="Button_Click"/>
+               <Button Content="Button" Height="55" Width="118" Click="Button2_Click"/>
+            </WrapPanel>
         </TabItem>
 
     </TabControl>

@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using System.Windows;
 using JoyMapper.Models;
-using JoyMapper.Services;
-using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -51,6 +48,36 @@ namespace JoyMapper
 
         #endregion
 
+
+        #region KeyPatterns : List<KeyPattern> - Список паттернов
+
+        /// <summary>Список паттернов</summary>
+        private List<KeyPattern> _KeyPatterns;
+
+        /// <summary>Список паттернов</summary>
+        public List<KeyPattern> KeyPatterns
+        {
+            get => _KeyPatterns;
+            set => Set(ref _KeyPatterns, value);
+        }
+
+        #endregion
+
+     
+        #region SelectedPattern : KeyPattern - Выбранный паттерн
+
+        /// <summary>Выбранный паттерн</summary>
+        private KeyPattern _SelectedPattern;
+
+        /// <summary>Выбранный паттерн</summary>
+        public KeyPattern SelectedPattern
+        {
+            get => _SelectedPattern;
+            set => Set(ref _SelectedPattern, value);
+        }
+
+        #endregion
+
         
 
         #endregion
@@ -58,20 +85,24 @@ namespace JoyMapper
 
         #region Commands
         
-        #region Command LoadProfilesCommand - Загрузить профили
+        #region Command LoadDataCommand - Загрузить данные
 
-        /// <summary>Загрузить профили</summary>
+        /// <summary>Загрузить данные</summary>
         private Command _LoadProfilesCommand;
 
-        /// <summary>Загрузить профили</summary>
-        public Command LoadProfilesCommand => _LoadProfilesCommand
-            ??= new Command(OnLoadProfilesCommandExecuted, CanLoadProfilesCommandExecute, "Загрузить профили");
+        /// <summary>Загрузить данные</summary>
+        public Command LoadDataCommand => _LoadProfilesCommand
+            ??= new Command(OnLoadProfilesCommandExecuted, CanLoadProfilesCommandExecute, "Загрузить данные");
 
-        /// <summary>Проверка возможности выполнения - Загрузить профили</summary>
+        /// <summary>Проверка возможности выполнения - Загрузить данные</summary>
         private bool CanLoadProfilesCommandExecute() => true;
 
-        /// <summary>Логика выполнения - Загрузить профили</summary>
-        private void OnLoadProfilesCommandExecuted() => Profiles = App.DataManager.Profiles.ToList();
+        /// <summary>Логика выполнения - Загрузить данные</summary>
+        private void OnLoadProfilesCommandExecuted()
+        {
+            Profiles = App.DataManager.Profiles.ToList();
+            KeyPatterns = App.DataManager.KeyPatterns.ToList();
+        }
 
         #endregion
 
@@ -134,6 +165,144 @@ namespace JoyMapper
         private void OnDeleteProfileCommandExecuted()
         {
             
+        }
+
+        #endregion
+
+
+        #region Command CreatePatternCommand - Создать паттерн
+
+        /// <summary>Создать паттерн</summary>
+        private Command _CreatePatternCommand;
+
+        /// <summary>Создать паттерн</summary>
+        public Command CreatePatternCommand => _CreatePatternCommand
+            ??= new Command(OnCreatePatternCommandExecuted, CanCreatePatternCommandExecute, "Создать паттерн");
+
+        /// <summary>Проверка возможности выполнения - Создать паттерн</summary>
+        private bool CanCreatePatternCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Создать паттерн</summary>
+        private void OnCreatePatternCommandExecuted()
+        {
+            var wnd = new AddPattern()
+            {
+                Owner = Application.Current.MainWindow,
+                Title = "Добавить паттерн"
+            };
+            if(wnd.ShowDialog() != true) return;
+
+            var pattern = new KeyPattern
+            {
+                JoyKey = wnd.JoyButton,
+                JoyName = wnd.JoyName,
+                PressKeyBindings = wnd.PressKeyBindings.ToList(),
+                ReleaseKeyBindings = wnd.ReleaseKeyBindings.ToList(),
+                Name = wnd.PatternName,
+            };
+            App.DataManager.AddKeyPattern(pattern);
+
+            LoadDataCommand.Execute();
+            SelectedPattern = KeyPatterns.Last();
+
+        }
+
+        #endregion
+
+
+        #region Command EditPatternCommand - Редактировать паттерн
+
+        /// <summary>Редактировать паттерн</summary>
+        private Command _EditPatternCommand;
+
+        /// <summary>Редактировать паттерн</summary>
+        public Command EditPatternCommand => _EditPatternCommand
+            ??= new Command(OnEditPatternCommandExecuted, CanEditPatternCommandExecute, "Редактировать паттерн");
+
+        /// <summary>Проверка возможности выполнения - Редактировать паттерн</summary>
+        private bool CanEditPatternCommandExecute() => SelectedPattern != null;
+
+        /// <summary>Логика выполнения - Редактировать паттерн</summary>
+        private void OnEditPatternCommandExecuted()
+        {
+            var wnd = new AddPattern()
+            {
+                Owner = Application.Current.MainWindow,
+                Title = $"Редактировать паттерн {SelectedPattern.Name}",
+                JoyButton = SelectedPattern.JoyKey,
+                JoyName = SelectedPattern.JoyName,
+                PatternName = SelectedPattern.Name,
+                PressKeyBindings = new(SelectedPattern.PressKeyBindings),
+                ReleaseKeyBindings = new(SelectedPattern.ReleaseKeyBindings),
+
+            };
+            if (wnd.ShowDialog() != true) return;
+
+            var pattern = new KeyPattern
+            {
+                JoyKey = wnd.JoyButton,
+                JoyName = wnd.JoyName,
+                PressKeyBindings = wnd.PressKeyBindings.ToList(),
+                ReleaseKeyBindings = wnd.ReleaseKeyBindings.ToList(),
+                Name = wnd.PatternName,
+                Id = SelectedPattern.Id
+            };
+            App.DataManager.UpdateKeyPattern(pattern);
+
+            LoadDataCommand.Execute();
+            SelectedPattern = KeyPatterns.Last();
+
+        }
+
+        #endregion
+
+
+        #region Command CopyPatternCommand - Создать копию паттерна
+
+        /// <summary>Создать копию паттерна</summary>
+        private Command _CopyPatternCommand;
+
+        /// <summary>Создать копию паттерна</summary>
+        public Command CopyPatternCommand => _CopyPatternCommand
+            ??= new Command(OnCopyPatternCommandExecuted, CanCopyPatternCommandExecute, "Создать копию паттерна");
+
+        /// <summary>Проверка возможности выполнения - Создать копию паттерна</summary>
+        private bool CanCopyPatternCommandExecute() => SelectedPattern != null;
+
+        /// <summary>Логика выполнения - Создать копию паттерна</summary>
+        private void OnCopyPatternCommandExecuted()
+        {
+            App.DataManager.AddKeyPattern(SelectedPattern);
+            LoadDataCommand.Execute();
+            SelectedPattern = KeyPatterns.Last();
+        }
+
+        #endregion
+
+
+        #region Command DeletePatternCommand - Удалить паттерн
+
+        /// <summary>Удалить паттерн</summary>
+        private Command _DeletePatternCommand;
+
+        /// <summary>Удалить паттерн</summary>
+        public Command DeletePatternCommand => _DeletePatternCommand
+            ??= new Command(OnDeletePatternCommandExecuted, CanDeletePatternCommandExecute, "Удалить паттерн");
+
+        /// <summary>Проверка возможности выполнения - Удалить паттерн</summary>
+        private bool CanDeletePatternCommandExecute() => SelectedPattern != null;
+
+        /// <summary>Логика выполнения - Удалить паттерн</summary>
+        private void OnDeletePatternCommandExecuted()
+        {
+            if (MessageBox.Show($"Удалить паттерн {SelectedPattern.Name}?",
+                    "Подтвердите удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                App.DataManager.RemoveKeyPattern(SelectedPattern.Id);
+                LoadDataCommand.Execute();
+                SelectedPattern = null;
+
+            }
         }
 
         #endregion
