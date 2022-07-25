@@ -27,15 +27,17 @@
             <Button Content="Добавить паттерн" HorizontalAlignment="Left" Command="{Binding AddPatternCommand}" Padding="10,3" />
             <Button Content="Сохранить" HorizontalAlignment="Right" Command="{Binding SaveProfileCommand}" Padding="10,3" />
         </Grid>
-        <ItemsControl ItemsSource="{Binding SelectedPatterns}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type viewModels:SelectedPatternViewModel}">
-                    <DockPanel Margin="0,5">
-                        <CheckBox IsChecked="{Binding IsSelected}"/>
-                        <TextBlock Text="{Binding PatternName}" Margin="6,0" FontWeight="Bold"/>
-                    </DockPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding SelectedPatterns}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:SelectedPatternViewModel}">
+                        <DockPanel Margin="0,5">
+                            <CheckBox IsChecked="{Binding IsSelected}"/>
+                            <TextBlock Text="{Binding PatternName}" Margin="6,0" FontWeight="Bold"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </DockPanel>
 </Window>
