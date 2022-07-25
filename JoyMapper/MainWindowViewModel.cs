@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
+using JoyMapper.Services;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -14,18 +16,18 @@ namespace JoyMapper
         {
         }
 
-
+        private readonly PatternService _PatternService = new();
 
 
         #region Props
 
-        #region Profiles : List<Profile> - Список профилей
+        #region Profiles : ObservableCollection<Profile> - Список профилей
 
         /// <summary>Список профилей</summary>
-        private List<Profile> _Profiles;
+        private ObservableCollection<Profile> _Profiles;
 
         /// <summary>Список профилей</summary>
-        public List<Profile> Profiles
+        public ObservableCollection<Profile> Profiles
         {
             get => _Profiles;
             set => Set(ref _Profiles, value);
@@ -49,13 +51,13 @@ namespace JoyMapper
         #endregion
 
 
-        #region KeyPatterns : List<KeyPattern> - Список паттернов
+        #region KeyPatterns : ObservableCollection<KeyPattern> - Список паттернов
 
         /// <summary>Список паттернов</summary>
-        private List<KeyPattern> _KeyPatterns;
+        private ObservableCollection<KeyPattern> _KeyPatterns;
 
         /// <summary>Список паттернов</summary>
-        public List<KeyPattern> KeyPatterns
+        public ObservableCollection<KeyPattern> KeyPatterns
         {
             get => _KeyPatterns;
             set => Set(ref _KeyPatterns, value);
@@ -205,26 +207,10 @@ namespace JoyMapper
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var wnd = new AddPattern()
-            {
-                Owner = Application.Current.MainWindow,
-                Title = "Добавить паттерн"
-            };
-            if(wnd.ShowDialog() != true) return;
-
-            var pattern = new KeyPattern
-            {
-                JoyKey = wnd.JoyButton,
-                JoyName = wnd.JoyName,
-                PressKeyBindings = wnd.PressKeyBindings.ToList(),
-                ReleaseKeyBindings = wnd.ReleaseKeyBindings.ToList(),
-                Name = wnd.PatternName,
-            };
-            App.DataManager.AddKeyPattern(pattern);
-
-            LoadDataCommand.Execute();
-            SelectedPattern = KeyPatterns.Last();
-
+            var added = _PatternService.AddPattern();
+            if (added == null) return;
+            KeyPatterns.Add(added);
+            SelectedPattern = added;
         }
 
         #endregion
