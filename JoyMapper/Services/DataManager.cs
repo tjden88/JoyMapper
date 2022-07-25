@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Windows;
 using JoyMapper.Models;
 
 namespace JoyMapper.Services
@@ -14,6 +11,9 @@ namespace JoyMapper.Services
     /// </summary>
     internal class DataManager
     {
+
+        private readonly DataSerializer _DataSerializer = new();
+
         private class Data
         {
             public List<Profile> Profiles { get; set; } = new();
@@ -99,41 +99,8 @@ namespace JoyMapper.Services
 
         #endregion
 
-        private Data LoadData()
-        {
-            if (!File.Exists(_SettingsFileName))
-                return new Data();
-            try
-            {
-                string jsonString = File.ReadAllText(_SettingsFileName);
-                return JsonSerializer.Deserialize<Data>(jsonString);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Ошибка загрузки данных");
-                return new Data();
-            }
-        }
+        private Data LoadData() => _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
 
-        private void SaveData()
-        {
-            try
-            {
-                var data = new Data
-                {
-                    KeyPatterns = KeyPatterns.ToList(),
-                    Profiles = Profiles.ToList()
-                };
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                var serialized = JsonSerializer.Serialize(data, options);
-
-                File.WriteAllText(_SettingsFileName, serialized, Encoding.UTF8);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Ошибка при сохраниении данных");
-            }
-        }
-
+        private void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
     }
 }
