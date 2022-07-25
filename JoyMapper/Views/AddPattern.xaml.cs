@@ -109,7 +109,7 @@ namespace JoyMapper.Views
         {
             get => PatternNameText.Text.Trim();
             set => PatternNameText.Text = value;
-        } 
+        }
         #endregion
 
 
@@ -164,36 +164,39 @@ namespace JoyMapper.Views
 
         private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
+
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
             if (IsPressRecorded && !e.IsRepeat)
                 PressKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = true,
-                    KeyCode = e.Key
+                    KeyCode = key,
                 });
 
             if (IsReleaseRecorded && !e.IsRepeat)
                 ReleaseKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = true,
-                    KeyCode = e.Key
+                    KeyCode = key
                 });
         }
 
 
         private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
             if (IsPressRecorded)
                 PressKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = false,
-                    KeyCode = e.Key
+                    KeyCode = key
                 });
 
             if (IsReleaseRecorded)
                 ReleaseKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = false,
-                    KeyCode = e.Key
+                    KeyCode = key
                 });
         }
 
@@ -249,7 +252,7 @@ namespace JoyMapper.Views
         {
             var wnd = new AddJoyButton { Owner = this };
             var result = wnd.ShowDialog();
-            if(result != true) return;
+            if (result != true) return;
             JoyButton = wnd.JoyKey;
             JoyName = wnd.JoyName;
 
@@ -259,8 +262,8 @@ namespace JoyMapper.Views
 
         private void RemovePressCommand_Click(object sender, RoutedEventArgs e)
         {
-            var btn = (Button) sender;
-            PressKeyBindings.Remove((KeyboardKeyBinding) btn.Tag);
+            var btn = (Button)sender;
+            PressKeyBindings.Remove((KeyboardKeyBinding)btn.Tag);
         }
 
         private void RemoveReleaseCommand_Click(object sender, RoutedEventArgs e)
