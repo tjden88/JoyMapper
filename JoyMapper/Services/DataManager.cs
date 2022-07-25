@@ -147,7 +147,7 @@ namespace JoyMapper.Services
 
         #endregion
 
-        private Data LoadData() => _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
+        private Data LoadData() => _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
 
         private void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
     }
