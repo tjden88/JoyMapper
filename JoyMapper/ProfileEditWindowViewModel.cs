@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 using WPR.MVVM.Commands;
@@ -99,6 +100,40 @@ namespace JoyMapper
 
             SelectedPatterns = new(mapped);
             Name = profile.Name;
+        }
+
+        #endregion
+
+
+        #region Command SaveProfileCommand - Сохранить профиль
+
+        /// <summary>Сохранить профиль</summary>
+        private Command _SaveProfileCommand;
+
+        /// <summary>Сохранить профиль</summary>
+        public Command SaveProfileCommand => _SaveProfileCommand
+            ??= new Command(OnSaveProfileCommandExecuted, CanSaveProfileCommandExecute, "Сохранить профиль");
+
+        /// <summary>Проверка возможности выполнения - Сохранить профиль</summary>
+        private bool CanSaveProfileCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Сохранить профиль</summary>
+        private void OnSaveProfileCommandExecuted()
+        {
+            var wnd = Application.Current.Windows.Cast<Window>().First(w => w.IsActive);
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                MessageBox.Show(wnd, "Введите имя профиля");
+                return;
+            }
+
+            if (!SelectedPatterns.Any(p => p.IsSelected))
+            {
+                MessageBox.Show(wnd, "Не выбрано ни одного паттерна!");
+                return;
+            }
+
+            wnd.DialogResult = true;
         }
 
         #endregion

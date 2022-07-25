@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoyMapper"
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
+        WindowStartupLocation="CenterOwner"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="347" Width="526">
@@ -23,7 +24,7 @@
         <TextBox DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" Text="Выберите используемые паттерны:"/>
         <StackPanel Margin="0,10,0,0" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Orientation="Horizontal">
-            <Button Content="Сохранить" Padding="10,3"></Button>
+            <Button Content="Сохранить" Command="{Binding SaveProfileCommand}" Padding="10,3"></Button>
         </StackPanel>
         <ListBox ItemsSource="{Binding SelectedPatterns}">
             <ListBox.ItemTemplate>

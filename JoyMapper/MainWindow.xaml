@@ -28,13 +28,26 @@
         <TabItem Header="Профили">
             <DockPanel>
                 <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
-                    <Button Content="Создать" />
+                    <Button Content="Создать" Command="{Binding CreateProfileCommand}" />
                     <Button Content="Сделать копию" />
                     <Button Content="Удалить" />
                 </UniformGrid>
 
-                <ListBox>
-                    
+                <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch">
+
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:Profile}">
+                            <DockPanel LastChildFill="False" Margin="10,5">
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                                <Button DockPanel.Dock="Right" Padding="20,5" Content="Запуск" FontSize="20"></Button>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
         </TabItem>

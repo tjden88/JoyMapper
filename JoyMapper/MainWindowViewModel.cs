@@ -143,7 +143,27 @@ namespace JoyMapper
         /// <summary>Логика выполнения - Создать профиль</summary>
         private void OnCreateProfileCommandExecuted()
         {
-            
+            var vm = new ProfileEditWindowViewModel();
+            var wnd = new ProfileEditWindow()
+            {
+                Owner = Application.Current.MainWindow,
+                DataContext = vm
+            };
+            if( wnd.ShowDialog() != true) return;
+
+            var profile = new Profile
+            {
+                Name = vm.Name,
+                KeyPatternsIds = vm.SelectedPatterns
+                    .Where(p => p.IsSelected)
+                    .Select(p => p.PatternId)
+                    .ToList()
+            };
+
+            App.DataManager.AddProfile(profile);
+            LoadDataCommand.Execute();
+            SelectedProfile = Profiles.Last();
+
         }
 
         #endregion
