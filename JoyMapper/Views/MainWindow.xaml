@@ -13,6 +13,7 @@
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="10"/>
         </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
@@ -24,59 +25,81 @@
     <d:Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </d:Window.DataContext>
-    <TabControl>
-        <TabItem Header="Профили">
-            <DockPanel>
-                <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
-                    <Button Content="Создать" Command="{Binding CreateProfileCommand}" />
-                    <Button Content="Сделать копию" Command="{Binding CopyProfileCommand}" />
-                    <Button Content="Редактировать" Command="{Binding EditProfileCommand}"/>
-                    <Button Content="Удалить" Command="{Binding DeleteProfileCommand}" />
-                </UniformGrid>
+    <Grid>
+        <TabControl>
+            <TabItem Header="Профили">
+                <DockPanel>
+                    <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
+                        <Button Content="Создать" Command="{Binding CreateProfileCommand}" />
+                        <Button Content="Сделать копию" Command="{Binding CopyProfileCommand}" />
+                        <Button Content="Редактировать" Command="{Binding EditProfileCommand}"/>
+                        <Button Content="Удалить" Command="{Binding DeleteProfileCommand}" />
+                    </UniformGrid>
 
-                <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
+                    <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
 
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:Profile}">
-                            <DockPanel LastChildFill="False" Margin="10,5">
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
-                                <Button DockPanel.Dock="Right" Padding="20,5" Content="Запуск" FontSize="20" />
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </DockPanel>
-        </TabItem>
-        <TabItem Header="Паттерны">
-            <DockPanel>
-                <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
-                    <Button Content="Создать" Command="{Binding CreatePatternCommand}" />
-                    <Button Content="Сделать копию" Command="{Binding CopyPatternCommand}" />
-                    <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
-                    <Button Content="Удалить" Command="{Binding DeletePatternCommand}"/>
-                </UniformGrid>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:Profile}">
+                                <DockPanel LastChildFill="False" Margin="10,5">
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                                    <Button DockPanel.Dock="Right" Padding="20,5" Content="Запуск" FontSize="20"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
+                                            CommandParameter="{Binding}"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Паттерны">
+                <DockPanel>
+                    <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
+                        <Button Content="Создать" Command="{Binding CreatePatternCommand}" />
+                        <Button Content="Сделать копию" Command="{Binding CopyPatternCommand}" />
+                        <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
+                        <Button Content="Удалить" Command="{Binding DeletePatternCommand}"/>
+                    </UniformGrid>
 
-                <ListBox ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                    <ListBox ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
 
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:KeyPattern}">
-                           <StackPanel Orientation="Vertical">
-                               <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
-                               <WrapPanel>
-                                    <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                   <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
-                               </WrapPanel>
-                           </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </DockPanel>
-        </TabItem>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
+                                    <WrapPanel>
+                                        <TextBlock Margin="5" Text="{Binding JoyName}"/>
+                                        <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </TabItem>
 
-    </TabControl>
+        </TabControl>
+
+        <!--Индикатор запущенного профиля-->
+        <Border Background="LightGray" Visibility="{Binding IsProfileStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+                    <TextBlock Margin="10" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
+                    <Button Content="Остановить" FontSize="30" Foreground="RoyalBlue" Background="White" Padding="10"
+                            Command="{Binding StopProfileCommand}"/>
+                </StackPanel>
+                <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBlock TextAlignment="Center" Text="{Binding LogText}" Foreground="Red" FontSize="16"></TextBlock>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>

@@ -9,13 +9,9 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal class MainWindowViewModel : ViewModel
+    internal partial class MainWindowViewModel : ViewModel
     {
-
-        public MainWindowViewModel()
-        {
-        }
-
+        
         private readonly PatternService _PatternService = new();
 
 
@@ -81,7 +77,6 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-
         #endregion
 
 
@@ -104,27 +99,6 @@ namespace JoyMapper.ViewModels
         {
             Profiles = new(App.DataManager.Profiles);
             KeyPatterns = new(App.DataManager.KeyPatterns);
-        }
-
-        #endregion
-
-
-        #region Command StartProfileCommand - Запустить профиль
-
-        /// <summary>Запустить профиль</summary>
-        private Command _StartProfileCommand;
-
-        /// <summary>Запустить профиль</summary>
-        public Command StartProfileCommand => _StartProfileCommand
-            ??= new Command(OnStartProfileCommandExecuted, CanStartProfileCommandExecute, "Запустить профиль");
-
-        /// <summary>Проверка возможности выполнения - Запустить профиль</summary>
-        private bool CanStartProfileCommandExecute(object p) => p is Profile;
-
-        /// <summary>Логика выполнения - Запустить профиль</summary>
-        private void OnStartProfileCommandExecuted(object p)
-        {
-            var profile = (Profile)p;
         }
 
         #endregion
