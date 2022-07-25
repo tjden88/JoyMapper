@@ -29,12 +29,12 @@
             <DockPanel>
                 <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
                     <Button Content="Создать" Command="{Binding CreateProfileCommand}" />
-                    <Button Content="Сделать копию" />
-                    <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
+                    <Button Content="Сделать копию" Command="{Binding CopyProfileCommand}" />
+                    <Button Content="Редактировать" Command="{Binding EditProfileCommand}"/>
                     <Button Content="Удалить" Command="{Binding DeleteProfileCommand}" />
                 </UniformGrid>
 
-                <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch">
+                <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
 
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
