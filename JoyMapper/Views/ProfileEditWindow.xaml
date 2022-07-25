@@ -17,7 +17,7 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <d:Window.DataContext>
-        <local:ProfileEditWindowViewModel/>
+        <viewModels:ProfileEditWindowViewModel/>
     </d:Window.DataContext>
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" Text="Имя профиля:"/>
@@ -27,15 +27,15 @@
             <Button Content="Добавить паттерн" HorizontalAlignment="Left" Command="{Binding AddPatternCommand}" Padding="10,3" />
             <Button Content="Сохранить" HorizontalAlignment="Right" Command="{Binding SaveProfileCommand}" Padding="10,3" />
         </Grid>
-        <ListBox ItemsSource="{Binding SelectedPatterns}">
-            <ListBox.ItemTemplate>
+        <ItemsControl ItemsSource="{Binding SelectedPatterns}">
+            <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewModels:SelectedPatternViewModel}">
-                    <DockPanel>
+                    <DockPanel Margin="0,5">
                         <CheckBox IsChecked="{Binding IsSelected}"/>
-                        <TextBlock Text="{Binding PatternName}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding PatternName}" Margin="6,0" FontWeight="Bold"/>
                     </DockPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </DockPanel>
 </Window>
