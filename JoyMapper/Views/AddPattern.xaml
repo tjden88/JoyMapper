@@ -56,7 +56,7 @@
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
             <TextBlock VerticalAlignment="Center" Text="Имя паттерна: " />
             <TextBox Name="PatternNameText" Width="200" VerticalAlignment="Center" />
-            <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click" />
+            <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click" Width="62" />
         </DockPanel>
     </Grid>
 </Window>

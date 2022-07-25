@@ -210,7 +210,7 @@ namespace JoyMapper.Views
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            if (JoyName == null || JoyButton < 0)
+            if (JoyName == null || JoyButton < 1)
             {
                 MessageBox.Show("Не определена кнопка контроллера для назначения паттерна");
                 return;

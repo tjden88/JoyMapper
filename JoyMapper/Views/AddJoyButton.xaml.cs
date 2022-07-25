@@ -54,8 +54,8 @@ namespace JoyMapper.Views
                 {
                     joy.Poll();
                     var state = joy.GetCurrentState();
-                    var pressedButton = Array.IndexOf(state.Buttons, true);
-                    if (pressedButton > -1)
+                    var pressedButton = Array.IndexOf(state.Buttons, true) + 1;
+                    if (pressedButton > 0)
                     {
                         JoyName = joy.Information.InstanceName;
                         JoyKey = pressedButton;
@@ -81,7 +81,7 @@ namespace JoyMapper.Views
             ??= new Command(OnAcceptButtonCommandExecuted, CanAcceptButtonCommandExecute, "Принять изменения");
 
         /// <summary>Проверка возможности выполнения - Принять изменения</summary>
-        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyKey > -1;
+        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyKey > 0;
 
         /// <summary>Логика выполнения - Принять изменения</summary>
         private void OnAcceptButtonCommandExecuted()
