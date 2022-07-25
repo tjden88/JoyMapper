@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
@@ -231,32 +230,11 @@ namespace JoyMapper
         /// <summary>Логика выполнения - Редактировать паттерн</summary>
         private void OnEditPatternCommandExecuted()
         {
-            var wnd = new AddPattern()
-            {
-                Owner = Application.Current.MainWindow,
-                Title = $"Редактировать паттерн {SelectedPattern.Name}",
-                JoyButton = SelectedPattern.JoyKey,
-                JoyName = SelectedPattern.JoyName,
-                PatternName = SelectedPattern.Name,
-                PressKeyBindings = new(SelectedPattern.PressKeyBindings),
-                ReleaseKeyBindings = new(SelectedPattern.ReleaseKeyBindings),
-
-            };
-            if (wnd.ShowDialog() != true) return;
-
-            var pattern = new KeyPattern
-            {
-                JoyKey = wnd.JoyButton,
-                JoyName = wnd.JoyName,
-                PressKeyBindings = wnd.PressKeyBindings.ToList(),
-                ReleaseKeyBindings = wnd.ReleaseKeyBindings.ToList(),
-                Name = wnd.PatternName,
-                Id = SelectedPattern.Id
-            };
-            App.DataManager.UpdateKeyPattern(pattern);
+            var edited = _PatternService.EditPattern(SelectedPattern);
+            if (edited == null) return;
 
             LoadDataCommand.Execute();
-            SelectedPattern = KeyPatterns.Last();
+            SelectedPattern = edited;
 
         }
 
