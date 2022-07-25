@@ -171,6 +171,28 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region Command CopyProfileCommand - Копировать профиль
+
+        /// <summary>Копировать профиль</summary>
+        private Command _CopyProfileCommand;
+
+        /// <summary>Копировать профиль</summary>
+        public Command CopyProfileCommand => _CopyProfileCommand
+            ??= new Command(OnCopyProfileCommandExecuted, CanCopyProfileCommandExecute, "Копировать профиль");
+
+        /// <summary>Проверка возможности выполнения - Копировать профиль</summary>
+        private bool CanCopyProfileCommandExecute() => SelectedProfile != null;
+
+        /// <summary>Логика выполнения - Копировать профиль</summary>
+        private void OnCopyProfileCommandExecuted()
+        {
+            App.DataManager.AddProfile(SelectedProfile);
+            LoadDataCommand.Execute();
+            SelectedProfile = Profiles.Last();
+        }
+
+        #endregion
+
         #region Command DeleteProfileCommand - Удалить профиль
 
         /// <summary>Удалить профиль</summary>
@@ -181,12 +203,18 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnDeleteProfileCommandExecuted, CanDeleteProfileCommandExecute, "Удалить профиль");
 
         /// <summary>Проверка возможности выполнения - Удалить профиль</summary>
-        private bool CanDeleteProfileCommandExecute() => true;
+        private bool CanDeleteProfileCommandExecute() => SelectedProfile != null;
 
         /// <summary>Логика выполнения - Удалить профиль</summary>
         private void OnDeleteProfileCommandExecuted()
         {
-
+            if (MessageBox.Show($"Удалить профиль {SelectedProfile.Name}?",
+                    "Подтвердите удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                App.DataManager.RemoveProfile(SelectedProfile.Id);
+                LoadDataCommand.Execute();
+                SelectedProfile = null;
+            }
         }
 
         #endregion

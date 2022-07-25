@@ -30,7 +30,8 @@
                 <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
                     <Button Content="Создать" Command="{Binding CreateProfileCommand}" />
                     <Button Content="Сделать копию" />
-                    <Button Content="Удалить" />
+                    <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
+                    <Button Content="Удалить" Command="{Binding DeleteProfileCommand}" />
                 </UniformGrid>
 
                 <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch">
@@ -75,12 +76,6 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
-        </TabItem>
-        <TabItem Header="Debug">
-           <WrapPanel>
-               <Button Content="Button" Height="55" Width="118" Click="Button_Click"/>
-               <Button Content="Button" Height="55" Width="118" Click="Button2_Click"/>
-            </WrapPanel>
         </TabItem>
 
     </TabControl>
