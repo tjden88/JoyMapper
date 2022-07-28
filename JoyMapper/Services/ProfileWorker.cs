@@ -51,11 +51,6 @@ namespace JoyMapper.Services
                 .Select(d => new Joystick(new DirectInput(), d.InstanceGuid))
                 .ToArray();
 
-            if (usedJoysticks.Length < usedJoyNames.Length)
-            {
-                AppLog.LogMessage($"Найдено {usedJoysticks.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
-                                  $"Подключите нужные устройства и перезапустите профиль");
-            }
 
 
             _UsedInProfileJoystickStates = usedJoysticks
@@ -85,6 +80,14 @@ namespace JoyMapper.Services
 
             IsActive = true;
             Task.Run(Work);
+            AppLog.LogMessage("Профиль запущен");
+
+            if (usedJoysticks.Length < usedJoyNames.Length)
+            {
+                AppLog.LogMessage($"Найдено {usedJoysticks.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
+                                  $"Подключите нужные устройства и перезапустите профиль", LogMessage.MessageType.Warning);
+            }
+
         }
 
         /// <summary> Остановить отслеживание </summary>

@@ -85,7 +85,7 @@
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
-        <Border Background="LightGray" Visibility="{Binding IsProfileStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Border Background="White" Visibility="{Binding IsProfileStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -97,7 +97,19 @@
                             Command="{Binding StopProfileCommand}"/>
                 </StackPanel>
                 <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <TextBlock TextAlignment="Center" Text="{Binding LogText}" Foreground="Red" FontSize="16"></TextBlock>
+                    <ItemsControl ItemsSource="{Binding LogMessages}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:LogMessage}">
+                                
+                                <TextBlock Margin="5" TextAlignment="Center" Text="{Binding}" FontSize="16">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush Color="{Binding Color}"/>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Grid>
         </Border>

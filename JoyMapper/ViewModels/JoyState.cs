@@ -85,7 +85,7 @@ namespace JoyMapper.ViewModels
             catch (Exception e)
             {
                 Debug.WriteLine(e);
-                AppLog.LogMessage($"Ошибка опроса устройства - {Joystick.Information.InstanceName}");
+                AppLog.LogMessage($"Ошибка опроса устройства - {Joystick.Information.InstanceName}", LogMessage.MessageType.Error);
                 _IsFault = true;
             }
 

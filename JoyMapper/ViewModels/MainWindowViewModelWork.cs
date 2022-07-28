@@ -1,4 +1,5 @@
-﻿using JoyMapper.Models;
+﻿using System.Collections.ObjectModel;
+using JoyMapper.Models;
 using JoyMapper.Services;
 using WPR.MVVM.Commands;
 
@@ -11,19 +12,19 @@ namespace JoyMapper.ViewModels
 
         public MainWindowViewModel()
         {
-            AppLog.Report += s => LogText += $"{s}\n";
+            AppLog.Report += msg => LogMessages.Add(msg);
         }
-       
-        #region LogText : string - Список лога
 
-        /// <summary>Список лога</summary>
-        private string _LogText = "";
+        #region LogMessages : ObservableCollection<LogMessage> - Лог запущенного профиля
 
-        /// <summary>Список лога</summary>
-        public string LogText
+        /// <summary>Лог запущенного профиля</summary>
+        private ObservableCollection<LogMessage> _LogMessages = new();
+
+        /// <summary>Лог запущенного профиля</summary>
+        public ObservableCollection<LogMessage> LogMessages
         {
-            get => _LogText;
-            set => Set(ref _LogText, value);
+            get => _LogMessages;
+            set => Set(ref _LogMessages, value);
         }
 
         #endregion
@@ -70,7 +71,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Запустить профиль</summary>
         private void OnStartProfileCommandExecuted(object p)
         {
-            LogText=string.Empty;
+            LogMessages.Clear();
             var profile = (Profile)p;
             ActiveProfile = profile;
             _ProfileWorker.Start(profile);
