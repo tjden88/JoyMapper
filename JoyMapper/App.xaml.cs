@@ -9,6 +9,10 @@ namespace JoyMapper
     /// </summary>
     public partial class App : Application
     {
+
+        /// <summary> Версия приложения </summary>
+        internal const string AppVersion = "1.1";
+
         /// <summary> Менеджер данных профилей текущей сессии </summary>
         internal static DataManager DataManager { get; } = new();
 

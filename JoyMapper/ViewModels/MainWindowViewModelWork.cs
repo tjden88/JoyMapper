@@ -13,6 +13,7 @@ namespace JoyMapper.ViewModels
         public MainWindowViewModel()
         {
             AppLog.Report += msg => LogMessages.Add(msg);
+            Title = "JoyMapper " + App.AppVersion;
         }
 
         #region LogMessages : ObservableCollection<LogMessage> - Лог запущенного профиля

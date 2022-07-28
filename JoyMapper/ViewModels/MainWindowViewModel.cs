@@ -12,7 +12,7 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal partial class MainWindowViewModel : ViewModel
+    internal partial class MainWindowViewModel : WindowViewModel
     {
         
         private readonly PatternService _PatternService = new();
