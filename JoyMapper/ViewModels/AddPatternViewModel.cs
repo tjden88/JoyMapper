@@ -1,4 +1,8 @@
-﻿using WPR.MVVM.ViewModels;
+﻿using System.Collections.ObjectModel;
+using JoyMapper.Models;
+using JoyMapper.Views;
+using WPR.MVVM.Commands;
+using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
@@ -54,11 +58,171 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
+
+        #region JoyName : string - Имя назначенного джойстика
+
+        /// <summary>Имя назначенного джойстика</summary>
+        private string _JoyName;
+
+        /// <summary>Имя назначенного джойстика</summary>
+        public string JoyName
+        {
+            get => _JoyName;
+            set => Set(ref _JoyName, value);
+        }
 
         #endregion
 
 
+        #region JoyButton : int - Номер кнопки назначенного джойстика
+
+        /// <summary>Номер кнопки назначенного джойстика</summary>
+        private int _JoyButton;
+
+        /// <summary>Номер кнопки назначенного джойстика</summary>
+        public int JoyButton
+        {
+            get => _JoyButton;
+            set => Set(ref _JoyButton, value);
+        }
+
+        #endregion
+
+
+        #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
+
+        /// <summary>Список команд при нажатии кнопки</summary>
+        private ObservableCollection<KeyboardKeyBinding> _PressKeyBindings;
+
+        /// <summary>Список команд при нажатии кнопки</summary>
+        public ObservableCollection<KeyboardKeyBinding> PressKeyBindings
+        {
+            get => _PressKeyBindings;
+            set => Set(ref _PressKeyBindings, value);
+        }
+
+        #endregion
+
+
+        #region ReleaseKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при отпускании кнопки
+
+        /// <summary>Список команд при отпускании кнопки</summary>
+        private ObservableCollection<KeyboardKeyBinding> _ReleaseKeyBindings;
+
+        /// <summary>Список команд при отпускании кнопки</summary>
+        public ObservableCollection<KeyboardKeyBinding> ReleaseKeyBindings
+        {
+            get => _ReleaseKeyBindings;
+            set => Set(ref _ReleaseKeyBindings, value);
+        }
+
+        #endregion
+
+
+
+        #endregion
+
+
+        #region Commands
+
+        #region Command AttachJoyButtonCommand - Определить кнопку джойстика
+
+        /// <summary>Определить кнопку джойстика</summary>
+        private Command _AttachJoyButtonCommand;
+
+        /// <summary>Определить кнопку джойстика</summary>
+        public Command AttachJoyButtonCommand => _AttachJoyButtonCommand
+            ??= new Command(OnAttachJoyButtonCommandExecuted, CanAttachJoyButtonCommandExecute, "Определить кнопку джойстика");
+
+        /// <summary>Проверка возможности выполнения - Определить кнопку джойстика</summary>
+        private bool CanAttachJoyButtonCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
+        private void OnAttachJoyButtonCommandExecuted()
+        {
+            var wnd = new AddJoyButton { Owner = App.ActiveWindow};
+            var result = wnd.ShowDialog();
+            if (result != true) return;
+            JoyButton = wnd.JoyKey;
+            JoyName = wnd.JoyName;
+
+        }
+
+        #endregion
+
+
+        #region Command ChangePressRecordCommand - Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика
+
+        /// <summary>Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
+        private Command _ChangePressRecordCommand;
+
+        /// <summary>Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
+        public Command ChangePressRecordCommand => _ChangePressRecordCommand
+            ??= new Command(OnChangePressRecordCommandExecuted, CanChangePressRecordCommandExecute, "Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика");
+
+        /// <summary>Проверка возможности выполнения - Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
+        private bool CanChangePressRecordCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
+        private void OnChangePressRecordCommandExecuted() => IsPressRecorded = !IsPressRecorded;
+
+        #endregion
+
+
+        #region Command ChangeReleaseRecordCommand - Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика
+
+        /// <summary>Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
+        private Command _ChangeReleaseRecordCommand;
+
+        /// <summary>Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
+        public Command ChangeReleaseRecordCommand => _ChangeReleaseRecordCommand
+            ??= new Command(OnChangeReleaseRecordCommandExecuted, CanChangeReleaseRecordCommandExecute, "Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика");
+
+        /// <summary>Проверка возможности выполнения - Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
+        private bool CanChangeReleaseRecordCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
+        private void OnChangeReleaseRecordCommandExecuted() => IsReleaseRecorded = !IsReleaseRecorded;
+
+        #endregion
+
+
+        #region Command ClaerPressBindingsCommand - Очистить назначения команд нажатия
+
+        /// <summary>Очистить назначения команд нажатия</summary>
+        private Command _ClaerPressBindingsCommand;
+
+        /// <summary>Очистить назначения команд нажатия</summary>
+        public Command ClaerPressBindingsCommand => _ClaerPressBindingsCommand
+            ??= new Command(OnClaerPressBindingsCommandExecuted, CanClaerPressBindingsCommandExecute, "Очистить назначения команд нажатия");
+
+        /// <summary>Проверка возможности выполнения - Очистить назначения команд нажатия</summary>
+        private bool CanClaerPressBindingsCommandExecute() => PressKeyBindings?.Count > 0;
+
+        /// <summary>Логика выполнения - Очистить назначения команд нажатия</summary>
+        private void OnClaerPressBindingsCommandExecuted() => PressKeyBindings.Clear();
+
+        #endregion
+
+
+        #region Command ClaerReleaseBindingsCommand - Очистить назначения команд отпускания
+
+        /// <summary>Очистить назначения команд отпускания</summary>
+        private Command _ClaerReleaseBindingsCommand;
+
+        /// <summary>Очистить назначения команд отпускания</summary>
+        public Command ClaerReleaseBindingsCommand => _ClaerReleaseBindingsCommand
+            ??= new Command(OnClaerReleaseBindingsCommandExecuted, CanClaerReleaseBindingsCommandExecute, "Очистить назначения команд отпускания");
+
+        /// <summary>Проверка возможности выполнения - Очистить назначения команд отпускания</summary>
+        private bool CanClaerReleaseBindingsCommandExecute() => ReleaseKeyBindings?.Count > 0;
+
+        /// <summary>Логика выполнения - Очистить назначения команд отпускания</summary>
+        private void OnClaerReleaseBindingsCommandExecuted() => ReleaseKeyBindings.Clear();
+
+        #endregion
+
+        #endregion
 
     }
 }

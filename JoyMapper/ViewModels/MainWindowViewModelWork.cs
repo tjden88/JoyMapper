@@ -1,5 +1,4 @@
-﻿using System;
-using JoyMapper.Models;
+﻿using JoyMapper.Models;
 using JoyMapper.Services;
 using WPR.MVVM.Commands;
 

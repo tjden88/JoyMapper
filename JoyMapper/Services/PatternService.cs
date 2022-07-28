@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Views;
 
@@ -18,7 +17,7 @@ namespace JoyMapper.Services
         {
             var wnd = new AddPattern()
             {
-                Owner = Application.Current.Windows.Cast<Window>().First(w => w.IsActive),
+                Owner = App.ActiveWindow,
                 Title = "Добавить паттерн"
             };
             if (wnd.ShowDialog() != true) return null;
@@ -44,7 +43,7 @@ namespace JoyMapper.Services
         {
             var wnd = new AddPattern()
             {
-                Owner = Application.Current.Windows.Cast<Window>().First(w => w.IsActive),
+                Owner = App.ActiveWindow,
                 Title = $"Редактировать паттерн {pattern.Name}",
                 JoyButton = pattern.JoyKey,
                 JoyName = pattern.JoyName,
