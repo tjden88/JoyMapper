@@ -4,13 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         WindowStartupLocation="CenterOwner"
+        Style="{StaticResource ChromeWindow}"
+        Background="{Binding RelativeSource={RelativeSource Self}, Path=BorderBrush}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Нажмите кнопку на джойстике" Width="272" Height="140">
-    <StackPanel Margin="10" VerticalAlignment="Top">
-        <TextBlock Name="JoyNameText" HorizontalAlignment="Center" Text="Джойстик...." />
-        <TextBlock Name="ButtonNumberText" HorizontalAlignment="Center" Text="Кнопка...." />
-        <Button Content="Принять" Command="{Binding AcceptButtonCommand}" HorizontalAlignment="Center" Margin="10" Padding="20,2" />
+        Title="Нажмите кнопку на джойстике" Width="320" Height="150">
+    <StackPanel Margin="10" VerticalAlignment="Center">
+        <TextBlock Name="JoyNameText" HorizontalAlignment="Center" Text="Джойстик...." Foreground="{DynamicResource TextColorBrush}"  FontSize="14" Margin="5" />
+        <TextBlock Name="ButtonNumberText" HorizontalAlignment="Center" Text="Кнопка...." Foreground="{DynamicResource TextColorBrush}" FontSize="14"/>
+        <Button Content="ПРИНЯТЬ" IsDefault="True"
+                Command="{Binding AcceptButtonCommand}" 
+                Style="{StaticResource AccentWPRButton}" HorizontalAlignment="Center" Margin="10"/>
     </StackPanel>
 </Window>
