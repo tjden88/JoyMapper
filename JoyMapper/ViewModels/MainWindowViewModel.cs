@@ -1,9 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Views;
+using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -111,7 +114,7 @@ namespace JoyMapper.ViewModels
 
         /// <summary>Создать профиль</summary>
         public Command CreateProfileCommand => _CreateProfileCommand
-            ??= new Command(OnCreateProfileCommandExecuted, CanCreateProfileCommandExecute, "Создать профиль");
+            ??= new Command(OnCreateProfileCommandExecuted, CanCreateProfileCommandExecute, "Создать новый профиль");
 
         /// <summary>Проверка возможности выполнения - Создать профиль</summary>
         private bool CanCreateProfileCommandExecute() => true;
@@ -163,6 +166,7 @@ namespace JoyMapper.ViewModels
             var prof = App.DataManager.CopyProfile(SelectedProfile.Id);
             Profiles.Add(prof);
             SelectedProfile = prof;
+            WPRMessageBox.Bubble(App.ActiveWindow, "Профиль скопирован");
         }
 
         #endregion
@@ -208,23 +212,23 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region Command DeleteProfileCommand - Удалить профиль
+        #region AsyncCommand DeleteProfileCommand - Удалить профиль
 
         /// <summary>Удалить профиль</summary>
-        private Command _DeleteProfileCommand;
+        private AsyncCommand _DeleteProfileCommand;
 
         /// <summary>Удалить профиль</summary>
-        public Command DeleteProfileCommand => _DeleteProfileCommand
-            ??= new Command(OnDeleteProfileCommandExecuted, CanDeleteProfileCommandExecute, "Удалить профиль");
+        public AsyncCommand DeleteProfileCommand => _DeleteProfileCommand
+            ??= new AsyncCommand(OnDeleteProfileCommandExecutedAsync, CanDeleteProfileCommandExecute, "Удалить профиль");
 
         /// <summary>Проверка возможности выполнения - Удалить профиль</summary>
         private bool CanDeleteProfileCommandExecute() => SelectedProfile != null;
 
         /// <summary>Логика выполнения - Удалить профиль</summary>
-        private void OnDeleteProfileCommandExecuted()
+        private async Task OnDeleteProfileCommandExecutedAsync(CancellationToken cancel)
         {
-            if (MessageBox.Show($"Удалить профиль {SelectedProfile.Name}?",
-                    "Подтвердите удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить профиль {SelectedProfile.Name}?");
+            if (result)
             {
                 App.DataManager.RemoveProfile(SelectedProfile.Id);
                 LoadDataCommand.Execute();
