@@ -22,7 +22,7 @@
         <viewModels:MainWindowViewModel/>
     </d:Window.DataContext>
     <Grid>
-        <TabControl TabStripPlacement="Left" Margin="5">
+        <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
             <TabItem>
                 <TabItem.Header>
                     <controls:WPRIconText Text="Профили" IconSource="CameraControl" Foreground="{DynamicResource PrimaryColorBrush}"/>
@@ -129,6 +129,16 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </DockPanel>
+                </controls:WPRCard>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <controls:WPRIconText Text="Настройки" IconSource="Settings" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                </TabItem.Header>
+
+                <controls:WPRCard>
+
                 </controls:WPRCard>
             </TabItem>
 
