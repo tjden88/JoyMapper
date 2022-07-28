@@ -30,7 +30,7 @@ namespace JoyMapper.Models
         public Color Color => Type switch
         {
             MessageType.Error => Colors.Red,
-            MessageType.Warning => Colors.Orange,
+            MessageType.Warning => Colors.Yellow,
             MessageType.Info => Colors.Green,
             _ => throw new ArgumentOutOfRangeException()
         };

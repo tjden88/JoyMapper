@@ -231,7 +231,7 @@ namespace JoyMapper.ViewModels
             if (result)
             {
                 App.DataManager.RemoveProfile(SelectedProfile.Id);
-                LoadDataCommand.Execute();
+                Profiles.Remove(SelectedProfile);
                 SelectedProfile = null;
             }
         }
@@ -307,37 +307,38 @@ namespace JoyMapper.ViewModels
             var newPattern = App.DataManager.CopyKeyPattern(SelectedPattern.Id);
             KeyPatterns.Add(newPattern);
             SelectedPattern = newPattern;
+            WPRMessageBox.Bubble(App.ActiveWindow, "Паттерн скопирован");
         }
 
         #endregion
 
 
-        #region Command DeletePatternCommand - Удалить паттерн
+        #region AsyncCommand DeletePatternCommand - Удалить паттерн
 
         /// <summary>Удалить паттерн</summary>
-        private Command _DeletePatternCommand;
+        private AsyncCommand _DeletePatternCommand;
 
         /// <summary>Удалить паттерн</summary>
-        public Command DeletePatternCommand => _DeletePatternCommand
-            ??= new Command(OnDeletePatternCommandExecuted, CanDeletePatternCommandExecute, "Удалить паттерн");
+        public AsyncCommand DeletePatternCommand => _DeletePatternCommand
+            ??= new AsyncCommand(OnDeletePatternCommandExecutedAsync, CanDeletePatternCommandExecute, "Удалить паттерн");
 
         /// <summary>Проверка возможности выполнения - Удалить паттерн</summary>
         private bool CanDeletePatternCommandExecute() => SelectedPattern != null;
 
         /// <summary>Логика выполнения - Удалить паттерн</summary>
-        private void OnDeletePatternCommandExecuted()
+        private async Task OnDeletePatternCommandExecutedAsync(CancellationToken cancel)
         {
-            if (MessageBox.Show($"Удалить паттерн {SelectedPattern.Name}?",
-                    "Подтвердите удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить паттерн {SelectedPattern.Name}?");
+            if (result)
             {
                 App.DataManager.RemoveKeyPattern(SelectedPattern.Id);
-                LoadDataCommand.Execute();
+                KeyPatterns.Remove(SelectedPattern);
                 SelectedPattern = null;
-
             }
         }
 
         #endregion
+
 
         #endregion
 

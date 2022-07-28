@@ -27,6 +27,7 @@
                 <TabItem.Header>
                     <controls:WPRIconText Text="Профили" IconSource="CameraControl" Foreground="{DynamicResource AccentColorBrush}"/>
                 </TabItem.Header>
+
                 <!--Профили-->
                 <controls:WPRCard>
                     <DockPanel>
@@ -57,7 +58,8 @@
                             </Button>
                         </ToolBar>
 
-                        <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20" Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
+                        <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
                         <ListBox Margin="5" ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
 
                             <ListBox.ItemTemplate>
@@ -74,50 +76,84 @@
                     </DockPanel>
                 </controls:WPRCard>
             </TabItem>
+
             <TabItem>
                 <TabItem.Header>
                     <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource AccentColorBrush}"/>
                 </TabItem.Header>
-                <DockPanel>
-                    <ToolBar DockPanel.Dock="Top" HorizontalAlignment="Left">
-                        <Button Content="Создать" Command="{Binding CreatePatternCommand}" />
-                        <Button Content="Сделать копию" Command="{Binding CopyPatternCommand}" />
-                        <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
-                        <Button Content="Удалить" Command="{Binding DeletePatternCommand}"/>
-                    </ToolBar>
 
-                    <ListBox ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                <!--Профили-->
+                <controls:WPRCard>
+                    <DockPanel>
+                        <ToolBar DockPanel.Dock="Top" Margin="5">
+                            <Button Command="{Binding CreatePatternCommand}"
+                                    ToolTip="{Binding CreatePatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIconText Text="Новый паттерн" IconSource="Add"  FontWeight="Bold"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding CopyPatternCommand}"
+                                    ToolTip="{Binding CopyPatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="ContentCopy"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding EditPatternCommand}"
+                                    ToolTip="{Binding EditPatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="EditOutline"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding DeletePatternCommand}"
+                                    ToolTip="{Binding DeletePatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </ToolBar>
 
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:KeyPattern}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
-                                    <WrapPanel>
-                                        <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                        <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
-                                    </WrapPanel>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
+                        <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
+
+                        <ListBox Margin="5" ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
+                                        <WrapPanel>
+                                            <TextBlock Margin="5" Text="{Binding JoyName}"/>
+                                            <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </controls:WPRCard>
             </TabItem>
 
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
-        <Border Background="White" Visibility="{Binding IsProfileStarted, Converter={StaticResource Bool2VisibilityConverter}}">
+        <Border Background="{DynamicResource LightPrimaryColorBrush}"
+                Visibility="{Binding IsProfileStarted, Converter={StaticResource Bool2VisibilityConverter}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
-                    <TextBlock Margin="10" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
-                    <Button Content="Остановить" FontSize="30" Foreground="RoyalBlue" Background="White" Padding="10"
-                            Command="{Binding StopProfileCommand}"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
+                    <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
+                    <Button Padding="40, 10"
+                            HorizontalAlignment="Center"
+                            Command="{Binding StopProfileCommand}"
+                            ToolTip="{Binding StopProfileCommand}">
+                        <Button.Content>
+                            <TextBlock Text="Остановить" FontSize="20"/>
+                        </Button.Content>
+                    </Button>
                 </StackPanel>
-                <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Margin="10" Grid.Row="1" Foreground="{DynamicResource DarkPrimaryColorBrush}">
                     <ItemsControl ItemsSource="{Binding LogMessages}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:LogMessage}">
