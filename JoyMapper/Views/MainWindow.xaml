@@ -25,7 +25,7 @@
         <TabControl TabStripPlacement="Left" Margin="5">
             <TabItem>
                 <TabItem.Header>
-                    <controls:WPRIconText Text="Профили" IconSource="CameraControl" Foreground="{DynamicResource AccentColorBrush}"/>
+                    <controls:WPRIconText Text="Профили" IconSource="CameraControl" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
                 <!--Профили-->
@@ -79,7 +79,7 @@
 
             <TabItem>
                 <TabItem.Header>
-                    <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource AccentColorBrush}"/>
+                    <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
                 <!--Профили-->
