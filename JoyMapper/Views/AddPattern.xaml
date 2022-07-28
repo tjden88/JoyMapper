@@ -8,6 +8,7 @@
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         PreviewKeyDown="AddPattern_OnPreviewKeyDown"
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
+        WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="459" Width="578">
     <Window.Resources>
@@ -105,13 +106,34 @@
                             Command="{Binding ClaerReleaseBindingsCommand}" 
                             ToolTip="{Binding ClaerReleaseBindingsCommand}" />
                 </StackPanel>
-                <ListBox ItemsSource="{Binding ReleaseKeyBindings}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
+                <Grid>
+                    <ListBox ItemsSource="{Binding ReleaseKeyBindings}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Border Focusable="True" Opacity="0.5" Background="DeepSkyBlue">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Setters>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style.Setters>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsReleaseRecorded}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Foreground="Red" TextAlignment="Center" FontSize="24" Margin="5" TextWrapping="Wrap" Text="Запись..."/>
+                            <TextBlock Foreground="White" TextAlignment="Center" FontSize="20" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
             </DockPanel>
         </GroupBox>
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
