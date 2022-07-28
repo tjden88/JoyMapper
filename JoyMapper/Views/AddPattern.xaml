@@ -9,7 +9,7 @@
         PreviewKeyDown="AddPattern_OnPreviewKeyDown"
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
         mc:Ignorable="d"
-        Title="Добавление паттерна" Height="459" Width="578">
+        Title="{Binding Title}" Height="459" Width="578">
     <Window.Resources>
         <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
             <Grid Margin="5,0">
@@ -26,6 +26,9 @@
         <viewModels:AddPatternViewModel/>
     </d:Window.DataContext>
     <b:Interaction.Triggers>
+        <b:DataTrigger Binding="{Binding ChangesSaved}" Value="True">
+            <b:ChangePropertyAction PropertyName="DialogResult" Value="True"/>
+        </b:DataTrigger>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
                 <b:InvokeCommandAction Command="{Binding AttachJoyButtonCommand}"/>
@@ -114,7 +117,7 @@
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
             <TextBlock VerticalAlignment="Center" Text="Имя паттерна: " />
             <TextBox Width="200" VerticalAlignment="Center" Text="{Binding PatternName, UpdateSourceTrigger=PropertyChanged}" />
-            <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click" Width="62" />
+            <Button DockPanel.Dock="Right" Content="Сохранить" Command="{Binding SaveCommand}" />
         </DockPanel>
     </Grid>
 </Window>

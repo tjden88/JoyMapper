@@ -1,9 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models;
-using WPR.MVVM.Commands;
+using JoyMapper.ViewModels;
 
 namespace JoyMapper.Views
 {
@@ -17,19 +15,21 @@ namespace JoyMapper.Views
             InitializeComponent();
         }
 
+        private AddPatternViewModel ViewModel => (AddPatternViewModel) DataContext;
+
         private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-
+            var vm = ViewModel;
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            if (IsPressRecorded && !e.IsRepeat)
-                PressKeyBindings.Add(new KeyboardKeyBinding()
+            if (vm.IsPressRecorded && !e.IsRepeat)
+                vm.PressKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = true,
                     KeyCode = key,
                 });
 
-            if (IsReleaseRecorded && !e.IsRepeat)
-                ReleaseKeyBindings.Add(new KeyboardKeyBinding()
+            if (vm.IsReleaseRecorded && !e.IsRepeat)
+                vm.ReleaseKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = true,
                     KeyCode = key
@@ -39,43 +39,21 @@ namespace JoyMapper.Views
 
         private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
+            var vm = ViewModel;
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            if (IsPressRecorded)
-                PressKeyBindings.Add(new KeyboardKeyBinding()
+            if (vm.IsPressRecorded)
+                vm.PressKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = false,
                     KeyCode = key
                 });
 
-            if (IsReleaseRecorded)
-                ReleaseKeyBindings.Add(new KeyboardKeyBinding()
+            if (vm.IsReleaseRecorded)
+                vm.ReleaseKeyBindings.Add(new KeyboardKeyBinding()
                 {
                     IsPress = false,
                     KeyCode = key
                 });
-        }
-
-        private void ButtonSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (JoyName == null || JoyButton < 1)
-            {
-                MessageBox.Show("Не определена кнопка контроллера для назначения паттерна");
-                return;
-            }
-
-            if (PressKeyBindings.Count == 0 && ReleaseKeyBindings.Count == 0)
-            {
-                MessageBox.Show("Клавиатурные команды не назначены");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(PatternName))
-            {
-                MessageBox.Show("Введите имя паттерна");
-                return;
-            }
-
-            DialogResult = true;
         }
 
     }

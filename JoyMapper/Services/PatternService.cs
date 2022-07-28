@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using JoyMapper.Models;
+using JoyMapper.ViewModels;
 using JoyMapper.Views;
 
 namespace JoyMapper.Services
@@ -15,21 +16,18 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern AddPattern()
         {
+           var vm = new AddPatternViewModel()
+            {
+                Title = "Добавить паттерн"
+            };
             var wnd = new AddPattern()
             {
                 Owner = App.ActiveWindow,
-                Title = "Добавить паттерн"
+                DataContext = vm
             };
             if (wnd.ShowDialog() != true) return null;
 
-            var pattern = new KeyPattern
-            {
-                JoyKey = wnd.JoyButton,
-                JoyName = wnd.JoyName,
-                PressKeyBindings = wnd.PressKeyBindings.ToList(),
-                ReleaseKeyBindings = wnd.ReleaseKeyBindings.ToList(),
-                Name = wnd.PatternName,
-            };
+            var pattern = BuildPattern(vm);
             App.DataManager.AddKeyPattern(pattern);
             return pattern;
         }
@@ -41,31 +39,39 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern EditPattern(KeyPattern pattern)
         {
-            var wnd = new AddPattern()
+            var vm = new AddPatternViewModel()
             {
-                Owner = App.ActiveWindow,
                 Title = $"Редактировать паттерн {pattern.Name}",
                 JoyButton = pattern.JoyKey,
                 JoyName = pattern.JoyName,
                 PatternName = pattern.Name,
                 PressKeyBindings = new(pattern.PressKeyBindings),
                 ReleaseKeyBindings = new(pattern.ReleaseKeyBindings),
-
+            };
+            var wnd = new AddPattern()
+            {
+                Owner = App.ActiveWindow,
+                DataContext = vm
             };
             if (wnd.ShowDialog() != true) return null;
 
-            var newPattern = new KeyPattern
-            {
-                JoyKey = wnd.JoyButton,
-                JoyName = wnd.JoyName,
-                PressKeyBindings = wnd.PressKeyBindings.ToList(),
-                ReleaseKeyBindings = wnd.ReleaseKeyBindings.ToList(),
-                Name = wnd.PatternName,
-                Id = pattern.Id
-            };
-            App.DataManager.UpdateKeyPattern(newPattern);
+            var editPattern = BuildPattern(vm);
+            editPattern.Id = pattern.Id;
+            App.DataManager.UpdateKeyPattern(editPattern);
+            return editPattern;
+        }
 
-            return newPattern;
+        private KeyPattern BuildPattern(AddPatternViewModel ViewModel)
+        {
+            var keyPattern = new KeyPattern
+            {
+                JoyKey = ViewModel.JoyButton,
+                JoyName = ViewModel.JoyName,
+                PressKeyBindings = ViewModel.PressKeyBindings.ToList(),
+                ReleaseKeyBindings = ViewModel.ReleaseKeyBindings.ToList(),
+                Name = ViewModel.PatternName,
+            };
+            return keyPattern;
         }
     }
 }

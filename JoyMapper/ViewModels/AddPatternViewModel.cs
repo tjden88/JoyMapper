@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Views;
 using WPR.MVVM.Commands;
@@ -11,6 +12,22 @@ namespace JoyMapper.ViewModels
 
 
         #region Props
+
+
+        #region ChangesSaved : bool - Изменения приняты
+
+        /// <summary>Изменения приняты</summary>
+        private bool _ChangesSaved;
+
+        /// <summary>Изменения приняты</summary>
+        public bool ChangesSaved
+        {
+            get => _ChangesSaved;
+            private set => Set(ref _ChangesSaved, value);
+        }
+
+        #endregion
+
 
         #region PatternName : string - Имя паттерна
 
@@ -27,7 +44,6 @@ namespace JoyMapper.ViewModels
         #endregion
 
         
-
         #region IsPressRecorded : bool - Нажата ли кнопка записи нажатий
 
         /// <summary>Нажата ли кнопка записи нажатий</summary>
@@ -107,7 +123,7 @@ namespace JoyMapper.ViewModels
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
 
         /// <summary>Список команд при нажатии кнопки</summary>
-        private ObservableCollection<KeyboardKeyBinding> _PressKeyBindings;
+        private ObservableCollection<KeyboardKeyBinding> _PressKeyBindings = new();
 
         /// <summary>Список команд при нажатии кнопки</summary>
         public ObservableCollection<KeyboardKeyBinding> PressKeyBindings
@@ -122,7 +138,7 @@ namespace JoyMapper.ViewModels
         #region ReleaseKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при отпускании кнопки
 
         /// <summary>Список команд при отпускании кнопки</summary>
-        private ObservableCollection<KeyboardKeyBinding> _ReleaseKeyBindings;
+        private ObservableCollection<KeyboardKeyBinding> _ReleaseKeyBindings = new();
 
         /// <summary>Список команд при отпускании кнопки</summary>
         public ObservableCollection<KeyboardKeyBinding> ReleaseKeyBindings
@@ -255,6 +271,49 @@ namespace JoyMapper.ViewModels
         {
             PressKeyBindings.Remove(p);
             ReleaseKeyBindings.Remove(p);
+        }
+
+        #endregion
+
+
+        #region Command SaveCommand - Сохранить паттерн
+
+        /// <summary>Сохранить паттерн</summary>
+        private Command _SaveCommand;
+
+        /// <summary>Сохранить паттерн</summary>
+        public Command SaveCommand => _SaveCommand
+            ??= new Command(OnSaveCommandExecuted, CanSaveCommandExecute, "Сохранить паттерн");
+
+        /// <summary>Проверка возможности выполнения - Сохранить паттерн</summary>
+        private bool CanSaveCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Сохранить паттерн</summary>
+        private void OnSaveCommandExecuted()
+        {
+#if RELEASE
+            if (JoyName == null || JoyButton < 1)
+            {
+                MessageBox.Show(App.ActiveWindow, "Не определена кнопка контроллера для назначения паттерна");
+                return;
+            } 
+#endif
+
+            if (PressKeyBindings.Count == 0 && ReleaseKeyBindings.Count == 0)
+            {
+                MessageBox.Show(App.ActiveWindow, "Клавиатурные команды не назначены");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(PatternName))
+            {
+                MessageBox.Show(App.ActiveWindow, "Введите имя паттерна");
+                return;
+            }
+
+            PatternName = PatternName.Trim();
+
+            ChangesSaved = true;
         }
 
         #endregion
