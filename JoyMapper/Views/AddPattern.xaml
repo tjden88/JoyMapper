@@ -32,7 +32,7 @@
         </b:DataTrigger>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
-                <b:InvokeCommandAction Command="{Binding AttachJoyButtonCommand}"/>
+                <b:InvokeCommandAction Command="{Binding AttachButtonIfEmptyCommand}"/>
             </b:EventTrigger.Actions>
         </b:EventTrigger>
     </b:Interaction.Triggers>
@@ -50,8 +50,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="10" TextBlock.FontWeight="Bold">
             <TextBlock VerticalAlignment="Center" Text="Кнопка джойстика:" />
-            <TextBlock Name="JoyNameText" VerticalAlignment="Center"  Text="" Margin="5,0" />
-            <TextBlock Name="JoyBtnNumberText" VerticalAlignment="Center" Text="-не определено-" />
+            <TextBlock VerticalAlignment="Center"  Text="{Binding JoyButtonText}" Margin="5,0" />
             <Button Command="{Binding AttachJoyButtonCommand}" Margin="10" Padding="10,2" Content="Определить кнопку" />
         </StackPanel>
         <Separator Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"/>

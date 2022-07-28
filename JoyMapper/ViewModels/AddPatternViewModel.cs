@@ -119,6 +119,11 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+        /// <summary> Назначенная кнопка </summary>
+        public string JoyButtonText => JoyName is null
+            ? "-не определено-"
+            : JoyName + ", Кнопка " + JoyButton; 
+
 
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
 
@@ -150,11 +155,26 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-
         #endregion
 
 
         #region Commands
+
+        #region Command AttachButtonIfEmptyCommand - Назначить кнопку джойстика если не назначена
+
+        /// <summary>Назначить кнопку джойстика если не назначена</summary>
+        private Command _AttachButtonIfEmptyCommand;
+
+        /// <summary>Назначить кнопку джойстика если не назначена</summary>
+        public Command AttachButtonIfEmptyCommand => _AttachButtonIfEmptyCommand
+            ??= new Command(OnAttachJoyButtonCommandExecuted, CanAttachButtonIfEmptyCommandExecute, "Назначить кнопку джойстика если не назначена");
+
+        /// <summary>Проверка возможности выполнения - Назначить кнопку джойстика если не назначена</summary>
+        private bool CanAttachButtonIfEmptyCommandExecute() => JoyButton == 0;
+
+
+        #endregion
+
 
         #region Command AttachJoyButtonCommand - Определить кнопку джойстика
 
