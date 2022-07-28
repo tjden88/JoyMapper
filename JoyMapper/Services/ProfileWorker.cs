@@ -40,6 +40,14 @@ namespace JoyMapper.Services
                 .Where(p => profile.KeyPatternsIds.Contains(p.Id))
                 .ToArray();
 
+            if (keyPatterns.Length == 0)
+            {
+                AppLog.LogMessage("В выбранном профиле не назначено ни одного паттерна! Необходимо отредактировать профиль или запустить другой"
+                    , LogMessage.MessageType.Error);
+                return;
+            }
+
+
             var usedJoyNames = keyPatterns
                 .Select(p => p.JoyName)
                 .Distinct()
@@ -51,7 +59,12 @@ namespace JoyMapper.Services
                 .Select(d => new Joystick(new DirectInput(), d.InstanceGuid))
                 .ToArray();
 
-
+            if (usedJoysticks.Length == 0)
+            {
+                AppLog.LogMessage("Джойстики, используемые в этом профиле, не найдены. Подключите их и перезапустите профиль"
+                    , LogMessage.MessageType.Error);
+                return;
+            }
 
             _UsedInProfileJoystickStates = usedJoysticks
                 .Select(joy => new JoyState

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
+using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -97,7 +100,8 @@ namespace JoyMapper.ViewModels
             {
                 IsSelected = profile.KeyPatternsIds.Contains(p.Id),
                 PatternName = p.Name,
-                PatternId = p.Id
+                PatternId = p.Id,
+                Description = p.JoyName + " - Кнопка " + p.JoyKey
             });
 
             SelectedPatterns = new(mapped);
@@ -107,34 +111,35 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region Command SaveProfileCommand - Сохранить профиль
+        #region AsyncCommand SaveProfileCommandCommand - Сохранить профиль
 
         /// <summary>Сохранить профиль</summary>
-        private Command _SaveProfileCommand;
+        private AsyncCommand _SaveProfileCommandCommand;
 
         /// <summary>Сохранить профиль</summary>
-        public Command SaveProfileCommand => _SaveProfileCommand
-            ??= new Command(OnSaveProfileCommandExecuted, CanSaveProfileCommandExecute, "Сохранить профиль");
+        public AsyncCommand SaveProfileCommand => _SaveProfileCommandCommand
+            ??= new AsyncCommand(OnSaveProfileCommandCommandExecutedAsync, CanSaveProfileCommandCommandExecute, "Сохранить профиль");
 
         /// <summary>Проверка возможности выполнения - Сохранить профиль</summary>
-        private bool CanSaveProfileCommandExecute() => true;
+        private bool CanSaveProfileCommandCommandExecute() => true;
 
         /// <summary>Логика выполнения - Сохранить профиль</summary>
-        private void OnSaveProfileCommandExecuted()
+        private async Task OnSaveProfileCommandCommandExecutedAsync(CancellationToken cancel)
         {
-            var wnd = Application.Current.Windows.Cast<Window>().First(w => w.IsActive);
+            var wnd = App.ActiveWindow;
             if (string.IsNullOrWhiteSpace(Name))
             {
-                MessageBox.Show(wnd, "Введите имя профиля");
+                await WPRMessageBox.InformationAsync(wnd, "Введите имя профиля");
                 return;
             }
 
             if (!SelectedPatterns.Any(p => p.IsSelected))
             {
-                MessageBox.Show(wnd, "Не выбрано ни одного паттерна!");
+                await WPRMessageBox.InformationAsync(wnd, "Не выбрано ни одного паттерна!");
                 return;
             }
 
+            Name = Name.Trim();
             wnd.DialogResult = true;
         }
 

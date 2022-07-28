@@ -46,6 +46,21 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
+        #region Description : string - Описание джойстика и кнопки
+
+        /// <summary>Описание джойстика и кнопки</summary>
+        private string _Description;
+
+        /// <summary>Описание джойстика и кнопки</summary>
+        public string Description
+        {
+            get => _Description;
+            set => Set(ref _Description, value);
+        }
+
+        #endregion
+
         
     }
 }
