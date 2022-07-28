@@ -12,6 +12,21 @@ namespace JoyMapper.ViewModels
 
         #region Props
 
+        #region PatternName : string - Имя паттерна
+
+        /// <summary>Имя паттерна</summary>
+        private string _PatternName;
+
+        /// <summary>Имя паттерна</summary>
+        public string PatternName
+        {
+            get => _PatternName;
+            set => Set(ref _PatternName, value);
+        }
+
+        #endregion
+
+        
 
         #region IsPressRecorded : bool - Нажата ли кнопка записи нажатий
 
@@ -219,6 +234,28 @@ namespace JoyMapper.ViewModels
 
         /// <summary>Логика выполнения - Очистить назначения команд отпускания</summary>
         private void OnClaerReleaseBindingsCommandExecuted() => ReleaseKeyBindings.Clear();
+
+        #endregion
+
+
+        #region Command RemoveKeyBindingCommand : KeyboardKeyBinding - Удалить назначение клавиши
+
+        /// <summary>Удалить назначение клавиши</summary>
+        private Command<KeyboardKeyBinding> _RemoveKeyBindingCommand;
+
+        /// <summary>Удалить назначение клавиши</summary>
+        public Command<KeyboardKeyBinding> RemoveKeyBindingCommand => _RemoveKeyBindingCommand
+            ??= new Command<KeyboardKeyBinding>(OnRemoveKeyBindingCommandExecuted, CanRemoveKeyBindingCommandExecute, "Удалить назначение клавиши");
+
+        /// <summary>Проверка возможности выполнения - Удалить назначение клавиши</summary>
+        private bool CanRemoveKeyBindingCommandExecute(KeyboardKeyBinding p) => true;
+
+        /// <summary>Проверка возможности выполнения - Удалить назначение клавиши</summary>
+        private void OnRemoveKeyBindingCommandExecuted(KeyboardKeyBinding p)
+        {
+            PressKeyBindings.Remove(p);
+            ReleaseKeyBindings.Remove(p);
+        }
 
         #endregion
 

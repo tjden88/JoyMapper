@@ -5,11 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:models="clr-namespace:JoyMapper.Models"
+        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         PreviewKeyDown="AddPattern_OnPreviewKeyDown"
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
         mc:Ignorable="d"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Добавление паттерна" Height="459" Width="578">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
+            <Grid Margin="5,0">
+                <TextBlock Text="{Binding}"/>
+                <Button HorizontalAlignment="Right" Width="20" VerticalAlignment="Center" Content="X" Foreground="Red"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveKeyBindingCommand}"
+                        ToolTip="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveKeyBindingCommand}"
+                        CommandParameter="{Binding}"
+                        Background="Transparent" BorderThickness="0"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <d:Window.DataContext>
+        <viewModels:AddPatternViewModel/>
+    </d:Window.DataContext>
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
@@ -39,26 +54,21 @@
         <GroupBox Grid.Row="2" Grid.Column="0" Header="Комбинация клавиш при нажатии кнопки">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                    <Button Name="RecordPressButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonPressRecord_Click" />
-                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearPress_Click" />
+                    <Button DockPanel.Dock="Top" Margin="0,10" 
+                            Content="{Binding PressButtonText}" 
+                            ToolTip="{Binding ChangePressRecordCommand}"
+                            Command="{Binding ChangePressRecordCommand}"/>
+                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" 
+                            Command="{Binding ClaerPressBindingsCommand}" 
+                            ToolTip="{Binding ClaerPressBindingsCommand}" />
                 </StackPanel>
                 <Grid>
-                    <ListBox Name="PressKeyBindingsList" ItemsSource="{Binding PressKeyBindings}">
+                    <ListBox ItemsSource="{Binding PressKeyBindings}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             </Style>
                         </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-                                <Grid Margin="5,0">
-                                    <TextBlock Text="{Binding}"/>
-                                    <Button HorizontalAlignment="Right" Width="20" VerticalAlignment="Center" Content="X" Foreground="Red"
-                                            Click="RemovePressCommand_Click"
-                                            Background="Transparent" BorderThickness="0" ToolTip="Удалить" Tag="{Binding}"></Button>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
                     </ListBox>
                     <Border Focusable="True" Opacity="0.5" Background="DeepSkyBlue">
                         <Border.Style>
@@ -84,31 +94,26 @@
         <GroupBox Grid.Row="2" Grid.Column="1" Header="Комбинация клавиш при отпускании кнопки">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                    <Button Name="RecordReleaseButton" DockPanel.Dock="Top" Margin="0,10" Content="Начать запись" Click="ButtonReleaseRecord_Click" />
-                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" Click="ButtonClearRelease_Click" />
+                    <Button DockPanel.Dock="Top" Margin="0,10" 
+                            Content="{Binding ReleaseButtonText}" 
+                            ToolTip="{Binding ChangeReleaseRecordCommand}"
+                            Command="{Binding ChangeReleaseRecordCommand}"/>
+                    <Button DockPanel.Dock="Top" Margin="10" Content="Очистить" 
+                            Command="{Binding ClaerReleaseBindingsCommand}" 
+                            ToolTip="{Binding ClaerReleaseBindingsCommand}" />
                 </StackPanel>
-                <ListBox Name="ReleaseKeyBindingsList" ItemsSource="{Binding ReleaseKeyBindings}">
+                <ListBox ItemsSource="{Binding ReleaseKeyBindings}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </Style>
                     </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-                            <Grid Margin="5,0">
-                                <TextBlock Text="{Binding}"/>
-                                <Button HorizontalAlignment="Right" Width="20" VerticalAlignment="Center" Content="X" Foreground="Red"
-                                        Click="RemoveReleaseCommand_Click"
-                                        Background="Transparent" BorderThickness="0" ToolTip="Удалить" Tag="{Binding}"></Button>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
         </GroupBox>
         <DockPanel Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" LastChildFill="False">
             <TextBlock VerticalAlignment="Center" Text="Имя паттерна: " />
-            <TextBox Name="PatternNameText" Width="200" VerticalAlignment="Center" />
+            <TextBox Width="200" VerticalAlignment="Center" Text="{Binding PatternName, UpdateSourceTrigger=PropertyChanged}" />
             <Button DockPanel.Dock="Right" Content="Сохранить" Click="ButtonSave_Click" Width="62" />
         </DockPanel>
     </Grid>
