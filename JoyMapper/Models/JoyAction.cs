@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using JoyMapper.ViewModels;
 using SharpDX.DirectInput;
 
 namespace JoyMapper.Models
@@ -76,12 +75,22 @@ namespace JoyMapper.Models
                     return GetPowPoint(pow2State) == POWPosition;
 
                 case StateType.Axis:
-                    break;
+                    var axisValue = Axis switch
+                    {
+                        Axises.X => state.X,
+                        Axises.Y => state.Y,
+                        Axises.Z => state.Z,
+                        Axises.RX => state.RotationX,
+                        Axises.RY => state.RotationY,
+                        Axises.RZ => state.RotationZ,
+                        Axises.Slider1 => state.Sliders[0],
+                        Axises.Slider2 => state.Sliders[1],
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                    return axisValue >= StartAxisValue && axisValue <= EndAxisValue;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            return false;
         }
 
 
