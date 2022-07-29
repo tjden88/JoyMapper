@@ -31,6 +31,8 @@ namespace JoyMapper.Services
         public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p=>p.Id);
         public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns.OrderBy(p => p.Id);
 
+        public AppSettings AppSettings => ProfilesData.AppSettings;
+
 
 
         #region Public Methods
