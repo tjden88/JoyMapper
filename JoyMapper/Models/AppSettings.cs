@@ -10,5 +10,8 @@
 
         /// <summary> Интервал задержки между нажатиями кнопок клавиатуры </summary>
         public int KeyboardInputDelay { get; set; } = 5;
+
+        /// <summary> Id текущей цветовой схемы </summary>
+        public int CurrentColorCheme { get; set; }
     }
 }

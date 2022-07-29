@@ -1,4 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Media;
+using JoyMapper.Models;
+using WPR;
 using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
@@ -12,7 +16,6 @@ namespace JoyMapper.ViewModels
         private const string HomeUrl = "https://github.com/tjden88/JoyMapper";
 
         private const string ReportProblemAddress = "https://github.com/tjden88/JoyMapper/issues";
-
 
 
         #region Props
@@ -50,6 +53,49 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
+        #region CurrentColorTheme : ColorTheme - Текущая цветовая схема
+
+        /// <summary>Текущая цветовая схема</summary>
+        private ColorTheme _CurrentColorTheme;
+
+        /// <summary>Текущая цветовая схема</summary>
+        public ColorTheme CurrentColorTheme
+        {
+            get => _CurrentColorTheme;
+            set => Set(ref _CurrentColorTheme, value);
+        }
+
+        #endregion
+
+        public IEnumerable<ColorTheme> ColorThemes => new List<ColorTheme>()
+        {
+            new ()
+            {
+                Id = 0,
+                PrimaryColor = (Color) ColorConverter.ConvertFromString("#3F51B5")!,
+                AccentColor = (Color) ColorConverter.ConvertFromString("#FF5722")!,
+            }, 
+            new ()
+            {
+                Id = 1,
+                PrimaryColor = (Color) ColorConverter.ConvertFromString("#00838f")!,
+                AccentColor = (Color) ColorConverter.ConvertFromString("#757575")!,
+            },
+            new ()
+            {
+                Id = 2,
+                PrimaryColor = (Color) ColorConverter.ConvertFromString("#757575")!,
+                AccentColor = (Color) ColorConverter.ConvertFromString("#26c6da")!,
+            },
+            new ()
+            {
+                Id = 3,
+                PrimaryColor = (Color) ColorConverter.ConvertFromString("#00e5ff")!,
+                AccentColor = (Color) ColorConverter.ConvertFromString("#311b92")!,
+            },
+
+        };
 
         #endregion
 
@@ -113,5 +159,8 @@ namespace JoyMapper.ViewModels
                 UseShellExecute = true
             });
         }
+
+
+
     }
 }
