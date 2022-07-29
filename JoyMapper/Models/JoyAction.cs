@@ -50,7 +50,7 @@ namespace JoyMapper.Models
 
         public int ButtonNumber { get; set; }
 
-        public POWPoint POWPosition { get; set; }
+        public int POWPosition { get; set; }
 
         public Axises Axis { get; set; }
 
@@ -69,11 +69,9 @@ namespace JoyMapper.Models
                     return btnValue;
 
                 case StateType.POW1:
-                    var pow1State = state.PointOfViewControllers[0];
-                    return GetPowPoint(pow1State) == POWPosition;
+                    return POWPosition == state.PointOfViewControllers[0];
                 case StateType.POW2:
-                    var pow2State = state.PointOfViewControllers[1];
-                    return GetPowPoint(pow2State) == POWPosition;
+                    return POWPosition == state.PointOfViewControllers[1];
 
                 case StateType.Axis:
                     var axisValue = Axis switch
@@ -107,7 +105,7 @@ namespace JoyMapper.Models
             return txt;
         }
 
-        private POWPoint GetPowPoint(int rawValue) =>
+        public static POWPoint GetPowPoint(int rawValue) =>
             rawValue switch
             {
                 -1 => POWPoint.None,

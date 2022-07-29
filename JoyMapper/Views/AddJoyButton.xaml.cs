@@ -58,6 +58,26 @@ namespace JoyMapper.Views
                     //Debug.WriteLine(joy.Information.InstanceName);
                     var state = joy.GetCurrentState();
 
+                    // Проверка POW
+                    if (state.PointOfViewControllers[0] > -1)
+                    {
+                        JoyName = joy.Information.InstanceName;
+                        JoyAction = new JoyAction(JoyAction.StateType.POW1)
+                        {
+                            POWPosition = state.PointOfViewControllers[0]
+                        };
+                        break;
+                    }
+                    if (state.PointOfViewControllers[1] > -1)
+                    {
+                        JoyName = joy.Information.InstanceName;
+                        JoyAction = new JoyAction(JoyAction.StateType.POW2)
+                        {
+                            POWPosition = state.PointOfViewControllers[1]
+                        };
+                        break;
+                    }
+
 
                     // Проверка кнопок
                     var pressedButton = Array.IndexOf(state.Buttons, true) + 1;
