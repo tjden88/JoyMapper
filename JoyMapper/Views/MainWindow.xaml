@@ -148,15 +148,15 @@
                         </DockPanel>
                         <DockPanel LastChildFill="False">
                             <TextBlock Text="Интервал между отправкой команд клавиатуры (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="10" MaxValue="1000" Margin="10,0"/>
+                            <controls:NumericTextBox Width="80" MinValue="1" MaxValue="500" Margin="10,0"/>
                         </DockPanel>
 
                         <Separator Background="{DynamicResource DividerColorBrush}"/>
 
-                        <StackPanel Orientation="Horizontal">
+                        <DockPanel LastChildFill="False">
                             <TextBlock Text="Внешний вид (цветовая схема)" VerticalAlignment="Center"/>
                             <ComboBox Width="200" Margin="10,20"/>
-                        </StackPanel>
+                        </DockPanel>
 
                         <Separator Background="{DynamicResource DividerColorBrush}"/>
 

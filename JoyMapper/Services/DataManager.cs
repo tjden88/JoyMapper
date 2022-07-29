@@ -19,6 +19,8 @@ namespace JoyMapper.Services
             public List<Profile> Profiles { get; set; } = new();
 
             public List<KeyPattern> KeyPatterns { get; set; } = new();
+
+            public AppSettings AppSettings { get; set; } = new();
         }
 
         private readonly string _SettingsFileName = Path.Combine(Environment.CurrentDirectory, "Config.json");
