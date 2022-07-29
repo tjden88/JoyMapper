@@ -1,7 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Views;
+using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -99,7 +102,7 @@ namespace JoyMapper.ViewModels
         public string JoyName
         {
             get => _JoyName;
-            set => Set(ref _JoyName, value);
+            set => IfSet(ref _JoyName, value).CallPropertyChanged(nameof(JoyButtonText));
         }
 
         #endregion
@@ -114,7 +117,7 @@ namespace JoyMapper.ViewModels
         public int JoyButton
         {
             get => _JoyButton;
-            set => Set(ref _JoyButton, value);
+            set => IfSet(ref _JoyButton, value).CallPropertyChanged(nameof(JoyButtonText));
         }
 
         #endregion
@@ -296,43 +299,40 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region Command SaveCommand - Сохранить паттерн
+        #region AsyncCommand SaveCommand - Сохранить паттерн
 
         /// <summary>Сохранить паттерн</summary>
-        private Command _SaveCommand;
+        private AsyncCommand _SaveCommand;
 
         /// <summary>Сохранить паттерн</summary>
-        public Command SaveCommand => _SaveCommand
-            ??= new Command(OnSaveCommandExecuted, CanSaveCommandExecute, "Сохранить паттерн");
+        public AsyncCommand SaveCommand => _SaveCommand
+            ??= new AsyncCommand(OnSaveCommandExecutedAsync, CanSaveCommandExecute, "Сохранить паттерн");
 
         /// <summary>Проверка возможности выполнения - Сохранить паттерн</summary>
         private bool CanSaveCommandExecute() => true;
 
         /// <summary>Логика выполнения - Сохранить паттерн</summary>
-        private void OnSaveCommandExecuted()
+        private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-#if RELEASE
             if (JoyName == null || JoyButton < 1)
             {
-                MessageBox.Show(App.ActiveWindow, "Не определена кнопка контроллера для назначения паттерна");
+                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
-            } 
-#endif
+            }
 
             if (PressKeyBindings.Count == 0 && ReleaseKeyBindings.Count == 0)
             {
-                MessageBox.Show(App.ActiveWindow, "Клавиатурные команды не назначены");
+                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Клавиатурные команды не назначены");
                 return;
             }
 
             if (string.IsNullOrEmpty(PatternName))
             {
-                MessageBox.Show(App.ActiveWindow, "Введите имя паттерна");
+                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Введите имя паттерна");
                 return;
             }
 
             PatternName = PatternName.Trim();
-
             ChangesSaved = true;
         }
 
