@@ -12,7 +12,9 @@
         PreviewKeyUp="AddPattern_OnPreviewKeyUp"
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
+        Focusable="True"
         mc:Ignorable="d"
+        Name="Window"
         Title="{Binding Title}" Height="550" Width="700">
     <Window.Resources>
         <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
