@@ -34,7 +34,6 @@ namespace JoyMapper.Services
         public AppSettings AppSettings => ProfilesData.AppSettings;
 
 
-
         #region Public Methods
 
 
@@ -146,10 +145,12 @@ namespace JoyMapper.Services
             SaveData();
         }
 
+        /// <summary> Сохранить профили и настройки </summary>
+        public void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+
         #endregion
 
         private Data LoadData() => _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
 
-        private void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
     }
 }

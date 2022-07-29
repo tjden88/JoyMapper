@@ -144,11 +144,11 @@
 
                         <DockPanel LastChildFill="False">
                             <TextBlock Text="Интервал опроса джойстиков (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="10" MaxValue="1000" Margin="10,0"/>
+                            <controls:NumericTextBox Width="80" MinValue="10" MaxValue="1000" Margin="10,0" Value="{Binding JoystickPollingDelay}"/>
                         </DockPanel>
                         <DockPanel LastChildFill="False">
                             <TextBlock Text="Интервал между отправкой команд клавиатуры (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="1" MaxValue="500" Margin="10,0"/>
+                            <controls:NumericTextBox Width="80" MinValue="1" MaxValue="200" Margin="10,0" Value="{Binding KeyboardDelay}"/>
                         </DockPanel>
 
                         <Separator Background="{DynamicResource DividerColorBrush}"/>

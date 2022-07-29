@@ -13,6 +13,47 @@ namespace JoyMapper.ViewModels
 
         private const string ReportProblemAddress = "https://github.com/tjden88/JoyMapper/issues";
 
+
+
+        #region Props
+
+        #region JoystickPollingDelay : int - Интервал опроса джойстиков
+
+        /// <summary>Интервал опроса джойстиков</summary>
+        public int JoystickPollingDelay
+        {
+            get => App.DataManager.AppSettings.JoystickPollingDelay;
+            set
+            {
+                if(Equals(App.DataManager.AppSettings.JoystickPollingDelay, value)) return;
+                App.DataManager.AppSettings.JoystickPollingDelay = value;
+                App.DataManager.SaveData();
+                OnPropertyChanged(nameof(JoystickPollingDelay));
+            }
+        }
+
+        #endregion
+
+        #region KeyboardDelay : int - Интервал команд клавиатуры
+
+        /// <summary>Интервал команд клавиатуры</summary>
+        public int KeyboardDelay
+        {
+            get => App.DataManager.AppSettings.KeyboardInputDelay;
+            set
+            {
+                if (Equals(App.DataManager.AppSettings.KeyboardInputDelay, value)) return;
+                App.DataManager.AppSettings.KeyboardInputDelay = value;
+                App.DataManager.SaveData();
+                OnPropertyChanged(nameof(KeyboardDelay));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+
         #region Command GoToHomepageCommand - Перейти на страницу проекта
 
         /// <summary>Перейти на страницу проекта</summary>
