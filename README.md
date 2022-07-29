@@ -18,14 +18,22 @@
 
 Главное окно программы:
 
+![Главное окно программы](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/MainWindow.jpg)
+
 Окно редактирования профиля:
+
+![Окно редактирования профиля](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/EditProfileWindow.jpg)
 
 Окно редактирования паттерна:
 
+![Окно редактирования паттерна](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/EditPatternWindow.jpg)
+
 Окно запущенного профиля:
+
+![Окно запущенного профиля](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/StartedProfile.jpg)
 
 ---
 
-### Скачать:
+### [Скачать актуальную версию](https://github.com/tjden88/JoyMapper/releases/download/Release/JoyMapper.zip)
 
 После загрузки необходимо распаковать архив в любую папку.
