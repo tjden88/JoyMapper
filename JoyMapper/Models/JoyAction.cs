@@ -63,7 +63,7 @@ namespace JoyMapper.Models
             switch (Type)
             {
                 case StateType.Button:
-                    var btnValue = state.Buttons[ButtonNumber - 1];
+                    var btnValue = state.Buttons[ButtonNumber];
                     return btnValue;
 
                 case StateType.POW1:

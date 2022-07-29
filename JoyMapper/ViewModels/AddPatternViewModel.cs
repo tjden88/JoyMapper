@@ -1,9 +1,11 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Views;
+using SharpDX.DirectInput;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -13,6 +15,11 @@ namespace JoyMapper.ViewModels
     internal class AddPatternViewModel : WindowViewModel
     {
 
+
+        public AddPatternViewModel()
+        {
+            Task.Run(CheckActionStatus);
+        }
 
         #region Props
 
@@ -122,6 +129,22 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
+        #region ActionIsActive : bool - Назначенное действие джойстика сейчас активно
+
+        /// <summary>Назначенное действие джойстика сейчас активно</summary>
+        private bool _ActionIsActive;
+
+        /// <summary>Назначенное действие джойстика сейчас активно</summary>
+        public bool ActionIsActive
+        {
+            get => _ActionIsActive;
+            set => Set(ref _ActionIsActive, value);
+        }
+
+        #endregion
+
+        
         
 
         /// <summary> Назначенное действие </summary>
@@ -340,6 +363,30 @@ namespace JoyMapper.ViewModels
         #endregion
 
         #endregion
+
+        // Проверяет сатус назначеного действия
+        private async Task CheckActionStatus()
+        {
+            while (true)
+            {
+                if (JoyAction != null)
+                {
+                    var instance = new DirectInput()
+                        .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+                        .FirstOrDefault(d=>d.ProductName == JoyName);
+                    if (instance != null)
+                    {
+                        var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
+                        joy.Acquire();
+                        joy.Poll();
+                        var state = joy.GetCurrentState();
+                        var status = JoyAction.IsActionActive(state);
+                        ActionIsActive = status;
+                    }
+                }
+                await Task.Delay(200);
+            }
+        }
 
     }
 }
