@@ -69,17 +69,32 @@
                 <DockPanel DockPanel.Dock="Bottom"  Margin="10,0">
                     <Separator DockPanel.Dock="Top"/>
                     <TextBlock Text="Текущее значение:" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
-                    <TextBlock Text="Выбранный интервал:" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
 
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Начало активной зоны оси:" VerticalAlignment="Center" />
+                        <Slider VerticalAlignment="Center" Grid.Column="1" Margin="5" Maximum="65535" IsSelectionRangeEnabled="True"
+                                SelectionStart="{Binding AxisStartValue}" 
+                                SelectionEnd="{Binding AxisFinishValue}" 
+                                Value="{Binding AxisStartValue}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding AxisStartValue}"/>
+                    </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="180"/>
                             <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Активная зона оси:"  Margin="0,5,10,5"/>
-                        <Slider VerticalAlignment="Center" Grid.Column="1" />
-                        <Slider VerticalAlignment="Center" Grid.Column="1" Value="5"/>
-
+                        <TextBlock Text="Конец активной зоны оси:"  VerticalAlignment="Center"/>
+                        <Slider VerticalAlignment="Center" Grid.Column="1" Margin="5" Maximum="65535" IsSelectionRangeEnabled="True" 
+                                SelectionStart="{Binding AxisStartValue}" 
+                                SelectionEnd="{Binding AxisFinishValue}" 
+                                Value="{Binding AxisFinishValue}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding AxisFinishValue}"/>
                     </Grid>
                 </DockPanel>
 

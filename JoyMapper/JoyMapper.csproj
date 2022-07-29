@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Styles\**" />
+    <EmbeddedResource Remove="Styles\**" />
+    <None Remove="Styles\**" />
+    <Page Remove="Styles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="joystick.ico" />
   </ItemGroup>
 
@@ -20,10 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\WPR\WPR.MVVM\WPR.MVVM.csproj" />
     <ProjectReference Include="..\..\WPR\WPR\WPR.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Styles\" />
   </ItemGroup>
 
 </Project>

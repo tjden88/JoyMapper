@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
+
         #region IsPressRecorded : bool - Нажата ли кнопка записи нажатий
 
         /// <summary>Нажата ли кнопка записи нажатий</summary>
@@ -148,12 +149,12 @@ namespace JoyMapper.ViewModels
         public string ActionIsActiveText => ActionIsActive
             ? "Активно"
             : "Неактивно";
-        
+
 
         /// <summary> Назначенное действие </summary>
         public string JoyButtonText => JoyName is null
             ? "-не определено-"
-            : JoyName + " - " + JoyAction?.ActionText; 
+            : JoyName + " - " + JoyAction?.ActionText;
 
 
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
@@ -181,6 +182,46 @@ namespace JoyMapper.ViewModels
         {
             get => _ReleaseKeyBindings;
             set => Set(ref _ReleaseKeyBindings, value);
+        }
+
+        #endregion
+
+
+        #region AxisStartValue : int - Начальное значение оси
+
+        /// <summary>Начальное значение оси</summary>
+        private int _AxisStartValue = 32768;
+
+        /// <summary>Начальное значение оси</summary>
+        public int AxisStartValue
+        {
+            get => _AxisStartValue;
+            set
+            {
+                if (Equals(_AxisStartValue, value)) return;
+                _AxisStartValue = Math.Min(value, AxisFinishValue);
+                OnPropertyChanged(nameof(AxisStartValue));
+            }
+        }
+
+        #endregion
+
+
+        #region AxisFinishValue : int - Конечное значение оси
+
+        /// <summary>Конечное значение оси</summary>
+        private int _AxisFinishValue = 65535;
+
+        /// <summary>Конечное значение оси</summary>
+        public int AxisFinishValue
+        {
+            get => _AxisFinishValue;
+            set
+            {
+                if (Equals(_AxisFinishValue, value)) return;
+                _AxisFinishValue = Math.Max(value, AxisStartValue);
+                OnPropertyChanged(nameof(AxisFinishValue));
+            }
         }
 
         #endregion
@@ -224,7 +265,7 @@ namespace JoyMapper.ViewModels
         {
             var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
             if (joyAction == null) return;
-            
+
             JoyAction = joyAction;
             JoyName = joyName;
         }
@@ -377,7 +418,7 @@ namespace JoyMapper.ViewModels
                 {
                     var instance = new DirectInput()
                         .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                        .FirstOrDefault(d=>d.ProductName == JoyName);
+                        .FirstOrDefault(d => d.ProductName == JoyName);
                     if (instance != null)
                     {
                         var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
