@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using SharpDX.DirectInput;
 
 namespace JoyMapper.Models
@@ -92,6 +93,7 @@ namespace JoyMapper.Models
 
 
         /// <summary> Описание действия джойстика </summary>
+        [JsonIgnore]
         public string ActionText
         {
             get

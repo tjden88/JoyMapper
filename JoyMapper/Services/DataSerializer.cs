@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
 
@@ -39,7 +40,7 @@ namespace JoyMapper.Services
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
+                var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, };
                 var serialized = JsonSerializer.Serialize(obj, options);
 
                 File.WriteAllText(FileName, serialized, Encoding.UTF8);
