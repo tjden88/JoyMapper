@@ -13,7 +13,7 @@
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="600" Width="700">
+        Title="{Binding Title}" Height="550" Width="700">
     <Window.Resources>
         <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
             <Grid Background="{StaticResource TransparentBrush}" Name="Grid">

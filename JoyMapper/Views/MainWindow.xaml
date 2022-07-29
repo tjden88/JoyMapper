@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Topmost="True"
         Style="{StaticResource ChromeWindow}"
-        Title="{Binding Title}" Height="450" Width="800">
+        Title="{Binding Title}" Height="600" Width="800">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
