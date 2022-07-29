@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -53,6 +54,7 @@ namespace JoyMapper.Views
                 foreach (var joy in joys)
                 {
                     joy.Poll();
+                    Debug.WriteLine(joy.Information.InstanceName);
                     var state = joy.GetCurrentState();
                     var pressedButton = Array.IndexOf(state.Buttons, true) + 1;
                     if (pressedButton > 0)

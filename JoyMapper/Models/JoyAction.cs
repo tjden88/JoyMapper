@@ -90,6 +90,13 @@ namespace JoyMapper.Models
             {
                 -1 => POWPoint.None,
                 0 => POWPoint.Up,
+                4500 => POWPoint.UpRight,
+                9000 => POWPoint.Right,
+                13500 => POWPoint.DownRight,
+                18000 => POWPoint.Down,
+                22500 => POWPoint.DownLeft,
+                27000 => POWPoint.Left,
+                31500 => POWPoint.UpLeft,
                 _ => POWPoint.None
             };
     }
