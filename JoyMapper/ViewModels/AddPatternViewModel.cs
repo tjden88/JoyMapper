@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Services;
-using JoyMapper.Views;
 using SharpDX.DirectInput;
 using WPR;
 using WPR.MVVM.Commands;
@@ -367,6 +367,7 @@ namespace JoyMapper.ViewModels
         // Проверяет сатус назначеного действия
         private async Task CheckActionStatus()
         {
+            var joystickState = new JoystickState();
             while (true)
             {
                 if (JoyAction != null)
@@ -378,13 +379,15 @@ namespace JoyMapper.ViewModels
                     {
                         var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
                         joy.Acquire();
-                        joy.Poll();
-                        var state = joy.GetCurrentState();
-                        var status = JoyAction.IsActionActive(state);
+                        await Task.Delay(10);
+                        joy.GetCurrentState(ref joystickState);
+                        var status = JoyAction.IsActionActive(ref joystickState);
                         ActionIsActive = status;
+
+                        joy.Unacquire();
                     }
                 }
-                await Task.Delay(200);
+                await Task.Delay(100);
             }
         }
 

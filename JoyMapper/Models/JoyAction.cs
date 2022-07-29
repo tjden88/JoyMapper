@@ -58,12 +58,12 @@ namespace JoyMapper.Models
 
 
         /// <summary> Проверка, активно ли в данный момент действие джойстика </summary>
-        public bool IsActionActive(JoystickState state)
+        public bool IsActionActive(ref JoystickState state)
         {
             switch (Type)
             {
                 case StateType.Button:
-                    var btnValue = state.Buttons[ButtonNumber];
+                    var btnValue = state.Buttons[ButtonNumber - 1];
                     return btnValue;
 
                 case StateType.POW1:

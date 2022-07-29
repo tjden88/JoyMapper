@@ -123,12 +123,13 @@ namespace JoyMapper.ViewModels
             foreach (var joy in joys)
                 joy.Acquire();
 
+            await Task.Delay(10);
+
             while (!_Accepted)
             {
 
                 foreach (var joy in joys)
                 {
-                    joy.Poll();
                     var state = joy.GetCurrentState();
 
                     // Проверка POW
@@ -158,21 +159,22 @@ namespace JoyMapper.ViewModels
 
                     // Проверка кнопок
                     var pressedButton = Array.LastIndexOf(state.Buttons, true) + 1;
-                    if (pressedButton > 0)
-                    {
-                        JoyName = joy.Information.InstanceName;
-                        JoyAction = new JoyAction
-                        {
-                            Type = JoyAction.StateType.Button,
-                            ButtonNumber = pressedButton
-                        };
-                        break;
-                    }
-                }
+                    if (pressedButton <= 0) continue;
 
+                    JoyName = joy.Information.InstanceName;
+                    JoyAction = new JoyAction
+                    {
+                        Type = JoyAction.StateType.Button,
+                        ButtonNumber = pressedButton
+                    };
+                    CommandManager.InvalidateRequerySuggested();
+                    break;
+                }
 
                 await Task.Delay(100);
             }
+
+            foreach (var joy in joys) joy.Unacquire();
         }
 
     }
