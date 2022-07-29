@@ -16,9 +16,12 @@ namespace JoyMapper.Services
 
         private class Data
         {
+            public AppSettings AppSettings { get; set; } = new();
+
             public List<Profile> Profiles { get; set; } = new();
 
             public List<KeyPattern> KeyPatterns { get; set; } = new();
+
         }
 
         private readonly string _SettingsFileName = Path.Combine(Environment.CurrentDirectory, "Config.json");
@@ -29,6 +32,7 @@ namespace JoyMapper.Services
         public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p=>p.Id);
         public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns.OrderBy(p => p.Id);
 
+        public AppSettings AppSettings => ProfilesData.AppSettings;
 
 
         #region Public Methods
@@ -142,10 +146,12 @@ namespace JoyMapper.Services
             SaveData();
         }
 
+        /// <summary> Сохранить профили и настройки </summary>
+        public void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+
         #endregion
 
         private Data LoadData() => _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
 
-        private void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
     }
 }

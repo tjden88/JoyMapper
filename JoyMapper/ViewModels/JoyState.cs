@@ -16,9 +16,11 @@ namespace JoyMapper.ViewModels
         private Joystick _Joystick;
         private bool _IsFault; // Ошибка в опросе
 
-        public record BtnState(int BtnNumber)
+        /// <summary> Статус действия </summary>
+        public record ActionState(JoyAction Action)
         {
-            public bool IsPressed { get; set; }
+
+            public bool IsActive { get; set; }
 
             public List<KeyboardKeyBinding> PressKeyBindings { get; set; }
             public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
@@ -37,8 +39,8 @@ namespace JoyMapper.ViewModels
             }
         }
 
-        /// <summary> Статус используемых кнопок </summary>
-        public List<BtnState> BtnStates { get; set; } = new();
+        /// <summary> Статус используемых действий </summary>
+        public List<ActionState> Actions { get; set; } = new();
 
 
         /// <summary>
@@ -46,9 +48,9 @@ namespace JoyMapper.ViewModels
         /// Сохраняет новое состояние
         /// </summary>
         /// <returns></returns>
-        public List<BtnState> GetDifferents()
+        public List<ActionState> GetDifferents()
         {
-            var result = new List<BtnState>();
+            var result = new List<ActionState>();
             try
             {
                 if (_IsFault) // была ошибка, пробуем переподключиться к джойстику
@@ -68,17 +70,16 @@ namespace JoyMapper.ViewModels
                 }
 
                 var joy = Joystick;
-                joy.Poll();
-                var state = joy.GetCurrentState().Buttons;
+                var state = joy.GetCurrentState();
 
 
-                foreach (var btnState in BtnStates)
+                foreach (var actionState in Actions)
                 {
-                    var newBtnValue = state[btnState.BtnNumber - 1];
-                    if (newBtnValue != btnState.IsPressed)
+                    var isActiveNow = actionState.Action.IsActionActive(ref state);
+                    if (isActiveNow != actionState.IsActive)
                     {
-                        result.Add(btnState);
-                        btnState.IsPressed = newBtnValue;
+                        result.Add(actionState);
+                        actionState.IsActive = isActiveNow;
                     }
                 }
             }
@@ -92,19 +93,17 @@ namespace JoyMapper.ViewModels
             return result;
         }
 
-        /// <summary> Синхронизировать состояние кнопок </summary>
-        public void UpdateBtnStatus()
+        /// <summary> Синхронизировать состояние </summary>
+        public void SyncStatus()
         {
             try
             {
                 var joy = Joystick;
                 joy.Poll();
-                var state = joy.GetCurrentState().Buttons;
-                foreach (var btnState in BtnStates)
-                {
-                    var newBtnValue = state[btnState.BtnNumber - 1];
-                    btnState.IsPressed = newBtnValue;
-                }
+                var state = joy.GetCurrentState();
+                foreach (var actionState in Actions)
+                    actionState.IsActive = actionState.Action.IsActionActive(ref state);
+
             }
             catch (Exception e)
             {

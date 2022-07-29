@@ -14,8 +14,17 @@ namespace JoyMapper.ViewModels
 {
     internal partial class MainWindowViewModel : WindowViewModel
     {
-        
+
         private readonly PatternService _PatternService = new();
+
+        public MainWindowViewModel()
+        {
+            AppLog.Report += msg => LogMessages.Add(msg);
+            Title = "JoyMapper " + App.AppVersion;
+            CurrentColorTheme = ColorThemes
+                .FirstOrDefault(c => c.Id == App.DataManager.AppSettings.CurrentColorCheme)
+                                ?? ColorThemes.First();
+        }
 
 
         #region Props
@@ -202,7 +211,7 @@ namespace JoyMapper.ViewModels
                     .Where(p => p.IsSelected)
                     .Select(p => p.PatternId)
                     .ToList(),
-                Id=vm.Id,
+                Id = vm.Id,
             };
 
             App.DataManager.UpdateProfile(profile);

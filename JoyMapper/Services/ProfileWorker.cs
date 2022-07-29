@@ -14,10 +14,10 @@ namespace JoyMapper.Services
     internal class ProfileWorker
     {
         // задержка опроса джойстика
-        private const int PollingDelay = 50;
+        private int _PollingDelay ;
 
         // задержка между командами ввода клавиатуры
-        private const int InputDelay = 5;
+        private int _InputDelay ;
 
 
         private readonly KeyboardSender _Sender = new();
@@ -35,6 +35,8 @@ namespace JoyMapper.Services
             if (IsActive)
                 Stop();
 
+            _PollingDelay = App.DataManager.AppSettings.JoystickPollingDelay;
+            _InputDelay = App.DataManager.AppSettings.KeyboardInputDelay;
 
             var keyPatterns = App.DataManager.KeyPatterns
                 .Where(p => profile.KeyPatternsIds.Contains(p.Id))
@@ -70,9 +72,9 @@ namespace JoyMapper.Services
                 .Select(joy => new JoyState
                 {
                     Joystick = joy,
-                    BtnStates = keyPatterns
+                    Actions = keyPatterns
                         .Where(p=>p.JoyName == joy.Information.InstanceName)
-                        .Select(p=> new JoyState.BtnState(p.JoyKey))
+                        .Select(p=> new JoyState.ActionState(p.JoyAction))
                         .ToList()
                 })
                 .ToList();
@@ -80,15 +82,15 @@ namespace JoyMapper.Services
 
             foreach (var joyState in _UsedInProfileJoystickStates)
             {
-                foreach (var btnState in joyState.BtnStates)
+                foreach (var actionState in joyState.Actions)
                 {
                     var pattern = keyPatterns.First(p =>
-                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyKey == btnState.BtnNumber);
-                    btnState.PressKeyBindings = pattern.PressKeyBindings;
-                    btnState.ReleaseKeyBindings = pattern.ReleaseKeyBindings;
+                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyAction == actionState.Action);
+                    actionState.PressKeyBindings = pattern.PressKeyBindings;
+                    actionState.ReleaseKeyBindings = pattern.ReleaseKeyBindings;
                 }
 
-                joyState.UpdateBtnStatus();
+                joyState.SyncStatus();
             }
 
             IsActive = true;
@@ -107,7 +109,7 @@ namespace JoyMapper.Services
         public void Stop()
         {
             IsActive = false;
-            Thread.Sleep(PollingDelay + 10);
+            Thread.Sleep(_PollingDelay + 10);
         }
 
         private async Task Work()
@@ -118,11 +120,11 @@ namespace JoyMapper.Services
                 {
                     var diff = joyState.GetDifferents();
                     foreach (var diffState in diff)
-                        await SendCommands(diffState.IsPressed
+                        await SendCommands(diffState.IsActive
                             ? diffState.PressKeyBindings
                             : diffState.ReleaseKeyBindings);
                 }
-                await Task.Delay(PollingDelay);
+                await Task.Delay(_PollingDelay);
             }
         }
 
@@ -136,7 +138,7 @@ namespace JoyMapper.Services
                 else
                     _Sender.ReleaseKey(binding.KeyCode);
 
-                await Task.Delay(InputDelay);
+                await Task.Delay(_InputDelay);
             }
 
         }

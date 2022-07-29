@@ -1,0 +1,9 @@
+﻿{
+  "AppSettings": {
+    "JoystickPollingDelay": 50,
+    "KeyboardInputDelay": 5,
+    "CurrentColorCheme": 0
+  },
+  "Profiles": [],
+  "KeyPatterns": []
+}

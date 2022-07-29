@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using JoyMapper.Models;
-using JoyMapper.Views;
+using JoyMapper.Services;
+using SharpDX.DirectInput;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -13,6 +15,11 @@ namespace JoyMapper.ViewModels
     internal class AddPatternViewModel : WindowViewModel
     {
 
+
+        public AddPatternViewModel()
+        {
+            Task.Run(CheckActionStatus);
+        }
 
         #region Props
 
@@ -46,7 +53,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
+
         #region IsPressRecorded : bool - Нажата ли кнопка записи нажатий
 
         /// <summary>Нажата ли кнопка записи нажатий</summary>
@@ -108,24 +115,48 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region JoyButton : int - Номер кнопки назначенного джойстика
+        #region JoyAction : JoyAction - Действие джойстика
 
-        /// <summary>Номер кнопки назначенного джойстика</summary>
-        private int _JoyButton;
+        /// <summary>Действие джойстика</summary>
+        private JoyAction _JoyAction;
 
-        /// <summary>Номер кнопки назначенного джойстика</summary>
-        public int JoyButton
+        /// <summary>Действие джойстика</summary>
+        public JoyAction JoyAction
         {
-            get => _JoyButton;
-            set => IfSet(ref _JoyButton, value).CallPropertyChanged(nameof(JoyButtonText));
+            get => _JoyAction;
+            set => IfSet(ref _JoyAction, value)
+                .CallPropertyChanged(nameof(JoyButtonText))
+                .CallPropertyChanged(nameof(AxisSettingsEnable));
         }
 
         #endregion
 
-        /// <summary> Назначенная кнопка </summary>
+
+        #region ActionIsActive : bool - Назначенное действие джойстика сейчас активно
+
+        /// <summary>Назначенное действие джойстика сейчас активно</summary>
+        private bool _ActionIsActive;
+
+        /// <summary>Назначенное действие джойстика сейчас активно</summary>
+        public bool ActionIsActive
+        {
+            get => _ActionIsActive;
+            set => IfSet(ref _ActionIsActive, value)
+                .CallPropertyChanged(nameof(ActionIsActiveText));
+        }
+
+        #endregion
+
+        /// <summary> Текст активности назначенного действия </summary>
+        public string ActionIsActiveText => ActionIsActive
+            ? "Активно"
+            : "Неактивно";
+
+
+        /// <summary> Назначенное действие </summary>
         public string JoyButtonText => JoyName is null
             ? "-не определено-"
-            : JoyName + ", Кнопка " + JoyButton; 
+            : JoyName + " - " + JoyAction?.ActionText;
 
 
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
@@ -158,6 +189,73 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region AxisStartValue : int - Начальное значение оси
+
+        /// <summary>Начальное значение оси</summary>
+        private int _AxisStartValue = 32768;
+
+        /// <summary>Начальное значение оси</summary>
+        public int AxisStartValue
+        {
+            get => _AxisStartValue;
+            set
+            {
+                if (Equals(_AxisStartValue, value)) return;
+                _AxisStartValue = Math.Min(value, AxisFinishValue);
+                if (JoyAction?.Type == JoyAction.StateType.Axis)
+                {
+                    JoyAction.StartAxisValue = _AxisStartValue;
+                }
+                OnPropertyChanged(nameof(AxisStartValue));
+            }
+        }
+
+        #endregion
+
+
+        #region AxisFinishValue : int - Конечное значение оси
+
+        /// <summary>Конечное значение оси</summary>
+        private int _AxisFinishValue = 65535;
+
+        /// <summary>Конечное значение оси</summary>
+        public int AxisFinishValue
+        {
+            get => _AxisFinishValue;
+            set
+            {
+                if (Equals(_AxisFinishValue, value)) return;
+                _AxisFinishValue = Math.Max(value, AxisStartValue);
+                if (JoyAction?.Type == JoyAction.StateType.Axis)
+                {
+                    JoyAction.EndAxisValue = _AxisFinishValue;
+                }
+                OnPropertyChanged(nameof(AxisFinishValue));
+            }
+        }
+
+        #endregion
+
+        #region CurrentAxisValue : int - Текущее положение оси
+
+        /// <summary>Текущее положение оси</summary>
+        private int _CurrentAxisValue;
+
+        /// <summary>Текущее положение оси</summary>
+        public int CurrentAxisValue
+        {
+            get => _CurrentAxisValue;
+            private set => Set(ref _CurrentAxisValue, value);
+        }
+
+        #endregion
+
+        
+
+        /// <summary> Включить настройки оси </summary>
+        public bool AxisSettingsEnable => JoyAction?.Type == JoyAction.StateType.Axis;
+
+
         #endregion
 
 
@@ -173,7 +271,7 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnAttachJoyButtonCommandExecuted, CanAttachButtonIfEmptyCommandExecute, "Назначить кнопку джойстика если не назначена");
 
         /// <summary>Проверка возможности выполнения - Назначить кнопку джойстика если не назначена</summary>
-        private bool CanAttachButtonIfEmptyCommandExecute() => JoyButton == 0;
+        private bool CanAttachButtonIfEmptyCommandExecute() => JoyAction == null;
 
 
         #endregion
@@ -194,12 +292,16 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
         private void OnAttachJoyButtonCommandExecuted()
         {
-            var wnd = new AddJoyButton { Owner = App.ActiveWindow};
-            var result = wnd.ShowDialog();
-            if (result != true) return;
-            JoyButton = wnd.JoyKey;
-            JoyName = wnd.JoyName;
+            var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
+            if (joyAction == null) return;
 
+            if (joyAction.Type == JoyAction.StateType.Axis)
+            {
+                joyAction.StartAxisValue = AxisStartValue;
+                joyAction.EndAxisValue = AxisFinishValue;
+            }
+            JoyAction = joyAction;
+            JoyName = joyName;
         }
 
         #endregion
@@ -314,7 +416,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Сохранить паттерн</summary>
         private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-            if (JoyName == null || JoyButton < 1)
+            if (JoyName == null || JoyAction == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
@@ -339,6 +441,51 @@ namespace JoyMapper.ViewModels
         #endregion
 
         #endregion
+
+        // Проверяет сатус назначеного действия
+        private async Task CheckActionStatus()
+        {
+            var joystickState = new JoystickState();
+            while (!ChangesSaved)
+            {
+                if (JoyAction != null)
+                {
+                    var instance = new DirectInput()
+                        .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+                        .FirstOrDefault(d => d.ProductName == JoyName);
+                    if (instance != null)
+                    {
+                        var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
+                        joy.Acquire();
+                        joy.Poll();
+                        await Task.Delay(100);
+                        joy.GetCurrentState(ref joystickState);
+                        var status = JoyAction.IsActionActive(ref joystickState);
+                        ActionIsActive = status;
+                        if (JoyAction.Type == JoyAction.StateType.Axis)
+                        {
+                            // Обновить значение оси
+
+                            var newValue = JoyAction.Axis switch
+                            {
+                                JoyAction.Axises.X => joystickState.X,
+                                JoyAction.Axises.Y => joystickState.Y,
+                                JoyAction.Axises.Z => joystickState.Z,
+                                JoyAction.Axises.RX => joystickState.RotationX,
+                                JoyAction.Axises.RY => joystickState.RotationY,
+                                JoyAction.Axises.RZ => joystickState.RotationZ,
+                                JoyAction.Axises.Slider1 => joystickState.Sliders[0],
+                                JoyAction.Axises.Slider2 => joystickState.Sliders[1],
+                                _ => throw new ArgumentOutOfRangeException()
+                            };
+                            CurrentAxisValue = newValue;
+                        }
+
+                        joy.Unacquire();
+                    }
+                }
+            }
+        }
 
     }
 }

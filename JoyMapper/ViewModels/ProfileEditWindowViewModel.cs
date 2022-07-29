@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
 using WPR;
@@ -101,7 +100,7 @@ namespace JoyMapper.ViewModels
                 IsSelected = profile.KeyPatternsIds.Contains(p.Id),
                 PatternName = p.Name,
                 PatternId = p.Id,
-                Description = p.JoyName + " - Кнопка " + p.JoyKey
+                Description = p.JoyName + " - " + p.JoyAction.ActionText
             });
 
             SelectedPatterns = new(mapped);
