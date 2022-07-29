@@ -13,7 +13,6 @@ namespace JoyMapper.ViewModels
     /// </summary>
     internal class JoyState
     {
-        private Joystick _Joystick;
         private bool _IsFault; // Ошибка в опросе
 
         /// <summary> Статус действия </summary>
@@ -27,7 +26,8 @@ namespace JoyMapper.ViewModels
 
         }
 
-
+        private string _JoystickName;
+        private Joystick _Joystick;
         /// <summary> Привязанный джойстик </summary>
         public Joystick Joystick
         {
@@ -36,6 +36,7 @@ namespace JoyMapper.ViewModels
             {
                 _Joystick = value;
                 _Joystick.Acquire();
+                _JoystickName = value?.Information.InstanceName;
             }
         }
 
@@ -57,13 +58,13 @@ namespace JoyMapper.ViewModels
                 {
                     var newJoy = new DirectInput()
                         .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                        .FirstOrDefault(d => d.InstanceName == Joystick.Information.InstanceName);
+                        .FirstOrDefault(d => d.InstanceName == _JoystickName);
                     if (newJoy != null)
                     {
                         _IsFault = false;
                         Joystick.Dispose();
                         Joystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
-                        AppLog.LogMessage($"Устройство восстановлено - {Joystick.Information.InstanceName}");
+                        AppLog.LogMessage($"Устройство восстановлено - {_JoystickName}");
                     }
                     else
                         return result;
@@ -86,7 +87,7 @@ namespace JoyMapper.ViewModels
             catch (Exception e)
             {
                 Debug.WriteLine(e);
-                AppLog.LogMessage($"Ошибка опроса устройства - {Joystick.Information.InstanceName}", LogMessage.MessageType.Error);
+                AppLog.LogMessage($"Ошибка опроса устройства - {_JoystickName}", LogMessage.MessageType.Error);
                 _IsFault = true;
             }
 
