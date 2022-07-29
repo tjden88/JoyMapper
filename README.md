@@ -28,6 +28,8 @@
 
 ![Окно редактирования паттерна](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/EditPatternWindow.jpg)
 
+![Окно редактирования паттерна оси](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/EditAxisPatternWindow.jpg)
+
 Окно запущенного профиля:
 
 ![Окно запущенного профиля](https://github.com/tjden88/JoyMapper/blob/master/JoyMapper/Help/StartedProfile.jpg)
