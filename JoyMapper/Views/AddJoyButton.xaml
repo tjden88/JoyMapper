@@ -12,10 +12,10 @@
         mc:Ignorable="d"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Title="Нажмите кнопку на джойстике" Width="320" Height="150">
+        Title="Нажмите кнопку / ось на джойстике" Width="320" Height="150">
     <StackPanel Margin="10" VerticalAlignment="Center">
         <TextBlock Name="JoyNameText" HorizontalAlignment="Center" Text="Джойстик...."  FontSize="14" Margin="5" />
-        <TextBlock Name="ButtonNumberText" HorizontalAlignment="Center" Text="Кнопка...." FontSize="14"/>
+        <TextBlock Name="ButtonActionText" HorizontalAlignment="Center" Text="Действие...." FontSize="14"/>
         <Button Content="ПРИНЯТЬ" IsDefault="True"
                 Command="{Binding AcceptButtonCommand}" HorizontalAlignment="Center" Margin="10"/>
     </StackPanel>

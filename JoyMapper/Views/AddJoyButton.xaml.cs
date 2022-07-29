@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using JoyMapper.Models;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 
@@ -24,7 +24,8 @@ namespace JoyMapper.Views
 
 
         public string JoyName { get; set; }
-        public int JoyKey { get; set; }
+
+        public JoyAction JoyAction { get; set; }
 
         private bool _Accepted;
 
@@ -53,16 +54,22 @@ namespace JoyMapper.Views
 
                 foreach (var joy in joys)
                 {
-                    joy.Poll();
-                    Debug.WriteLine(joy.Information.InstanceName);
+                    joy.Poll(); 
+                    //Debug.WriteLine(joy.Information.InstanceName);
                     var state = joy.GetCurrentState();
+
+
+                    // Проверка кнопок
                     var pressedButton = Array.IndexOf(state.Buttons, true) + 1;
                     if (pressedButton > 0)
                     {
                         JoyName = joy.Information.InstanceName;
-                        JoyKey = pressedButton;
+                        JoyAction = new JoyAction(JoyAction.StateType.Button)
+                        {
+                            ButtonNumber = pressedButton
+                        };
                         JoyNameText.Text = JoyName;
-                        ButtonNumberText.Text = "Кнопка " + JoyKey;
+                        ButtonActionText.Text = "Кнопка " + pressedButton;
                         CommandManager.InvalidateRequerySuggested();
                         break;
                     }
@@ -83,7 +90,7 @@ namespace JoyMapper.Views
             ??= new Command(OnAcceptButtonCommandExecuted, CanAcceptButtonCommandExecute, "Принять изменения");
 
         /// <summary>Проверка возможности выполнения - Принять изменения</summary>
-        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyKey > 0;
+        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyAction != null;
 
         /// <summary>Логика выполнения - Принять изменения</summary>
         private void OnAcceptButtonCommandExecuted()

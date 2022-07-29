@@ -8,7 +8,7 @@ namespace JoyMapper.Models
     /// Действие джойстикка (кнопка, указатель, ось)
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    internal class JoyAction
+    public class JoyAction
     {
 
         public JoyAction(StateType stateType) => Type = stateType;
@@ -58,6 +58,7 @@ namespace JoyMapper.Models
 
         public int EndAxisValue { get; set; }
 
+
         /// <summary> Проверка, активно ли в данный момент действие джойстика </summary>
         public bool IsActionActive(JoystickState state)
         {
@@ -93,6 +94,18 @@ namespace JoyMapper.Models
             }
         }
 
+        /// <summary> Описание действия джойстика </summary>
+        public string ActionText()
+        {
+            var txt = Type switch
+            {
+                StateType.Axis => "Ось " + Axis,
+                StateType.Button => "Кнопка " + ButtonNumber,
+                StateType.POW1 or StateType.POW2 => "Переключатель вида " + POWPosition,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            return txt;
+        }
 
         private POWPoint GetPowPoint(int rawValue) =>
             rawValue switch

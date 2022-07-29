@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Views;
 using WPR;
@@ -108,24 +107,26 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region JoyButton : int - Номер кнопки назначенного джойстика
+        #region JoyAction : JoyAction - Действие джойстика
 
-        /// <summary>Номер кнопки назначенного джойстика</summary>
-        private int _JoyButton;
+        /// <summary>Действие джойстика</summary>
+        private JoyAction _JoyAction;
 
-        /// <summary>Номер кнопки назначенного джойстика</summary>
-        public int JoyButton
+        /// <summary>Действие джойстика</summary>
+        public JoyAction JoyAction
         {
-            get => _JoyButton;
-            set => IfSet(ref _JoyButton, value).CallPropertyChanged(nameof(JoyButtonText));
+            get => _JoyAction;
+            set => Set(ref _JoyAction, value);
         }
 
         #endregion
 
-        /// <summary> Назначенная кнопка </summary>
+        
+
+        /// <summary> Назначенное действие </summary>
         public string JoyButtonText => JoyName is null
             ? "-не определено-"
-            : JoyName + ", Кнопка " + JoyButton; 
+            : JoyName + JoyAction.ActionText(); 
 
 
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
@@ -173,7 +174,7 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnAttachJoyButtonCommandExecuted, CanAttachButtonIfEmptyCommandExecute, "Назначить кнопку джойстика если не назначена");
 
         /// <summary>Проверка возможности выполнения - Назначить кнопку джойстика если не назначена</summary>
-        private bool CanAttachButtonIfEmptyCommandExecute() => JoyButton == 0;
+        private bool CanAttachButtonIfEmptyCommandExecute() => JoyAction == null;
 
 
         #endregion
@@ -197,7 +198,7 @@ namespace JoyMapper.ViewModels
             var wnd = new AddJoyButton { Owner = App.ActiveWindow};
             var result = wnd.ShowDialog();
             if (result != true) return;
-            JoyButton = wnd.JoyKey;
+            JoyAction = wnd.JoyAction;
             JoyName = wnd.JoyName;
 
         }
@@ -314,7 +315,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Сохранить паттерн</summary>
         private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-            if (JoyName == null || JoyButton < 1)
+            if (JoyName == null || JoyAction == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
