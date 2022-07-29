@@ -117,7 +117,7 @@ namespace JoyMapper.ViewModels
         public JoyAction JoyAction
         {
             get => _JoyAction;
-            set => Set(ref _JoyAction, value);
+            set => IfSet(ref _JoyAction, value).CallPropertyChanged(nameof(JoyButtonText));
         }
 
         #endregion
@@ -127,7 +127,7 @@ namespace JoyMapper.ViewModels
         /// <summary> Назначенное действие </summary>
         public string JoyButtonText => JoyName is null
             ? "-не определено-"
-            : JoyName + JoyAction.ActionText(); 
+            : JoyName + " - " + JoyAction.ActionText(); 
 
 
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки

@@ -21,6 +21,7 @@ namespace JoyMapper.Services
             };
 
             var mapJoyAction = wnd.ShowDialog() != true ? null : vm.JoyAction;
+            JoyName = vm.JoyName;
             return mapJoyAction;
         }
     }
