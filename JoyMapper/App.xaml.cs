@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using JoyMapper.Services;
 
 namespace JoyMapper
@@ -9,8 +10,16 @@ namespace JoyMapper
     public partial class App : Application
     {
 
+        /// <summary> Версия приложения </summary>
+        internal const string AppVersion = "1.1";
+
+        /// <summary> Менеджер данных профилей текущей сессии </summary>
         internal static DataManager DataManager { get; } = new();
- 
+
+        /// <summary> Активное окно </summary>
+        internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
+
+
     }
 
 }

@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\WPR\WPR.MVVM\WPR.MVVM.csproj" />
+    <ProjectReference Include="..\..\WPR\WPR\WPR.csproj" />
   </ItemGroup>
 
 </Project>

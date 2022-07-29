@@ -40,6 +40,14 @@ namespace JoyMapper.Services
                 .Where(p => profile.KeyPatternsIds.Contains(p.Id))
                 .ToArray();
 
+            if (keyPatterns.Length == 0)
+            {
+                AppLog.LogMessage("В выбранном профиле не назначено ни одного паттерна! Необходимо отредактировать профиль или запустить другой"
+                    , LogMessage.MessageType.Error);
+                return;
+            }
+
+
             var usedJoyNames = keyPatterns
                 .Select(p => p.JoyName)
                 .Distinct()
@@ -51,12 +59,12 @@ namespace JoyMapper.Services
                 .Select(d => new Joystick(new DirectInput(), d.InstanceGuid))
                 .ToArray();
 
-            if (usedJoysticks.Length < usedJoyNames.Length)
+            if (usedJoysticks.Length == 0)
             {
-                AppLog.LogMessage($"Найдено {usedJoysticks.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
-                                  $"Подключите нужные устройства и перезапустите профиль");
+                AppLog.LogMessage("Джойстики, используемые в этом профиле, не найдены. Подключите их и перезапустите профиль"
+                    , LogMessage.MessageType.Error);
+                return;
             }
-
 
             _UsedInProfileJoystickStates = usedJoysticks
                 .Select(joy => new JoyState
@@ -85,6 +93,14 @@ namespace JoyMapper.Services
 
             IsActive = true;
             Task.Run(Work);
+            AppLog.LogMessage("Профиль запущен");
+
+            if (usedJoysticks.Length < usedJoyNames.Length)
+            {
+                AppLog.LogMessage($"Найдено {usedJoysticks.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
+                                  $"Подключите нужные устройства и перезапустите профиль", LogMessage.MessageType.Warning);
+            }
+
         }
 
         /// <summary> Остановить отслеживание </summary>

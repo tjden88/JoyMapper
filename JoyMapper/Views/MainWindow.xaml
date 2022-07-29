@@ -6,15 +6,11 @@
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:models="clr-namespace:JoyMapper.Models"
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
+        xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
-        Title="JoyMapper" Height="450" Width="800">
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="10"/>
-        </Style>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </Window.Resources>
+        Topmost="True"
+        Style="{StaticResource ChromeWindow}"
+        Title="{Binding Title}" Height="450" Width="800">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
@@ -26,78 +22,161 @@
         <viewModels:MainWindowViewModel/>
     </d:Window.DataContext>
     <Grid>
-        <TabControl>
-            <TabItem Header="Профили">
-                <DockPanel>
-                    <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
-                        <Button Content="Создать" Command="{Binding CreateProfileCommand}" />
-                        <Button Content="Сделать копию" Command="{Binding CopyProfileCommand}" />
-                        <Button Content="Редактировать" Command="{Binding EditProfileCommand}"/>
-                        <Button Content="Удалить" Command="{Binding DeleteProfileCommand}" />
-                    </UniformGrid>
+        <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
+            <TabItem>
+                <TabItem.Header>
+                    <controls:WPRIconText Text="Профили" IconSource="CameraControl" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                </TabItem.Header>
 
-                    <ListBox ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
+                <!--Профили-->
+                <controls:WPRCard>
+                    <DockPanel>
+                        <ToolBar DockPanel.Dock="Top" Margin="5">
+                            <Button Command="{Binding CreateProfileCommand}"
+                                    ToolTip="{Binding CreateProfileCommand}">
+                                <Button.Content>
+                                    <controls:WPRIconText Text="Новый профиль" IconSource="Add"  FontWeight="Bold"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding CopyProfileCommand}"
+                                    ToolTip="{Binding CopyProfileCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="ContentCopy"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding EditProfileCommand}"
+                                    ToolTip="{Binding EditProfileCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="EditOutline"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding DeleteProfileCommand}"
+                                    ToolTip="{Binding DeleteProfileCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </ToolBar>
 
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:Profile}">
-                                <DockPanel LastChildFill="False" Margin="10,5">
-                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
-                                    <Button DockPanel.Dock="Right" Padding="20,5" Content="Запуск" FontSize="20"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
-                                            CommandParameter="{Binding}"/>
-                                </DockPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
+                        <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
+                        <ListBox Margin="5" ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:Profile}">
+                                    <DockPanel LastChildFill="False" Margin="10,5">
+                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                                        <Button DockPanel.Dock="Right" Padding="30,10" Content="Запуск" FontSize="20"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </controls:WPRCard>
             </TabItem>
-            <TabItem Header="Паттерны">
-                <DockPanel>
-                    <UniformGrid DockPanel.Dock="Top" Columns="4" HorizontalAlignment="Left">
-                        <Button Content="Создать" Command="{Binding CreatePatternCommand}" />
-                        <Button Content="Сделать копию" Command="{Binding CopyPatternCommand}" />
-                        <Button Content="Редактировать" Command="{Binding EditPatternCommand}"/>
-                        <Button Content="Удалить" Command="{Binding DeletePatternCommand}"/>
-                    </UniformGrid>
 
-                    <ListBox ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+            <TabItem>
+                <TabItem.Header>
+                    <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                </TabItem.Header>
 
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:KeyPattern}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
-                                    <WrapPanel>
-                                        <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                        <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
-                                    </WrapPanel>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
+                <!--Профили-->
+                <controls:WPRCard>
+                    <DockPanel>
+                        <ToolBar DockPanel.Dock="Top" Margin="5">
+                            <Button Command="{Binding CreatePatternCommand}"
+                                    ToolTip="{Binding CreatePatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIconText Text="Новый паттерн" IconSource="Add"  FontWeight="Bold"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding CopyPatternCommand}"
+                                    ToolTip="{Binding CopyPatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="ContentCopy"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding EditPatternCommand}"
+                                    ToolTip="{Binding EditPatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="EditOutline"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding DeletePatternCommand}"
+                                    ToolTip="{Binding DeletePatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </ToolBar>
+
+                        <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
+
+                        <ListBox Margin="5" ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
+                                        <WrapPanel>
+                                            <TextBlock Margin="5" Text="{Binding JoyName}"/>
+                                            <TextBlock Margin="5" Text="{Binding JoyKey, StringFormat='Кнопка: {0}'}"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </controls:WPRCard>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <controls:WPRIconText Text="Настройки" IconSource="Settings" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                </TabItem.Header>
+
+                <controls:WPRCard>
+
+                </controls:WPRCard>
             </TabItem>
 
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
-        <Border Background="LightGray" Visibility="{Binding IsProfileStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Border Background="{DynamicResource LightPrimaryColorBrush}"
+                Visibility="{Binding IsProfileStarted, Converter={StaticResource Bool2VisibilityConverter}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
-                    <TextBlock Margin="10" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
-                    <Button Content="Остановить" FontSize="30" Foreground="RoyalBlue" Background="White" Padding="10"
-                            Command="{Binding StopProfileCommand}"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
+                    <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
+                    <Button Padding="40, 10"
+                            HorizontalAlignment="Center"
+                            Command="{Binding StopProfileCommand}"
+                            ToolTip="{Binding StopProfileCommand}">
+                        <Button.Content>
+                            <TextBlock Text="Остановить" FontSize="20"/>
+                        </Button.Content>
+                    </Button>
                 </StackPanel>
-                <ScrollViewer Margin="10" Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <TextBlock TextAlignment="Center" Text="{Binding LogText}" Foreground="Red" FontSize="16"></TextBlock>
+                <ScrollViewer Margin="10" Grid.Row="1" Foreground="{DynamicResource DarkPrimaryColorBrush}">
+                    <ItemsControl ItemsSource="{Binding LogMessages}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:LogMessage}">
+                                
+                                <TextBlock Margin="5" TextAlignment="Center" Text="{Binding}" FontSize="16">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush Color="{Binding Color}"/>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Grid>
         </Border>

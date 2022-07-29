@@ -1,4 +1,5 @@
 ﻿using System;
+using JoyMapper.Models;
 
 namespace JoyMapper.Services
 {
@@ -7,12 +8,10 @@ namespace JoyMapper.Services
     /// </summary>
     internal static class AppLog
     {
-        public static Action<string> Report;
 
-        public static void LogMessage(string Message)
-        {
-            var msg = DateTime.Now.ToString("T") + " - " + Message;
-            Report?.Invoke(msg);
-        }
+        public static Action<LogMessage> Report;
+
+        public static void LogMessage( string Message, LogMessage.MessageType messageType = Models.LogMessage.MessageType.Info) => 
+            Report?.Invoke(new LogMessage(messageType, Message));
     }
 }
