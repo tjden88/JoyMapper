@@ -22,14 +22,14 @@ namespace JoyMapper.Models
         public enum POWPoint
         {
             None,
-            Up,
-            Down,
-            Left,
-            Right,
-            UpLeft,
-            DownLeft,
-            DownRight,
-            UpRight,
+            Вверх,
+            Вниз,
+            Влево,
+            Вправо,
+            ВверхВлево,
+            ВнизВлево,
+            ВнизВправо,
+            ВверхВправо,
         }
 
         public enum Axises
@@ -97,7 +97,8 @@ namespace JoyMapper.Models
             {
                 StateType.Axis => "Ось " + Axis,
                 StateType.Button => "Кнопка " + ButtonNumber,
-                StateType.POW1 or StateType.POW2 => "Переключатель вида " + POWPosition,
+                StateType.POW1 => "Переключатель вида №1 " + GetPowPoint(POWPosition),
+                StateType.POW2 => "Переключатель вида №2 " + GetPowPoint(POWPosition),
                 _ => throw new ArgumentOutOfRangeException()
             };
             return txt;
@@ -107,14 +108,14 @@ namespace JoyMapper.Models
             rawValue switch
             {
                 -1 => POWPoint.None,
-                0 => POWPoint.Up,
-                4500 => POWPoint.UpRight,
-                9000 => POWPoint.Right,
-                13500 => POWPoint.DownRight,
-                18000 => POWPoint.Down,
-                22500 => POWPoint.DownLeft,
-                27000 => POWPoint.Left,
-                31500 => POWPoint.UpLeft,
+                0 => POWPoint.Вверх,
+                4500 => POWPoint.ВверхВправо,
+                9000 => POWPoint.Вправо,
+                13500 => POWPoint.ВнизВправо,
+                18000 => POWPoint.Вниз,
+                22500 => POWPoint.ВнизВлево,
+                27000 => POWPoint.Влево,
+                31500 => POWPoint.ВверхВлево,
                 _ => POWPoint.None
             };
     }

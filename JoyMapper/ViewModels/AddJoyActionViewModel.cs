@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using JoyMapper.Models;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
@@ -128,7 +129,6 @@ namespace JoyMapper.ViewModels
                 foreach (var joy in joys)
                 {
                     joy.Poll();
-                    //Debug.WriteLine(joy.Information.InstanceName);
                     var state = joy.GetCurrentState();
 
                     // Проверка POW
@@ -140,6 +140,7 @@ namespace JoyMapper.ViewModels
                             Type = JoyAction.StateType.POW1,
                             POWPosition = state.PointOfViewControllers[0]
                         };
+                        CommandManager.InvalidateRequerySuggested();
                         break;
                     }
                     if (state.PointOfViewControllers[1] > -1)
@@ -150,12 +151,13 @@ namespace JoyMapper.ViewModels
                             Type = JoyAction.StateType.POW2,
                             POWPosition = state.PointOfViewControllers[1]
                         };
+                        CommandManager.InvalidateRequerySuggested();
                         break;
                     }
 
 
                     // Проверка кнопок
-                    var pressedButton = Array.IndexOf(state.Buttons, true) + 1;
+                    var pressedButton = Array.LastIndexOf(state.Buttons, true) + 1;
                     if (pressedButton > 0)
                     {
                         JoyName = joy.Information.InstanceName;

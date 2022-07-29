@@ -20,7 +20,8 @@ namespace JoyMapper.Services
                 DataContext = vm,
             };
 
-            return wnd.ShowDialog() != true ? null : vm.JoyAction;
+            var mapJoyAction = wnd.ShowDialog() != true ? null : vm.JoyAction;
+            return mapJoyAction;
         }
     }
 }
