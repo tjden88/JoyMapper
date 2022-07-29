@@ -11,11 +11,11 @@ using WPR.MVVM.Commands;
 namespace JoyMapper.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AddJoyButton.xaml
+    /// Логика взаимодействия для AddJoyAction.xaml
     /// </summary>
-    public partial class AddJoyButton : Window
+    public partial class AddJoyAction : Window
     {
-        public AddJoyButton()
+        public AddJoyAction()
         {
             InitializeComponent();
             LoadJoyDevices();
@@ -62,8 +62,9 @@ namespace JoyMapper.Views
                     if (state.PointOfViewControllers[0] > -1)
                     {
                         JoyName = joy.Information.InstanceName;
-                        JoyAction = new JoyAction(JoyAction.StateType.POW1)
+                        JoyAction = new JoyAction
                         {
+                            Type = JoyAction.StateType.POW1,
                             POWPosition = state.PointOfViewControllers[0]
                         };
                         break;
@@ -71,8 +72,9 @@ namespace JoyMapper.Views
                     if (state.PointOfViewControllers[1] > -1)
                     {
                         JoyName = joy.Information.InstanceName;
-                        JoyAction = new JoyAction(JoyAction.StateType.POW2)
+                        JoyAction = new JoyAction
                         {
+                            Type = JoyAction.StateType.POW2,
                             POWPosition = state.PointOfViewControllers[1]
                         };
                         break;
@@ -84,8 +86,9 @@ namespace JoyMapper.Views
                     if (pressedButton > 0)
                     {
                         JoyName = joy.Information.InstanceName;
-                        JoyAction = new JoyAction(JoyAction.StateType.Button)
+                        JoyAction = new JoyAction
                         {
+                            Type = JoyAction.StateType.Button,
                             ButtonNumber = pressedButton
                         };
                         JoyNameText.Text = JoyName;

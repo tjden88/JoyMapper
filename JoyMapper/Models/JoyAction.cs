@@ -11,8 +11,6 @@ namespace JoyMapper.Models
     public class JoyAction
     {
 
-        public JoyAction(StateType stateType) => Type = stateType;
-
         public enum StateType
         {
             Button,

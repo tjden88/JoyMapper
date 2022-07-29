@@ -195,7 +195,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
         private void OnAttachJoyButtonCommandExecuted()
         {
-            var wnd = new AddJoyButton { Owner = App.ActiveWindow};
+            var wnd = new AddJoyAction { Owner = App.ActiveWindow};
             var result = wnd.ShowDialog();
             if (result != true) return;
             JoyAction = wnd.JoyAction;
