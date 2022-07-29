@@ -155,7 +155,27 @@
 
                         <DockPanel LastChildFill="False">
                             <TextBlock Text="Внешний вид (цветовая схема)" VerticalAlignment="Center"/>
-                            <ComboBox Width="200" Margin="10,20"/>
+                            <ComboBox Width="120" Margin="10,20" 
+                                      ItemsSource="{Binding ColorThemes}" 
+                                      SelectedItem="{Binding CurrentColorTheme}"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalContentAlignment="Center"
+                                      IsSynchronizedWithCurrentItem="True">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:ColorTheme}">
+                                        <Border CornerRadius="8" BorderThickness="0" Height="40" Margin="0,0,0,8">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding PrimaryColor}"/>
+                                            </Border.Background>
+                                            <controls:WPRIcon Source="StarBorder" IconSize="26">
+                                                <controls:WPRIcon.Foreground>
+                                                    <SolidColorBrush Color="{Binding AccentColor}"/>
+                                                </controls:WPRIcon.Foreground>
+                                            </controls:WPRIcon>
+                                        </Border>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </DockPanel>
 
                         <Separator Background="{DynamicResource DividerColorBrush}"/>

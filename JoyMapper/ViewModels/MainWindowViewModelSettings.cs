@@ -63,7 +63,12 @@ namespace JoyMapper.ViewModels
         public ColorTheme CurrentColorTheme
         {
             get => _CurrentColorTheme;
-            set => Set(ref _CurrentColorTheme, value);
+            set => IfSet(ref _CurrentColorTheme, value).Then(v =>
+            {
+                v.SetTheme();
+                App.DataManager.AppSettings.CurrentColorCheme = v.Id;
+                App.DataManager.SaveData();
+            });
         }
 
         #endregion
@@ -91,8 +96,8 @@ namespace JoyMapper.ViewModels
             new ()
             {
                 Id = 3,
-                PrimaryColor = (Color) ColorConverter.ConvertFromString("#00e5ff")!,
-                AccentColor = (Color) ColorConverter.ConvertFromString("#311b92")!,
+                PrimaryColor = (Color) ColorConverter.ConvertFromString("#5d4037")!,
+                AccentColor = (Color) ColorConverter.ConvertFromString("#81c784")!,
             },
 
         };
