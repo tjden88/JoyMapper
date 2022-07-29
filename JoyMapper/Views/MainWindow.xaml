@@ -81,7 +81,7 @@
                     <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
-                <!--Профили-->
+                <!--Паттерны-->
                 <controls:WPRCard>
                     <DockPanel>
                         <ToolBar DockPanel.Dock="Top" Margin="5">
@@ -121,7 +121,7 @@
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
                                         <WrapPanel>
                                             <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                            <TextBlock Margin="5" Text="{Binding JoyAction, StringFormat='Кнопка: {0}'}"/>
+                                            <TextBlock Margin="0,5" Text="{Binding JoyAction.ActionText, StringFormat='({0})'}"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </DataTemplate>

@@ -46,7 +46,7 @@ namespace JoyMapper.ViewModels
 
 
         /// <summary>Имя действия джойстика</summary>
-        public string JoyActionName => JoyAction?.ActionText() ?? "Действие...";
+        public string JoyActionName => JoyAction?.ActionText ?? "Действие...";
 
 
         #region Accepted : bool - Принять привязку

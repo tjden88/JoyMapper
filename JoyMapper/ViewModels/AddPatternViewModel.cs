@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -139,18 +138,22 @@ namespace JoyMapper.ViewModels
         public bool ActionIsActive
         {
             get => _ActionIsActive;
-            set => Set(ref _ActionIsActive, value);
+            set => IfSet(ref _ActionIsActive, value)
+                .CallPropertyChanged(nameof(ActionIsActiveText));
         }
 
         #endregion
 
-        
+        /// <summary> Текст активности назначенного действия </summary>
+        public string ActionIsActiveText => ActionIsActive
+            ? "Активно"
+            : "Неактивно";
         
 
         /// <summary> Назначенное действие </summary>
         public string JoyButtonText => JoyName is null
             ? "-не определено-"
-            : JoyName + " - " + JoyAction.ActionText(); 
+            : JoyName + " - " + JoyAction?.ActionText; 
 
 
         #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
@@ -368,7 +371,7 @@ namespace JoyMapper.ViewModels
         private async Task CheckActionStatus()
         {
             var joystickState = new JoystickState();
-            while (true)
+            while (!ChangesSaved)
             {
                 if (JoyAction != null)
                 {

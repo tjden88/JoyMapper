@@ -63,7 +63,7 @@
                 <TextBlock Text="{Binding JoyButtonText}"  Margin="0,5,0,0"/>
                 <DockPanel>
                     <TextBlock Text="Текущий статус:" Margin="0,5" FontWeight="Bold"/>
-                    <Ellipse Width="16" Height="16">
+                    <Ellipse Width="16" Height="16" Margin="5">
                         <Ellipse.Style>
                             <Style TargetType="Ellipse">
                                 <Style.Triggers>
@@ -77,7 +77,7 @@
                             </Style>
                         </Ellipse.Style>
                     </Ellipse>
-                    <TextBlock Text="{Binding ActionIsActive}"></TextBlock>
+                    <TextBlock Text="{Binding ActionIsActiveText}" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
         </StackPanel>

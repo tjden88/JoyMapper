@@ -90,24 +90,28 @@ namespace JoyMapper.Models
             }
         }
 
+
         /// <summary> Описание действия джойстика </summary>
-        public string ActionText()
+        public string ActionText
         {
-            var txt = Type switch
+            get
             {
-                StateType.Axis => "Ось " + Axis,
-                StateType.Button => "Кнопка " + ButtonNumber,
-                StateType.POW1 => "Переключатель вида №1 " + GetPowPoint(POWPosition),
-                StateType.POW2 => "Переключатель вида №2 " + GetPowPoint(POWPosition),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            return txt;
+                var txt = Type switch
+                {
+                    StateType.Axis => "Ось " + Axis,
+                    StateType.Button => "Кнопка " + ButtonNumber,
+                    StateType.POW1 => "Переключатель вида №1 " + GetPowPoint(POWPosition),
+                    StateType.POW2 => "Переключатель вида №2 " + GetPowPoint(POWPosition),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return txt;
+            }
         }
+
 
         public static POWPoint GetPowPoint(int rawValue) =>
             rawValue switch
             {
-                -1 => POWPoint.None,
                 0 => POWPoint.Вверх,
                 4500 => POWPoint.ВверхВправо,
                 9000 => POWPoint.Вправо,
