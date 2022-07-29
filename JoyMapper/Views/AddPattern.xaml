@@ -48,7 +48,7 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <DockPanel Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
-        <TextBox helpers:TextHelper.Hint="Имя паттерна" Name="NameText" Text="{Binding PatternName}" DockPanel.Dock="Top" Margin="5"/>
+        <TextBox helpers:TextHelper.Hint="Имя паттерна" Name="NameText" Text="{Binding PatternName, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" Margin="5"/>
 
         <!--Статус и настройки-->
         <Grid DockPanel.Dock="Top">
@@ -68,7 +68,7 @@
                 <!--Настройки оси-->
                 <DockPanel DockPanel.Dock="Bottom"  Margin="10,0" Visibility="{Binding AxisSettingsEnable, Converter={StaticResource Bool2VisibilityConverter}}">
                     <Separator DockPanel.Dock="Top"/>
-                    <TextBlock Text="Текущее значение:" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
+                    <TextBlock Text="{Binding CurrentAxisValue, StringFormat='Текущее значение: {0}'}" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
 
                     <Grid DockPanel.Dock="Top">
                         <Grid.ColumnDefinitions>

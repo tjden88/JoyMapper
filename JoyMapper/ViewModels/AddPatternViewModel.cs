@@ -236,6 +236,22 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+        #region CurrentAxisValue : int - Текущее положение оси
+
+        /// <summary>Текущее положение оси</summary>
+        private int _CurrentAxisValue;
+
+        /// <summary>Текущее положение оси</summary>
+        public int CurrentAxisValue
+        {
+            get => _CurrentAxisValue;
+            private set => Set(ref _CurrentAxisValue, value);
+        }
+
+        #endregion
+
+        
+
         /// <summary> Включить настройки оси </summary>
         public bool AxisSettingsEnable => JoyAction?.Type == JoyAction.StateType.Axis;
 
@@ -279,6 +295,11 @@ namespace JoyMapper.ViewModels
             var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
             if (joyAction == null) return;
 
+            if (joyAction.Type == JoyAction.StateType.Axis)
+            {
+                joyAction.StartAxisValue = AxisStartValue;
+                joyAction.EndAxisValue = AxisFinishValue;
+            }
             JoyAction = joyAction;
             JoyName = joyName;
         }
@@ -436,15 +457,33 @@ namespace JoyMapper.ViewModels
                     {
                         var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
                         joy.Acquire();
-                        await Task.Delay(10);
+                        joy.Poll();
+                        await Task.Delay(100);
                         joy.GetCurrentState(ref joystickState);
                         var status = JoyAction.IsActionActive(ref joystickState);
                         ActionIsActive = status;
+                        if (JoyAction.Type == JoyAction.StateType.Axis)
+                        {
+                            // Обновить значение оси
+
+                            var newValue = JoyAction.Axis switch
+                            {
+                                JoyAction.Axises.X => joystickState.X,
+                                JoyAction.Axises.Y => joystickState.Y,
+                                JoyAction.Axises.Z => joystickState.Z,
+                                JoyAction.Axises.RX => joystickState.RotationX,
+                                JoyAction.Axises.RY => joystickState.RotationY,
+                                JoyAction.Axises.RZ => joystickState.RotationZ,
+                                JoyAction.Axises.Slider1 => joystickState.Sliders[0],
+                                JoyAction.Axises.Slider2 => joystickState.Sliders[1],
+                                _ => throw new ArgumentOutOfRangeException()
+                            };
+                            CurrentAxisValue = newValue;
+                        }
 
                         joy.Unacquire();
                     }
                 }
-                await Task.Delay(100);
             }
         }
 
