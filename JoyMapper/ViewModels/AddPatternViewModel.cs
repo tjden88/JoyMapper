@@ -124,7 +124,9 @@ namespace JoyMapper.ViewModels
         public JoyAction JoyAction
         {
             get => _JoyAction;
-            set => IfSet(ref _JoyAction, value).CallPropertyChanged(nameof(JoyButtonText));
+            set => IfSet(ref _JoyAction, value)
+                .CallPropertyChanged(nameof(JoyButtonText))
+                .CallPropertyChanged(nameof(AxisSettingsEnable));
         }
 
         #endregion
@@ -200,6 +202,10 @@ namespace JoyMapper.ViewModels
             {
                 if (Equals(_AxisStartValue, value)) return;
                 _AxisStartValue = Math.Min(value, AxisFinishValue);
+                if (JoyAction?.Type == JoyAction.StateType.Axis)
+                {
+                    JoyAction.StartAxisValue = _AxisStartValue;
+                }
                 OnPropertyChanged(nameof(AxisStartValue));
             }
         }
@@ -220,11 +226,18 @@ namespace JoyMapper.ViewModels
             {
                 if (Equals(_AxisFinishValue, value)) return;
                 _AxisFinishValue = Math.Max(value, AxisStartValue);
+                if (JoyAction?.Type == JoyAction.StateType.Axis)
+                {
+                    JoyAction.EndAxisValue = _AxisFinishValue;
+                }
                 OnPropertyChanged(nameof(AxisFinishValue));
             }
         }
 
         #endregion
+
+        /// <summary> Включить настройки оси </summary>
+        public bool AxisSettingsEnable => JoyAction?.Type == JoyAction.StateType.Axis;
 
 
         #endregion

@@ -66,7 +66,7 @@
             </Button>
             <DockPanel Grid.Column="1">
                 <!--Настройки оси-->
-                <DockPanel DockPanel.Dock="Bottom"  Margin="10,0">
+                <DockPanel DockPanel.Dock="Bottom"  Margin="10,0" Visibility="{Binding AxisSettingsEnable, Converter={StaticResource Bool2VisibilityConverter}}">
                     <Separator DockPanel.Dock="Top"/>
                     <TextBlock Text="Текущее значение:" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
 
