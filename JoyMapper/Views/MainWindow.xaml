@@ -8,6 +8,7 @@
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
+        Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="600" Width="800">
     <b:Interaction.Triggers>
@@ -60,14 +61,13 @@
                         <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
                         <ListBox Margin="5" ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
-
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:Profile}">
-                                    <DockPanel LastChildFill="False" Margin="10,5">
+                                    <DockPanel LastChildFill="False" Margin="10,5" >
                                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
                                         <Button DockPanel.Dock="Right" Padding="30,10" Content="Запуск" FontSize="20"
-                                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
-                                                CommandParameter="{Binding}"/>
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
+                                                    CommandParameter="{Binding}"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -166,7 +166,7 @@
                     <ItemsControl ItemsSource="{Binding LogMessages}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:LogMessage}">
-                                
+
                                 <TextBlock Margin="5" TextAlignment="Center" Text="{Binding}" FontSize="16">
                                     <TextBlock.Foreground>
                                         <SolidColorBrush Color="{Binding Color}"/>
