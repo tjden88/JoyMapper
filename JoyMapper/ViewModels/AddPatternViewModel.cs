@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
+using JoyMapper.Services;
 using JoyMapper.Views;
 using WPR;
 using WPR.MVVM.Commands;
@@ -195,12 +196,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
         private void OnAttachJoyButtonCommandExecuted()
         {
-            var wnd = new AddJoyAction { Owner = App.ActiveWindow};
-            var result = wnd.ShowDialog();
-            if (result != true) return;
-            JoyAction = wnd.JoyAction;
-            JoyName = wnd.JoyName;
-
+            var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
+            if (joyAction == null) return;
+            
+            JoyAction = joyAction;
+            JoyName = joyName;
         }
 
         #endregion

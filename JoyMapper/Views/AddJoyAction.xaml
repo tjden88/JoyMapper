@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource ChromeWindow}"
         BorderBrush="{DynamicResource BackgroundColorBrush}"
@@ -13,6 +14,16 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         Title="Нажмите кнопку / ось на джойстике" Width="320" Height="150">
+    <b:Interaction.Triggers>
+        <b:DataTrigger Binding="{Binding Accepted}" Value="True">
+            <b:ChangePropertyAction PropertyName="DialogResult" Value="True"/>
+        </b:DataTrigger>
+        <b:EventTrigger EventName="Loaded">
+            <b:EventTrigger.Actions>
+                <b:InvokeCommandAction Command="{Binding LoadConnectedJoysticksCommand}"/>
+            </b:EventTrigger.Actions>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <d:Window.DataContext>
         <viewModels:AddJoyActionViewModel/>
     </d:Window.DataContext>

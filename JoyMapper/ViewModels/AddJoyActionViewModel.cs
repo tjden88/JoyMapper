@@ -1,4 +1,8 @@
-﻿using JoyMapper.Models;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using JoyMapper.Models;
+using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -61,6 +65,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+        #region Commands
 
         #region Command AcceptButtonCommand - Принять изменения
 
@@ -80,7 +85,93 @@ namespace JoyMapper.ViewModels
             Accepted = true;
         }
 
+
         #endregion
+
+
+        #region Command LoadConnectedJoysticksCommand - Загрузить подключённые джойстики для отслеживания
+
+        /// <summary>Загрузить подключённые джойстики для отслеживания</summary>
+        private Command _LoadConnectedJoysticksCommand;
+
+        /// <summary>Загрузить подключённые джойстики для отслеживания</summary>
+        public Command LoadConnectedJoysticksCommand => _LoadConnectedJoysticksCommand
+            ??= new Command(OnLoadConnectedJoysticksCommandExecuted, CanLoadConnectedJoysticksCommandExecute, "Загрузить подключённые джойстики для отслеживания");
+
+        /// <summary>Проверка возможности выполнения - Загрузить подключённые джойстики для отслеживания</summary>
+        private bool CanLoadConnectedJoysticksCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Загрузить подключённые джойстики для отслеживания</summary>
+        private void OnLoadConnectedJoysticksCommandExecuted() => ListenConnectedJoysticks();
+
+        #endregion
+
+
+        #endregion
+
+
+        private async void ListenConnectedJoysticks()
+        {
+            var connectedDevices = new DirectInput()
+                .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly);
+
+            var joys = connectedDevices
+                .Select(j => new Joystick(new DirectInput(), j.InstanceGuid))
+                .ToArray();
+
+            foreach (var joy in joys)
+                joy.Acquire();
+
+            while (!_Accepted)
+            {
+
+                foreach (var joy in joys)
+                {
+                    joy.Poll();
+                    //Debug.WriteLine(joy.Information.InstanceName);
+                    var state = joy.GetCurrentState();
+
+                    // Проверка POW
+                    if (state.PointOfViewControllers[0] > -1)
+                    {
+                        JoyName = joy.Information.InstanceName;
+                        JoyAction = new JoyAction
+                        {
+                            Type = JoyAction.StateType.POW1,
+                            POWPosition = state.PointOfViewControllers[0]
+                        };
+                        break;
+                    }
+                    if (state.PointOfViewControllers[1] > -1)
+                    {
+                        JoyName = joy.Information.InstanceName;
+                        JoyAction = new JoyAction
+                        {
+                            Type = JoyAction.StateType.POW2,
+                            POWPosition = state.PointOfViewControllers[1]
+                        };
+                        break;
+                    }
+
+
+                    // Проверка кнопок
+                    var pressedButton = Array.IndexOf(state.Buttons, true) + 1;
+                    if (pressedButton > 0)
+                    {
+                        JoyName = joy.Information.InstanceName;
+                        JoyAction = new JoyAction
+                        {
+                            Type = JoyAction.StateType.Button,
+                            ButtonNumber = pressedButton
+                        };
+                        break;
+                    }
+                }
+
+
+                await Task.Delay(100);
+            }
+        }
 
     }
 }
