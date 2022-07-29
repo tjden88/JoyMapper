@@ -70,9 +70,9 @@ namespace JoyMapper.Services
                 .Select(joy => new JoyState
                 {
                     Joystick = joy,
-                    BtnStates = keyPatterns
+                    Actions = keyPatterns
                         .Where(p=>p.JoyName == joy.Information.InstanceName)
-                        .Select(p=> new JoyState.BtnState(p.JoyAction.ButtonNumber))
+                        .Select(p=> new JoyState.ActionState(p.JoyAction))
                         .ToList()
                 })
                 .ToList();
@@ -80,15 +80,15 @@ namespace JoyMapper.Services
 
             foreach (var joyState in _UsedInProfileJoystickStates)
             {
-                foreach (var btnState in joyState.BtnStates)
+                foreach (var actionState in joyState.Actions)
                 {
                     var pattern = keyPatterns.First(p =>
-                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyAction.ButtonNumber == btnState.BtnNumber);
-                    btnState.PressKeyBindings = pattern.PressKeyBindings;
-                    btnState.ReleaseKeyBindings = pattern.ReleaseKeyBindings;
+                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyAction == actionState.Action);
+                    actionState.PressKeyBindings = pattern.PressKeyBindings;
+                    actionState.ReleaseKeyBindings = pattern.ReleaseKeyBindings;
                 }
 
-                joyState.UpdateBtnStatus();
+                joyState.SyncStatus();
             }
 
             IsActive = true;
@@ -118,7 +118,7 @@ namespace JoyMapper.Services
                 {
                     var diff = joyState.GetDifferents();
                     foreach (var diffState in diff)
-                        await SendCommands(diffState.IsPressed
+                        await SendCommands(diffState.IsActive
                             ? diffState.PressKeyBindings
                             : diffState.ReleaseKeyBindings);
                 }
