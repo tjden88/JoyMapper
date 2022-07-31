@@ -151,43 +151,14 @@ namespace JoyMapper.ViewModels
             foreach (var joy in joys) joy.Unacquire();
         }
 
-        private class JoyAxisState
-        {
-            public string JoyName { get; set; }
 
-            public int XAxis { get; set; }
-
-            public int YAxis { get; set; }
-
-            public int ZAxis { get; set; }
-
-            public int RxAxis { get; set; }
-
-            public int RyAxis { get; set; }
-
-            public int RzAxis { get; set; }
-
-            public int Slider1 { get; set; }
-            public int Slider2 { get; set; }
-
-            public void Update(ref JoystickState joyState)
-            {
-                XAxis = joyState.X;
-                YAxis = joyState.Y;
-                ZAxis = joyState.Z;
-                RxAxis = joyState.RotationX;
-                RyAxis = joyState.RotationY;
-                RzAxis = joyState.RotationZ;
-                Slider1 = joyState.Sliders[0];
-                Slider2 = joyState.Sliders[1];
-            }
-
-        }
+        #region AllActions
 
         private static List<JoyState.ActionState> AllActions()
         {
             var list = new List<JoyState.ActionState>();
 
+            // Кнопки
             for (var i = 1; i <= 128; i++)
             {
                 list.Add(new(new JoyAction
@@ -197,9 +168,46 @@ namespace JoyMapper.ViewModels
                 }));
             }
 
+            // POW
+            foreach (var powValue in JoyAction.PowValues)
+            {
+                list.Add(new(new JoyAction
+                {
+                    Type = JoyAction.StateType.POW1,
+                    POWPosition = powValue,
+                }
+                ));
+
+                list.Add(new(new JoyAction
+                {
+                    Type = JoyAction.StateType.POW2,
+                    POWPosition = powValue,
+                }
+                ));
+            }
+
+            // Оси
+            foreach (JoyAction.Axises axis in Enum.GetValues(typeof(JoyAction.Axises)))
+            {
+                list.Add(new(new JoyAction
+                {
+                    Type = JoyAction.StateType.Axis,
+                    Axis = axis,
+                    StartAxisValue = 0,
+                    EndAxisValue = 20000,
+                }));
+                list.Add(new(new JoyAction
+                {
+                    Type = JoyAction.StateType.Axis,
+                    Axis = axis,
+                    StartAxisValue = 45000,
+                    EndAxisValue = 65535,
+                }));
+            }
 
             return list;
         }
 
+        #endregion
     }
 }

@@ -110,6 +110,7 @@ namespace JoyMapper.Models
             }
         }
 
+        public static int[] PowValues => new[] {0, 4500, 9000, 13500, 18000, 22500, 27000, 31500};
 
         public static POWPoint GetPowPoint(int rawValue) =>
             rawValue switch
