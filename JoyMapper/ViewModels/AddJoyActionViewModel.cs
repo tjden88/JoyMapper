@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -113,7 +114,6 @@ namespace JoyMapper.ViewModels
 
         private async void ListenConnectedJoysticks()
         {
-            var state = new JoystickState();
 
             var connectedDevices = new DirectInput()
                   .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly);
@@ -122,161 +122,30 @@ namespace JoyMapper.ViewModels
                 .Select(j => new Joystick(new DirectInput(), j.InstanceGuid))
                 .ToArray();
 
-
-            var joyAxisStates = joys
-                .Select(j => new JoyAxisState
-                {
-                    JoyName = j.Information.InstanceName
-                })
-                .ToArray();
-
-            foreach (var joy in joys)
+            var joyStates = joys.Select(j => new JoyState()
             {
-                joy.Acquire();
-                joy.Poll();
-            }
+                Joystick = j,
+                Actions = AllActions(),
+            }).ToArray();
 
-            await Task.Delay(50);
-
-            foreach (var joy in joys)
-            {
-                joy.GetCurrentState(ref state);
-                joyAxisStates.First(s => s.JoyName == joy.Information.InstanceName)
-                    .Update(ref state);
-            }
-
-            var axisCheckCounter = 0;
+            foreach (var js in joyStates)
+                js.SyncStatus();
 
 
             while (!_Accepted)
             {
-                axisCheckCounter++;
-
-                foreach (var joy in joys)
+                foreach (var joyState in joyStates)
                 {
-                    joy.GetCurrentState(ref state);
+                    var diff = joyState.GetDifferents();
+                    if (diff.FirstOrDefault(d => d.IsActive) is not { } firstDiff) continue;
 
-                    // Проверка смещения осей каждые 500 мс
-                    if (axisCheckCounter > 4)
-                    {
-                        const int axisOffset = 20000;
-
-                        JoyAction MakeAxisAction(JoyAction.Axises axises)
-                        {
-                            return new JoyAction()
-                            {
-                                Type = JoyAction.StateType.Axis,
-                                Axis = axises
-                            };
-                        }
-
-                        var prevState = joyAxisStates.First(s => s.JoyName == joy.Information.InstanceName);
-
-                        var axisChanged = false;
-
-                        // Проверить оси
-                        if (Math.Abs(prevState.XAxis - state.X) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.X);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.YAxis - state.Y) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.Y);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.ZAxis - state.Z) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.Z);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.RxAxis - state.RotationX) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.RX);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.RyAxis - state.RotationY) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.RY);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.RzAxis - state.RotationZ) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.RZ);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.Slider1 - state.Sliders[0]) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.Slider1);
-                            axisChanged = true;
-                        }
-                        if (Math.Abs(prevState.Slider2 - state.Sliders[1]) > axisOffset)
-                        {
-                            JoyName = joy.Information.InstanceName;
-                            JoyAction = MakeAxisAction(JoyAction.Axises.Slider2);
-                            axisChanged = true;
-                        }
-
-                        // Задать текущее состояние
-                        prevState.Update(ref state);
-
-                        if (axisChanged)
-                        {
-                            CommandManager.InvalidateRequerySuggested();
-                            break;
-                        }
-
-                    }
-
-                    // Проверка POW
-                    if (state.PointOfViewControllers[0] > -1)
-                    {
-                        JoyName = joy.Information.InstanceName;
-                        JoyAction = new JoyAction
-                        {
-                            Type = JoyAction.StateType.POW1,
-                            POWPosition = state.PointOfViewControllers[0]
-                        };
-                        CommandManager.InvalidateRequerySuggested();
-                        break;
-                    }
-                    if (state.PointOfViewControllers[1] > -1)
-                    {
-                        JoyName = joy.Information.InstanceName;
-                        JoyAction = new JoyAction
-                        {
-                            Type = JoyAction.StateType.POW2,
-                            POWPosition = state.PointOfViewControllers[1]
-                        };
-                        CommandManager.InvalidateRequerySuggested();
-                        break;
-                    }
-
-
-                    // Проверка кнопок
-                    var pressedButton = Array.LastIndexOf(state.Buttons, true) + 1;
-                    if (pressedButton <= 0) continue;
-
-                    JoyName = joy.Information.InstanceName;
-                    JoyAction = new JoyAction
-                    {
-                        Type = JoyAction.StateType.Button,
-                        ButtonNumber = pressedButton
-                    };
+                    JoyName = joyState.Joystick.Information.InstanceName;
+                    JoyAction = firstDiff.Action;
                     CommandManager.InvalidateRequerySuggested();
                     break;
+
                 }
-
                 await Task.Delay(100);
-
-                if (axisCheckCounter > 4) axisCheckCounter = 0;
             }
 
             foreach (var joy in joys) joy.Unacquire();
@@ -313,6 +182,23 @@ namespace JoyMapper.ViewModels
                 Slider2 = joyState.Sliders[1];
             }
 
+        }
+
+        private static List<JoyState.ActionState> AllActions()
+        {
+            var list = new List<JoyState.ActionState>();
+
+            for (var i = 1; i <= 128; i++)
+            {
+                list.Add(new(new JoyAction
+                {
+                    Type = JoyAction.StateType.Button,
+                    ButtonNumber = i,
+                }));
+            }
+
+
+            return list;
         }
 
     }
