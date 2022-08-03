@@ -9,7 +9,8 @@ namespace JoyMapper.Models
     /// Действие джойстикка (кнопка, указатель, ось)
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class JoyAction
+    [Obsolete("Рефакторинг")]
+    public class JoyActionOld
     {
 
         public enum StateType

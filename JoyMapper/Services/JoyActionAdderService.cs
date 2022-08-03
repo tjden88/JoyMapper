@@ -10,7 +10,7 @@ namespace JoyMapper.Services
     internal class JoyActionAdderService
     {
         /// <summary> Получить привязку к действию джойстика </summary>
-        public JoyAction MapJoyAction(out string JoyName)
+        public JoyActionOld MapJoyAction(out string JoyName)
         {
             JoyName = null;
             var vm = new AddJoyActionViewModel();
@@ -20,7 +20,7 @@ namespace JoyMapper.Services
                 DataContext = vm,
             };
 
-            var mapJoyAction = wnd.ShowDialog() != true ? null : vm.JoyAction;
+            var mapJoyAction = wnd.ShowDialog() != true ? null : vm.JoyActionOld;
             JoyName = vm.JoyName;
             return mapJoyAction;
         }

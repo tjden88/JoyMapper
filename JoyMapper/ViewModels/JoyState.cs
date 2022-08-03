@@ -16,7 +16,7 @@ namespace JoyMapper.ViewModels
         private bool _IsFault; // Ошибка в опросе
 
         /// <summary> Статус действия </summary>
-        public record ActionState(JoyAction Action)
+        public record ActionState(JoyActionOld ActionOld)
         {
 
             public bool IsActive { get; set; }
@@ -76,7 +76,7 @@ namespace JoyMapper.ViewModels
 
                 foreach (var actionState in Actions)
                 {
-                    var isActiveNow = actionState.Action.IsActionActive(ref state);
+                    var isActiveNow = actionState.ActionOld.IsActionActive(ref state);
                     if (isActiveNow != actionState.IsActive)
                     {
                         result.Add(actionState);
@@ -103,7 +103,7 @@ namespace JoyMapper.ViewModels
                 joy.Poll();
                 var state = joy.GetCurrentState();
                 foreach (var actionState in Actions)
-                    actionState.IsActive = actionState.Action.IsActionActive(ref state);
+                    actionState.IsActive = actionState.ActionOld.IsActionActive(ref state);
 
             }
             catch (Exception e)

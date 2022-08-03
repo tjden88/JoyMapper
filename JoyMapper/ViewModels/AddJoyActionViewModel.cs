@@ -30,16 +30,16 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region JoyAction : JoyAction - Назначаемое действие джойстика
+        #region JoyActionOld : JoyActionOld - Назначаемое действие джойстика
 
         /// <summary>Назначаемое действие джойстика</summary>
-        private JoyAction _JoyAction;
+        private JoyActionOld _JoyActionOld;
 
         /// <summary>Назначаемое действие джойстика</summary>
-        public JoyAction JoyAction
+        public JoyActionOld JoyActionOld
         {
-            get => _JoyAction;
-            set => IfSet(ref _JoyAction, value)
+            get => _JoyActionOld;
+            set => IfSet(ref _JoyActionOld, value)
                 .CallPropertyChanged(nameof(JoyActionName));
         }
 
@@ -47,7 +47,7 @@ namespace JoyMapper.ViewModels
 
 
         /// <summary>Имя действия джойстика</summary>
-        public string JoyActionName => JoyAction?.ActionText ?? "Действие...";
+        public string JoyActionName => JoyActionOld?.ActionText ?? "Действие...";
 
 
         #region Accepted : bool - Принять привязку
@@ -79,7 +79,7 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnAcceptButtonCommandExecuted, CanAcceptButtonCommandExecute, "Принять изменения");
 
         /// <summary>Проверка возможности выполнения - Принять изменения</summary>
-        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyAction != null;
+        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyActionOld != null;
 
         /// <summary>Логика выполнения - Принять изменения</summary>
         private void OnAcceptButtonCommandExecuted()
@@ -140,7 +140,7 @@ namespace JoyMapper.ViewModels
                     if (diff.FirstOrDefault(d => d.IsActive) is not { } firstDiff) continue;
 
                     JoyName = joyState.Joystick.Information.InstanceName;
-                    JoyAction = firstDiff.Action;
+                    JoyActionOld = firstDiff.ActionOld;
                     CommandManager.InvalidateRequerySuggested();
                     break;
 
@@ -161,44 +161,44 @@ namespace JoyMapper.ViewModels
             // Кнопки
             for (var i = 1; i <= 128; i++)
             {
-                list.Add(new(new JoyAction
+                list.Add(new(new JoyActionOld
                 {
-                    Type = JoyAction.StateType.Button,
+                    Type = JoyActionOld.StateType.Button,
                     ButtonNumber = i,
                 }));
             }
 
             // POW
-            foreach (var powValue in JoyAction.PowValues)
+            foreach (var powValue in JoyActionOld.PowValues)
             {
-                list.Add(new(new JoyAction
+                list.Add(new(new JoyActionOld
                 {
-                    Type = JoyAction.StateType.POW1,
+                    Type = JoyActionOld.StateType.POW1,
                     POWPosition = powValue,
                 }
                 ));
 
-                list.Add(new(new JoyAction
+                list.Add(new(new JoyActionOld
                 {
-                    Type = JoyAction.StateType.POW2,
+                    Type = JoyActionOld.StateType.POW2,
                     POWPosition = powValue,
                 }
                 ));
             }
 
             // Оси
-            foreach (JoyAction.Axises axis in Enum.GetValues(typeof(JoyAction.Axises)))
+            foreach (JoyActionOld.Axises axis in Enum.GetValues(typeof(JoyActionOld.Axises)))
             {
-                list.Add(new(new JoyAction
+                list.Add(new(new JoyActionOld
                 {
-                    Type = JoyAction.StateType.Axis,
+                    Type = JoyActionOld.StateType.Axis,
                     Axis = axis,
                     StartAxisValue = 0,
                     EndAxisValue = 20000,
                 }));
-                list.Add(new(new JoyAction
+                list.Add(new(new JoyActionOld
                 {
-                    Type = JoyAction.StateType.Axis,
+                    Type = JoyActionOld.StateType.Axis,
                     Axis = axis,
                     StartAxisValue = 45000,
                     EndAxisValue = 65535,
