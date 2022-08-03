@@ -22,11 +22,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
+    <PackageReference Include="WPR.Styles" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\WPR\WPR.MVVM\WPR.MVVM.csproj" />
-    <ProjectReference Include="..\..\WPR\WPR\WPR.csproj" />
   </ItemGroup>
 
 </Project>
