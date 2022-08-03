@@ -12,7 +12,7 @@
             public int Z;
             public int Rx;
             public int Ry;
-            public int Zy;
+            public int Rz;
             public int Slider1;
             public int Slider2;
         }
