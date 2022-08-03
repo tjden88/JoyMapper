@@ -3,7 +3,7 @@
 /// <summary>
 /// Действие джойстика, привязанное к интервалу оси контроллера
 /// </summary>
-internal class AxisJoyActionBase : JoyActionBase
+internal class AxisJoyAction : JoyActionBase
 {
     public enum Axises
     {
@@ -23,4 +23,5 @@ internal class AxisJoyActionBase : JoyActionBase
 
     public int EndValue { get; set; }
 
+    public override string Description => "Ось " + Axis;
 }

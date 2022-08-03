@@ -1,4 +1,6 @@
-﻿namespace JoyMapper.Models.JoyActions
+﻿using System.Text.Json.Serialization;
+
+namespace JoyMapper.Models.JoyActions
 {
     /// <summary>
     /// Дейстаие джойстика (базовый класс)
@@ -7,5 +9,8 @@
     {
         public string JoyName { get; set; }
 
+        /// <summary> Описание дествия </summary>
+        [JsonIgnore]
+        public abstract string Description { get; }
     }
 }
