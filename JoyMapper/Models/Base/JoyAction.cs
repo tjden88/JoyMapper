@@ -8,5 +8,7 @@ namespace JoyMapper.Models.Base
 {
     internal abstract class JoyAction
     {
+        public string JoyName { get; set; }
+
     }
 }
