@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
 namespace JoyMapper.Services.ActionWatchers
@@ -14,6 +11,25 @@ namespace JoyMapper.Services.ActionWatchers
         public SimpleButtonActionWatcher(SimpleButtonJoyAction buttonJoyAction)
         {
             _ButtonJoyAction = buttonJoyAction;
+        }
+
+        public override void Poll(JoyState joyState)
+        {
+            var btnState = _ButtonJoyAction.Button.Type switch
+            {
+                ButtonType.Button => joyState.Buttons[_ButtonJoyAction.Button.Value],
+                ButtonType.Pow1 => joyState.Pow1Value == _ButtonJoyAction.Button.Value,
+                ButtonType.Pow2 => joyState.Pow2Value == _ButtonJoyAction.Button.Value,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            if(IsActive == btnState) return;
+
+            IsActive = btnState;
+
+            SendKeyboardCommands(btnState 
+                ? _ButtonJoyAction.PressKeyBindings 
+                : _ButtonJoyAction.ReleaseKeyBindings);
         }
     }
 }

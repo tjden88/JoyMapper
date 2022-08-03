@@ -17,16 +17,17 @@ namespace JoyMapper.Models
     {
         public ButtonType Type { get; set; }
 
-        public int ButtonNumber { get; set; }
+        /// <summary> Номер кнопки или значение указателя вида </summary>
+        public int Value { get; set; }
 
 
         public override string ToString()
         {
             var txt = Type switch
             {
-                ButtonType.Button => "Кнопка " + ButtonNumber,
-                ButtonType.Pow1 => "Переключатель вида №1 " + GetPowPoint(ButtonNumber),
-                ButtonType.Pow2 => "Переключатель вида №2 " + GetPowPoint(ButtonNumber),
+                ButtonType.Button => "Кнопка " + Value,
+                ButtonType.Pow1 => "Переключатель вида №1 " + GetPowPoint(Value),
+                ButtonType.Pow2 => "Переключатель вида №2 " + GetPowPoint(Value),
                 _ => throw new ArgumentOutOfRangeException()
             };
             return txt;
