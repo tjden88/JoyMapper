@@ -14,27 +14,9 @@
         WindowStartupLocation="CenterOwner"
         Focusable="True"
         mc:Ignorable="d"
-        Name="Window"
-        Title="{Binding Title}" Height="550" Width="700">
+        Title="{Binding Title}" Height="700" Width="850">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-            <Grid Background="{StaticResource TransparentBrush}" Name="Grid">
 
-                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5"/>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Center"
-                        Style="{StaticResource WPRToolButton}" Margin="0,0,5,0"
-                        Visibility="{Binding ElementName=Grid, Path=IsMouseOver, Converter={StaticResource Bool2VisibilityConverter}}"
-                        Foreground="Red"
-                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveKeyBindingCommand}"
-                        ToolTip="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveKeyBindingCommand}"
-                        CommandParameter="{Binding}"
-                        Background="Transparent" BorderThickness="0">
-                    <Button.Content>
-                        <controls:WPRIcon Source="TrashOutline"/>
-                    </Button.Content>
-                </Button>
-            </Grid>
-        </DataTemplate>
     </Window.Resources>
     <d:Window.DataContext>
         <viewModels:AddPatternViewModel/>
@@ -67,43 +49,15 @@
                 </Button.Content>
             </Button>
             <DockPanel Grid.Column="1">
-                <!--Настройки оси-->
-                <DockPanel DockPanel.Dock="Bottom"  Margin="10,0" Visibility="{Binding AxisSettingsEnable, Converter={StaticResource Bool2VisibilityConverter}}">
-                    <Separator DockPanel.Dock="Top"/>
-                    <TextBlock Text="{Binding CurrentAxisValue, StringFormat='Текущее значение: {0}'}" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
 
-                    <Grid DockPanel.Dock="Top">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="50"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Начало активной зоны оси:" VerticalAlignment="Center" />
-                        <Slider VerticalAlignment="Center" Grid.Column="1" Margin="5" Maximum="65535" IsSelectionRangeEnabled="True"
-                                SelectionStart="{Binding AxisStartValue}" 
-                                SelectionEnd="{Binding AxisFinishValue}" 
-                                Value="{Binding AxisStartValue}" />
-                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding AxisStartValue}"/>
-                    </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="50"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Конец активной зоны оси:"  VerticalAlignment="Center"/>
-                        <Slider VerticalAlignment="Center" Grid.Column="1" Margin="5" Maximum="65535" IsSelectionRangeEnabled="True" 
-                                SelectionStart="{Binding AxisStartValue}" 
-                                SelectionEnd="{Binding AxisFinishValue}" 
-                                Value="{Binding AxisFinishValue}" />
-                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding AxisFinishValue}"/>
-                    </Grid>
-                </DockPanel>
+                <ScrollViewer DockPanel.Dock="Right" Width="250" Height="80" VerticalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding WatcherLogText}"/>
+                </ScrollViewer>
 
                 <!--Инфо о назначенном действии-->
                 <StackPanel  Orientation="Vertical" Margin="10">
                     <TextBlock Text="Назначенная кнопка / ось" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                    <TextBlock Text="{Binding JoyButtonText}"  Margin="0,5,0,0"/>
+                    <TextBlock Text="{Binding JoyActionText}"  Margin="0,5,0,0"/>
                     <DockPanel>
                         <TextBlock Text="Текущий статус:" Margin="0,5" FontWeight="Bold"/>
                         <Ellipse Width="16" Height="16" Margin="5">
@@ -130,104 +84,26 @@
 
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
 
+        <!--Тип биндинга кнопки-->
+        <DockPanel DockPanel.Dock="Top" Visibility="{Binding IsButton, Converter={StaticResource Bool2VisibilityConverter}}">
+            <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
+            <StackPanel >
+                <TextBlock DockPanel.Dock="Top"  Text="Тип привязки кнопки" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                <RadioButton Margin="5" Content="Стандартный" IsChecked="{Binding IsExtendedButtonMode, Converter={StaticResource BoolNotConverter}}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Расширенный" IsChecked="{Binding IsExtendedButtonMode}" FontWeight="Bold"/>
+            </StackPanel>
+            <WrapPanel Margin="5,8,5,5">
+                <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}" Text="{Binding ButtonModeInfo}"/>
+            </WrapPanel>
+        </DockPanel>
+
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
                 Content="Сохранить" IsDefault="True"
                 Command="{Binding SaveCommand}" />
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
 
-        <Grid>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <DockPanel Grid.Column="0" Margin="5">
-                <TextBlock Text="Действия кнопок при нажатии" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                <ToolBar DockPanel.Dock="Top" Margin="0,5">
-                    <Button DockPanel.Dock="Top"
-                            ToolTip="{Binding ChangePressRecordCommand}"
-                            Command="{Binding ChangePressRecordCommand}">
-                        <Button.Content>
-                            <controls:WPRIconText Text="{Binding PressButtonText}" IconSource="Keyboard"/>
-                        </Button.Content>
-                    </Button>
-                    <Button DockPanel.Dock="Top"
-                            Command="{Binding ClaerPressBindingsCommand}" 
-                            ToolTip="{Binding ClaerPressBindingsCommand}">
-                        <Button.Content>
-                            <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}"></controls:WPRIcon>
-                        </Button.Content>
-                    </Button>
-                </ToolBar>
-                <Grid>
-                    <ListBox ItemsSource="{Binding PressKeyBindings}" HorizontalContentAlignment="Stretch"/>
-                    <Border CornerRadius="5" Focusable="True" Opacity="0.4" Background="{DynamicResource AccentColorBrush}">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Setters>
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Style.Setters>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPressRecorded}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="28" Margin="5" TextWrapping="Wrap" Text="Запись..."/>
-                            <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="20" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-            </DockPanel>
-
-            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
-
-            <DockPanel Grid.Column="2" Margin="5">
-                <TextBlock Text="Действия кнопок при отпускании" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                <ToolBar DockPanel.Dock="Top" Margin="0,5">
-                    <Button DockPanel.Dock="Top"
-                            ToolTip="{Binding ChangeReleaseRecordCommand}"
-                            Command="{Binding ChangeReleaseRecordCommand}">
-                        <Button.Content>
-                            <controls:WPRIconText Text="{Binding ReleaseButtonText}" IconSource="Keyboard"/>
-                        </Button.Content>
-                    </Button>
-                    <Button DockPanel.Dock="Top"
-                            Command="{Binding ClaerReleaseBindingsCommand}" 
-                            ToolTip="{Binding ClaerReleaseBindingsCommand}">
-                        <Button.Content>
-                            <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}"></controls:WPRIcon>
-                        </Button.Content>
-                    </Button>
-                </ToolBar>
-                <Grid>
-                    <ListBox ItemsSource="{Binding ReleaseKeyBindings}" HorizontalContentAlignment="Stretch"/>
-                    <Border CornerRadius="5" Focusable="True" Opacity="0.4" Background="{DynamicResource AccentColorBrush}">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Setters>
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Style.Setters>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsReleaseRecorded}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="28" Margin="5" TextWrapping="Wrap" Text="Запись..."/>
-                            <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="20" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-            </DockPanel>
-
-        </Grid>
+        <ContentControl Content="{Binding JoyAction}"></ContentControl>
     </DockPanel>
 </Window>

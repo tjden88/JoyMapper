@@ -21,12 +21,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\WPR\WPR.MVVM\WPR.MVVM.csproj" />
-    <ProjectReference Include="..\..\WPR\WPR\WPR.csproj" />
+    <PackageReference Include="WPR.Styles" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

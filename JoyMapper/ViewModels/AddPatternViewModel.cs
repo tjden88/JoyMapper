@@ -1,10 +1,13 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using JoyMapper.Models;
+using JoyMapper.Helpers;
+using JoyMapper.Models.JoyActions;
 using JoyMapper.Services;
+using JoyMapper.Services.ActionWatchers;
+using JoyMapper.ViewModels.JoyActions;
 using SharpDX.DirectInput;
 using WPR;
 using WPR.MVVM.Commands;
@@ -12,13 +15,41 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal class AddPatternViewModel : WindowViewModel
+    internal class AddPatternViewModel : WindowViewModel, IDisposable
     {
-
-
-        public AddPatternViewModel()
+        public enum ActionType // Тип настраиваемого действия
         {
-            Task.Run(CheckActionStatus);
+            None,
+            SimpleButton,
+            ExtendedButton,
+            Axis
+        }
+
+
+        public AddPatternViewModel() => Task.Run(CheckActionStatus);
+
+        /// <summary> Для редактирования паттерна </summary>
+        public AddPatternViewModel(JoyActionViewModelBase viewModel) : this()
+        {
+            switch (viewModel)
+            {
+                case AxisJoyActionViewModel axis:
+                    _AxisJoyActionViewModel = axis;
+                    CurrentActionType = ActionType.Axis;
+                    break;
+                case SimpleButtonJoyActionViewModel sm:
+                    _SimpleButtonJoyActionViewModel = sm;
+                    _ExtendedButtonJoyActionViewModel.Button = sm.Button;
+                    CurrentActionType = ActionType.SimpleButton;
+                    break;
+                case ExtendedButtonJoyActionViewModel extended:
+                    _ExtendedButtonJoyActionViewModel = extended;
+                    _SimpleButtonJoyActionViewModel.Button = extended.Button;
+                    CurrentActionType = ActionType.ExtendedButton;
+                    break;
+                default:
+                    throw new NotSupportedException("Неизвестный тип");
+            }
         }
 
         #region Props
@@ -54,79 +85,16 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region IsPressRecorded : bool - Нажата ли кнопка записи нажатий
+        #region JoyName : string - Имя джойстика
 
-        /// <summary>Нажата ли кнопка записи нажатий</summary>
-        private bool _IsPressRecorded;
-
-        /// <summary>Нажата ли кнопка записи нажатий</summary>
-        public bool IsPressRecorded
-        {
-            get => _IsPressRecorded;
-            set => IfSet(ref _IsPressRecorded, value).CallPropertyChanged(nameof(PressButtonText));
-        }
-
-        #endregion
-
-
-        #region IsReleaseRecorded : bool - Нажата ли кнопка записи при отпускании
-
-        /// <summary>Нажата ли кнопка записи при отпускании</summary>
-        private bool _IsReleaseRecorded;
-
-        /// <summary>Нажата ли кнопка записи при отпускании</summary>
-        public bool IsReleaseRecorded
-        {
-            get => _IsReleaseRecorded;
-            set => IfSet(ref _IsReleaseRecorded, value).CallPropertyChanged(nameof(ReleaseButtonText));
-        }
-
-        #endregion
-
-
-        #region PressButtonText : string - Текст кнопки записи нажатия
-
-        /// <summary>Текст кнопки записи нажатия</summary>
-        public string PressButtonText => IsPressRecorded ? "Остановть запись" : "Начать запись";
-
-        #endregion
-
-
-        #region ReleaseButtonText : string - Текст кнопки записи отпускания
-
-        /// <summary>Текст кнопки записи отпускания</summary>
-        public string ReleaseButtonText => IsReleaseRecorded ? "Остановть запись" : "Начать запись";
-
-        #endregion
-
-
-        #region JoyName : string - Имя назначенного джойстика
-
-        /// <summary>Имя назначенного джойстика</summary>
+        /// <summary>Имя джойстика</summary>
         private string _JoyName;
 
-        /// <summary>Имя назначенного джойстика</summary>
+        /// <summary>Имя джойстика</summary>
         public string JoyName
         {
             get => _JoyName;
-            set => IfSet(ref _JoyName, value).CallPropertyChanged(nameof(JoyButtonText));
-        }
-
-        #endregion
-
-
-        #region JoyAction : JoyAction - Действие джойстика
-
-        /// <summary>Действие джойстика</summary>
-        private JoyAction _JoyAction;
-
-        /// <summary>Действие джойстика</summary>
-        public JoyAction JoyAction
-        {
-            get => _JoyAction;
-            set => IfSet(ref _JoyAction, value)
-                .CallPropertyChanged(nameof(JoyButtonText))
-                .CallPropertyChanged(nameof(AxisSettingsEnable));
+            set => Set(ref _JoyName, value);
         }
 
         #endregion
@@ -145,121 +113,137 @@ namespace JoyMapper.ViewModels
                 .CallPropertyChanged(nameof(ActionIsActiveText));
         }
 
-        #endregion
-
         /// <summary> Текст активности назначенного действия </summary>
         public string ActionIsActiveText => ActionIsActive
             ? "Активно"
             : "Неактивно";
 
 
-        /// <summary> Назначенное действие </summary>
-        public string JoyButtonText => JoyName is null
-            ? "-не определено-"
-            : JoyName + " - " + JoyAction?.ActionText;
+        #endregion
 
 
-        #region PressKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при нажатии кнопки
+        #region IsExtendedButtonMode : bool - Выбран режим расширенной привязки кнопки
 
-        /// <summary>Список команд при нажатии кнопки</summary>
-        private ObservableCollection<KeyboardKeyBinding> _PressKeyBindings = new();
+        /// <summary>Выбран режим расширенной привязки кнопки</summary>
+        private bool _IsExtendedButtonMode;
 
-        /// <summary>Список команд при нажатии кнопки</summary>
-        public ObservableCollection<KeyboardKeyBinding> PressKeyBindings
+        /// <summary>Выбран режим расширенной привязки кнопки</summary>
+        public bool IsExtendedButtonMode
         {
-            get => _PressKeyBindings;
-            set => Set(ref _PressKeyBindings, value);
+            get => _IsExtendedButtonMode;
+            set => IfSet(ref _IsExtendedButtonMode, value)
+                .Then(v => CurrentActionType = v ? ActionType.ExtendedButton : ActionType.SimpleButton)
+                .CallPropertyChanged(nameof(ButtonModeInfo));
         }
 
         #endregion
 
 
-        #region ReleaseKeyBindings : ObservableCollection<KeyboardKeyBinding> - Список команд при отпускании кнопки
+        #region ButtonModeInfo
 
-        /// <summary>Список команд при отпускании кнопки</summary>
-        private ObservableCollection<KeyboardKeyBinding> _ReleaseKeyBindings = new();
-
-        /// <summary>Список команд при отпускании кнопки</summary>
-        public ObservableCollection<KeyboardKeyBinding> ReleaseKeyBindings
-        {
-            get => _ReleaseKeyBindings;
-            set => Set(ref _ReleaseKeyBindings, value);
-        }
+        public string ButtonModeInfo => IsExtendedButtonMode
+            ? "Позволяет назначить до трёх разных команд на одну кнопку:\n" +
+              "◉ Одиночное нажатие\n" +
+              "◉ Двойное нажатие\n" +
+              "◉ Долгое нажатие"
+            : "Позволяет назначить разные команды на нажатие и отпускание.\n" +
+              "◉ Подходит для тумблеров\n";
 
         #endregion
 
 
-        #region AxisStartValue : int - Начальное значение оси
+        #region JoyActionText - string
 
-        /// <summary>Начальное значение оси</summary>
-        private int _AxisStartValue = 32768;
+        public string JoyActionText => $"{JoyName} - {JoyAction?.Description}";
 
-        /// <summary>Начальное значение оси</summary>
-        public int AxisStartValue
+        #endregion
+
+
+        #region CurrentActionType : ActionType - Тип действия
+
+        /// <summary>Тип действия</summary>
+        private ActionType _CurrentActionType = ActionType.None;
+
+        /// <summary>Тип действия</summary>
+        public ActionType CurrentActionType
         {
-            get => _AxisStartValue;
-            set
+            get => _CurrentActionType;
+            private set
             {
-                if (Equals(_AxisStartValue, value)) return;
-                _AxisStartValue = Math.Min(value, AxisFinishValue);
-                if (JoyAction?.Type == JoyAction.StateType.Axis)
+                _CurrentActionType = value;
+                OnPropertyChanged(nameof(CurrentActionType));
+                WatcherLogText = string.Empty;
+
+                if (value != ActionType.None)
                 {
-                    JoyAction.StartAxisValue = _AxisStartValue;
+                    _CurrentActionWatcher = ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel());
+                    _CurrentActionWatcher.OnActionHandled += s => WatcherLogText += $"{s}\n";
                 }
-                OnPropertyChanged(nameof(AxisStartValue));
+                else
+                    _CurrentActionWatcher = null;
+
+                OnPropertyChanged(nameof(JoyAction));
+                OnPropertyChanged(nameof(IsButton));
+                OnPropertyChanged(nameof(JoyActionText));
             }
         }
 
         #endregion
 
 
-        #region AxisFinishValue : int - Конечное значение оси
+        #region WatcherLogText : string - Текст отслеживания событий
 
-        /// <summary>Конечное значение оси</summary>
-        private int _AxisFinishValue = 65535;
+        /// <summary>Текст отслеживания событий</summary>
+        private string _WatcherLogText;
 
-        /// <summary>Конечное значение оси</summary>
-        public int AxisFinishValue
+        /// <summary>Текст отслеживания событий</summary>
+        public string WatcherLogText
         {
-            get => _AxisFinishValue;
-            set
-            {
-                if (Equals(_AxisFinishValue, value)) return;
-                _AxisFinishValue = Math.Max(value, AxisStartValue);
-                if (JoyAction?.Type == JoyAction.StateType.Axis)
-                {
-                    JoyAction.EndAxisValue = _AxisFinishValue;
-                }
-                OnPropertyChanged(nameof(AxisFinishValue));
-            }
-        }
-
-        #endregion
-
-        #region CurrentAxisValue : int - Текущее положение оси
-
-        /// <summary>Текущее положение оси</summary>
-        private int _CurrentAxisValue;
-
-        /// <summary>Текущее положение оси</summary>
-        public int CurrentAxisValue
-        {
-            get => _CurrentAxisValue;
-            private set => Set(ref _CurrentAxisValue, value);
+            get => _WatcherLogText;
+            set => Set(ref _WatcherLogText, value);
         }
 
         #endregion
 
         
 
-        /// <summary> Включить настройки оси </summary>
-        public bool AxisSettingsEnable => JoyAction?.Type == JoyAction.StateType.Axis;
+
+        #region IsButton
+
+        public bool IsButton => CurrentActionType is ActionType.SimpleButton or ActionType.ExtendedButton;
+
+        #endregion
+
+
+        #region JoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
+
+
+        private readonly SimpleButtonJoyActionViewModel _SimpleButtonJoyActionViewModel = new();
+
+        private readonly ExtendedButtonJoyActionViewModel _ExtendedButtonJoyActionViewModel = new();
+
+        private readonly AxisJoyActionViewModel _AxisJoyActionViewModel = new();
+
+
+        /// <summary>Текущая вьюмодель действия</summary>
+        public JoyActionViewModelBase JoyAction =>
+            CurrentActionType switch
+            {
+                ActionType.Axis => _AxisJoyActionViewModel,
+                ActionType.SimpleButton => _SimpleButtonJoyActionViewModel,
+                ActionType.ExtendedButton => _ExtendedButtonJoyActionViewModel,
+                _ => null
+            };
+
+
+        #endregion
 
 
         #endregion
 
 
         #region Commands
+
 
         #region Command AttachButtonIfEmptyCommand - Назначить кнопку джойстика если не назначена
 
@@ -295,107 +279,22 @@ namespace JoyMapper.ViewModels
             var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
             if (joyAction == null) return;
 
-            if (joyAction.Type == JoyAction.StateType.Axis)
-            {
-                joyAction.StartAxisValue = AxisStartValue;
-                joyAction.EndAxisValue = AxisFinishValue;
-            }
-            JoyAction = joyAction;
             JoyName = joyName;
-        }
+            var action = joyAction.ToViewModel();
+            if (action is AxisJoyActionViewModel axisJoyActionViewModel)
+            {
+                _AxisJoyActionViewModel.Axis = axisJoyActionViewModel.Axis;
+                CurrentActionType = ActionType.Axis;
+            }
+            else
+            {
+                var btnAction = (SimpleButtonJoyActionViewModel)action;
+                _SimpleButtonJoyActionViewModel.Button = btnAction.Button;
+                _ExtendedButtonJoyActionViewModel.Button = btnAction.Button;
+                CurrentActionType = IsExtendedButtonMode ? ActionType.ExtendedButton : ActionType.SimpleButton;
+            }
 
-        #endregion
-
-
-        #region Command ChangePressRecordCommand - Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика
-
-        /// <summary>Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
-        private Command _ChangePressRecordCommand;
-
-        /// <summary>Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
-        public Command ChangePressRecordCommand => _ChangePressRecordCommand
-            ??= new Command(OnChangePressRecordCommandExecuted, CanChangePressRecordCommandExecute, "Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика");
-
-        /// <summary>Проверка возможности выполнения - Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
-        private bool CanChangePressRecordCommandExecute() => true;
-
-        /// <summary>Логика выполнения - Начать / остановить запись клавиатурных команд при нажатии кнопки джойстика</summary>
-        private void OnChangePressRecordCommandExecuted() => IsPressRecorded = !IsPressRecorded;
-
-        #endregion
-
-
-        #region Command ChangeReleaseRecordCommand - Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика
-
-        /// <summary>Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
-        private Command _ChangeReleaseRecordCommand;
-
-        /// <summary>Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
-        public Command ChangeReleaseRecordCommand => _ChangeReleaseRecordCommand
-            ??= new Command(OnChangeReleaseRecordCommandExecuted, CanChangeReleaseRecordCommandExecute, "Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика");
-
-        /// <summary>Проверка возможности выполнения - Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
-        private bool CanChangeReleaseRecordCommandExecute() => true;
-
-        /// <summary>Логика выполнения - Начать / остановить запись клавиатурных команд при отпускании кнопки джойстика</summary>
-        private void OnChangeReleaseRecordCommandExecuted() => IsReleaseRecorded = !IsReleaseRecorded;
-
-        #endregion
-
-
-        #region Command ClaerPressBindingsCommand - Очистить назначения команд нажатия
-
-        /// <summary>Очистить назначения команд нажатия</summary>
-        private Command _ClaerPressBindingsCommand;
-
-        /// <summary>Очистить назначения команд нажатия</summary>
-        public Command ClaerPressBindingsCommand => _ClaerPressBindingsCommand
-            ??= new Command(OnClaerPressBindingsCommandExecuted, CanClaerPressBindingsCommandExecute, "Очистить назначения команд нажатия");
-
-        /// <summary>Проверка возможности выполнения - Очистить назначения команд нажатия</summary>
-        private bool CanClaerPressBindingsCommandExecute() => PressKeyBindings?.Count > 0;
-
-        /// <summary>Логика выполнения - Очистить назначения команд нажатия</summary>
-        private void OnClaerPressBindingsCommandExecuted() => PressKeyBindings.Clear();
-
-        #endregion
-
-
-        #region Command ClaerReleaseBindingsCommand - Очистить назначения команд отпускания
-
-        /// <summary>Очистить назначения команд отпускания</summary>
-        private Command _ClaerReleaseBindingsCommand;
-
-        /// <summary>Очистить назначения команд отпускания</summary>
-        public Command ClaerReleaseBindingsCommand => _ClaerReleaseBindingsCommand
-            ??= new Command(OnClaerReleaseBindingsCommandExecuted, CanClaerReleaseBindingsCommandExecute, "Очистить назначения команд отпускания");
-
-        /// <summary>Проверка возможности выполнения - Очистить назначения команд отпускания</summary>
-        private bool CanClaerReleaseBindingsCommandExecute() => ReleaseKeyBindings?.Count > 0;
-
-        /// <summary>Логика выполнения - Очистить назначения команд отпускания</summary>
-        private void OnClaerReleaseBindingsCommandExecuted() => ReleaseKeyBindings.Clear();
-
-        #endregion
-
-
-        #region Command RemoveKeyBindingCommand : KeyboardKeyBinding - Удалить назначение клавиши
-
-        /// <summary>Удалить назначение клавиши</summary>
-        private Command<KeyboardKeyBinding> _RemoveKeyBindingCommand;
-
-        /// <summary>Удалить назначение клавиши</summary>
-        public Command<KeyboardKeyBinding> RemoveKeyBindingCommand => _RemoveKeyBindingCommand
-            ??= new Command<KeyboardKeyBinding>(OnRemoveKeyBindingCommandExecuted, CanRemoveKeyBindingCommandExecute, "Удалить назначение клавиши");
-
-        /// <summary>Проверка возможности выполнения - Удалить назначение клавиши</summary>
-        private bool CanRemoveKeyBindingCommandExecute(KeyboardKeyBinding p) => true;
-
-        /// <summary>Проверка возможности выполнения - Удалить назначение клавиши</summary>
-        private void OnRemoveKeyBindingCommandExecuted(KeyboardKeyBinding p)
-        {
-            PressKeyBindings.Remove(p);
-            ReleaseKeyBindings.Remove(p);
+            JoyName = joyName;
         }
 
         #endregion
@@ -416,25 +315,27 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Сохранить паттерн</summary>
         private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-            if (JoyName == null || JoyAction == null)
+            if (JoyAction == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
             }
 
-            if (PressKeyBindings.Count == 0 && ReleaseKeyBindings.Count == 0)
+            if (!JoyAction.HasKeyBindings)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Клавиатурные команды не назначены");
                 return;
             }
 
-            if (string.IsNullOrEmpty(PatternName))
+            var patternName = PatternName?.Trim();
+
+            if (string.IsNullOrEmpty(patternName))
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Введите имя паттерна");
                 return;
             }
 
-            PatternName = PatternName.Trim();
+            PatternName = patternName;
             ChangesSaved = true;
         }
 
@@ -442,50 +343,60 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
+
+        #region WatchStatus
+
+        private ActionWatcherBase _CurrentActionWatcher;
+
+
         // Проверяет сатус назначеного действия
         private async Task CheckActionStatus()
         {
-            var joystickState = new JoystickState();
-            while (!ChangesSaved)
+            while (!_Disposed)
             {
-                if (JoyAction != null)
+                try
                 {
+                    if (_CurrentActionWatcher == null)
+                    {
+                        await Task.Delay(200);
+                        continue;
+                    }
+
+                    if (_CurrentActionWatcher is AxisActionWatcher axisWatcher)
+                    {
+                        var action = (AxisJoyAction)axisWatcher.JoyAction;
+                        action.EndValue = _AxisJoyActionViewModel.EndValue;
+                        action.StartValue = _AxisJoyActionViewModel.StartValue;
+                        _AxisJoyActionViewModel.CurrentAxisValue = axisWatcher.CurrentValue;
+                    }
+
                     var instance = new DirectInput()
                         .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
                         .FirstOrDefault(d => d.ProductName == JoyName);
-                    if (instance != null)
-                    {
-                        var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
-                        joy.Acquire();
-                        joy.Poll();
-                        await Task.Delay(100);
-                        joy.GetCurrentState(ref joystickState);
-                        var status = JoyAction.IsActionActive(ref joystickState);
-                        ActionIsActive = status;
-                        if (JoyAction.Type == JoyAction.StateType.Axis)
-                        {
-                            // Обновить значение оси
 
-                            var newValue = JoyAction.Axis switch
-                            {
-                                JoyAction.Axises.X => joystickState.X,
-                                JoyAction.Axises.Y => joystickState.Y,
-                                JoyAction.Axises.Z => joystickState.Z,
-                                JoyAction.Axises.RX => joystickState.RotationX,
-                                JoyAction.Axises.RY => joystickState.RotationY,
-                                JoyAction.Axises.RZ => joystickState.RotationZ,
-                                JoyAction.Axises.Slider1 => joystickState.Sliders[0],
-                                JoyAction.Axises.Slider2 => joystickState.Sliders[1],
-                                _ => throw new ArgumentOutOfRangeException()
-                            };
-                            CurrentAxisValue = newValue;
-                        }
+                    if (instance == null) continue;
 
-                        joy.Unacquire();
-                    }
+                    var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
+                    joy.Acquire();
+                    await Task.Delay(50);
+
+                    _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel(), false);
+                    ActionIsActive = _CurrentActionWatcher.IsActive;
+
+
+                    joy.Unacquire();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
                 }
             }
         }
 
+        #endregion
+
+        private bool _Disposed;
+        public void Dispose() => _Disposed = true;
     }
 }

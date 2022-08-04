@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyMapper", "JoyMapper\JoyMapper.csproj", "{52833D50-9880-4FEA-A75B-5D651496AE0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPR", "..\WPR\WPR\WPR.csproj", "{DAA9B710-26B8-453E-9F12-AC3FA35A3D18}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{52833D50-9880-4FEA-A75B-5D651496AE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52833D50-9880-4FEA-A75B-5D651496AE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52833D50-9880-4FEA-A75B-5D651496AE0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DAA9B710-26B8-453E-9F12-AC3FA35A3D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAA9B710-26B8-453E-9F12-AC3FA35A3D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAA9B710-26B8-453E-9F12-AC3FA35A3D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAA9B710-26B8-453E-9F12-AC3FA35A3D18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

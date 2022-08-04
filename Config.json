@@ -1,7 +1,9 @@
 ﻿{
   "AppSettings": {
+    "AppVersion": "1.3",
     "JoystickPollingDelay": 50,
-    "KeyboardInputDelay": 5,
+    "DoublePressDelay": 400,
+    "LongPressDelay": 500,
     "CurrentColorCheme": 0
   },
   "Profiles": [],

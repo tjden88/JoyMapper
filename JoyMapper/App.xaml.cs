@@ -11,7 +11,7 @@ namespace JoyMapper
     {
 
         /// <summary> Версия приложения </summary>
-        internal const string AppVersion = "1.2";
+        internal const string AppVersion = "1.3";
 
         /// <summary> Менеджер данных профилей текущей сессии </summary>
         internal static DataManager DataManager { get; } = new();

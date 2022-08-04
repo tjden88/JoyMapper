@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Windows;
+using Newtonsoft.Json;
 
 namespace JoyMapper.Services
 {
@@ -12,6 +11,12 @@ namespace JoyMapper.Services
     /// </summary>
     internal class DataSerializer
     {
+        private readonly JsonSerializerSettings _Settings = new()
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            NullValueHandling = NullValueHandling.Ignore,
+        };
+
         /// <summary>
         /// Создать копию объекта
         /// </summary>
@@ -21,8 +26,8 @@ namespace JoyMapper.Services
         {
             try
             {
-                var serialized = JsonSerializer.Serialize(obj);
-                return JsonSerializer.Deserialize<T>(serialized);
+                var serialized = JsonConvert.SerializeObject(obj, Formatting.Indented, _Settings);
+                return JsonConvert.DeserializeObject<T>(serialized, _Settings);
             }
             catch (Exception e)
             {
@@ -40,8 +45,7 @@ namespace JoyMapper.Services
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, };
-                var serialized = JsonSerializer.Serialize(obj, options);
+                var serialized = JsonConvert.SerializeObject(obj, Formatting.Indented, _Settings);
 
                 File.WriteAllText(FileName, serialized, Encoding.UTF8);
             }
@@ -63,7 +67,7 @@ namespace JoyMapper.Services
             try
             {
                 var jsonString = File.ReadAllText(FileName);
-                return JsonSerializer.Deserialize<T>(jsonString);
+                return JsonConvert.DeserializeObject<T>(jsonString, _Settings);
             }
             catch (Exception e)
             {

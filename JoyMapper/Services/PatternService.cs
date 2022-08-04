@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using JoyMapper.Helpers;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 using JoyMapper.Views;
@@ -16,7 +16,7 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern AddPattern()
         {
-           var vm = new AddPatternViewModel
+           using var vm = new AddPatternViewModel
            {
                 Title = "Добавить паттерн"
             };
@@ -39,14 +39,11 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern EditPattern(KeyPattern pattern)
         {
-            var vm = new AddPatternViewModel
+            using var vm = new AddPatternViewModel(pattern.JoyAction.ToViewModel())
             {
-                Title = $"Редактировать паттерн {pattern.Name}",
-                JoyAction = pattern.JoyAction,
+                Title = $"Редактировать паттерн: {pattern.Name}",
                 JoyName = pattern.JoyName,
                 PatternName = pattern.Name,
-                PressKeyBindings = new(pattern.PressKeyBindings),
-                ReleaseKeyBindings = new(pattern.ReleaseKeyBindings),
             };
             var wnd = new AddPattern
             {
@@ -65,10 +62,8 @@ namespace JoyMapper.Services
         {
             var keyPattern = new KeyPattern
             {
-                JoyAction = ViewModel.JoyAction,
+                JoyAction = ViewModel.JoyAction.ToModel(),
                 JoyName = ViewModel.JoyName,
-                PressKeyBindings = ViewModel.PressKeyBindings.ToList(),
-                ReleaseKeyBindings = ViewModel.ReleaseKeyBindings.ToList(),
                 Name = ViewModel.PatternName,
             };
             return keyPattern;
