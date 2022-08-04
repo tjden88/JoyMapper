@@ -15,13 +15,8 @@ namespace JoyMapper.Services
         // задержка опроса джойстика
         private int _PollingDelay;
 
-        // задержка между командами ввода клавиатуры
-        private int _InputDelay;
 
-
-        private readonly KeyboardSender _Sender = new();
-
-        // Используемые в профиле джойстики
+        // Используемые в профиле поллеры
         private List<JoystickPoller> _JoystickPollers;
 
         // Активен ли трекинг
@@ -35,7 +30,6 @@ namespace JoyMapper.Services
                 Stop();
 
             _PollingDelay = App.DataManager.AppSettings.JoystickPollingDelay;
-            _InputDelay = App.DataManager.AppSettings.KeyboardInputDelay;
 
             var keyPatterns = App.DataManager.KeyPatterns
                 .Where(p => profile.KeyPatternsIds.Contains(p.Id))
@@ -76,7 +70,7 @@ namespace JoyMapper.Services
 
 
             foreach (var poller in _JoystickPollers)
-                poller.SyncActions();
+                Task.Run(poller.SyncActions);
 
             
             IsActive = true;

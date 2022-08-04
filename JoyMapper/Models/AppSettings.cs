@@ -5,11 +5,17 @@
     /// </summary>
     internal class AppSettings
     {
+        public string AppVersion { get; set; } = App.AppVersion;
+
+
         /// <summary> Интервал опроса джойстиков </summary>
         public int JoystickPollingDelay { get; set; } = 50;
 
-        /// <summary> Интервал задержки между нажатиями кнопок клавиатуры </summary>
-        public int KeyboardInputDelay { get; set; } = 5;
+        /// <summary> Задержка двойного нажатия кнопки </summary>
+        public int DoublePressDelay { get; set; } = 400;
+
+        /// <summary> Задержка долгого нажатия кнопки </summary>
+        public int LongPressDelay { get; set; } = 500;
 
         /// <summary> Id текущей цветовой схемы </summary>
         public int CurrentColorCheme { get; set; }

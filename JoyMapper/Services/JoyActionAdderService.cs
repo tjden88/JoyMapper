@@ -1,5 +1,4 @@
-﻿using JoyMapper.Models;
-using JoyMapper.Models.JoyActions;
+﻿using JoyMapper.Models.JoyActions;
 using JoyMapper.ViewModels;
 using JoyMapper.Views;
 

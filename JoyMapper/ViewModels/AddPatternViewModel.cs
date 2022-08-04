@@ -184,6 +184,7 @@ namespace JoyMapper.ViewModels
 
                 OnPropertyChanged(nameof(JoyAction));
                 OnPropertyChanged(nameof(IsButton));
+                OnPropertyChanged(nameof(JoyActionText));
             }
         }
 
@@ -278,6 +279,7 @@ namespace JoyMapper.ViewModels
             var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
             if (joyAction == null) return;
 
+            JoyName = joyName;
             var action = joyAction.ToViewModel();
             if (action is AxisJoyActionViewModel axisJoyActionViewModel)
             {

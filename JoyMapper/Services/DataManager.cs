@@ -29,7 +29,7 @@ namespace JoyMapper.Services
         private Data _ProfilesData;
         private Data ProfilesData => _ProfilesData ??= LoadData();
 
-        public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p=>p.Id);
+        public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p => p.Id);
         public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns.OrderBy(p => p.Id);
 
         public AppSettings AppSettings => ProfilesData.AppSettings;
@@ -139,7 +139,7 @@ namespace JoyMapper.Services
             ProfilesData.KeyPatterns.Remove(ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == patternId));
 
             foreach (var profile in Profiles)
-            { 
+            {
                 profile.KeyPatternsIds.Remove(patternId);
             }
 
@@ -151,7 +151,13 @@ namespace JoyMapper.Services
 
         #endregion
 
-        private Data LoadData() => _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
+        private Data LoadData()
+        {
+            var appSettVersion = _DataSerializer.LoadFromFile<AppSettings>(_SettingsFileName)?.AppVersion;
+            if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
+                File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion}-backup.json"), true);
 
+            return _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
+        }
     }
 }
