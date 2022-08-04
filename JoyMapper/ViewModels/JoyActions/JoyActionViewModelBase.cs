@@ -21,5 +21,8 @@ namespace JoyMapper.ViewModels.JoyActions
         /// <summary>Описание действия</summary>
         public abstract string Description { get; }
 
+        /// <summary> Есть ли назначенные кнопки </summary>
+        public abstract bool HasKeyBindings { get; }
+
     }
 }

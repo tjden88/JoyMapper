@@ -80,6 +80,21 @@ namespace JoyMapper.ViewModels.JoyActions
         #endregion
 
 
+        #region CurrentAxisValue : int - Текущее положение оси
+
+        /// <summary>Текущее положение оси</summary>
+        private int _CurrentAxisValue;
+
+        /// <summary>Текущее положение оси</summary>
+        public int CurrentAxisValue
+        {
+            get => _CurrentAxisValue;
+            private set => Set(ref _CurrentAxisValue, value);
+        }
+
+        #endregion
+
+
         public override string Description => "Ось " + Axis;
     }
 }
