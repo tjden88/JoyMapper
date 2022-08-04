@@ -51,7 +51,7 @@ namespace JoyMapper.Services
 
             foreach (var state in _ActionsCurrentStates)
             {
-                state.Watcher.Poll(joyState);
+                state.Watcher.Poll(joyState, false);
                 if (state.IsActive != state.Watcher.IsActive)
                 {
                     state.IsActive = state.Watcher.IsActive;
@@ -64,7 +64,15 @@ namespace JoyMapper.Services
 
         public void SyncActions()
         {
+            var joyState = GetJoyState();
 
+            if (joyState == null) return;
+
+            foreach (var state in _ActionsCurrentStates)
+            {
+                state.Watcher.Poll(joyState, false);
+                state.IsActive = state.Watcher.IsActive;
+            }
         }
 
 

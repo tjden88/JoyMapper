@@ -99,17 +99,10 @@ namespace JoyMapper.ViewModels
         {
             get => _JoyAction;
             set => IfSet(ref _JoyAction, value)
-                .Then(v =>
-                {
-                    if (v is null)
-                        _CurrentActionWatcher = null;
-                    else
-                    {
-                        var currentActionWatcher = ActionWatcherFactory.CreateActionWatcherBase(v.ToModel());
-                        currentActionWatcher.AlloySendKeyboardCommands = false;
-                        _CurrentActionWatcher = currentActionWatcher;
-                    }
-                });
+                .Then(v => 
+                    _CurrentActionWatcher = v is null 
+                        ? null 
+                        : ActionWatcherFactory.CreateActionWatcherBase(v.ToModel()));
         }
 
         #endregion
@@ -225,7 +218,7 @@ namespace JoyMapper.ViewModels
                 joy.Acquire();
                 await Task.Delay(100);
 
-                _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel());
+                _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel(), false);
                 ActionIsActive = _CurrentActionWatcher.IsActive;
 
 
