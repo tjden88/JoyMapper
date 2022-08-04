@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyActions;
 using JoyMapper.Services;
+using JoyMapper.Services.ActionWatchers;
 using JoyMapper.ViewModels.JoyActions;
 using SharpDX.DirectInput;
 using WPR;
@@ -151,12 +153,18 @@ namespace JoyMapper.ViewModels
         public JoyActionViewModelBase CurrentJoyAction
         {
             get => _CurrentJoyAction;
-            set => Set(ref _CurrentJoyAction, value);
+            set => IfSet(ref _CurrentJoyAction, value)
+                .Then(v =>
+                {
+                    _CurrentActionWatcher = v is null 
+                        ? null 
+                        : ActionWatcherFactory.CreateActionWatcherBase(v);
+                });
         }
 
         #endregion
 
-        
+        private ActionWatcherBase _CurrentActionWatcher;
 
         #endregion
 
