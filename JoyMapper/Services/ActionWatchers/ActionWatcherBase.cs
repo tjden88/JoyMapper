@@ -20,7 +20,7 @@ namespace JoyMapper.Services.ActionWatchers
         /// <summary> Отправить клавиатурные команды в очередь команд </summary>
         protected void SendKeyboardCommands(List<KeyboardKeyBinding> keyboardKeyBindings)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

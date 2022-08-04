@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 using SharpDX.DirectInput;
+using JoyState = JoyMapper.ViewModels.JoyState;
 
 namespace JoyMapper.Services
 {
