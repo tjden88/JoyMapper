@@ -42,7 +42,7 @@ namespace JoyMapper.Services
             var vm = new AddPatternViewModel
             {
                 Title = $"Редактировать паттерн {pattern.Name}",
-                JoyActionOld = pattern.JoyActionOld,
+                JoyActionOld = pattern.JoyAction,
                 JoyName = pattern.JoyName,
                 PatternName = pattern.Name,
                 PressKeyBindings = new(pattern.PressKeyBindings),
@@ -65,7 +65,7 @@ namespace JoyMapper.Services
         {
             var keyPattern = new KeyPattern
             {
-                JoyActionOld = ViewModel.JoyActionOld,
+                JoyAction = ViewModel.JoyActionOld,
                 JoyName = ViewModel.JoyName,
                 PressKeyBindings = ViewModel.PressKeyBindings.ToList(),
                 ReleaseKeyBindings = ViewModel.ReleaseKeyBindings.ToList(),

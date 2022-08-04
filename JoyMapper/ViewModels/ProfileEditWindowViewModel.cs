@@ -100,7 +100,7 @@ namespace JoyMapper.ViewModels
                 IsSelected = profile.KeyPatternsIds.Contains(p.Id),
                 PatternName = p.Name,
                 PatternId = p.Id,
-                Description = p.JoyName + " - " + p.JoyActionOld.ActionText
+                Description = p.JoyName + " - " + p.JoyAction.ActionText
             });
 
             SelectedPatterns = new(mapped);

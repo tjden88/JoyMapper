@@ -74,7 +74,7 @@ namespace JoyMapper.Services
                     Joystick = joy,
                     Actions = keyPatterns
                         .Where(p=>p.JoyName == joy.Information.InstanceName)
-                        .Select(p=> new JoyState.ActionState(p.JoyActionOld))
+                        .Select(p=> new JoyState.ActionState(p.JoyAction))
                         .ToList()
                 })
                 .ToList();
@@ -85,7 +85,7 @@ namespace JoyMapper.Services
                 foreach (var actionState in joyState.Actions)
                 {
                     var pattern = keyPatterns.First(p =>
-                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyActionOld == actionState.ActionOld);
+                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyAction == actionState.ActionOld);
                     actionState.PressKeyBindings = pattern.PressKeyBindings;
                     actionState.ReleaseKeyBindings = pattern.ReleaseKeyBindings;
                 }

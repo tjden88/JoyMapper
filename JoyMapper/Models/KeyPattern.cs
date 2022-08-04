@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using JoyMapper.Models.JoyActions;
 
 namespace JoyMapper.Models
 {
@@ -9,9 +9,7 @@ namespace JoyMapper.Models
 
         public string JoyName { get; set; }
 
-        public JoyActionOld JoyActionOld { get; set; }
+        public JoyActionBase JoyAction { get; set; }
 
-        public List<KeyboardKeyBinding> PressKeyBindings { get; set; }
-        public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
     }
 }

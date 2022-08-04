@@ -30,7 +30,7 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region JoyActionOld : JoyActionOld - Назначаемое действие джойстика
+        #region JoyAction : JoyAction - Назначаемое действие джойстика
 
         /// <summary>Назначаемое действие джойстика</summary>
         private JoyActionOld _JoyActionOld;
