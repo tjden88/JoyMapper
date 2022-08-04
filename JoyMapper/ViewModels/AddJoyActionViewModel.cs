@@ -6,7 +6,6 @@ using System.Windows.Input;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 using JoyMapper.Services;
-using JoyMapper.Services.ActionWatchers;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;

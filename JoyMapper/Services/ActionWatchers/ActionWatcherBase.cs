@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
@@ -11,6 +10,8 @@ namespace JoyMapper.Services.ActionWatchers
     /// </summary>
     internal abstract class ActionWatcherBase
     {
+        private static readonly KeyboardSender _Sender = new();
+
 
         /// <summary> Ассоциированное действие </summary>
         public abstract JoyActionBase JoyAction { get; }
@@ -26,7 +27,15 @@ namespace JoyMapper.Services.ActionWatchers
         /// <summary> Отправить клавиатурные команды в очередь команд </summary>
         protected void SendKeyboardCommands(List<KeyboardKeyBinding> keyboardKeyBindings)
         {
-            throw new NotImplementedException();
+            foreach (var binding in keyboardKeyBindings)
+            {
+                if (binding.IsPress)
+                    _Sender.PressKey(binding.KeyCode);
+                else
+                    _Sender.ReleaseKey(binding.KeyCode);
+
+                //await Task.Delay(_InputDelay);
+            }
         }
     }
 }

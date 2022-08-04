@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
 using SharpDX.DirectInput;
-using JoyState = JoyMapper.ViewModels.JoyState;
 
 namespace JoyMapper.Services
 {
@@ -14,16 +13,16 @@ namespace JoyMapper.Services
     internal class ProfileWorker
     {
         // задержка опроса джойстика
-        private int _PollingDelay ;
+        private int _PollingDelay;
 
         // задержка между командами ввода клавиатуры
-        private int _InputDelay ;
+        private int _InputDelay;
 
 
         private readonly KeyboardSender _Sender = new();
 
         // Используемые в профиле джойстики
-        private List<JoyState> _UsedInProfileJoystickStates;
+        private List<JoystickPoller> _JoystickPollers;
 
         // Активен ли трекинг
         private bool IsActive { get; set; }
@@ -55,51 +54,38 @@ namespace JoyMapper.Services
                 .Distinct()
                 .ToArray();
 
-            var usedJoysticks = new DirectInput()
+            var usedDevices = new DirectInput()
                 .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
                 .Where(d => usedJoyNames.Contains(d.InstanceName))
-                .Select(d => new Joystick(new DirectInput(), d.InstanceGuid))
                 .ToArray();
 
-            if (usedJoysticks.Length == 0)
+            if (usedDevices.Length == 0)
             {
                 AppLog.LogMessage("Джойстики, используемые в этом профиле, не найдены. Подключите их и перезапустите профиль"
                     , LogMessage.MessageType.Error);
                 return;
             }
 
-            _UsedInProfileJoystickStates = usedJoysticks
-                .Select(joy => new JoyState
-                {
-                    Joystick = joy,
-                    Actions = keyPatterns
-                        .Where(p=>p.JoyName == joy.Information.InstanceName)
-                        .Select(p=> new JoyState.ActionState(p.JoyAction))
-                        .ToList()
-                })
+            _JoystickPollers = usedDevices
+                .Select(joy => new JoystickPoller(joy.InstanceName,
+                    keyPatterns
+                        .Where(p => p.JoyName == joy.InstanceName)
+                        .Select(p => p.JoyAction)
+                ))
                 .ToList();
 
 
-            foreach (var joyState in _UsedInProfileJoystickStates)
-            {
-                foreach (var actionState in joyState.Actions)
-                {
-                    var pattern = keyPatterns.First(p =>
-                        p.JoyName == joyState.Joystick.Information.InstanceName && p.JoyAction == actionState.ActionOld);
-                    actionState.PressKeyBindings = pattern.PressKeyBindings;
-                    actionState.ReleaseKeyBindings = pattern.ReleaseKeyBindings;
-                }
+            foreach (var poller in _JoystickPollers)
+                poller.SyncActions();
 
-                joyState.SyncStatus();
-            }
-
+            
             IsActive = true;
             Task.Run(Work);
             AppLog.LogMessage("Профиль запущен");
 
-            if (usedJoysticks.Length < usedJoyNames.Length)
+            if (usedDevices.Length < usedJoyNames.Length)
             {
-                AppLog.LogMessage($"Найдено {usedJoysticks.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
+                AppLog.LogMessage($"Найдено {usedDevices.Length} джойстиков из задействованных в профиле: {usedJoyNames.Length}.\n" +
                                   $"Подключите нужные устройства и перезапустите профиль", LogMessage.MessageType.Warning);
             }
 
@@ -116,14 +102,8 @@ namespace JoyMapper.Services
         {
             while (IsActive)
             {
-                foreach (var joyState in _UsedInProfileJoystickStates)
-                {
-                    var diff = joyState.GetDifferents();
-                    foreach (var diffState in diff)
-                        await SendCommands(diffState.IsActive
-                            ? diffState.PressKeyBindings
-                            : diffState.ReleaseKeyBindings);
-                }
+                foreach (var poller in _JoystickPollers) poller.Poll();
+
                 await Task.Delay(_PollingDelay);
             }
         }
@@ -133,7 +113,7 @@ namespace JoyMapper.Services
         {
             foreach (var binding in keyBindings)
             {
-                if(binding.IsPress)
+                if (binding.IsPress)
                     _Sender.PressKey(binding.KeyCode);
                 else
                     _Sender.ReleaseKey(binding.KeyCode);

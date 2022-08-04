@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using JoyMapper.Models;
 using JoyMapper.ViewModels;
 
 namespace JoyMapper.Views
