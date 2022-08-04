@@ -16,7 +16,7 @@
         mc:Ignorable="d"
         Title="{Binding Title}" Height="550" Width="700">
     <Window.Resources>
-        
+
     </Window.Resources>
     <d:Window.DataContext>
         <viewModels:AddPatternViewModel/>
@@ -111,6 +111,21 @@
         </Grid>
 
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
+
+        <!--Тип биндинга кнопки-->
+        <DockPanel DockPanel.Dock="Top" >
+            <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
+            <StackPanel >
+                <TextBlock DockPanel.Dock="Top"  Text="Тип привязки кнопки" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                <RadioButton Margin="5" Content="Стандартный" IsChecked="{Binding IsExtendedButtonMode, Converter={StaticResource BoolNotConverter}}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Расширенный" IsChecked="{Binding IsExtendedButtonMode}" FontWeight="Bold"/>
+            </StackPanel>
+            <WrapPanel Margin="5,8,5,5">
+                <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ButtonModeInfo}"/>
+            </WrapPanel>
+        </DockPanel>
 
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
                 Content="Сохранить" IsDefault="True"

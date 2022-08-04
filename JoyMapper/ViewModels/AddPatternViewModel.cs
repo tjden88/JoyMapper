@@ -83,6 +83,33 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region IsExtendedButtonMode : bool - Выбран режим расширенной привязки кнопки
+
+        /// <summary>Выбран режим расширенной привязки кнопки</summary>
+        private bool _IsExtendedButtonMode;
+
+        /// <summary>Выбран режим расширенной привязки кнопки</summary>
+        public bool IsExtendedButtonMode
+        {
+            get => _IsExtendedButtonMode;
+            set => IfSet(ref _IsExtendedButtonMode, value).CallPropertyChanged(nameof(ButtonModeInfo));
+        }
+
+        #endregion
+
+        #region ButtonModeInfo
+
+        public string ButtonModeInfo => IsExtendedButtonMode
+            ? "Позволяет назначить до трёх разных команд на одну кнопку:\n" +
+              "   ◉ Одиночное нажатие\n" +
+              "   ◉ Двойное нажатие\n" +
+              "   ◉ Долгое нажатие"
+            : "Позволяет назначить разные команды на нажатие и отпускание.\n" +
+              "   ◉ Подходит для тумблеров\n";
+
+        #endregion
+
+
         /// <summary> Текст активности назначенного действия </summary>
         public string ActionIsActiveText => ActionIsActive
             ? "Активно"
@@ -102,9 +129,9 @@ namespace JoyMapper.ViewModels
             get => _JoyAction;
             set => IfSet(ref _JoyAction, value)
                 .CallPropertyChanged(nameof(JoyActionText))
-                .Then(v => 
-                    _CurrentActionWatcher = v is null 
-                        ? null 
+                .Then(v =>
+                    _CurrentActionWatcher = v is null
+                        ? null
                         : ActionWatcherFactory.CreateActionWatcherBase(v.ToModel()));
         }
 
