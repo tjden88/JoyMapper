@@ -1,4 +1,4 @@
-﻿using JoyMapper.Models;
+﻿using JoyMapper.Models.JoyActions;
 using JoyMapper.ViewModels;
 using JoyMapper.Views;
 
@@ -10,7 +10,7 @@ namespace JoyMapper.Services
     internal class JoyActionAdderService
     {
         /// <summary> Получить привязку к действию джойстика </summary>
-        public JoyActionOld MapJoyAction(out string JoyName)
+        public JoyActionBase MapJoyAction(out string JoyName)
         {
             JoyName = null;
             var vm = new AddJoyActionViewModel();
