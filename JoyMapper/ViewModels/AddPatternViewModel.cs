@@ -147,7 +147,8 @@ namespace JoyMapper.ViewModels
             var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
             if (joyAction == null) return;
 
-            // TODO: не работает
+            JoyName = joyName;
+            JoyAction = _JoyAction;
         }
 
         #endregion
