@@ -20,7 +20,7 @@ namespace JoyMapper.Services.ActionWatchers
 
 
         /// <summary> Активно ли состояние действия </summary>
-        protected bool IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         /// <summary> Отправить клавиатурные команды в очередь команд </summary>
         protected void SendKeyboardCommands(List<KeyboardKeyBinding> keyboardKeyBindings)

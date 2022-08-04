@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using JoyMapper.Models;
-using JoyMapper.Models.JoyActions;
+using JoyMapper.Helpers;
 using JoyMapper.Services;
 using JoyMapper.Services.ActionWatchers;
 using JoyMapper.ViewModels.JoyActions;
@@ -54,22 +52,6 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
-
-
-        #region JoyName : string - Имя назначенного джойстика
-
-        /// <summary>Имя назначенного джойстика</summary>
-        private string _JoyName;
-
-        /// <summary>Имя назначенного джойстика</summary>
-        public string JoyName
-        {
-            get => _JoyName;
-            set => IfSet(ref _JoyName, value).CallPropertyChanged(nameof(JoyButtonText));
-        }
-
-        #endregion
-
 
 
         #region ActionIsActive : bool - Назначенное действие джойстика сейчас активно
@@ -156,9 +138,14 @@ namespace JoyMapper.ViewModels
             set => IfSet(ref _CurrentJoyAction, value)
                 .Then(v =>
                 {
-                    _CurrentActionWatcher = v is null 
-                        ? null 
-                        : ActionWatcherFactory.CreateActionWatcherBase(v);
+                    if (v is null)
+                        _CurrentActionWatcher = null;
+                    else
+                    {
+                        var currentActionWatcher = ActionWatcherFactory.CreateActionWatcherBase(v.ToModel());
+                        currentActionWatcher.AlloySendKeyboardCommands = false;
+                        _CurrentActionWatcher = currentActionWatcher;
+                    }
                 });
         }
 
@@ -207,7 +194,6 @@ namespace JoyMapper.ViewModels
             if (joyAction == null) return;
 
             // TODO: не работает
-            JoyName = joyName;
         }
 
         #endregion
@@ -229,7 +215,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Сохранить паттерн</summary>
         private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-            if (JoyName == null || CurrentJoyAction == null)
+            if (CurrentJoyAction == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
@@ -260,15 +246,18 @@ namespace JoyMapper.ViewModels
         // Проверяет сатус назначеного действия
         private async Task CheckActionStatus()
         {
-            var joystickState = new JoystickState();
             while (!ChangesSaved)
             {
-                if (CurrentJoyAction == null) continue;
+                if (_CurrentActionWatcher == null)
+                {
+                    await Task.Delay(200);
+                    continue;
+                }
 
 
                 var instance = new DirectInput()
                     .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                    .FirstOrDefault(d => d.ProductName == JoyName);
+                    .FirstOrDefault(d => d.ProductName == CurrentJoyAction.JoyName);
 
                 if (instance == null) continue;
 
@@ -276,27 +265,9 @@ namespace JoyMapper.ViewModels
                 joy.Acquire();
                 await Task.Delay(100);
 
-                joy.GetCurrentState(ref joystickState);
-                var status = JoyActionOld.IsActionActive(ref joystickState);
-                ActionIsActive = status;
-                if (JoyActionOld.Type == JoyActionOld.StateType.Axis)
-                {
-                    // Обновить значение оси
+                _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel());
+                ActionIsActive = _CurrentActionWatcher.IsActive;
 
-                    var newValue = JoyActionOld.Axis switch
-                    {
-                        JoyActionOld.Axises.X => joystickState.X,
-                        JoyActionOld.Axises.Y => joystickState.Y,
-                        JoyActionOld.Axises.Z => joystickState.Z,
-                        JoyActionOld.Axises.RX => joystickState.RotationX,
-                        JoyActionOld.Axises.RY => joystickState.RotationY,
-                        JoyActionOld.Axises.RZ => joystickState.RotationZ,
-                        JoyActionOld.Axises.Slider1 => joystickState.Sliders[0],
-                        JoyActionOld.Axises.Slider2 => joystickState.Sliders[1],
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-                    CurrentAxisValue = newValue;
-                }
 
                 joy.Unacquire();
             }
