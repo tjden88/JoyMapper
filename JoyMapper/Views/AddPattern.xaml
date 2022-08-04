@@ -14,27 +14,9 @@
         WindowStartupLocation="CenterOwner"
         Focusable="True"
         mc:Ignorable="d"
-        Name="Window"
         Title="{Binding Title}" Height="550" Width="700">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-            <Grid Background="{StaticResource TransparentBrush}" Name="Grid">
-
-                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5"/>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Center"
-                        Style="{StaticResource WPRToolButton}" Margin="0,0,5,0"
-                        Visibility="{Binding ElementName=Grid, Path=IsMouseOver, Converter={StaticResource Bool2VisibilityConverter}}"
-                        Foreground="Red"
-                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveKeyBindingCommand}"
-                        ToolTip="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveKeyBindingCommand}"
-                        CommandParameter="{Binding}"
-                        Background="Transparent" BorderThickness="0">
-                    <Button.Content>
-                        <controls:WPRIcon Source="TrashOutline"/>
-                    </Button.Content>
-                </Button>
-            </Grid>
-        </DataTemplate>
+        
     </Window.Resources>
     <d:Window.DataContext>
         <viewModels:AddPatternViewModel/>
@@ -68,7 +50,7 @@
             </Button>
             <DockPanel Grid.Column="1">
                 <!--Настройки оси-->
-                <DockPanel DockPanel.Dock="Bottom"  Margin="10,0" Visibility="{Binding AxisSettingsEnable, Converter={StaticResource Bool2VisibilityConverter}}">
+                <!--<DockPanel DockPanel.Dock="Bottom"  Margin="10,0" Visibility="{Binding AxisSettingsEnable, Converter={StaticResource Bool2VisibilityConverter}}">
                     <Separator DockPanel.Dock="Top"/>
                     <TextBlock Text="{Binding CurrentAxisValue, StringFormat='Текущее значение: {0}'}" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
 
@@ -98,12 +80,12 @@
                                 Value="{Binding AxisFinishValue}" />
                         <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding AxisFinishValue}"/>
                     </Grid>
-                </DockPanel>
+                </DockPanel>-->
 
                 <!--Инфо о назначенном действии-->
                 <StackPanel  Orientation="Vertical" Margin="10">
                     <TextBlock Text="Назначенная кнопка / ось" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                    <TextBlock Text="{Binding JoyButtonText}"  Margin="0,5,0,0"/>
+                    <TextBlock Text="{Binding JoyActionText}"  Margin="0,5,0,0"/>
                     <DockPanel>
                         <TextBlock Text="Текущий статус:" Margin="0,5" FontWeight="Bold"/>
                         <Ellipse Width="16" Height="16" Margin="5">

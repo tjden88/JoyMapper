@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using JoyMapper.Models;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -76,6 +77,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
         #region Command ClearBindingsCommand - Очистить назначенные клавиши
 
         /// <summary>Очистить назначенные клавиши</summary>
@@ -86,13 +88,31 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnClearBindingsCommandExecuted, CanClearBindingsCommandExecute, "Очистить назначенные клавиши");
 
         /// <summary>Проверка возможности выполнения - Очистить назначенные клавиши</summary>
-        private bool CanClearBindingsCommandExecute() => true;
+        private bool CanClearBindingsCommandExecute() => KeyBindings.Any();
 
         /// <summary>Логика выполнения - Очистить назначенные клавиши</summary>
         private void OnClearBindingsCommandExecuted()
         {
             KeyBindings.Clear();
         }
+
+        #endregion
+
+
+        #region Command RemoveKeyBindingCommand - Удалить действие клавиши
+
+        /// <summary>Удалить действие клавиши</summary>
+        private Command _RemoveKeyBindingCommand;
+
+        /// <summary>Удалить действие клавиши</summary>
+        public Command RemoveKeyBindingCommand => _RemoveKeyBindingCommand
+            ??= new Command(OnRemoveKeyBindingCommandExecuted, CanRemoveKeyBindingCommandExecute, "Удалить действие клавиши");
+
+        /// <summary>Проверка возможности выполнения - Удалить действие клавиши</summary>
+        private bool CanRemoveKeyBindingCommandExecute(object p) => p is KeyboardKeyBinding;
+
+        /// <summary>Логика выполнения - Удалить действие клавиши</summary>
+        private void OnRemoveKeyBindingCommandExecuted(object p) => KeyBindings.Remove((KeyboardKeyBinding)p);
 
         #endregion
 

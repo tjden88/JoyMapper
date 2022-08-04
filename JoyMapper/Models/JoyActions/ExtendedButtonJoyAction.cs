@@ -9,9 +9,9 @@ internal class ExtendedButtonJoyAction : JoyActionBase
 {
     public JoyButton Button { get; set; }
 
-    public List<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
-    public List<KeyboardKeyBinding> DoublePressKeyBindings { get; set; }
-    public List<KeyboardKeyBinding> LongPressKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> SinglePressKeyBindings { get; set; } = new();
+    public List<KeyboardKeyBinding> DoublePressKeyBindings { get; set; } = new();
+    public List<KeyboardKeyBinding> LongPressKeyBindings { get; set; } = new();
 
     public override string Description => Button.ToString();
 

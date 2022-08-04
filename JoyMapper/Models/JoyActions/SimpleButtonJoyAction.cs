@@ -9,9 +9,9 @@ namespace JoyMapper.Models.JoyActions
     {
         public JoyButton Button { get; set; }
 
-        public List<KeyboardKeyBinding> PressKeyBindings { get; set; }
+        public List<KeyboardKeyBinding> PressKeyBindings { get; set; } = new();
 
-        public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
+        public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; } = new();
 
         public override string Description => Button.ToString();
 

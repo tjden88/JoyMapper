@@ -25,9 +25,9 @@ internal class AxisJoyAction : JoyActionBase
 
     public int EndValue { get; set; }
 
-    public List<KeyboardKeyBinding> OnRangeKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> OnRangeKeyBindings { get; set; } = new();
 
-    public List<KeyboardKeyBinding> OutOfRangeKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> OutOfRangeKeyBindings { get; set; } = new();
 
     public override string Description => "Ось " + Axis;
 

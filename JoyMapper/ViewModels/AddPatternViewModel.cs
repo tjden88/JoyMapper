@@ -88,6 +88,8 @@ namespace JoyMapper.ViewModels
             ? "Активно"
             : "Неактивно";
 
+        public string JoyActionText => $"{JoyName} - {JoyAction?.Description}";
+
 
         #region JoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
 
@@ -99,6 +101,7 @@ namespace JoyMapper.ViewModels
         {
             get => _JoyAction;
             set => IfSet(ref _JoyAction, value)
+                .CallPropertyChanged(nameof(JoyActionText))
                 .Then(v => 
                     _CurrentActionWatcher = v is null 
                         ? null 
@@ -148,7 +151,7 @@ namespace JoyMapper.ViewModels
             if (joyAction == null) return;
 
             JoyName = joyName;
-            JoyAction = _JoyAction;
+            JoyAction = joyAction.ToViewModel();
         }
 
         #endregion
