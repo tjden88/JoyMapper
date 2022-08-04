@@ -20,10 +20,13 @@ namespace JoyMapper.Views
         {
             var vm = ViewModel;
             if (vm.JoyAction?.IsRecording != true) return;
+            if (!e.IsRepeat)
+            {
+                var key = e.Key == Key.System ? e.SystemKey : e.Key;
 
-            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+                vm.JoyAction.AddKeyBinding(key, true);
 
-            vm.JoyAction.AddKeyBinding(key, true);
+            }
             e.Handled = true;
         }
 
@@ -32,10 +35,13 @@ namespace JoyMapper.Views
         {
             var vm = ViewModel;
             if (vm.JoyAction?.IsRecording != true) return;
+            if (!e.IsRepeat)
+            {
+                var key = e.Key == Key.System ? e.SystemKey : e.Key;
 
-            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+                vm.JoyAction.AddKeyBinding(key, false);
 
-            vm.JoyAction.AddKeyBinding(key, false);
+            }
             e.Handled = true;
         }
 
