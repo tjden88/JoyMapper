@@ -14,7 +14,9 @@ internal class AxisActionWatcher : ActionWatcherBase
         _AxisJoyAction = axisJoyAction;
     }
 
-    public override void Poll(JoyState joyState)
+    public override JoyActionBase JoyAction => _AxisJoyAction;
+
+    public override void Poll(JoyState joyState, bool SendCommands)
     {
         var axisState = _AxisJoyAction.Axis switch
         {
@@ -40,6 +42,8 @@ internal class AxisActionWatcher : ActionWatcherBase
         if (IsActive == axisState) return;
 
         IsActive = axisState;
+
+        if(!SendCommands) return;
 
         Debug.WriteLine(axisState ? "SendingOnRangeKeyBindings" : "SendingOutOfRangeKeyBindings");
 

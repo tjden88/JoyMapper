@@ -7,8 +7,6 @@ namespace JoyMapper.Models.JoyActions
     /// </summary>
     internal abstract class JoyActionBase
     {
-        public string JoyName { get; set; }
-
         /// <summary> Описание дествия </summary>
         [JsonIgnore]
         public abstract string Description { get; }

@@ -14,7 +14,9 @@ namespace JoyMapper.Services.ActionWatchers
             _ButtonJoyAction = buttonJoyAction;
         }
 
-        public override void Poll(JoyState joyState)
+        public override JoyActionBase JoyAction => _ButtonJoyAction;
+
+        public override void Poll(JoyState joyState, bool SendCommands)
         {
             var btnState = _ButtonJoyAction.Button.Type switch
             {
@@ -25,6 +27,8 @@ namespace JoyMapper.Services.ActionWatchers
             };
 
             if(IsActive == btnState) return;
+
+            if(!SendCommands) return;
 
             IsActive = btnState;
             Debug.WriteLine(btnState ? "SendingPressKbCommands" : "SendingReleaseKbCommands");

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyActions;
+using JoyMapper.Services.ActionWatchers;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -33,13 +35,13 @@ namespace JoyMapper.ViewModels
         #region JoyAction : JoyAction - Назначаемое действие джойстика
 
         /// <summary>Назначаемое действие джойстика</summary>
-        private JoyActionOld _JoyActionOld;
+        private JoyActionBase _JoyAction;
 
         /// <summary>Назначаемое действие джойстика</summary>
-        public JoyActionOld JoyActionOld
+        public JoyActionBase JoyAction
         {
-            get => _JoyActionOld;
-            set => IfSet(ref _JoyActionOld, value)
+            get => _JoyAction;
+            set => IfSet(ref _JoyAction, value)
                 .CallPropertyChanged(nameof(JoyActionName));
         }
 
@@ -47,7 +49,7 @@ namespace JoyMapper.ViewModels
 
 
         /// <summary>Имя действия джойстика</summary>
-        public string JoyActionName => JoyActionOld?.ActionText ?? "Действие...";
+        public string JoyActionName => JoyAction?.Description ?? "Действие...";
 
 
         #region Accepted : bool - Принять привязку
@@ -79,7 +81,7 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnAcceptButtonCommandExecuted, CanAcceptButtonCommandExecute, "Принять изменения");
 
         /// <summary>Проверка возможности выполнения - Принять изменения</summary>
-        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyActionOld != null;
+        private bool CanAcceptButtonCommandExecute() => JoyName != null && JoyAction != null;
 
         /// <summary>Логика выполнения - Принять изменения</summary>
         private void OnAcceptButtonCommandExecuted()
@@ -122,6 +124,15 @@ namespace JoyMapper.ViewModels
                 .Select(j => new Joystick(new DirectInput(), j.InstanceGuid))
                 .ToArray();
 
+
+            var watchers = AllJoyActions().Select(act =>
+            {
+                var actionWatcherBase = ActionWatcherFactory.CreateActionWatcherBase(act);
+                actionWatcherBase.AlloySendKeyboardCommands = false;
+                return actionWatcherBase;
+            });
+
+
             var joyStates = joys.Select(j => new JoyState()
             {
                 Joystick = j,
@@ -140,7 +151,7 @@ namespace JoyMapper.ViewModels
                     if (diff.FirstOrDefault(d => d.IsActive) is not { } firstDiff) continue;
 
                     JoyName = joyState.Joystick.Information.InstanceName;
-                    JoyActionOld = firstDiff.ActionOld;
+                    JoyAction = firstDiff.ActionOld;
                     CommandManager.InvalidateRequerySuggested();
                     break;
 
@@ -154,55 +165,50 @@ namespace JoyMapper.ViewModels
 
         #region AllActions
 
-        private static List<JoyState.ActionState> AllActions()
+        private static List<JoyActionBase> AllJoyActions()
         {
-            var list = new List<JoyState.ActionState>();
+            var list = new List<JoyActionBase>();
 
             // Кнопки
             for (var i = 1; i <= 128; i++)
             {
-                list.Add(new(new JoyActionOld
+                list.Add(new SimpleButtonJoyAction()
                 {
-                    Type = JoyActionOld.StateType.Button,
-                    ButtonNumber = i,
-                }));
+                    Button = new JoyButton() { Type = ButtonType.Button, Value = i },
+                });
             }
 
-            // POW
-            foreach (var powValue in JoyActionOld.PowValues)
-            {
-                list.Add(new(new JoyActionOld
-                {
-                    Type = JoyActionOld.StateType.POW1,
-                    POWPosition = powValue,
-                }
-                ));
+            var powValues = new[] { 0, 4500, 9000, 13500, 18000, 22500, 27000, 31500 };
 
-                list.Add(new(new JoyActionOld
+            // POW
+            foreach (var powValue in powValues)
+            {
+                list.Add(new SimpleButtonJoyAction()
                 {
-                    Type = JoyActionOld.StateType.POW2,
-                    POWPosition = powValue,
-                }
-                ));
+                    Button = new JoyButton() { Type = ButtonType.Pow1, Value = powValue },
+                });
+
+                list.Add(new SimpleButtonJoyAction()
+                {
+                    Button = new JoyButton() { Type = ButtonType.Pow2, Value = powValue },
+                });
             }
 
             // Оси
-            foreach (JoyActionOld.Axises axis in Enum.GetValues(typeof(JoyActionOld.Axises)))
+            foreach (AxisJoyAction.Axises axis in Enum.GetValues(typeof(AxisJoyAction.Axises)))
             {
-                list.Add(new(new JoyActionOld
+                list.Add(new AxisJoyAction()
                 {
-                    Type = JoyActionOld.StateType.Axis,
                     Axis = axis,
-                    StartAxisValue = 0,
-                    EndAxisValue = 20000,
-                }));
-                list.Add(new(new JoyActionOld
+                    StartValue = 0,
+                    EndValue = 20000,
+                });
+                list.Add(new AxisJoyAction()
                 {
-                    Type = JoyActionOld.StateType.Axis,
                     Axis = axis,
-                    StartAxisValue = 45000,
-                    EndAxisValue = 65535,
-                }));
+                    StartValue = 45000,
+                    EndValue = 65535,
+                });
             }
 
             return list;

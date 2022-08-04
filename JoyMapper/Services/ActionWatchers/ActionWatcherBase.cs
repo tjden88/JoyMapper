@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyActions;
 
 namespace JoyMapper.Services.ActionWatchers
 {
@@ -11,12 +12,12 @@ namespace JoyMapper.Services.ActionWatchers
     internal abstract class ActionWatcherBase
     {
 
-        /// <summary> Разрешить отправку команд клавиатуры </summary>
-        public bool AlloySendKeyboardCommands { get; set; } = true;
+        /// <summary> Ассоциированное действие </summary>
+        public abstract JoyActionBase JoyAction { get; }
 
 
         /// <summary> Обновить состояние действия </summary>
-        public abstract void Poll(JoyState joyState);
+        public abstract void Poll(JoyState joyState, bool SendCommands);
 
 
         /// <summary> Активно ли состояние действия </summary>
@@ -25,7 +26,6 @@ namespace JoyMapper.Services.ActionWatchers
         /// <summary> Отправить клавиатурные команды в очередь команд </summary>
         protected void SendKeyboardCommands(List<KeyboardKeyBinding> keyboardKeyBindings)
         {
-            if(!AlloySendKeyboardCommands) return;
             throw new NotImplementedException();
         }
     }

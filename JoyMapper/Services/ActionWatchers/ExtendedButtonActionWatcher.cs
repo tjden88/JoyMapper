@@ -16,12 +16,14 @@ namespace JoyMapper.Services.ActionWatchers
 
         private bool _FirstPressHandled; // Первое нажатие поймано
 
+        public override JoyActionBase JoyAction => _ButtonJoyAction;
+
         public ExtendedButtonActionWatcher(ExtendedButtonJoyAction buttonJoyAction)
         {
             _ButtonJoyAction = buttonJoyAction;
         }
 
-        public override void Poll(JoyState joyState)
+        public override void Poll(JoyState joyState, bool SendCommands)
         {
             var btnState = _ButtonJoyAction.Button.Type switch
             {
@@ -33,6 +35,8 @@ namespace JoyMapper.Services.ActionWatchers
 
             var prewState = IsActive;
             IsActive = btnState;
+
+            if(!SendCommands) return;
 
             // Кнопка не нажата и прошло время двойного клика
             if (_FirstPressHandled && !btnState && _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay)
