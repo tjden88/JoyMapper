@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows.Media;
 using JoyMapper.Models;
-using WPR;
 using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
