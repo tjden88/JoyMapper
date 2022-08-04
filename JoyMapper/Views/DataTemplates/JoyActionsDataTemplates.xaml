@@ -58,22 +58,58 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type joyActions:AxisJoyActionViewModel}">
-        <Grid>
+        <!--Настройки оси-->
+       <DockPanel>
+            <DockPanel DockPanel.Dock="Top"  Margin="5">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+                <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
 
-            <ContentControl Content="{Binding OnRangeKeys}" Margin="5"/>
+                <TextBlock Text="{Binding CurrentAxisValue, StringFormat='Текущее значение: {0}'}" DockPanel.Dock="Bottom" Margin="0,5,5,5"/>
 
-            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Начало активной зоны оси:" VerticalAlignment="Center" />
+                        <Slider VerticalAlignment="Center" Grid.Column="1" Margin="5" Maximum="65535" IsSelectionRangeEnabled="True"
+                                SelectionStart="{Binding StartValue}" 
+                                SelectionEnd="{Binding EndValue}" 
+                                Value="{Binding StartValue}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding StartValue}"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Конец активной зоны оси:"  VerticalAlignment="Center"/>
+                        <Slider VerticalAlignment="Center" Grid.Column="1" Margin="5" Maximum="65535" IsSelectionRangeEnabled="True" 
+                                SelectionStart="{Binding StartValue}" 
+                                SelectionEnd="{Binding EndValue}" 
+                                Value="{Binding EndValue}" />
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding EndValue}"/>
+                    </Grid>
+                </DockPanel>
+            <Grid>
 
-            <ContentControl Grid.Column="2" Content="{Binding OutOfRangeKeys}" Margin="5"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-        </Grid>
+                <ContentControl Content="{Binding OnRangeKeys}" Margin="5"/>
+
+                <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
+
+                <ContentControl Grid.Column="2" Content="{Binding OutOfRangeKeys}" Margin="5"/>
+
+            </Grid>
+        </DockPanel>
 
     </DataTemplate>
 
