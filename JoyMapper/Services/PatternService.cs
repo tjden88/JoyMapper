@@ -39,10 +39,9 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern EditPattern(KeyPattern pattern)
         {
-            var vm = new AddPatternViewModel
+            var vm = new AddPatternViewModel(pattern.JoyAction.ToViewModel())
             {
                 Title = $"Редактировать паттерн {pattern.Name}",
-                JoyAction = pattern.JoyAction.ToViewModel(),
                 JoyName = pattern.JoyName,
                 PatternName = pattern.Name,
             };

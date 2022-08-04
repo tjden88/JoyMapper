@@ -16,7 +16,7 @@ namespace JoyMapper.ViewModels
 {
     internal class AddPatternViewModel : WindowViewModel
     {
-        public enum ActionType
+        public enum ActionType // Тип настраиваемого действия
         {
             None,
             SimpleButton,
@@ -25,9 +25,29 @@ namespace JoyMapper.ViewModels
         }
 
 
-        private ActionWatcherBase _CurrentActionWatcher;
-
         public AddPatternViewModel() => Task.Run(CheckActionStatus);
+
+        /// <summary> Для редактирования паттерна </summary>
+        public AddPatternViewModel(JoyActionViewModelBase viewModel):this()
+        {
+            switch (viewModel)
+            {
+                case AxisJoyActionViewModel axis:
+                    _AxisJoyActionViewModel = axis;
+                    CurrentActionType = ActionType.Axis;
+                    break;
+                case SimpleButtonJoyActionViewModel sm:
+                    _SimpleButtonJoyActionViewModel = sm;
+                    CurrentActionType = ActionType.SimpleButton;
+                    break;
+                case ExtendedButtonJoyActionViewModel extended:
+                    _ExtendedButtonJoyActionViewModel = extended;
+                    CurrentActionType = ActionType.ExtendedButton;
+                    break;
+                default:
+                    throw new NotSupportedException("Неизвестный тип");
+            }
+        }
 
         #region Props
 
@@ -90,6 +110,12 @@ namespace JoyMapper.ViewModels
                 .CallPropertyChanged(nameof(ActionIsActiveText));
         }
 
+        /// <summary> Текст активности назначенного действия </summary>
+        public string ActionIsActiveText => ActionIsActive
+            ? "Активно"
+            : "Неактивно";
+
+
         #endregion
 
 
@@ -123,18 +149,17 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        /// <summary> Текст активности назначенного действия </summary>
-        public string ActionIsActiveText => ActionIsActive
-            ? "Активно"
-            : "Неактивно";
+        #region JoyActionText - string
 
-        public string JoyActionText => $"{JoyName} - {JoyAction?.Description}";
+        public string JoyActionText => $"{JoyName} - {JoyAction?.Description}"; 
+
+        #endregion
 
 
         #region CurrentActionType : ActionType - Тип действия
 
         /// <summary>Тип действия</summary>
-        private ActionType _CurrentActionType;
+        private ActionType _CurrentActionType = ActionType.None;
 
         /// <summary>Тип действия</summary>
         public ActionType CurrentActionType
@@ -274,6 +299,13 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
+
+        #region WatchStatus
+
+        private ActionWatcherBase _CurrentActionWatcher;
+
+
         // Проверяет сатус назначеного действия
         private async Task CheckActionStatus()
         {
@@ -311,5 +343,6 @@ namespace JoyMapper.ViewModels
             }
         }
 
+        #endregion
     }
 }
