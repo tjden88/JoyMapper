@@ -28,7 +28,7 @@ namespace JoyMapper.ViewModels
         public AddPatternViewModel() => Task.Run(CheckActionStatus);
 
         /// <summary> Для редактирования паттерна </summary>
-        public AddPatternViewModel(JoyActionViewModelBase viewModel):this()
+        public AddPatternViewModel(JoyActionViewModelBase viewModel) : this()
         {
             switch (viewModel)
             {
@@ -153,7 +153,7 @@ namespace JoyMapper.ViewModels
 
         #region JoyActionText - string
 
-        public string JoyActionText => $"{JoyName} - {JoyAction?.Description}"; 
+        public string JoyActionText => $"{JoyName} - {JoyAction?.Description}";
 
         #endregion
 
@@ -168,12 +168,15 @@ namespace JoyMapper.ViewModels
         {
             get => _CurrentActionType;
             private set => IfSet(ref _CurrentActionType, value)
+                .Then(v => _CurrentActionWatcher = v != ActionType.None 
+                    ? ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel()) 
+                    : null)
                 .CallPropertyChanged(nameof(JoyAction));
         }
 
         #endregion
 
-        
+
         #region JoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
 
 
@@ -246,7 +249,7 @@ namespace JoyMapper.ViewModels
             }
             else
             {
-                var btnAction = (SimpleButtonJoyActionViewModel) action;
+                var btnAction = (SimpleButtonJoyActionViewModel)action;
                 _SimpleButtonJoyActionViewModel.Button = btnAction.Button;
                 _ExtendedButtonJoyActionViewModel.Button = btnAction.Button;
                 CurrentActionType = IsExtendedButtonMode ? ActionType.ExtendedButton : ActionType.SimpleButton;

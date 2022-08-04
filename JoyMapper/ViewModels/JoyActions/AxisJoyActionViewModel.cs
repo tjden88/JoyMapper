@@ -26,7 +26,7 @@ namespace JoyMapper.ViewModels.JoyActions
         #region StartValue : int - Начальное значение
 
         /// <summary>Начальное значение</summary>
-        private int _StartValue;
+        private int _StartValue = 32768;
 
         /// <summary>Начальное значение</summary>
         public int StartValue
@@ -41,7 +41,7 @@ namespace JoyMapper.ViewModels.JoyActions
         #region EndValue : int - Конечное значение
 
         /// <summary>Конечное значение</summary>
-        private int _EndValue;
+        private int _EndValue = 65535;
 
         /// <summary>Конечное значение</summary>
         public int EndValue

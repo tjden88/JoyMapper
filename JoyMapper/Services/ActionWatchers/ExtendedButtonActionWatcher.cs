@@ -27,7 +27,7 @@ namespace JoyMapper.Services.ActionWatchers
         {
             var btnState = _ButtonJoyAction.Button.Type switch
             {
-                ButtonType.Button => joyState.Buttons[_ButtonJoyAction.Button.Value],
+                ButtonType.Button => joyState.Buttons[_ButtonJoyAction.Button.Value-1],
                 ButtonType.Pow1 => joyState.Pow1Value == _ButtonJoyAction.Button.Value,
                 ButtonType.Pow2 => joyState.Pow2Value == _ButtonJoyAction.Button.Value,
                 _ => throw new ArgumentOutOfRangeException()
