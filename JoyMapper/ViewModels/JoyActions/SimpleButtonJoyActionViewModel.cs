@@ -46,8 +46,8 @@ internal class SimpleButtonJoyActionViewModel : JoyActionViewModelBase
     public override void AddKeyBinding(Key key, bool isPress)
     {
         if(PressKeys.IsRecorded)
-            PressKeys.KeyBindings.Add(new KeyboardKeyBinding {IsPress = isPress, KeyCode = key});
+            PressKeys.KeyBindings.Add(new KeyboardKeyBinding {Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key});
         if (ReleaseKeys.IsRecorded)
-            ReleaseKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+            ReleaseKeys.KeyBindings.Add(new KeyboardKeyBinding { Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key });
     }
 }

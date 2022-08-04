@@ -107,20 +107,5 @@ namespace JoyMapper.Services
                 await Task.Delay(_PollingDelay);
             }
         }
-
-
-        private async Task SendCommands(List<KeyboardKeyBinding> keyBindings)
-        {
-            foreach (var binding in keyBindings)
-            {
-                if (binding.IsPress)
-                    _Sender.PressKey(binding.KeyCode);
-                else
-                    _Sender.ReleaseKey(binding.KeyCode);
-
-                await Task.Delay(_InputDelay);
-            }
-
-        }
     }
 }

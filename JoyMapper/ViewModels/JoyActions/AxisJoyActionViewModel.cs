@@ -103,9 +103,9 @@ namespace JoyMapper.ViewModels.JoyActions
         public override void AddKeyBinding(Key key, bool isPress)
         {
             if (OnRangeKeys.IsRecorded)
-                OnRangeKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+                OnRangeKeys.KeyBindings.Add(new KeyboardKeyBinding { Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key });
             if (OutOfRangeKeys.IsRecorded)
-                OutOfRangeKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+                OutOfRangeKeys.KeyBindings.Add(new KeyboardKeyBinding { Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key });
         }
     }
 }

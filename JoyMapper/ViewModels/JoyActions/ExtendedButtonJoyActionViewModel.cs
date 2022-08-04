@@ -53,10 +53,10 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
     public override void AddKeyBinding(Key key, bool isPress)
     {
         if (SinglePressKeys.IsRecorded)
-            SinglePressKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+            SinglePressKeys.KeyBindings.Add(new KeyboardKeyBinding { Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key });
         if (DoublePressKeys.IsRecorded)
-            DoublePressKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+            DoublePressKeys.KeyBindings.Add(new KeyboardKeyBinding { Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key });
         if (LongPressKeys.IsRecorded)
-            LongPressKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+            LongPressKeys.KeyBindings.Add(new KeyboardKeyBinding { Action = isPress ? KeyboardKeyBinding.KeyboardAction.KeyPress : KeyboardKeyBinding.KeyboardAction.KeyUp, KeyCode = key });
     }
 }

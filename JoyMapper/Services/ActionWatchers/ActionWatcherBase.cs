@@ -32,10 +32,17 @@ namespace JoyMapper.Services.ActionWatchers
         {
             foreach (var binding in keyboardKeyBindings)
             {
-                if (binding.IsPress)
-                    _Sender.PressKey(binding.KeyCode);
-                else
-                    _Sender.ReleaseKey(binding.KeyCode);
+                switch (binding.Action)
+                {
+                    case KeyboardKeyBinding.KeyboardAction.KeyPress:
+                        _Sender.PressKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.KeyUp:
+                        _Sender.ReleaseKey(binding.KeyCode);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
     }
