@@ -36,13 +36,14 @@ namespace JoyMapper.Services.ActionWatchers
             var prewState = IsActive;
             IsActive = btnState;
 
-            if(!SendCommands) return;
 
             // Кнопка не нажата и прошло время двойного клика
             if (_FirstPressHandled && !btnState && _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay)
             {
+                OnActionHandled?.Invoke("Одиночное нажатие");
+
                 Debug.WriteLine("SinglePressSend: " + _ButtonJoyAction.Button);
-                SendSinglePress();
+               if(SendCommands) SendSinglePress();
                 _FirstPressHandled = false;
                 _DelayMeter = null;
             }
@@ -57,8 +58,9 @@ namespace JoyMapper.Services.ActionWatchers
                 }
                 else // Второе нажатие
                 {
+                    OnActionHandled?.Invoke("Двойное нажатие");
                     Debug.WriteLine("DoublePressSend: " + _ButtonJoyAction.Button);
-                    SendDoublePress();
+                    if (SendCommands) SendDoublePress();
                     _FirstPressHandled = false;
                     _DelayMeter = null;
                 }
@@ -67,8 +69,9 @@ namespace JoyMapper.Services.ActionWatchers
             // Кнопка нажата больше времени долгого нажатия
             if (_FirstPressHandled && btnState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
             {
+                OnActionHandled?.Invoke("Долгое нажатие");
                 Debug.WriteLine("LongPressSend: " + _ButtonJoyAction.Button);
-                SendLongPress();
+                if (SendCommands) SendLongPress();
                 _FirstPressHandled = false;
                 _DelayMeter = null;
             }

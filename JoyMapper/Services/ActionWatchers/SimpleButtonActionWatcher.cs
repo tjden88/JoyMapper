@@ -30,7 +30,9 @@ namespace JoyMapper.Services.ActionWatchers
             IsActive = btnState;
            if(isActive == btnState) return;
 
-            if(!SendCommands) return;
+             OnActionHandled?.Invoke(btnState ? "Нажатие кнопки" : "Отпускание кнопки");
+           if(!SendCommands) return;
+
 
             Debug.WriteLine(btnState ? "SendingPressKbCommands" : "SendingReleaseKbCommands");
             SendKeyboardCommands(btnState 

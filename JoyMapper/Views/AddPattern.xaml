@@ -50,6 +50,9 @@
             </Button>
             <DockPanel Grid.Column="1">
 
+                <ScrollViewer DockPanel.Dock="Right" Width="250" Height="80" VerticalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding WatcherLogText}"/>
+                </ScrollViewer>
 
                 <!--Инфо о назначенном действии-->
                 <StackPanel  Orientation="Vertical" Margin="10">

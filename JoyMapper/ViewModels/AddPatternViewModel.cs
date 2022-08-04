@@ -15,7 +15,7 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal class AddPatternViewModel : WindowViewModel
+    internal class AddPatternViewModel : WindowViewModel, IDisposable
     {
         public enum ActionType // Тип настраиваемого действия
         {
@@ -172,10 +172,15 @@ namespace JoyMapper.ViewModels
             {
                 _CurrentActionType = value;
                 OnPropertyChanged(nameof(CurrentActionType));
+                WatcherLogText = string.Empty;
 
-                _CurrentActionWatcher = value != ActionType.None
-                    ? ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel())
-                    : null;
+                if (value != ActionType.None)
+                {
+                    _CurrentActionWatcher = ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel());
+                    _CurrentActionWatcher.OnActionHandled += s => WatcherLogText += $"{s}\n";
+                }
+                else
+                    _CurrentActionWatcher = null;
 
                 OnPropertyChanged(nameof(JoyAction));
                 OnPropertyChanged(nameof(IsButton));
@@ -183,6 +188,23 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
+
+        #region WatcherLogText : string - Текст отслеживания событий
+
+        /// <summary>Текст отслеживания событий</summary>
+        private string _WatcherLogText;
+
+        /// <summary>Текст отслеживания событий</summary>
+        public string WatcherLogText
+        {
+            get => _WatcherLogText;
+            set => Set(ref _WatcherLogText, value);
+        }
+
+        #endregion
+
+        
 
 
         #region IsButton
@@ -329,7 +351,7 @@ namespace JoyMapper.ViewModels
         // Проверяет сатус назначеного действия
         private async Task CheckActionStatus()
         {
-            while (!ChangesSaved)
+            while (!_Disposed)
             {
                 try
                 {
@@ -355,7 +377,7 @@ namespace JoyMapper.ViewModels
 
                     var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
                     joy.Acquire();
-                    await Task.Delay(100);
+                    await Task.Delay(50);
 
                     _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel(), false);
                     ActionIsActive = _CurrentActionWatcher.IsActive;
@@ -371,5 +393,8 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
+        private bool _Disposed;
+        public void Dispose() => _Disposed = true;
     }
 }

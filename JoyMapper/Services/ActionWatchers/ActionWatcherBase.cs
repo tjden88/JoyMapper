@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
@@ -12,6 +13,8 @@ namespace JoyMapper.Services.ActionWatchers
     {
         private static readonly KeyboardSender _Sender = new();
 
+        /// <summary> Сообщает о пойманном действии </summary>
+        public Action<string> OnActionHandled { get; set; }
 
         /// <summary> Ассоциированное действие </summary>
         public abstract JoyActionBase JoyAction { get; }
@@ -33,8 +36,6 @@ namespace JoyMapper.Services.ActionWatchers
                     _Sender.PressKey(binding.KeyCode);
                 else
                     _Sender.ReleaseKey(binding.KeyCode);
-
-                //await Task.Delay(_InputDelay);
             }
         }
     }

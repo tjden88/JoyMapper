@@ -78,11 +78,13 @@ internal class AxisActionWatcher : ActionWatcherBase
             return;
         }
 
+        OnActionHandled?.Invoke(axisState ? "Вход в диапазон оси" : "Выход из диапазона оси");
 
         if (!SendCommands)
         {
             return;
         }
+
 
         Debug.WriteLine(axisState ? "SendingOnRangeKeyBindings" : "SendingOutOfRangeKeyBindings");
 

@@ -16,7 +16,7 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern AddPattern()
         {
-           var vm = new AddPatternViewModel
+           using var vm = new AddPatternViewModel
            {
                 Title = "Добавить паттерн"
             };
@@ -39,7 +39,7 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern EditPattern(KeyPattern pattern)
         {
-            var vm = new AddPatternViewModel(pattern.JoyAction.ToViewModel())
+            using var vm = new AddPatternViewModel(pattern.JoyAction.ToViewModel())
             {
                 Title = $"Редактировать паттерн: {pattern.Name}",
                 JoyName = pattern.JoyName,
