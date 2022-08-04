@@ -19,53 +19,54 @@ namespace JoyMapper.Views
 
         private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            var vm = ViewModel;
-            var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            if (vm.IsPressRecorded && !e.IsRepeat)
-            {
-                vm.PressKeyBindings.Add(new KeyboardKeyBinding()
-                {
-                    IsPress = true,
-                    KeyCode = key,
-                });
-                e.Handled = true;
-            }
+            //TODO: Перенести логику привязок
+            //var vm = ViewModel;
+            //var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            //if (vm.IsPressRecorded && !e.IsRepeat)
+            //{
+            //    vm.PressKeyBindings.Add(new KeyboardKeyBinding()
+            //    {
+            //        IsPress = true,
+            //        KeyCode = key,
+            //    });
+            //    e.Handled = true;
+            //}
 
-            if (vm.IsReleaseRecorded && !e.IsRepeat)
-            {
-                vm.ReleaseKeyBindings.Add(new KeyboardKeyBinding()
-                {
-                    IsPress = true,
-                    KeyCode = key
-                });
-                e.Handled = true;
-            }
+            //if (vm.IsReleaseRecorded && !e.IsRepeat)
+            //{
+            //    vm.ReleaseKeyBindings.Add(new KeyboardKeyBinding()
+            //    {
+            //        IsPress = true,
+            //        KeyCode = key
+            //    });
+            //    e.Handled = true;
+            //}
         }
 
 
         private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
-            var vm = ViewModel;
-            var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            if (vm.IsPressRecorded)
-            {
-                vm.PressKeyBindings.Add(new KeyboardKeyBinding()
-                {
-                    IsPress = false,
-                    KeyCode = key
-                });
-                e.Handled = true;
-            }
+            //var vm = ViewModel;
+            //var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            //if (vm.IsPressRecorded)
+            //{
+            //    vm.PressKeyBindings.Add(new KeyboardKeyBinding()
+            //    {
+            //        IsPress = false,
+            //        KeyCode = key
+            //    });
+            //    e.Handled = true;
+            //}
 
-            if (vm.IsReleaseRecorded)
-            {
-                vm.ReleaseKeyBindings.Add(new KeyboardKeyBinding()
-                {
-                    IsPress = false,
-                    KeyCode = key
-                });
-                e.Handled = true;
-            }
+            //if (vm.IsReleaseRecorded)
+            //{
+            //    vm.ReleaseKeyBindings.Add(new KeyboardKeyBinding()
+            //    {
+            //        IsPress = false,
+            //        KeyCode = key
+            //    });
+            //    e.Handled = true;
+            //}
         }
 
     }

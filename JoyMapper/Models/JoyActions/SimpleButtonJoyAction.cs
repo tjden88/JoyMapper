@@ -13,5 +13,7 @@ namespace JoyMapper.Models.JoyActions
 
         public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
 
+        public override string Description => Button.ToString();
+
     }
 }

@@ -42,6 +42,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
         #region RecordButtonText : string - Текст кнопки записи нажатия
 
         /// <summary>Текст кнопки записи нажатия</summary>
