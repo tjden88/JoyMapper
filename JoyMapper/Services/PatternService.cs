@@ -41,7 +41,7 @@ namespace JoyMapper.Services
         {
             var vm = new AddPatternViewModel(pattern.JoyAction.ToViewModel())
             {
-                Title = $"Редактировать паттерн {pattern.Name}",
+                Title = $"Редактировать паттерн: {pattern.Name}",
                 JoyName = pattern.JoyName,
                 PatternName = pattern.Name,
             };

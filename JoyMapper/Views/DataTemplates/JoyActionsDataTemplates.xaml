@@ -28,4 +28,53 @@
     </DataTemplate>
 
 
+    <DataTemplate DataType="{x:Type joyActions:ExtendedButtonJoyActionViewModel}">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ContentControl Content="{Binding SinglePressKeys}" Margin="5"/>
+
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
+
+            <ContentControl Grid.Column="2" Content="{Binding DoublePressKeys}" Margin="5"/>
+
+            <Rectangle Grid.Column="3" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+
+            <GridSplitter Grid.Column="3" HorizontalAlignment="Center"/>
+
+            <ContentControl Grid.Column="4" Content="{Binding LongPressKeys}" Margin="5"/>
+
+        </Grid>
+
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type joyActions:AxisJoyActionViewModel}">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ContentControl Content="{Binding OnRangeKeys}" Margin="5"/>
+
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
+
+            <ContentControl Grid.Column="2" Content="{Binding OutOfRangeKeys}" Margin="5"/>
+
+        </Grid>
+
+    </DataTemplate>
+
 </ResourceDictionary>

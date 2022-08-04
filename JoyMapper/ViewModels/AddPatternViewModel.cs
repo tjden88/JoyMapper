@@ -38,10 +38,12 @@ namespace JoyMapper.ViewModels
                     break;
                 case SimpleButtonJoyActionViewModel sm:
                     _SimpleButtonJoyActionViewModel = sm;
+                    _ExtendedButtonJoyActionViewModel.Button = sm.Button;
                     CurrentActionType = ActionType.SimpleButton;
                     break;
                 case ExtendedButtonJoyActionViewModel extended:
                     _ExtendedButtonJoyActionViewModel = extended;
+                    _SimpleButtonJoyActionViewModel.Button = extended.Button;
                     CurrentActionType = ActionType.ExtendedButton;
                     break;
                 default:
