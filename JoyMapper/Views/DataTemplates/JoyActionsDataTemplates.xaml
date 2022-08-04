@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:joyActions="clr-namespace:JoyMapper.ViewModels.JoyActions"
+                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ActionKeyBindingDataTemplate.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate DataType="{x:Type joyActions:SimpleButtonJoyActionViewModel}">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ContentControl Content="{Binding PressKeys}" Margin="5"/>
+
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
+
+            <ContentControl Grid.Column="2" Content="{Binding ReleaseKeys}" Margin="5"/>
+
+        </Grid>
+
+    </DataTemplate>
+
+
+</ResourceDictionary>

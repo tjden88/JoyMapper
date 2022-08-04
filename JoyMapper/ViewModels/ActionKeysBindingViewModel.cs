@@ -59,6 +59,23 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region Command StartStopRecordCommand - Начать / остановить запись команд с клавиатуры
+
+        /// <summary>Начать / остановить запись команд с клавиатуры</summary>
+        private Command _StartStopRecordCommand;
+
+        /// <summary>Начать / остановить запись команд с клавиатуры</summary>
+        public Command StartStopRecordCommand => _StartStopRecordCommand
+            ??= new Command(OnStartStopRecordCommandExecuted, CanStartStopRecordCommandExecute, "Начать / остановить запись команд с клавиатуры");
+
+        /// <summary>Проверка возможности выполнения - Начать / остановить запись команд с клавиатуры</summary>
+        private bool CanStartStopRecordCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Начать / остановить запись команд с клавиатуры</summary>
+        private void OnStartStopRecordCommandExecuted() => IsRecorded = !IsRecorded;
+
+        #endregion
+
         #region Command ClearBindingsCommand - Очистить назначенные клавиши
 
         /// <summary>Очистить назначенные клавиши</summary>

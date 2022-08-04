@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source = "pack://application:,,,/WPR;component/Styles.xaml"/>
+                <ResourceDictionary Source = "Views/DataTemplates/JoyActionsDataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
