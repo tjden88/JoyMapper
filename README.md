@@ -36,6 +36,6 @@
 
 ---
 
-### [Скачать актуальную версию](https://github.com/tjden88/JoyMapper/releases/download/Release/JoyMapper.zip)
+### [Скачать актуальную версию](https://github.com/tjden88/JoyMapper/releases)
 
 После загрузки необходимо распаковать архив в любую папку.
