@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Input;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
@@ -32,7 +33,13 @@ namespace JoyMapper.ViewModels.JoyActions
         public int StartValue
         {
             get => _StartValue;
-            set => Set(ref _StartValue, value);
+            set
+            {
+                if (Equals(_StartValue, value)) return;
+                _StartValue = Math.Min(value, EndValue);
+
+                OnPropertyChanged(nameof(StartValue));
+            }
         }
 
         #endregion
@@ -47,7 +54,13 @@ namespace JoyMapper.ViewModels.JoyActions
         public int EndValue
         {
             get => _EndValue;
-            set => Set(ref _EndValue, value);
+            set
+            {
+                if (Equals(_EndValue, value)) return;
+                _EndValue = Math.Max(value, StartValue);
+
+                OnPropertyChanged(nameof(EndValue));
+            }
         }
 
         #endregion
