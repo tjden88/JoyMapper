@@ -38,24 +38,31 @@ namespace JoyMapper.Helpers
 
         public static JoyActionViewModelBase ToViewModel(this JoyActionBase model)
         {
-            if (model is AxisJoyAction axis)
+            return model switch
             {
-                return new AxisJoyActionViewModel
+                AxisJoyAction axis => new AxisJoyActionViewModel
                 {
-                    Axis = axis.Axis, 
+                    Axis = axis.Axis,
                     StartValue = axis.StartValue,
                     EndValue = axis.EndValue,
-                    OnRangeKeys =
-                    {
-                        KeyBindings = new(axis.OnRangeKeyBindings)
-                    },
-                    OutOfRangeKeys =
-                    {
-                        KeyBindings = new(axis.OutOfRangeKeyBindings),
-                    }
-                };
-            }
-            throw new ArgumentOutOfRangeException(nameof(model));
+                    OnRangeKeys = {KeyBindings = new(axis.OnRangeKeyBindings)},
+                    OutOfRangeKeys = {KeyBindings = new(axis.OutOfRangeKeyBindings),}
+                },
+                SimpleButtonJoyAction smpl => new SimpleButtonJoyActionViewModel()
+                {
+                    Button = smpl.Button,
+                    PressKeys = {KeyBindings = new(smpl.PressKeyBindings)},
+                    ReleaseKeys = {KeyBindings = new(smpl.ReleaseKeyBindings),}
+                },
+                ExtendedButtonJoyAction ext => new ExtendedButtonJoyActionViewModel()
+                {
+                    Button = ext.Button,
+                    SinglePressKeys = { KeyBindings = new(ext.SinglePressKeyBindings) },
+                    DoublePressKeys = { KeyBindings = new(ext.DoublePressKeyBindings) },
+                    LongPressKeys = { KeyBindings = new(ext.LongPressKeyBindings)}
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(model))
+            };
         }
 
 
