@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows.Input;
 using JoyMapper.Models;
 
 namespace JoyMapper.ViewModels.JoyActions;
@@ -47,4 +48,15 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
 
     public override bool HasKeyBindings => SinglePressKeys.KeyBindings.Any() || DoublePressKeys.KeyBindings.Any() || LongPressKeys.KeyBindings.Any();
 
+    public override bool IsRecording => SinglePressKeys.IsRecorded || DoublePressKeys.IsRecorded || LongPressKeys.IsRecorded;
+
+    public override void AddKeyBinding(Key key, bool isPress)
+    {
+        if (SinglePressKeys.IsRecorded)
+            SinglePressKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+        if (DoublePressKeys.IsRecorded)
+            DoublePressKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+        if (LongPressKeys.IsRecorded)
+            LongPressKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+    }
 }

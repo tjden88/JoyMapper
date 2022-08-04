@@ -167,7 +167,8 @@ namespace JoyMapper.ViewModels
             {
                 PatternName = added.Name,
                 IsSelected = true,
-                PatternId = added.Id
+                PatternId = added.Id,
+                Description = added.JoyName + " - " + added.JoyAction.Description
             });
         }
 

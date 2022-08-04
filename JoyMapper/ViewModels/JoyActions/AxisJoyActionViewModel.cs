@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Windows.Input;
+using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
 namespace JoyMapper.ViewModels.JoyActions
@@ -84,5 +86,13 @@ namespace JoyMapper.ViewModels.JoyActions
 
         public override string Description => "Ось " + Axis;
         public override bool HasKeyBindings => OnRangeKeys.KeyBindings.Any() || OutOfRangeKeys.KeyBindings.Any();
+        public override bool IsRecording => OnRangeKeys.IsRecorded || OutOfRangeKeys.IsRecorded;
+        public override void AddKeyBinding(Key key, bool isPress)
+        {
+            if (OnRangeKeys.IsRecorded)
+                OnRangeKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+            if (OutOfRangeKeys.IsRecorded)
+                OutOfRangeKeys.KeyBindings.Add(new KeyboardKeyBinding { IsPress = isPress, KeyCode = key });
+        }
     }
 }
