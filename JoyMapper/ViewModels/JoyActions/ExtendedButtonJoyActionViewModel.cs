@@ -1,4 +1,5 @@
-﻿using JoyMapper.Models;
+﻿using System.Linq;
+using JoyMapper.Models;
 
 namespace JoyMapper.ViewModels.JoyActions;
 
@@ -64,4 +65,7 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
 
 
     public override string Description => Button.ToString();
+
+    public override bool HasKeyBindings => SinglePressKeys.KeyBindings.Any() || DoublePressKeys.KeyBindings.Any() || LongPressKeys.KeyBindings.Any();
+
 }

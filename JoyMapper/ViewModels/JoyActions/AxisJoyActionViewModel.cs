@@ -1,4 +1,5 @@
-﻿using JoyMapper.Models.JoyActions;
+﻿using System.Linq;
+using JoyMapper.Models.JoyActions;
 
 namespace JoyMapper.ViewModels.JoyActions
 {
@@ -96,5 +97,6 @@ namespace JoyMapper.ViewModels.JoyActions
 
 
         public override string Description => "Ось " + Axis;
+        public override bool HasKeyBindings => OnRangeKeys.KeyBindings.Any() || OutOfRangeKeys.KeyBindings.Any();
     }
 }
