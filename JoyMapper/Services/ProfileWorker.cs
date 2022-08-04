@@ -68,9 +68,9 @@ namespace JoyMapper.Services
                 ))
                 .ToList();
 
-
-            foreach (var poller in _JoystickPollers)
-                Task.Run(poller.SyncActions);
+            
+            //foreach (var poller in _JoystickPollers)
+            //    Task.Run(poller.SyncActions);
 
             
             IsActive = true;
