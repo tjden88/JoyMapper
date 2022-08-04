@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using JoyMapper.Helpers;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
@@ -66,11 +67,16 @@ namespace JoyMapper.Services
 
 
         /// <summary> Синхронизировать текущее состояние действий и статуса джойстика </summary>
-        public void SyncActions()
+        public async Task SyncActions()
         {
             var joyState = GetJoyState(true);
 
             if (joyState == null) return;
+
+            await Task.Delay(100); // Чтобы джойстики успели отдуплиться
+
+            joyState = GetJoyState(true);
+
 
             foreach (var state in _ActionsCurrentStates)
             {

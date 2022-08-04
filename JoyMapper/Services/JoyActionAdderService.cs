@@ -13,7 +13,7 @@ namespace JoyMapper.Services
         /// <summary> Получить привязку к действию джойстика </summary>
         public JoyActionBase MapJoyAction(out string JoyName)
         {
-            var vm = new AddJoyActionViewModel();
+            using var vm = new AddJoyActionViewModel();
             var wnd = new AddJoyAction()
             {
                 Owner = App.ActiveWindow,

@@ -12,7 +12,7 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal class AddJoyActionViewModel : ViewModel
+    internal class AddJoyActionViewModel : ViewModel, IDisposable
     {
 
         #region Prop
@@ -113,7 +113,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-
+        private bool _Listen = true;
         private async void ListenConnectedJoysticks()
         {
 
@@ -127,10 +127,12 @@ namespace JoyMapper.ViewModels
 
 
             foreach (var poller in pollers)
-                poller.SyncActions();
+            {
+              await poller.SyncActions();
+            }
 
 
-            while (!_Accepted)
+            while (_Listen)
             {
                 foreach (var poller in pollers)
                 {
@@ -201,5 +203,7 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
+        public void Dispose() => _Listen = false;
     }
 }
