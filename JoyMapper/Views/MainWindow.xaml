@@ -143,12 +143,12 @@
                                    Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
 
                         <DockPanel LastChildFill="False">
-                            <TextBlock Text="Интервал опроса джойстиков (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="10" MaxValue="1000" Margin="10,0" Value="{Binding JoystickPollingDelay}"/>
+                            <TextBlock Text="Максимальная задержка двойного нажатия кнопки (мс)" VerticalAlignment="Center"/>
+                            <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1000" Margin="10,0" Value="{Binding DoublePressDelay}"/>
                         </DockPanel>
                         <DockPanel LastChildFill="False">
-                            <TextBlock Text="Интервал между отправкой команд клавиатуры (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="1" MaxValue="200" Margin="10,0" Value="{Binding KeyboardDelay}"/>
+                            <TextBlock Text="Задержка долгого нажатия кнопки (мс)" VerticalAlignment="Center"/>
+                            <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1500" Margin="10,0" Value="{Binding LongPressDelay}"/>
                         </DockPanel>
 
                         <Separator Background="{DynamicResource DividerColorBrush}"/>

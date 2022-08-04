@@ -9,7 +9,7 @@
 
 
         /// <summary> Интервал опроса джойстиков </summary>
-        public int JoystickPollingDelay { get; set; } = 50;
+        public int JoystickPollingDelay => 50;
 
         /// <summary> Задержка двойного нажатия кнопки </summary>
         public int DoublePressDelay { get; set; } = 400;

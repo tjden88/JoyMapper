@@ -19,35 +19,35 @@ namespace JoyMapper.ViewModels
 
         #region Props
 
-        #region JoystickPollingDelay : int - Интервал опроса джойстиков
+        #region DoublePressDelay : int - Интервал двойного нажатия
 
-        /// <summary>Интервал опроса джойстиков</summary>
-        public int JoystickPollingDelay
+        /// <summary>Интервал двойного нажатия</summary>
+        public int DoublePressDelay
         {
-            get => App.DataManager.AppSettings.JoystickPollingDelay;
+            get => App.DataManager.AppSettings.DoublePressDelay;
             set
             {
-                if(Equals(App.DataManager.AppSettings.JoystickPollingDelay, value)) return;
-                App.DataManager.AppSettings.JoystickPollingDelay = value;
+                if(Equals(App.DataManager.AppSettings.DoublePressDelay, value)) return;
+                App.DataManager.AppSettings.DoublePressDelay = value;
                 App.DataManager.SaveData();
-                OnPropertyChanged(nameof(JoystickPollingDelay));
+                OnPropertyChanged(nameof(DoublePressDelay));
             }
         }
 
         #endregion
 
-        #region KeyboardDelay : int - Интервал команд клавиатуры
+        #region LongPressDelay : int - Интервал длинного нажатия
 
-        /// <summary>Интервал команд клавиатуры</summary>
-        public int KeyboardDelay
+        /// <summary>Интервал длинного нажатия</summary>
+        public int LongPressDelay
         {
-            get => App.DataManager.AppSettings.KeyboardInputDelay;
+            get => App.DataManager.AppSettings.LongPressDelay;
             set
             {
-                if (Equals(App.DataManager.AppSettings.KeyboardInputDelay, value)) return;
-                App.DataManager.AppSettings.KeyboardInputDelay = value;
+                if (Equals(App.DataManager.AppSettings.LongPressDelay, value)) return;
+                App.DataManager.AppSettings.LongPressDelay = value;
                 App.DataManager.SaveData();
-                OnPropertyChanged(nameof(KeyboardDelay));
+                OnPropertyChanged(nameof(LongPressDelay));
             }
         }
 
