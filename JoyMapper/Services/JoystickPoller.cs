@@ -21,7 +21,7 @@ namespace JoyMapper.Services
         }
 
 
-        private readonly string _JoystickName;
+        public string JoystickName { get; init; }
 
         private bool _IsFault; // Ошибка в опросе
 
@@ -32,11 +32,13 @@ namespace JoyMapper.Services
 
         public JoystickPoller(string JoystickName, IEnumerable<JoyActionBase> joyActions)
         {
-            _JoystickName = JoystickName;
+            this.JoystickName = JoystickName;
             _ActionsCurrentStates = joyActions
                 .Select(act => new ActionCurrentState(ActionWatcherFactory.CreateActionWatcherBase(act)))
                 .ToList();
         }
+
+
 
         /// <summary> Получить активные действия, которые изменили своё состояние с предыдущего опроса </summary>
         public List<JoyActionBase> GetActiveDifferents()
@@ -62,6 +64,8 @@ namespace JoyMapper.Services
             return result;
         }
 
+
+        /// <summary> Синхронизировать текущее состояние действий и статуса джойстика </summary>
         public void SyncActions()
         {
             var joyState = GetJoyState();
@@ -76,6 +80,19 @@ namespace JoyMapper.Services
         }
 
 
+        /// <summary> Опросить действия и отправить команды клавиатуры </summary>
+        public void Poll()
+        {
+            var joyState = GetJoyState();
+
+            if (joyState == null) return;
+
+            foreach (var state in _ActionsCurrentStates)
+            {
+                state.Watcher.Poll(joyState, true);
+            }
+        }
+
         private JoyState GetJoyState()
         {
             try
@@ -84,14 +101,14 @@ namespace JoyMapper.Services
                 {
                     var newJoy = new DirectInput()
                         .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                        .FirstOrDefault(d => d.InstanceName == _JoystickName);
+                        .FirstOrDefault(d => d.InstanceName == JoystickName);
 
                     if (newJoy != null)
                     {
                         _IsFault = false;
                         _Joystick?.Dispose();
                         _Joystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
-                        AppLog.LogMessage($"Устройство восстановлено - {_JoystickName}");
+                        AppLog.LogMessage($"Устройство восстановлено - {JoystickName}");
                     }
                     else
                     {
@@ -107,7 +124,7 @@ namespace JoyMapper.Services
             catch (Exception e)
             {
                 Debug.WriteLine(e);
-                AppLog.LogMessage($"Ошибка опроса устройства - {_JoystickName}", LogMessage.MessageType.Error);
+                AppLog.LogMessage($"Ошибка опроса устройства - {JoystickName}", LogMessage.MessageType.Error);
                 _IsFault = true;
                 return null;
             }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
+using JoyMapper.Services;
 using JoyMapper.Services.ActionWatchers;
 using SharpDX.DirectInput;
 using WPR.MVVM.Commands;
@@ -120,46 +121,32 @@ namespace JoyMapper.ViewModels
             var connectedDevices = new DirectInput()
                   .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly);
 
-            var joys = connectedDevices
-                .Select(j => new Joystick(new DirectInput(), j.InstanceGuid))
+
+            var pollers = connectedDevices
+                .Select(j => new JoystickPoller(j.InstanceName, AllJoyActions()))
                 .ToArray();
 
 
-            var watchers = AllJoyActions().Select(act =>
-            {
-                var actionWatcherBase = ActionWatcherFactory.CreateActionWatcherBase(act);
-                actionWatcherBase.AlloySendKeyboardCommands = false;
-                return actionWatcherBase;
-            });
-
-
-            var joyStates = joys.Select(j => new JoyState()
-            {
-                Joystick = j,
-                Actions = AllActions(),
-            }).ToArray();
-
-            foreach (var js in joyStates)
-                js.SyncStatus();
+            foreach (var poller in pollers)
+                poller.SyncActions();
 
 
             while (!_Accepted)
             {
-                foreach (var joyState in joyStates)
+                foreach (var poller in pollers)
                 {
-                    var diff = joyState.GetDifferents();
-                    if (diff.FirstOrDefault(d => d.IsActive) is not { } firstDiff) continue;
+                    var diff = poller.GetActiveDifferents();
+                    if (diff.Any())
+                    {
+                        JoyName = poller.JoystickName;
+                        JoyAction = diff.First();
 
-                    JoyName = joyState.Joystick.Information.InstanceName;
-                    JoyAction = firstDiff.ActionOld;
-                    CommandManager.InvalidateRequerySuggested();
-                    break;
-
+                        CommandManager.InvalidateRequerySuggested();
+                        break;
+                    }
                 }
                 await Task.Delay(100);
             }
-
-            foreach (var joy in joys) joy.Unacquire();
         }
 
 
