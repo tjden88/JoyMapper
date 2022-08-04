@@ -78,7 +78,7 @@ namespace JoyMapper.ViewModels.JoyActions
         public int CurrentAxisValue
         {
             get => _CurrentAxisValue;
-            private set => Set(ref _CurrentAxisValue, value);
+            set => Set(ref _CurrentAxisValue, value);
         }
 
         #endregion

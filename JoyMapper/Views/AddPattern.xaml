@@ -82,7 +82,7 @@
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
 
         <!--Тип биндинга кнопки-->
-        <DockPanel DockPanel.Dock="Top" >
+        <DockPanel DockPanel.Dock="Top" Visibility="{Binding IsButton, Converter={StaticResource Bool2VisibilityConverter}}">
             <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
                        VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
             <StackPanel >

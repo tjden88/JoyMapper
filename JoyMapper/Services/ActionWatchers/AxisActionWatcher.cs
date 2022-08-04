@@ -9,6 +9,9 @@ internal class AxisActionWatcher : ActionWatcherBase
 {
     private readonly AxisJoyAction _AxisJoyAction;
 
+    /// <summary> Текущее значение </summary>
+    public int CurrentValue { get; private set; }
+
     public AxisActionWatcher(AxisJoyAction axisJoyAction)
     {
         _AxisJoyAction = axisJoyAction;
@@ -18,33 +21,68 @@ internal class AxisActionWatcher : ActionWatcherBase
 
     public override void Poll(JoyState joyState, bool SendCommands)
     {
-        var axisState = _AxisJoyAction.Axis switch
+        int axisValue;
+        bool axisState;
+        switch (_AxisJoyAction.Axis)
         {
-            AxisJoyAction.Axises.X => joyState.AxisValues.X >= _AxisJoyAction.StartValue &&
-                                      joyState.AxisValues.X <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Y => joyState.AxisValues.Y >= _AxisJoyAction.StartValue &&
-                                      joyState.AxisValues.Y <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Z => joyState.AxisValues.Z >= _AxisJoyAction.StartValue &&
-                                      joyState.AxisValues.Z <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Rx => joyState.AxisValues.Rx >= _AxisJoyAction.StartValue &&
-                                       joyState.AxisValues.Rx <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Ry => joyState.AxisValues.Ry >= _AxisJoyAction.StartValue &&
-                                       joyState.AxisValues.Ry <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Rz => joyState.AxisValues.Rz >= _AxisJoyAction.StartValue &&
-                                       joyState.AxisValues.Rz <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Slider1 => joyState.AxisValues.Slider1 >= _AxisJoyAction.StartValue &&
-                                            joyState.AxisValues.Slider1 <= _AxisJoyAction.EndValue,
-            AxisJoyAction.Axises.Slider2 => joyState.AxisValues.Slider2 >= _AxisJoyAction.StartValue &&
-                                            joyState.AxisValues.Slider2 <= _AxisJoyAction.EndValue,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+            case AxisJoyAction.Axises.X:
+                axisValue = joyState.AxisValues.X;
+                axisState = axisValue >= _AxisJoyAction.StartValue &&
+                            axisValue <= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Y:
+                axisValue = joyState.AxisValues.Y;
+                axisState = axisValue>= _AxisJoyAction.StartValue &&
+                            axisValue<= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Z:
+                axisValue = joyState.AxisValues.Z;
+                axisState = axisValue>= _AxisJoyAction.StartValue &&
+                            axisValue<= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Rx:
+                axisValue = joyState.AxisValues.Rx;
+                axisState = axisValue >= _AxisJoyAction.StartValue &&
+                            axisValue <= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Ry:
+                axisValue = joyState.AxisValues.Ry;
+                axisState = axisValue >= _AxisJoyAction.StartValue &&
+                            axisValue <= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Rz:
+                axisValue = joyState.AxisValues.Rz;
+                axisState = axisValue >= _AxisJoyAction.StartValue &&
+                            axisValue <= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Slider1:
+                axisValue = joyState.AxisValues.Slider1;
+                axisState = axisValue >= _AxisJoyAction.StartValue &&
+                            axisValue <= _AxisJoyAction.EndValue;
+                break;
+            case AxisJoyAction.Axises.Slider2:
+                axisValue = joyState.AxisValues.Slider2;
+                axisState = axisValue >= _AxisJoyAction.StartValue &&
+                            axisValue <= _AxisJoyAction.EndValue;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        CurrentValue = axisValue;
 
         var isActive = IsActive;
         IsActive = axisState;
-        if (isActive == axisState) return;
+        if (isActive == axisState)
+        {
+            return;
+        }
 
 
-        if (!SendCommands) return;
+        if (!SendCommands)
+        {
+            return;
+        }
 
         Debug.WriteLine(axisState ? "SendingOnRangeKeyBindings" : "SendingOutOfRangeKeyBindings");
 

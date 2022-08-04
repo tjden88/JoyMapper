@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Helpers;
+using JoyMapper.Models.JoyActions;
 using JoyMapper.Services;
 using JoyMapper.Services.ActionWatchers;
 using JoyMapper.ViewModels.JoyActions;
@@ -167,12 +168,26 @@ namespace JoyMapper.ViewModels
         public ActionType CurrentActionType
         {
             get => _CurrentActionType;
-            private set => IfSet(ref _CurrentActionType, value)
-                .Then(v => _CurrentActionWatcher = v != ActionType.None 
-                    ? ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel()) 
-                    : null)
-                .CallPropertyChanged(nameof(JoyAction));
+            private set
+            {
+                _CurrentActionType = value;
+                OnPropertyChanged(nameof(CurrentActionType));
+
+                _CurrentActionWatcher = value != ActionType.None
+                    ? ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel())
+                    : null;
+
+                OnPropertyChanged(nameof(JoyAction));
+                OnPropertyChanged(nameof(IsButton));
+            }
         }
+
+        #endregion
+
+
+        #region IsButton
+
+        public bool IsButton => CurrentActionType is ActionType.SimpleButton or ActionType.ExtendedButton;
 
         #endregion
 
@@ -324,6 +339,13 @@ namespace JoyMapper.ViewModels
                         continue;
                     }
 
+                    if (_CurrentActionWatcher is AxisActionWatcher axisWatcher)
+                    {
+                        var action = (AxisJoyAction)axisWatcher.JoyAction;
+                        action.EndValue = _AxisJoyActionViewModel.EndValue;
+                        action.StartValue = _AxisJoyActionViewModel.StartValue;
+                        _AxisJoyActionViewModel.CurrentAxisValue = axisWatcher.CurrentValue;
+                    }
 
                     var instance = new DirectInput()
                         .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
