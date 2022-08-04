@@ -14,7 +14,7 @@
         WindowStartupLocation="CenterOwner"
         Focusable="True"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="550" Width="700">
+        Title="{Binding Title}" Height="700" Width="850">
     <Window.Resources>
 
     </Window.Resources>
@@ -123,7 +123,7 @@
             </StackPanel>
             <WrapPanel Margin="5,8,5,5">
                 <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ButtonModeInfo}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}" Text="{Binding ButtonModeInfo}"/>
             </WrapPanel>
         </DockPanel>
 

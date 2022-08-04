@@ -16,6 +16,14 @@ namespace JoyMapper.ViewModels
 {
     internal class AddPatternViewModel : WindowViewModel
     {
+        public enum ActionType
+        {
+            None,
+            SimpleButton,
+            ExtendedButton,
+            Axis
+        }
+
 
         private ActionWatcherBase _CurrentActionWatcher;
 
@@ -94,20 +102,23 @@ namespace JoyMapper.ViewModels
         public bool IsExtendedButtonMode
         {
             get => _IsExtendedButtonMode;
-            set => IfSet(ref _IsExtendedButtonMode, value).CallPropertyChanged(nameof(ButtonModeInfo));
+            set => IfSet(ref _IsExtendedButtonMode, value)
+                .Then(v => CurrentActionType = v ? ActionType.ExtendedButton : ActionType.SimpleButton)
+                .CallPropertyChanged(nameof(ButtonModeInfo));
         }
 
         #endregion
+
 
         #region ButtonModeInfo
 
         public string ButtonModeInfo => IsExtendedButtonMode
             ? "Позволяет назначить до трёх разных команд на одну кнопку:\n" +
-              "   ◉ Одиночное нажатие\n" +
-              "   ◉ Двойное нажатие\n" +
-              "   ◉ Долгое нажатие"
+              "◉ Одиночное нажатие\n" +
+              "◉ Двойное нажатие\n" +
+              "◉ Долгое нажатие"
             : "Позволяет назначить разные команды на нажатие и отпускание.\n" +
-              "   ◉ Подходит для тумблеров\n";
+              "◉ Подходит для тумблеров\n";
 
         #endregion
 
@@ -120,24 +131,45 @@ namespace JoyMapper.ViewModels
         public string JoyActionText => $"{JoyName} - {JoyAction?.Description}";
 
 
-        #region JoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
+        #region CurrentActionType : ActionType - Тип действия
 
-        /// <summary>Текущая вьюмодель действия</summary>
-        private JoyActionViewModelBase _JoyAction;
+        /// <summary>Тип действия</summary>
+        private ActionType _CurrentActionType;
 
-        /// <summary>Текущая вьюмодель действия</summary>
-        public JoyActionViewModelBase JoyAction
+        /// <summary>Тип действия</summary>
+        public ActionType CurrentActionType
         {
-            get => _JoyAction;
-            set => IfSet(ref _JoyAction, value)
-                .CallPropertyChanged(nameof(JoyActionText))
-                .Then(v =>
-                    _CurrentActionWatcher = v is null
-                        ? null
-                        : ActionWatcherFactory.CreateActionWatcherBase(v.ToModel()));
+            get => _CurrentActionType;
+            private set => IfSet(ref _CurrentActionType, value)
+                .CallPropertyChanged(nameof(JoyAction));
         }
 
         #endregion
+
+        
+        #region JoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
+
+
+        private readonly SimpleButtonJoyActionViewModel _SimpleButtonJoyActionViewModel = new();
+
+        private readonly ExtendedButtonJoyActionViewModel _ExtendedButtonJoyActionViewModel = new();
+
+        private readonly AxisJoyActionViewModel _AxisJoyActionViewModel = new();
+
+
+        /// <summary>Текущая вьюмодель действия</summary>
+        public JoyActionViewModelBase JoyAction =>
+            CurrentActionType switch
+            {
+                ActionType.Axis => _AxisJoyActionViewModel,
+                ActionType.SimpleButton => _SimpleButtonJoyActionViewModel,
+                ActionType.ExtendedButton => _ExtendedButtonJoyActionViewModel,
+                _ => null
+            };
+
+
+        #endregion
+
 
         #endregion
 
@@ -179,8 +211,21 @@ namespace JoyMapper.ViewModels
             var joyAction = new JoyActionAdderService().MapJoyAction(out var joyName);
             if (joyAction == null) return;
 
+            var action = joyAction.ToViewModel();
+            if (action is AxisJoyActionViewModel axisJoyActionViewModel)
+            {
+                _AxisJoyActionViewModel.Axis = axisJoyActionViewModel.Axis;
+                CurrentActionType = ActionType.Axis;
+            }
+            else
+            {
+                var btnAction = (SimpleButtonJoyActionViewModel) action;
+                _SimpleButtonJoyActionViewModel.Button = btnAction.Button;
+                _ExtendedButtonJoyActionViewModel.Button = btnAction.Button;
+                CurrentActionType = IsExtendedButtonMode ? ActionType.ExtendedButton : ActionType.SimpleButton;
+            }
+
             JoyName = joyName;
-            JoyAction = joyAction.ToViewModel();
         }
 
         #endregion
