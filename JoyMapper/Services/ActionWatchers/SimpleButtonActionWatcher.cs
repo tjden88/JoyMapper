@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
@@ -26,7 +27,7 @@ namespace JoyMapper.Services.ActionWatchers
             if(IsActive == btnState) return;
 
             IsActive = btnState;
-
+            Debug.WriteLine(btnState ? "SendingPressKbCommands" : "SendingReleaseKbCommands");
             SendKeyboardCommands(btnState 
                 ? _ButtonJoyAction.PressKeyBindings 
                 : _ButtonJoyAction.ReleaseKeyBindings);
