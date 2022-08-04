@@ -9,8 +9,8 @@ namespace JoyMapper.Services.ActionWatchers
     {
         private readonly ExtendedButtonJoyAction _ButtonJoyAction;
 
-        private readonly int _DoublePressDelay = 500;
-        private readonly int _LongPressDelay = 400;
+        private readonly int _DoublePressDelay = 400;
+        private readonly int _LongPressDelay = 500;
 
         private Stopwatch _DelayMeter; // Таймер задержки между нажатиями
 
@@ -39,17 +39,10 @@ namespace JoyMapper.Services.ActionWatchers
             {
                 Debug.WriteLine("SinglePressSend: " + _ButtonJoyAction.Button);
                 SendSinglePress();
+                _FirstPressHandled = false;
                 _DelayMeter = null;
             }
-
-            // Кнопка нажата больше времени долгого нажатия
-            if (_FirstPressHandled && btnState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
-            {
-                Debug.WriteLine("LongPressSend: " + _ButtonJoyAction.Button);
-                SendLongPress();
-                _DelayMeter = null;
-            }
-
+            
 
             if (!prewState && btnState) // Состояние изменилось на нажатое
             {
@@ -65,6 +58,15 @@ namespace JoyMapper.Services.ActionWatchers
                     _FirstPressHandled = false;
                     _DelayMeter = null;
                 }
+            }
+
+            // Кнопка нажата больше времени долгого нажатия
+            if (_FirstPressHandled && btnState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
+            {
+                Debug.WriteLine("LongPressSend: " + _ButtonJoyAction.Button);
+                SendLongPress();
+                _FirstPressHandled = false;
+                _DelayMeter = null;
             }
 
 

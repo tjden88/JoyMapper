@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
@@ -39,6 +40,8 @@ internal class AxisActionWatcher : ActionWatcherBase
         if (IsActive == axisState) return;
 
         IsActive = axisState;
+
+        Debug.WriteLine(axisState ? "SendingOnRangeKeyBindings" : "SendingOutOfRangeKeyBindings");
 
         SendKeyboardCommands(axisState
             ? _AxisJoyAction.OnRangeKeyBindings
