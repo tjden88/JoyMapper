@@ -74,7 +74,6 @@ namespace JoyMapper.Services.ActionWatchers
             }
 
 
-            IsActive = btnState;
         }
 
 

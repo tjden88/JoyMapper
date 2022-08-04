@@ -57,7 +57,7 @@ namespace JoyMapper.Services
                 if (state.IsActive != state.Watcher.IsActive)
                 {
                     state.IsActive = state.Watcher.IsActive;
-                    result.Add(state.Watcher.JoyAction);
+                    if (state.IsActive) result.Add(state.Watcher.JoyAction);
                 }
             }
 
@@ -68,7 +68,7 @@ namespace JoyMapper.Services
         /// <summary> Синхронизировать текущее состояние действий и статуса джойстика </summary>
         public void SyncActions()
         {
-            var joyState = GetJoyState();
+            var joyState = GetJoyState(true);
 
             if (joyState == null) return;
 
@@ -93,7 +93,7 @@ namespace JoyMapper.Services
             }
         }
 
-        private JoyState GetJoyState()
+        private JoyState GetJoyState(bool poll = false)
         {
             try
             {
@@ -105,10 +105,12 @@ namespace JoyMapper.Services
 
                     if (newJoy != null)
                     {
-                        _IsFault = false;
                         _Joystick?.Dispose();
                         _Joystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
-                        AppLog.LogMessage($"Устройство восстановлено - {JoystickName}");
+                        _Joystick.Acquire();
+
+                        if (_IsFault) AppLog.LogMessage($"Устройство восстановлено - {JoystickName}");
+                        _IsFault = false;
                     }
                     else
                     {
@@ -117,7 +119,8 @@ namespace JoyMapper.Services
                 }
 
                 var joy = _Joystick;
-
+                if (poll) joy.Poll();
+                Debug.WriteLine(joy.Information.InstanceName + " - state getted");
                 return joy.GetCurrentState().ToModel();
 
             }

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Helpers;
@@ -232,28 +234,35 @@ namespace JoyMapper.ViewModels
         {
             while (!ChangesSaved)
             {
-                if (_CurrentActionWatcher == null)
+                try
                 {
-                    await Task.Delay(200);
-                    continue;
+                    if (_CurrentActionWatcher == null)
+                    {
+                        await Task.Delay(200);
+                        continue;
+                    }
+
+
+                    var instance = new DirectInput()
+                        .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+                        .FirstOrDefault(d => d.ProductName == JoyName);
+
+                    if (instance == null) continue;
+
+                    var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
+                    joy.Acquire();
+                    await Task.Delay(100);
+
+                    _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel(), false);
+                    ActionIsActive = _CurrentActionWatcher.IsActive;
+
+
+                    joy.Unacquire();
                 }
-
-
-                var instance = new DirectInput()
-                    .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                    .FirstOrDefault(d => d.ProductName == JoyName);
-
-                if (instance == null) continue;
-
-                var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
-                joy.Acquire();
-                await Task.Delay(100);
-
-                _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel(), false);
-                ActionIsActive = _CurrentActionWatcher.IsActive;
-
-
-                joy.Unacquire();
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
             }
         }
 

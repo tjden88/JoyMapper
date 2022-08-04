@@ -39,11 +39,12 @@ internal class AxisActionWatcher : ActionWatcherBase
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        if (IsActive == axisState) return;
-
+        var isActive = IsActive;
         IsActive = axisState;
+        if (isActive == axisState) return;
 
-        if(!SendCommands) return;
+
+        if (!SendCommands) return;
 
         Debug.WriteLine(axisState ? "SendingOnRangeKeyBindings" : "SendingOutOfRangeKeyBindings");
 
