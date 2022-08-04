@@ -23,7 +23,7 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
     #region SinglePressKeys : ActionKeysBindingViewModel - Команды при нажатии кнопки
 
     /// <summary>Команды при нажатии кнопки</summary>
-    private ActionKeysBindingViewModel _SinglePressKeys = new();
+    private ActionKeysBindingViewModel _SinglePressKeys = new() {Name = "Команды при однократном нажатии кнопки"};
 
     /// <summary>Команды при нажатии кнопки</summary>
     public ActionKeysBindingViewModel SinglePressKeys
@@ -37,7 +37,7 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
     #region DoublePressKeys : ActionKeysBindingViewModel - Команды двойного нажатия кнопки
 
     /// <summary>Команды двойного нажатия кнопки</summary>
-    private ActionKeysBindingViewModel _DoublePressKeys;
+    private ActionKeysBindingViewModel _DoublePressKeys = new() {Name = "Команды двойного нажатия кнопки"};
 
     /// <summary>Команды двойного нажатия кнопки</summary>
     public ActionKeysBindingViewModel DoublePressKeys
@@ -51,7 +51,7 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
     #region LongPressKeys : ActionKeysBindingViewModel - Команды долгого нажатия кнопки
 
     /// <summary>Команды долгого нажатия кнопки</summary>
-    private ActionKeysBindingViewModel _LongPressKeys;
+    private ActionKeysBindingViewModel _LongPressKeys = new() { Name = "Команды при долгом нажатии кнопки" };
 
     /// <summary>Команды долгого нажатия кнопки</summary>
     public ActionKeysBindingViewModel LongPressKeys

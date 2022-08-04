@@ -34,10 +34,18 @@ namespace JoyMapper.ViewModels
         public bool IsRecorded
         {
             get => _IsRecorded;
-            set => Set(ref _IsRecorded, value);
+            set => IfSet(ref _IsRecorded, value).CallPropertyChanged(nameof(RecordButtonText));
         }
 
         #endregion
+
+        #region RecordButtonText : string - Текст кнопки записи нажатия
+
+        /// <summary>Текст кнопки записи нажатия</summary>
+        public string RecordButtonText => IsRecorded ? "Остановть запись" : "Начать запись";
+
+        #endregion
+
 
 
         #region Name : string - Имя списка команд

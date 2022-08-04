@@ -23,7 +23,7 @@ internal class SimpleButtonJoyActionViewModel : JoyActionViewModelBase
     #region PressKeys : ActionKeysBindingViewModel - Команды при нажатии кнопки
 
     /// <summary>Команды при нажатии кнопки</summary>
-    private ActionKeysBindingViewModel _PressKeys = new();
+    private ActionKeysBindingViewModel _PressKeys = new() {Name = "Команды при нажатии кнопки"};
 
     /// <summary>Команды при нажатии кнопки</summary>
     public ActionKeysBindingViewModel PressKeys
@@ -38,7 +38,7 @@ internal class SimpleButtonJoyActionViewModel : JoyActionViewModelBase
     #region ReleaseKeys : ActionKeysBindingViewModel - Команды при отпускании кнопки
 
     /// <summary>Команды при отпускании кнопки</summary>
-    private ActionKeysBindingViewModel _ReleaseKeys = new();
+    private ActionKeysBindingViewModel _ReleaseKeys = new() {Name = "Команды при отпускании кнопки"};
 
     /// <summary>Команды при отпускании кнопки</summary>
     public ActionKeysBindingViewModel ReleaseKeys

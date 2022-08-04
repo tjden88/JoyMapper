@@ -84,7 +84,7 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region PressButtonText : string - Текст кнопки записи нажатия
+        #region RecordButtonText : string - Текст кнопки записи нажатия
 
         /// <summary>Текст кнопки записи нажатия</summary>
         public string PressButtonText => IsPressRecorded ? "Остановть запись" : "Начать запись";
