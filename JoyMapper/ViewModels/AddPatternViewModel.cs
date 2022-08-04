@@ -15,11 +15,9 @@ namespace JoyMapper.ViewModels
     internal class AddPatternViewModel : WindowViewModel
     {
 
+        private ActionWatcherBase _CurrentActionWatcher;
 
-        public AddPatternViewModel()
-        {
-            Task.Run(CheckActionStatus);
-        }
+        public AddPatternViewModel() => Task.Run(CheckActionStatus);
 
         #region Props
 
@@ -54,6 +52,21 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region JoyName : string - Имя джойстика
+
+        /// <summary>Имя джойстика</summary>
+        private string _JoyName;
+
+        /// <summary>Имя джойстика</summary>
+        public string JoyName
+        {
+            get => _JoyName;
+            set => Set(ref _JoyName, value);
+        }
+
+        #endregion
+
+
         #region ActionIsActive : bool - Назначенное действие джойстика сейчас активно
 
         /// <summary>Назначенное действие джойстика сейчас активно</summary>
@@ -76,66 +89,16 @@ namespace JoyMapper.ViewModels
             : "Неактивно";
 
 
-        #endregion
-
-
-
-        #region ActionsViewModels
-
-
-        #region SimpleButtonJoyActionViewModel : SimpleButtonJoyActionViewModel - Вьюмодель простого действия кнопки
-
-        /// <summary>Вьюмодель простого действия кнопки</summary>
-        private SimpleButtonJoyActionViewModel _SimpleButtonJoyActionViewModel = new();
-
-        /// <summary>Вьюмодель простого действия кнопки</summary>
-        public SimpleButtonJoyActionViewModel SimpleButtonJoyActionViewModel
-        {
-            get => _SimpleButtonJoyActionViewModel;
-            set => Set(ref _SimpleButtonJoyActionViewModel, value);
-        }
-
-        #endregion
-
-        #region ExtendedButtonJoyActionViewModel : ExtendedButtonJoyActionViewModel - Вьюмодель расширенного действия кнопки
-
-        /// <summary>Вьюмодель расширенного действия кнопки</summary>
-        private ExtendedButtonJoyActionViewModel _ExtendedButtonJoyActionViewModel = new();
-
-        /// <summary>Вьюмодель расширенного действия кнопки</summary>
-        public ExtendedButtonJoyActionViewModel ExtendedButtonJoyActionViewModel
-        {
-            get => _ExtendedButtonJoyActionViewModel;
-            set => Set(ref _ExtendedButtonJoyActionViewModel, value);
-        }
-
-        #endregion
-
-        #region AxisJoyActionViewModel : AxisJoyActionViewModel - Вьюмодель действия оси
-
-        /// <summary>Вьюмодель действия оси</summary>
-        private AxisJoyActionViewModel _AxisJoyActionViewModel = new();
-
-        /// <summary>Вьюмодель действия оси</summary>
-        public AxisJoyActionViewModel AxisJoyActionViewModel
-        {
-            get => _AxisJoyActionViewModel;
-            set => Set(ref _AxisJoyActionViewModel, value);
-        }
-
-        #endregion
-
-
-        #region CurrentJoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
+        #region JoyAction : JoyActionViewModelBase - Текущая вьюмодель действия
 
         /// <summary>Текущая вьюмодель действия</summary>
-        private JoyActionViewModelBase _CurrentJoyAction;
+        private JoyActionViewModelBase _JoyAction;
 
         /// <summary>Текущая вьюмодель действия</summary>
-        public JoyActionViewModelBase CurrentJoyAction
+        public JoyActionViewModelBase JoyAction
         {
-            get => _CurrentJoyAction;
-            set => IfSet(ref _CurrentJoyAction, value)
+            get => _JoyAction;
+            set => IfSet(ref _JoyAction, value)
                 .Then(v =>
                 {
                     if (v is null)
@@ -150,8 +113,6 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
-
-        private ActionWatcherBase _CurrentActionWatcher;
 
         #endregion
 
@@ -169,7 +130,7 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnAttachJoyButtonCommandExecuted, CanAttachButtonIfEmptyCommandExecute, "Назначить кнопку джойстика если не назначена");
 
         /// <summary>Проверка возможности выполнения - Назначить кнопку джойстика если не назначена</summary>
-        private bool CanAttachButtonIfEmptyCommandExecute() => CurrentJoyAction == null;
+        private bool CanAttachButtonIfEmptyCommandExecute() => JoyAction == null;
 
 
         #endregion
@@ -199,7 +160,6 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-
         #region AsyncCommand SaveCommand - Сохранить паттерн
 
         /// <summary>Сохранить паттерн</summary>
@@ -215,13 +175,13 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Сохранить паттерн</summary>
         private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-            if (CurrentJoyAction == null)
+            if (JoyAction == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
             }
 
-            if (!CurrentJoyAction.HasKeyBindings)
+            if (!JoyAction.HasKeyBindings)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Клавиатурные команды не назначены");
                 return;
@@ -257,7 +217,7 @@ namespace JoyMapper.ViewModels
 
                 var instance = new DirectInput()
                     .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                    .FirstOrDefault(d => d.ProductName == CurrentJoyAction.JoyName);
+                    .FirstOrDefault(d => d.ProductName == JoyName);
 
                 if (instance == null) continue;
 

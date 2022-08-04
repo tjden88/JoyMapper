@@ -54,14 +54,7 @@ namespace JoyMapper.ViewModels.JoyActions
         #region OnRangeKeys : ActionKeysBindingViewModel - Команды при входе в назначенный диапазон
 
         /// <summary>Команды при входе в назначенный диапазон</summary>
-        private ActionKeysBindingViewModel _OnRangeKeys = new() {Name = "Команды при входе в диапазон"};
-
-        /// <summary>Команды при входе в назначенный диапазон</summary>
-        public ActionKeysBindingViewModel OnRangeKeys
-        {
-            get => _OnRangeKeys;
-            set => Set(ref _OnRangeKeys, value);
-        }
+        public ActionKeysBindingViewModel OnRangeKeys { get; } = new("Команды при входе в диапазон");
 
         #endregion
 
@@ -69,14 +62,7 @@ namespace JoyMapper.ViewModels.JoyActions
         #region OutOfRangeKeys : ActionKeysBindingViewModel - Команды при выходе из диапазона
 
         /// <summary>Команды при выходе из диапазона</summary>
-        private ActionKeysBindingViewModel _OutOfRangeKeys = new() {Name = "Команды при выходе из диапазона"};
-
-        /// <summary>Команды при выходе из диапазона</summary>
-        public ActionKeysBindingViewModel OutOfRangeKeys
-        {
-            get => _OutOfRangeKeys;
-            set => Set(ref _OutOfRangeKeys, value);
-        }
+        public ActionKeysBindingViewModel OutOfRangeKeys { get; } = new("Команды при выходе из диапазона");
 
         #endregion
 

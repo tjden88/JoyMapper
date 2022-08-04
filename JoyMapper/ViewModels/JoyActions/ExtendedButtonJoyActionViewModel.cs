@@ -24,42 +24,21 @@ internal class ExtendedButtonJoyActionViewModel : JoyActionViewModelBase
     #region SinglePressKeys : ActionKeysBindingViewModel - Команды при нажатии кнопки
 
     /// <summary>Команды при нажатии кнопки</summary>
-    private ActionKeysBindingViewModel _SinglePressKeys = new() {Name = "Команды при однократном нажатии кнопки"};
-
-    /// <summary>Команды при нажатии кнопки</summary>
-    public ActionKeysBindingViewModel SinglePressKeys
-    {
-        get => _SinglePressKeys;
-        set => Set(ref _SinglePressKeys, value);
-    }
+    public ActionKeysBindingViewModel SinglePressKeys { get; } = new("Команды при однократном нажатии кнопки");
 
     #endregion
 
     #region DoublePressKeys : ActionKeysBindingViewModel - Команды двойного нажатия кнопки
 
     /// <summary>Команды двойного нажатия кнопки</summary>
-    private ActionKeysBindingViewModel _DoublePressKeys = new() {Name = "Команды двойного нажатия кнопки"};
-
-    /// <summary>Команды двойного нажатия кнопки</summary>
-    public ActionKeysBindingViewModel DoublePressKeys
-    {
-        get => _DoublePressKeys;
-        set => Set(ref _DoublePressKeys, value);
-    }
+    public ActionKeysBindingViewModel DoublePressKeys { get; } = new("Команды двойного нажатия кнопки");
 
     #endregion
 
     #region LongPressKeys : ActionKeysBindingViewModel - Команды долгого нажатия кнопки
 
     /// <summary>Команды долгого нажатия кнопки</summary>
-    private ActionKeysBindingViewModel _LongPressKeys = new() { Name = "Команды при долгом нажатии кнопки" };
-
-    /// <summary>Команды долгого нажатия кнопки</summary>
-    public ActionKeysBindingViewModel LongPressKeys
-    {
-        get => _LongPressKeys;
-        set => Set(ref _LongPressKeys, value);
-    }
+    public ActionKeysBindingViewModel LongPressKeys { get; } = new("Команды при долгом нажатии кнопки");
 
     #endregion
 

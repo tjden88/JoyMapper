@@ -24,14 +24,7 @@ internal class SimpleButtonJoyActionViewModel : JoyActionViewModelBase
     #region PressKeys : ActionKeysBindingViewModel - Команды при нажатии кнопки
 
     /// <summary>Команды при нажатии кнопки</summary>
-    private ActionKeysBindingViewModel _PressKeys = new() {Name = "Команды при нажатии кнопки"};
-
-    /// <summary>Команды при нажатии кнопки</summary>
-    public ActionKeysBindingViewModel PressKeys
-    {
-        get => _PressKeys;
-        set => Set(ref _PressKeys, value);
-    }
+    public ActionKeysBindingViewModel PressKeys { get; } = new("Команды при нажатии кнопки");
 
     #endregion
 
@@ -39,14 +32,7 @@ internal class SimpleButtonJoyActionViewModel : JoyActionViewModelBase
     #region ReleaseKeys : ActionKeysBindingViewModel - Команды при отпускании кнопки
 
     /// <summary>Команды при отпускании кнопки</summary>
-    private ActionKeysBindingViewModel _ReleaseKeys = new() {Name = "Команды при отпускании кнопки"};
-
-    /// <summary>Команды при отпускании кнопки</summary>
-    public ActionKeysBindingViewModel ReleaseKeys
-    {
-        get => _ReleaseKeys;
-        set => Set(ref _ReleaseKeys, value);
-    }
+    public ActionKeysBindingViewModel ReleaseKeys { get; } = new("Команды при отпускании кнопки");
 
     #endregion
 

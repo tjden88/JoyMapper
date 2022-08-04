@@ -10,6 +10,9 @@ namespace JoyMapper.ViewModels
     /// </summary>
     internal class ActionKeysBindingViewModel : ViewModel
     {
+
+        public ActionKeysBindingViewModel(string name) => Name = name;
+
         #region KeyBindings : ObservableCollection<KeyboardKeyBinding> - Последовательность нажатия или отпускания клавиш
 
         /// <summary>Последовательность нажатия или отпускания клавиш</summary>
@@ -47,18 +50,10 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-
         #region Name : string - Имя списка команд
 
         /// <summary>Имя списка команд</summary>
-        private string _Name;
-
-        /// <summary>Имя списка команд</summary>
-        public string Name
-        {
-            get => _Name;
-            set => Set(ref _Name, value);
-        }
+        public string Name { get; }
 
         #endregion
 
