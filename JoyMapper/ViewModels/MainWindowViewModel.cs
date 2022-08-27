@@ -349,6 +349,37 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region AsyncCommand CheckUpdatesCommand - Проверить обновления при запуске
+
+        /// <summary>Проверить обновления при запуске</summary>
+        private AsyncCommand _CheckUpdatesCommand;
+
+        /// <summary>Проверить обновления при запуске</summary>
+        public AsyncCommand CheckUpdatesCommand => _CheckUpdatesCommand
+            ??= new AsyncCommand(OnCheckUpdatesCommandExecutedAsync, CanCheckUpdatesCommandExecute, "Проверить обновления при запуске");
+
+        /// <summary>Проверка возможности выполнения - Проверить обновления при запуске</summary>
+        private bool CanCheckUpdatesCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Проверить обновления при запуске</summary>
+        private async Task OnCheckUpdatesCommandExecutedAsync(CancellationToken cancel)
+        {
+            var updater = App.UpdateChecker;
+            var updateAvaliable = await updater.CheckUpdate(App.AppVersion);
+            if(!updateAvaliable) return;
+
+            WPRMessageBox.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
+
+        }
+
+        private void ShowUpdateWindow(bool Clicked)
+        {
+                throw new System.NotImplementedException();
+        }
+
+        #endregion
+
+
         #endregion
 
     }

@@ -11,7 +11,8 @@ namespace JoyMapper.Services
     internal class UpdateChecker
     {
 
-        private const string LatestVersionTxtUrl = @"https://github.com/tjden88/JoyMapper/tree/master/JoyMapper/LatestVersion.txt";
+        private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/v1.4/JoyMapper/LatestVersion.txt";
+        //private const string LatestVersionTxtUrl = @"https://github.com/tjden88/JoyMapper/tree/master/JoyMapper/LatestVersion.txt";
 
         private record LastVersion(string Version, string UpdateUrl, string ReleaseNotes);
 
@@ -62,16 +63,26 @@ namespace JoyMapper.Services
         {
             if (_LastVersion != null) return _LastVersion;
 
-            var http = new HttpClient();
-            var txt = await http.GetStringAsync(LatestVersionTxtUrl);
-            
-            var splited = txt.Split(Environment.NewLine);
-            if (splited.Length > 2)
+            using (var client = new HttpClient())
             {
-                _LastVersion = new LastVersion(splited[0], splited[1],
-                    string.Join(Environment.NewLine, splited.Skip(2)));
-            }
+                var response = await client.GetAsync(LatestVersionTxtUrl);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var txt = await response.Content.ReadAsStringAsync();
+
+                    var lines = txt.Split(
+                        new[] { "\r\n", "\r", "\n" },
+                        StringSplitOptions.None);
+
+                    if (lines.Length > 2)
+                    {
+                        _LastVersion = new LastVersion(lines[0], lines[1],
+                            string.Join(Environment.NewLine, lines.Skip(2)));
+                    }
+
+                }
+            }
 
             return _LastVersion;
         }
