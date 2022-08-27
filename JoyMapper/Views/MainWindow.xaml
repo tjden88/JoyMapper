@@ -15,6 +15,7 @@
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
                 <b:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+                <b:InvokeCommandAction Command="{Binding CheckUpdatesCommand}"/>
             </b:EventTrigger.Actions>
         </b:EventTrigger>
     </b:Interaction.Triggers>
@@ -182,7 +183,12 @@
 
                         <TextBlock Text="О программе" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
-                        <TextBlock Text="{Binding AppVersion, StringFormat='Версия: {0}'}" Foreground="{DynamicResource PrimaryColorBrush}" Margin="0,10"/>
+
+                        <WrapPanel>
+                            <TextBlock Text="{Binding AppVersion, StringFormat='Версия: {0}'}" Foreground="{DynamicResource PrimaryColorBrush}" Margin="0,10"/>
+                            <Button Style="{StaticResource AccentWPRButton}" Content="Доступно обновление" Command="{Binding ShowUpdateWindowCommand}"
+                                    Visibility="{Binding ShowUpdateWindowCommand.Visibility}" Margin="10,5"></Button>
+                        </WrapPanel>
 
                         <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
                                 Command="{Binding GoToHomepageCommand}">
