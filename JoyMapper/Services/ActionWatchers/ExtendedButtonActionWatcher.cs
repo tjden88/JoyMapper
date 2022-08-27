@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyActions;
 
@@ -8,6 +9,8 @@ namespace JoyMapper.Services.ActionWatchers
     internal class ExtendedButtonActionWatcher : ActionWatcherBase
     {
         private readonly ExtendedButtonJoyAction _ButtonJoyAction;
+
+        private readonly bool _IsDoublePressActionsExist;
 
         private readonly int _DoublePressDelay = 400;
         private readonly int _LongPressDelay = 500;
@@ -21,11 +24,12 @@ namespace JoyMapper.Services.ActionWatchers
         public ExtendedButtonActionWatcher(ExtendedButtonJoyAction buttonJoyAction)
         {
             _ButtonJoyAction = buttonJoyAction;
+            _IsDoublePressActionsExist = buttonJoyAction.DoublePressKeyBindings?.Any() == true;
         }
 
         public override void Poll(JoyState joyState, bool SendCommands)
         {
-            var btnState = _ButtonJoyAction.Button.Type switch
+            var isBtnPressed = _ButtonJoyAction.Button.Type switch
             {
                 ButtonType.Button => joyState.Buttons[_ButtonJoyAction.Button.Value-1],
                 ButtonType.Pow1 => joyState.Pow1Value == _ButtonJoyAction.Button.Value,
@@ -33,12 +37,12 @@ namespace JoyMapper.Services.ActionWatchers
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            var prewState = IsActive;
-            IsActive = btnState;
+            var prewIsPressed = IsActive;
+            IsActive = isBtnPressed;
 
-
-            // Кнопка не нажата и прошло время двойного клика
-            if (_FirstPressHandled && !btnState && _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay)
+            // Кнопка не нажата и прошло время двойного клика или
+            // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
+            if (_FirstPressHandled && !isBtnPressed && (!_IsDoublePressActionsExist || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
             {
                 OnActionHandled?.Invoke("Одиночное нажатие");
 
@@ -49,7 +53,7 @@ namespace JoyMapper.Services.ActionWatchers
             }
             
 
-            if (!prewState && btnState) // Состояние изменилось на нажатое
+            if (!prewIsPressed && isBtnPressed) // Состояние изменилось на нажатое
             {
                 if (!_FirstPressHandled) // Регистрируем первое нажатие
                 {
@@ -67,7 +71,7 @@ namespace JoyMapper.Services.ActionWatchers
             }
 
             // Кнопка нажата больше времени долгого нажатия
-            if (_FirstPressHandled && btnState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
+            if (_FirstPressHandled && isBtnPressed && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
             {
                 OnActionHandled?.Invoke("Долгое нажатие");
                 Debug.WriteLine("LongPressSend: " + _ButtonJoyAction.Button);
