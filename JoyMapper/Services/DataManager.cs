@@ -154,7 +154,7 @@ namespace JoyMapper.Services
         private Data LoadData()
         {
             var appSettVersion = _DataSerializer.LoadFromFile<AppSettings>(_SettingsFileName)?.AppVersion;
-            if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
+            if (!Equals(App.AppVersion, appSettVersion) && File.Exists(_SettingsFileName)) // Бекап настроек
                 File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion}-backup.json"), true);
 
             return _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
