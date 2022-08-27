@@ -20,7 +20,7 @@ namespace JoyMapper
         internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
 
         /// <summary> Сервис проверки обновлений </summary>
-        internal static UpdateChecker UpdateChecker => new();
+        internal static UpdateChecker UpdateChecker { get; } = new();
 
 
     }

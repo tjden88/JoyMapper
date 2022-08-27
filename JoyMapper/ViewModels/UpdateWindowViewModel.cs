@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -6,7 +7,7 @@ namespace JoyMapper.ViewModels
 {
     internal class UpdateWindowViewModel : ViewModel
     {
-        #region ReleaseNotes : string - Заметки о новой версии
+        #region LastUpdateReleaseNotes : string - Заметки о новой версии
 
         /// <summary>Заметки о новой версии</summary>
         private string _ReleaseNotes;
@@ -54,6 +55,7 @@ namespace JoyMapper.ViewModels
                 FileName = DownloadLink,
                 UseShellExecute = true
             });
+            Application.Current.Shutdown();
         }
 
         #endregion

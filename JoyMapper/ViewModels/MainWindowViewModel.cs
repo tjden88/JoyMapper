@@ -347,57 +347,7 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
-
-
-        #region AsyncCommand CheckUpdatesCommand - Проверить обновления при запуске
-
-        /// <summary>Проверить обновления при запуске</summary>
-        private AsyncCommand _CheckUpdatesCommand;
-
-        /// <summary>Проверить обновления при запуске</summary>
-        public AsyncCommand CheckUpdatesCommand => _CheckUpdatesCommand
-            ??= new AsyncCommand(OnCheckUpdatesCommandExecutedAsync, CanCheckUpdatesCommandExecute, "Проверить обновления при запуске");
-
-        /// <summary>Проверка возможности выполнения - Проверить обновления при запуске</summary>
-        private bool CanCheckUpdatesCommandExecute() => true;
-
-        /// <summary>Логика выполнения - Проверить обновления при запуске</summary>
-        private async Task OnCheckUpdatesCommandExecutedAsync(CancellationToken cancel)
-        {
-            var updater = App.UpdateChecker;
-            var updateAvaliable = await updater.CheckUpdate(App.AppVersion);
-            if(!updateAvaliable) return;
-            _ReleaseNotes = await updater.GetLastReleaseNotes();
-            _UpdateDwnUrl = await updater.GetDownloadLink();
-
-            WPRMessageBox.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
-
-        }
-
-        private string _ReleaseNotes;
-        private string _UpdateDwnUrl;
-
-        private void ShowUpdateWindow(bool Clicked)
-        {
-            if (!Clicked) return;
-
-            var vm = new UpdateWindowViewModel()
-            {
-                DownloadLink = _UpdateDwnUrl,
-                ReleaseNotes = _ReleaseNotes,
-            };
-            var wnd = new UpdateWindow()
-            {
-                DataContext = vm,
-                Owner = App.ActiveWindow,
-            };
-
-            if(wnd.ShowDialog() == true) 
-                Application.Current.Shutdown();
-        }
-
-        #endregion
-
+        
 
         #endregion
 

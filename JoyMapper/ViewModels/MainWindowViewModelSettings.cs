@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using JoyMapper.Models;
+using JoyMapper.Views;
+using WPR;
 using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
@@ -16,6 +20,8 @@ namespace JoyMapper.ViewModels
 
         private const string ReportProblemAddress = "https://github.com/tjden88/JoyMapper/discussions/6";
 
+        public string LastUpdateReleaseNotes;
+        public string UpdateDownloadUrl;
 
         #region Props
 
@@ -71,6 +77,22 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
+
+        #region IsNewVersionAvaliable : bool - Доступна ли новая версия
+
+        /// <summary>Доступна ли новая версия</summary>
+        private bool _IsNewVersionAvaliable;
+
+        /// <summary>Доступна ли новая версия</summary>
+        public bool IsNewVersionAvaliable
+        {
+            get => _IsNewVersionAvaliable;
+            set => Set(ref _IsNewVersionAvaliable, value);
+        }
+
+        #endregion
+
+        
 
         public IEnumerable<ColorTheme> ColorThemes => new List<ColorTheme>()
         {
@@ -155,6 +177,51 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+        #region AsyncCommand CheckUpdatesCommand - Проверить обновления при запуске
+
+        /// <summary>Проверить обновления при запуске</summary>
+        private AsyncCommand _CheckUpdatesCommand;
+
+        /// <summary>Проверить обновления при запуске</summary>
+        public AsyncCommand CheckUpdatesCommand => _CheckUpdatesCommand
+            ??= new AsyncCommand(OnCheckUpdatesCommandExecutedAsync, CanCheckUpdatesCommandExecute, "Проверить обновления при запуске");
+
+        /// <summary>Проверка возможности выполнения - Проверить обновления при запуске</summary>
+        private bool CanCheckUpdatesCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Проверить обновления при запуске</summary>
+        private async Task OnCheckUpdatesCommandExecutedAsync(CancellationToken cancel)
+        {
+            var updater = App.UpdateChecker;
+            var updateAvaliable = await updater.CheckUpdate(App.AppVersion);
+            IsNewVersionAvaliable = updateAvaliable;
+            if (!updateAvaliable) return;
+            LastUpdateReleaseNotes = await updater.GetLastReleaseNotes();
+            UpdateDownloadUrl = await updater.GetDownloadLink();
+
+            WPRMessageBox.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
+
+        }
+
+        #endregion
+
+        #region Command ShowUpdateWindowCommand - Показать окно обновления
+
+        /// <summary>Показать окно обновления</summary>
+        private Command _ShowUpdateWindowCommand;
+
+        /// <summary>Показать окно обновления</summary>
+        public Command ShowUpdateWindowCommand => _ShowUpdateWindowCommand
+            ??= new Command(OnShowUpdateWindowCommandExecuted, CanShowUpdateWindowCommandExecute, "Показать окно обновления");
+
+        /// <summary>Проверка возможности выполнения - Показать окно обновления</summary>
+        private bool CanShowUpdateWindowCommandExecute() => IsNewVersionAvaliable;
+
+        /// <summary>Логика выполнения - Показать окно обновления</summary>
+        private void OnShowUpdateWindowCommandExecuted() => ShowUpdateWindow(true);
+
+        #endregion
+
         private void OpenWebPage(string Address)
         {
             Process.Start(new ProcessStartInfo
@@ -164,6 +231,22 @@ namespace JoyMapper.ViewModels
             });
         }
 
+        private void ShowUpdateWindow(bool Clicked)
+        {
+            if (!Clicked) return;
+
+            var vm = new UpdateWindowViewModel()
+            {
+                DownloadLink = UpdateDownloadUrl,
+                ReleaseNotes = LastUpdateReleaseNotes,
+            };
+            var wnd = new UpdateWindow()
+            {
+                DataContext = vm,
+                Owner = App.ActiveWindow,
+            };
+            wnd.ShowDialog();
+        }
 
 
     }
