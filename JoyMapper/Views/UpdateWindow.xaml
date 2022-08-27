@@ -14,7 +14,7 @@
         <viewModels:UpdateWindowViewModel/>
     </d:Window.DataContext>
     <StackPanel>
-        <TextBlock Text="{Binding ReleaseNotes}" MinHeight="100" Margin="10"/>
+        <TextBlock Text="{Binding ReleaseNotes}" MinHeight="50" Margin="10"/>
         <Button Content="Загрузить" HorizontalAlignment="Center" Command="{Binding GoToDownloadLinkCommand}"/>
     </StackPanel>
 </Window>
