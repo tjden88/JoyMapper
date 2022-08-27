@@ -12,7 +12,7 @@ namespace JoyMapper.Services
     {
 
         //private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/v1.4/JoyMapper/LatestVersion.txt"; // Debug
-        private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/tree/master/JoyMapper/LatestVersion.txt";
+        private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/master/JoyMapper/LatestVersion.txt";
 
         private record LastVersion(string Version, string UpdateUrl, string ReleaseNotes);
 

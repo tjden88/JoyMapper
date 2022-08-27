@@ -45,7 +45,7 @@ namespace JoyMapper.ViewModels
             ??= new Command(OnGoToDownloadLinkCommandExecuted, CanGoToDownloadLinkCommandExecute, "Перейти на страницу загрузки обновления");
 
         /// <summary>Проверка возможности выполнения - Перейти на страницу загрузки обновления</summary>
-        private bool CanGoToDownloadLinkCommandExecute() => DownloadLink != null;
+        private bool CanGoToDownloadLinkCommandExecute() => !string.IsNullOrEmpty(DownloadLink);
 
         /// <summary>Логика выполнения - Перейти на страницу загрузки обновления</summary>
         private void OnGoToDownloadLinkCommandExecuted()
