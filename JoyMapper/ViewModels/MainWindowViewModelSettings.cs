@@ -14,7 +14,7 @@ namespace JoyMapper.ViewModels
 
         private const string HomeUrl = "https://github.com/tjden88/JoyMapper";
 
-        private const string ReportProblemAddress = "https://github.com/tjden88/JoyMapper/issues";
+        private const string ReportProblemAddress = "https://github.com/tjden88/JoyMapper/discussions/6";
 
 
         #region Props
