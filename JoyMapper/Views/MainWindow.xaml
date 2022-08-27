@@ -15,6 +15,7 @@
         <b:EventTrigger EventName="Loaded">
             <b:EventTrigger.Actions>
                 <b:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+                <b:InvokeCommandAction Command="{Binding CheckUpdatesCommand}"/>
             </b:EventTrigger.Actions>
         </b:EventTrigger>
     </b:Interaction.Triggers>

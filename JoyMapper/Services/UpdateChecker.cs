@@ -62,16 +62,23 @@ namespace JoyMapper.Services
         {
             if (_LastVersion != null) return _LastVersion;
 
-            var http = new HttpClient();
-            var txt = await http.GetStringAsync(LatestVersionTxtUrl);
-            
-            var splited = txt.Split(Environment.NewLine);
-            if (splited.Length > 2)
+            using (var client = new HttpClient())
             {
-                _LastVersion = new LastVersion(splited[0], splited[1],
-                    string.Join(Environment.NewLine, splited.Skip(2)));
-            }
+                var response = await client.GetAsync(LatestVersionTxtUrl);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var txt = await response.Content.ReadAsStringAsync();
+
+                    var splited = txt.Split(Environment.NewLine);
+                    if (splited.Length > 2)
+                    {
+                        _LastVersion = new LastVersion(splited[0], splited[1],
+                            string.Join(Environment.NewLine, splited.Skip(2)));
+                    }
+
+                }
+            }
 
             return _LastVersion;
         }
