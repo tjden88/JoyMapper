@@ -4,10 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoyMapper.Views"
+        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         mc:Ignorable="d"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner"
         Style="{StaticResource ChromeWindow}"
-        Title="Проверка обновлений" Height="265" Width="450">
-    <Grid>
-
-    </Grid>
+        Title="Доступно обновление" SizeToContent="Height" Width="400">
+    <d:Window.DataContext>
+        <viewModels:UpdateWindowViewModel/>
+    </d:Window.DataContext>
+    <StackPanel>
+        <TextBlock Text="{Binding ReleaseNotes}" MinHeight="100" Margin="10"/>
+        <Button Content="Загрузить" HorizontalAlignment="Center" Command="{Binding GoToDownloadLinkCommand}"/>
+    </StackPanel>
 </Window>
