@@ -132,6 +132,68 @@
                 </controls:WPRCard>
             </TabItem>
 
+
+            <TabItem>
+                <TabItem.Header>
+                    <controls:WPRIconText Text="Модификаторы" IconSource="AxisArrow" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                </TabItem.Header>
+
+                <!--Модификаторы-->
+                <controls:WPRCard>
+                    <DockPanel>
+                        <ToolBar DockPanel.Dock="Top" Margin="5">
+                            <Button Command="{Binding CreatePatternCommand}"
+                                    ToolTip="{Binding CreatePatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIconText Text="Добавить модификатор" IconSource="Add"  FontWeight="Bold"/>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Command="{Binding EditPatternCommand}"
+                                    ToolTip="{Binding EditPatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="EditOutline"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding DeletePatternCommand}"
+                                    ToolTip="{Binding DeletePatternCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </ToolBar>
+
+                        <DockPanel DockPanel.Dock="Top">
+                            <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
+                            <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}">
+                                <TextBlock.Text>
+                                    Модификаторы предназначены для назначения дополнительных условий выполнения паттернов.
+                                    Например, можно назначить несколько разных паттернов действий для одной кнопки джойстика внутри профиля (с использованием модификатора или без).
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DockPanel>
+
+                        <TextBlock Text="Список модификаторов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
+
+                        <ListBox Margin="5" ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
+                                        <WrapPanel>
+                                            <TextBlock Margin="5" Text="{Binding JoyName}"/>
+                                            <TextBlock Margin="0,5" Text="{Binding JoyAction.Description, StringFormat='({0})'}"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </controls:WPRCard>
+
+            </TabItem>
+
             <TabItem>
                 <TabItem.Header>
                     <controls:WPRIconText Text="Настройки" IconSource="Settings" Foreground="{DynamicResource PrimaryColorBrush}"/>
