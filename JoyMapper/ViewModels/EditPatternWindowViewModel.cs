@@ -172,7 +172,6 @@ namespace JoyMapper.ViewModels
             get => _CurrentActionType;
             private set
             {
-                if(Equals(_CurrentActionType, value)) return;
                 _CurrentActionType = value;
                 OnPropertyChanged(nameof(CurrentActionType));
                 WatcherLogText = string.Empty;
@@ -208,7 +207,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
+
 
 
         #region IsButton
@@ -351,7 +350,7 @@ namespace JoyMapper.ViewModels
         #region WatchStatus
 
         private ActionWatcherBase _CurrentActionWatcher;
-
+        private Joystick _CurrentJoystick;
 
         // Проверяет сатус назначеного действия
         private async Task CheckActionStatus()
@@ -374,21 +373,24 @@ namespace JoyMapper.ViewModels
                         _AxisJoyActionViewModel.CurrentAxisValue = axisWatcher.CurrentValue;
                     }
 
-                    var instance = new DirectInput()
-                        .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                        .FirstOrDefault(d => d.ProductName == JoyName);
+                    if (_CurrentJoystick == null || _CurrentJoystick.Information.ProductName != JoyName)
+                    {
+                        var instance = new DirectInput()
+                            .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+                            .FirstOrDefault(d => d.ProductName == JoyName);
+                        if (instance == null) continue;
 
-                    if (instance == null) continue;
+                        _CurrentJoystick?.Dispose();
+                        _CurrentJoystick = new Joystick(new DirectInput(), instance.InstanceGuid);
+                        _CurrentJoystick.Acquire();
 
-                    var joy = new Joystick(new DirectInput(), instance.InstanceGuid);
-                    joy.Acquire();
+                    }
+
                     await Task.Delay(50);
 
-                    _CurrentActionWatcher.Poll(joy.GetCurrentState().ToModel(), false);
+                    _CurrentActionWatcher.Poll(_CurrentJoystick.GetCurrentState().ToModel(), false);
                     ActionIsActive = _CurrentActionWatcher.IsActive;
 
-
-                    joy.Unacquire();
                 }
                 catch (Exception e)
                 {

@@ -88,6 +88,7 @@ namespace JoyMapper.Services
         /// <summary> Остановить отслеживание </summary>
         public void Stop()
         {
+            if (_JoystickPollers?.Count > 0) _JoystickPollers.ForEach(p => p.Dispose());
             IsActive = false;
             Thread.Sleep(_PollingDelay + 10);
         }

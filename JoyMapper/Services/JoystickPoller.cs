@@ -14,7 +14,7 @@ namespace JoyMapper.Services
     /// <summary>
     /// Опрашивает джойстик и передаёт клавиатурные команды
     /// </summary>
-    internal class JoystickPoller
+    internal class JoystickPoller : IDisposable
     {
         private record ActionCurrentState(ActionWatcherBase Watcher)
         {
@@ -137,6 +137,11 @@ namespace JoyMapper.Services
                 _IsFault = true;
                 return null;
             }
+        }
+
+        public void Dispose()
+        {
+            _Joystick?.Dispose();
         }
     }
 }

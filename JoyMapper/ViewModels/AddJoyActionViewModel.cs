@@ -148,6 +148,8 @@ namespace JoyMapper.ViewModels
                 }
                 await Task.Delay(100);
             }
+
+            foreach (var poller in pollers) poller.Dispose();
         }
 
 
