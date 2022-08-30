@@ -8,7 +8,7 @@
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
-        Topmost="True"
+        Topmost="False"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="600" Width="800">

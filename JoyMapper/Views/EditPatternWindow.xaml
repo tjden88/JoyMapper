@@ -37,22 +37,35 @@
         <!--Статус и настройки-->
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Command="{Binding AttachJoyButtonCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource WPRFlatButton}" BorderThickness="1">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
-                        <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось"></TextBlock>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <DockPanel Grid.Column="1">
 
-                <ScrollViewer DockPanel.Dock="Right" Width="250" Height="80" VerticalScrollBarVisibility="Auto">
-                    <TextBlock VerticalAlignment="Bottom" Text="{Binding WatcherLogText}"/>
-                </ScrollViewer>
+            <DockPanel>
+                <!--Модификатор-->
+                <DockPanel DockPanel.Dock="Bottom" Margin="10" LastChildFill="False">
+                    <ComboBox Width="280" ItemsSource="{Binding Modificators}" 
+                              SelectedItem="{Binding SelectedModificator}"
+                              helpers:TextHelper.Hint="Модификатор" DisplayMemberPath="Name"/>
+                    <Button Style="{StaticResource WPRToolButton}" Margin="10,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding ClearModificatorCommand}"
+                            Visibility="{Binding ClearModificatorCommand.Visibility}"
+                            ToolTip="Без модификатора">
+                        <Button.Content>
+                            <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}" />
+                        </Button.Content>
+                    </Button>
+                </DockPanel>
+
+                <Button Command="{Binding AttachJoyButtonCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource WPRFlatButton}" BorderThickness="1">
+                    <Button.Content>
+                        <StackPanel Orientation="Vertical">
+                            <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
+                            <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
 
                 <!--Инфо о назначенном действии-->
                 <StackPanel  Orientation="Vertical" Margin="10">
@@ -78,8 +91,11 @@
                     </DockPanel>
 
                 </StackPanel>
-
             </DockPanel>
+
+            <ScrollViewer Grid.Column="1" Width="250" Height="120" VerticalScrollBarVisibility="Auto">
+                <TextBlock VerticalAlignment="Bottom" Text="{Binding WatcherLogText}"/>
+            </ScrollViewer>
         </Grid>
 
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
