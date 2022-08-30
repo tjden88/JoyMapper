@@ -1,4 +1,4 @@
-﻿<Window x:Class="JoyMapper.Views.AddPattern"
+﻿<Window x:Class="JoyMapper.Views.EditPatternWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -19,7 +19,7 @@
 
     </Window.Resources>
     <d:Window.DataContext>
-        <viewModels:AddPatternViewModel/>
+        <viewModels:EditPatternWindowViewModel/>
     </d:Window.DataContext>
     <b:Interaction.Triggers>
         <b:DataTrigger Binding="{Binding ChangesSaved}" Value="True">

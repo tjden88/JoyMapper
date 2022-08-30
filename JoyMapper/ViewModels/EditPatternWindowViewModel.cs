@@ -15,7 +15,7 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal class AddPatternViewModel : WindowViewModel, IDisposable
+    internal class EditPatternWindowViewModel : WindowViewModel, IDisposable
     {
         public enum ActionType // Тип настраиваемого действия
         {
@@ -26,10 +26,10 @@ namespace JoyMapper.ViewModels
         }
 
 
-        public AddPatternViewModel() => Task.Run(CheckActionStatus);
+        public EditPatternWindowViewModel() => Task.Run(CheckActionStatus);
 
         /// <summary> Для редактирования паттерна </summary>
-        public AddPatternViewModel(JoyActionViewModelBase viewModel) : this()
+        public EditPatternWindowViewModel(JoyActionViewModelBase viewModel) : this()
         {
             switch (viewModel)
             {

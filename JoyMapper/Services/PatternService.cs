@@ -16,11 +16,11 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern AddPattern()
         {
-           using var vm = new AddPatternViewModel
+           using var vm = new EditPatternWindowViewModel
            {
                 Title = "Добавить паттерн"
             };
-            var wnd = new AddPattern
+            var wnd = new EditPatternWindow
             {
                 Owner = App.ActiveWindow,
                 DataContext = vm
@@ -39,13 +39,13 @@ namespace JoyMapper.Services
         /// <returns>null, если пользователь отказался</returns>
         public KeyPattern EditPattern(KeyPattern pattern)
         {
-            using var vm = new AddPatternViewModel(pattern.JoyAction.ToViewModel())
+            using var vm = new EditPatternWindowViewModel(pattern.JoyAction.ToViewModel())
             {
                 Title = $"Редактировать паттерн: {pattern.Name}",
                 JoyName = pattern.JoyName,
                 PatternName = pattern.Name,
             };
-            var wnd = new AddPattern
+            var wnd = new EditPatternWindow
             {
                 Owner = App.ActiveWindow,
                 DataContext = vm
@@ -58,13 +58,13 @@ namespace JoyMapper.Services
             return editPattern;
         }
 
-        private KeyPattern BuildPattern(AddPatternViewModel ViewModel)
+        private KeyPattern BuildPattern(EditPatternWindowViewModel windowViewModel)
         {
             var keyPattern = new KeyPattern
             {
-                JoyAction = ViewModel.JoyAction.ToModel(),
-                JoyName = ViewModel.JoyName,
-                Name = ViewModel.PatternName,
+                JoyAction = windowViewModel.JoyAction.ToModel(),
+                JoyName = windowViewModel.JoyName,
+                Name = windowViewModel.PatternName,
             };
             return keyPattern;
         }

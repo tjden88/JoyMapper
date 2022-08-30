@@ -5,20 +5,20 @@ using JoyMapper.ViewModels;
 namespace JoyMapper.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AddPattern.xaml
+    /// Логика взаимодействия для EditPatternWindow.xaml
     /// </summary>
-    public partial class AddPattern : Window
+    public partial class EditPatternWindow : Window
     {
-        public AddPattern()
+        public EditPatternWindow()
         {
             InitializeComponent();
         }
 
-        private AddPatternViewModel ViewModel => (AddPatternViewModel)DataContext;
+        private EditPatternWindowViewModel WindowViewModel => (EditPatternWindowViewModel)DataContext;
 
         private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            var vm = ViewModel;
+            var vm = WindowViewModel;
             if (vm.JoyAction?.IsRecording != true) return;
             if (!e.IsRepeat)
             {
@@ -33,7 +33,7 @@ namespace JoyMapper.Views
 
         private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
-            var vm = ViewModel;
+            var vm = WindowViewModel;
             if (vm.JoyAction?.IsRecording != true) return;
             if (!e.IsRepeat)
             {
