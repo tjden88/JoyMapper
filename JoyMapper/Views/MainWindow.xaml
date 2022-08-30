@@ -150,8 +150,8 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Command="{Binding EditPatternCommand}"
-                                    ToolTip="{Binding EditPatternCommand}">
+                            <Button Command="{Binding EditModificatorCommand}"
+                                    ToolTip="{Binding EditModificatorCommand}">
                                 <Button.Content>
                                     <controls:WPRIcon Source="EditOutline"/>
                                 </Button.Content>

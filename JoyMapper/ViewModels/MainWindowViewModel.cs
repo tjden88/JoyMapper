@@ -421,6 +421,45 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
+        #region Command EditModificatorCommand - Редактировать модификатор
+
+        /// <summary>Редактировать модификатор</summary>
+        private Command _EditModificatorCommand;
+
+        /// <summary>Редактировать модификатор</summary>
+        public Command EditModificatorCommand => _EditModificatorCommand
+            ??= new Command(OnEditModificatorCommandExecuted, CanEditModificatorCommandExecute, "Редактировать модификатор");
+
+        /// <summary>Проверка возможности выполнения - Редактировать модификатор</summary>
+        private bool CanEditModificatorCommandExecute() => SelectedModificator != null;
+
+        /// <summary>Логика выполнения - Редактировать модификатор</summary>
+        private void OnEditModificatorCommandExecuted()
+        {
+            var vm = new EditModificatorWindowViewModel(SelectedModificator);
+            var wnd = new EditModificatorWindow
+            {
+                Owner = Application.Current.MainWindow,
+                DataContext = vm
+            };
+            if (wnd.ShowDialog() != true) return;
+
+            var modificator = new Modificator()
+            {
+                Id = vm.Id,
+                Name = vm.Name,
+                Button = vm.Button,
+                JoyName = vm.JoyName
+            };
+
+            App.DataManager.UpdateModificator(modificator);
+            LoadDataCommand.Execute();
+
+        }
+
+        #endregion
+
         #region AsyncCommand DeleteModificatorCommand - Удалить модификатор
 
         /// <summary>Удалить модификатор</summary>

@@ -125,13 +125,11 @@ namespace JoyMapper.Services
         public void UpdateKeyPattern(KeyPattern pattern)
         {
             var editPattern = ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == pattern.Id);
-            if (editPattern != null)
-            {
-                var index = ProfilesData.KeyPatterns.IndexOf(editPattern);
-                ProfilesData.KeyPatterns.Remove(editPattern);
-                ProfilesData.KeyPatterns.Insert(index, pattern);
-                SaveData();
-            }
+            if (editPattern == null) return;
+            var index = ProfilesData.KeyPatterns.IndexOf(editPattern);
+            ProfilesData.KeyPatterns.Remove(editPattern);
+            ProfilesData.KeyPatterns.Insert(index, pattern);
+            SaveData();
         }
 
 
@@ -175,6 +173,17 @@ namespace JoyMapper.Services
             }
 
             SaveData();
+        }
+
+        public void UpdateModificator(Modificator modificator)
+        {
+            var editModificator = ProfilesData.Modificators.FirstOrDefault(m => m.Id == modificator.Id);
+            if (editModificator == null) return;
+            var index = ProfilesData.Modificators.IndexOf(editModificator);
+            ProfilesData.Modificators.Remove(editModificator);
+            ProfilesData.Modificators.Insert(index, modificator);
+            SaveData();
+
         }
 
 
