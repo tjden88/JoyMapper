@@ -1,0 +1,60 @@
+﻿<Window x:Class="JoyMapper.Views.EditModificatorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JoyMapper.Views"
+        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
+        xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
+        xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        Style="{StaticResource ChromeWindow}"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Width="500">
+    <d:Window.DataContext>
+        <viewModels:EditModificatorWindowViewModel/>
+    </d:Window.DataContext>
+    <b:Interaction.Triggers>
+        <b:DataTrigger Binding="{Binding ChangesSaved}" Value="True">
+            <b:ChangePropertyAction PropertyName="DialogResult" Value="True"/>
+        </b:DataTrigger>
+    </b:Interaction.Triggers>
+
+    <DockPanel LastChildFill="False" Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
+        <TextBox helpers:TextHelper.Hint="Имя модификатора" Name="NameText" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" Margin="5"/>
+
+        <!--Статус и настройки-->
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding AttachJoyButtonCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource WPRFlatButton}" BorderThickness="1">
+                <Button.Content>
+                    <StackPanel Orientation="Vertical">
+                        <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
+                        <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку"></TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <DockPanel Grid.Column="1">
+
+                <!--Инфо о назначенном действии-->
+                <StackPanel  Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Назначенная кнопка" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                    <TextBlock Text="{Binding BtnText}"  Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+            </DockPanel>
+        </Grid>
+
+        <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
+
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
+                Content="Сохранить" IsDefault="True"
+                Command="{Binding SaveCommand}" />
+    </DockPanel>
+
+</Window>
