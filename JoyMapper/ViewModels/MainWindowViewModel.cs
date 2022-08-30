@@ -89,6 +89,38 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
+        #region Modificators : ObservableCollection<Modificator> - Список модификаторов
+
+        /// <summary>Список модификаторов</summary>
+        private ObservableCollection<Modificator> _Modificators;
+
+        /// <summary>Список модификаторов</summary>
+        public ObservableCollection<Modificator> Modificators
+        {
+            get => _Modificators;
+            set => Set(ref _Modificators, value);
+        }
+
+        #endregion
+
+
+        #region SelectedModificator : Modificator - Выбранный модификатор
+
+        /// <summary>Выбранный модификатор</summary>
+        private Modificator _SelectedModificator;
+
+        /// <summary>Выбранный модификатор</summary>
+        public Modificator SelectedModificator
+        {
+            get => _SelectedModificator;
+            set => Set(ref _SelectedModificator, value);
+        }
+
+        #endregion
+
+        
+
+
         #endregion
 
 
@@ -111,6 +143,8 @@ namespace JoyMapper.ViewModels
         {
             Profiles = new(App.DataManager.Profiles);
             KeyPatterns = new(App.DataManager.KeyPatterns);
+            Modificators = new(App.DataManager.Modificators);
+
         }
 
         #endregion
@@ -347,7 +381,64 @@ namespace JoyMapper.ViewModels
         }
 
         #endregion
-        
+
+
+        #region Command CreateModificatorCommand - Создать модификатор
+
+        /// <summary>Создать модификатор</summary>
+        private Command _CreateModificatorCommand;
+
+        /// <summary>Создать модификатор</summary>
+        public Command CreateModificatorCommand => _CreateModificatorCommand
+            ??= new Command(OnCreateModificatorCommandExecuted, CanCreateModificatorCommandExecute, "Создать новый модификатор");
+
+        /// <summary>Проверка возможности выполнения - Создать модификатор</summary>
+        private bool CanCreateModificatorCommandExecute() => true;
+
+        /// <summary>Логика выполнения - Создать модификатор</summary>
+        private void OnCreateModificatorCommandExecuted()
+        {
+            // TODO: заглушка
+            var modif = new Modificator()
+            {
+                Name = "Test",
+                JoyName = "TestJoy"
+            };
+
+            App.DataManager.AddModificator(modif);
+            LoadDataCommand.Execute();
+            SelectedModificator = Modificators.Last();
+
+        }
+
+        #endregion
+
+        #region AsyncCommand DeleteModificatorCommand - Удалить модификатор
+
+        /// <summary>Удалить модификатор</summary>
+        private AsyncCommand _DeleteModificatorCommand;
+
+        /// <summary>Удалить модификатор</summary>
+        public AsyncCommand DeleteModificatorCommand => _DeleteModificatorCommand
+            ??= new AsyncCommand(OnDeleteModificatorCommandExecutedAsync, CanDeleteModificatorCommandExecute, "Удалить выбранный модификатор");
+
+        /// <summary>Проверка возможности выполнения - Удалить модификатор</summary>
+        private bool CanDeleteModificatorCommandExecute() => SelectedModificator != null;
+
+        /// <summary>Логика выполнения - Удалить модификатор</summary>
+        private async Task OnDeleteModificatorCommandExecutedAsync(CancellationToken cancel)
+        {
+            var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить модификатор {SelectedModificator.Name}?");
+            if (result)
+            {
+                App.DataManager.RemoveModificator(SelectedModificator.Id);
+                Modificators.Remove(SelectedModificator);
+                SelectedModificator = null;
+            }
+        }
+
+        #endregion
+
 
         #endregion
 

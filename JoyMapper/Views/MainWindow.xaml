@@ -8,6 +8,7 @@
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
+        Topmost="True"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="600" Width="800">
@@ -142,8 +143,8 @@
                 <controls:WPRCard>
                     <DockPanel>
                         <ToolBar DockPanel.Dock="Top" Margin="5">
-                            <Button Command="{Binding CreatePatternCommand}"
-                                    ToolTip="{Binding CreatePatternCommand}">
+                            <Button Command="{Binding CreateModificatorCommand}"
+                                    ToolTip="{Binding CreateModificatorCommand}">
                                 <Button.Content>
                                     <controls:WPRIconText Text="Добавить модификатор" IconSource="Add"  FontWeight="Bold"/>
                                 </Button.Content>
@@ -155,8 +156,8 @@
                                     <controls:WPRIcon Source="EditOutline"/>
                                 </Button.Content>
                             </Button>
-                            <Button Command="{Binding DeletePatternCommand}"
-                                    ToolTip="{Binding DeletePatternCommand}">
+                            <Button Command="{Binding DeleteModificatorCommand}"
+                                    ToolTip="{Binding DeleteModificatorCommand}">
                                 <Button.Content>
                                     <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
                                 </Button.Content>
@@ -176,14 +177,14 @@
                         <TextBlock Text="Список модификаторов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}"></TextBlock>
 
-                        <ListBox Margin="5" ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                        <ListBox Margin="5" ItemsSource="{Binding Modificators}" SelectedItem="{Binding SelectedModificator}">
                             <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                <DataTemplate DataType="{x:Type models:Modificator}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
                                         <WrapPanel>
                                             <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                            <TextBlock Margin="0,5" Text="{Binding JoyAction.Description, StringFormat='({0})'}"/>
+                                            <TextBlock Margin="0,5" Text="{Binding Button, StringFormat='({0})'}"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </DataTemplate>
