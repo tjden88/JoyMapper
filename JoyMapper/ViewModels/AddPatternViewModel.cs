@@ -180,7 +180,7 @@ namespace JoyMapper.ViewModels
                 if (value != ActionType.None)
                 {
                     _CurrentActionWatcher = ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel());
-                    _CurrentActionWatcher.OnActionHandled += s => WatcherLogText += $"{s}\n";
+                    _CurrentActionWatcher.OnActionHandled += s => WatcherLogText = string.Join(Environment.NewLine, s, WatcherLogText);
                 }
                 else
                     _CurrentActionWatcher = null;

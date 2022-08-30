@@ -51,7 +51,7 @@
             <DockPanel Grid.Column="1">
 
                 <ScrollViewer DockPanel.Dock="Right" Width="250" Height="80" VerticalScrollBarVisibility="Auto">
-                    <TextBlock Text="{Binding WatcherLogText}"/>
+                    <TextBlock VerticalAlignment="Bottom" Text="{Binding WatcherLogText}"/>
                 </ScrollViewer>
 
                 <!--Инфо о назначенном действии-->
