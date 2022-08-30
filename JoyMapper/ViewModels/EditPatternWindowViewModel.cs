@@ -180,6 +180,8 @@ namespace JoyMapper.ViewModels
                 {
                     _CurrentActionWatcher = ActionWatcherFactory.CreateActionWatcherBase(JoyAction.ToModel());
                     _CurrentActionWatcher.OnActionHandled += s => WatcherLogText = string.Join(Environment.NewLine, s, WatcherLogText);
+                    if (_CurrentActionWatcher is ExtendedButtonActionWatcher extWatcher)
+                        extWatcher.OptimizeSingleClick = false;
                 }
                 else
                     _CurrentActionWatcher = null;
@@ -359,19 +361,21 @@ namespace JoyMapper.ViewModels
             {
                 try
                 {
-                    if (_CurrentActionWatcher == null)
+                    var watcher = _CurrentActionWatcher;
+                    if (watcher == null)
                     {
                         await Task.Delay(200);
                         continue;
                     }
 
-                    if (_CurrentActionWatcher is AxisActionWatcher axisWatcher)
+                    if (watcher is AxisActionWatcher axisWatcher)
                     {
                         var action = (AxisJoyAction)axisWatcher.JoyAction;
                         action.EndValue = _AxisJoyActionViewModel.EndValue;
                         action.StartValue = _AxisJoyActionViewModel.StartValue;
                         _AxisJoyActionViewModel.CurrentAxisValue = axisWatcher.CurrentValue;
                     }
+
 
                     if (_CurrentJoystick == null || _CurrentJoystick.Information.ProductName != JoyName)
                     {
@@ -388,8 +392,8 @@ namespace JoyMapper.ViewModels
 
                     await Task.Delay(50);
 
-                    _CurrentActionWatcher.Poll(_CurrentJoystick.GetCurrentState().ToModel(), false);
-                    ActionIsActive = _CurrentActionWatcher.IsActive;
+                    watcher.Poll(_CurrentJoystick.GetCurrentState().ToModel(), false);
+                    ActionIsActive = watcher.IsActive;
 
                 }
                 catch (Exception e)
@@ -397,11 +401,15 @@ namespace JoyMapper.ViewModels
                     Debug.WriteLine(e);
                 }
             }
+            _CurrentJoystick?.Dispose();
         }
 
         #endregion
 
         private bool _Disposed;
-        public void Dispose() => _Disposed = true;
+        public void Dispose()
+        {
+            _Disposed = true;
+        }
     }
 }

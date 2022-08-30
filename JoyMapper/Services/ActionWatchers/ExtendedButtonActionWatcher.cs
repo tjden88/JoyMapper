@@ -12,12 +12,15 @@ namespace JoyMapper.Services.ActionWatchers
 
         private readonly bool _IsDoublePressActionsExist;
 
-        private readonly int _DoublePressDelay = 400;
-        private readonly int _LongPressDelay = 500;
+        private readonly int _DoublePressDelay;
+        private readonly int _LongPressDelay;
 
         private Stopwatch _DelayMeter; // Таймер задержки между нажатиями
 
         private bool _FirstPressHandled; // Первое нажатие поймано
+
+        // Оптимизировать одиночное нажатие, если для двойного не назначено действий
+        public bool OptimizeSingleClick { get; set; } = true;
 
         public override JoyActionBase JoyAction => _ButtonJoyAction;
 
@@ -25,6 +28,9 @@ namespace JoyMapper.Services.ActionWatchers
         {
             _ButtonJoyAction = buttonJoyAction;
             _IsDoublePressActionsExist = buttonJoyAction.DoublePressKeyBindings?.Any() == true;
+
+            _DoublePressDelay = App.DataManager.AppSettings.DoublePressDelay;
+            _LongPressDelay = App.DataManager.AppSettings.LongPressDelay;
         }
 
         public override void Poll(JoyState joyState, bool SendCommands)
@@ -42,7 +48,7 @@ namespace JoyMapper.Services.ActionWatchers
 
             // Кнопка не нажата и прошло время двойного клика или
             // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
-            if (_FirstPressHandled && !isBtnPressed && (!_IsDoublePressActionsExist || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
+            if (_FirstPressHandled && !isBtnPressed && (!_IsDoublePressActionsExist && OptimizeSingleClick || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
             {
                 OnActionHandled?.Invoke("Одиночное нажатие");
 
