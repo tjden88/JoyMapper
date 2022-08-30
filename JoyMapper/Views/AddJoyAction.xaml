@@ -13,7 +13,8 @@
         mc:Ignorable="d"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Title="Нажмите кнопку / ось на джойстике" Width="320" Height="150">
+        Width = "320" Height="150"
+        Title="{Binding Title}">
     <b:Interaction.Triggers>
         <b:DataTrigger Binding="{Binding Accepted}" Value="True">
             <b:ChangePropertyAction PropertyName="DialogResult" Value="True"/>

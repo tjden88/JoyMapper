@@ -17,6 +17,32 @@ namespace JoyMapper.ViewModels
 
         #region Prop
 
+        #region Title : string - Заголовок
+
+
+        /// <summary>Заголовок</summary>
+        public string Title => IsOnlyButtons
+            ? "Нажмите кнопку на джойстике"
+            : "Нажмите кнопку / ось  на джойстике";
+
+        #endregion
+
+
+        #region IsOnlyButtons : bool - Обрабатывать только кнопки
+
+        /// <summary>Обрабатывать только кнопки</summary>
+        private bool _IsOnlyButtons;
+
+        /// <summary>Обрабатывать только кнопки</summary>
+        public bool IsOnlyButtons
+        {
+            get => _IsOnlyButtons;
+            set => IfSet(ref _IsOnlyButtons, value).CallPropertyChanged(nameof(Title));
+        }
+
+        #endregion
+
+        
         #region JoyName : string - Имя джойстика
 
         /// <summary>Имя джойстика</summary>
@@ -155,7 +181,7 @@ namespace JoyMapper.ViewModels
 
         #region AllActions
 
-        private static List<JoyActionBase> AllJoyActions()
+        private List<JoyActionBase> AllJoyActions()
         {
             var list = new List<JoyActionBase>();
 
@@ -183,6 +209,8 @@ namespace JoyMapper.ViewModels
                     Button = new JoyButton() { Type = ButtonType.Pow2, Value = powValue },
                 });
             }
+
+            if (IsOnlyButtons) return list;
 
             // Оси
             foreach (AxisJoyAction.Axises axis in Enum.GetValues(typeof(AxisJoyAction.Axises)))
