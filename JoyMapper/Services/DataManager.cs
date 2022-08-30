@@ -21,6 +21,7 @@ namespace JoyMapper.Services
             public List<Profile> Profiles { get; set; } = new();
 
             public List<KeyPattern> KeyPatterns { get; set; } = new();
+            public List<Modificator> Modificators { get; set; } = new();
 
         }
 
@@ -31,6 +32,7 @@ namespace JoyMapper.Services
 
         public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p => p.Id);
         public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns.OrderBy(p => p.Id);
+        public IEnumerable<Modificator> Modificators => ProfilesData.Modificators.OrderBy(m => m.Id);
 
         public AppSettings AppSettings => ProfilesData.AppSettings;
 
@@ -145,6 +147,36 @@ namespace JoyMapper.Services
 
             SaveData();
         }
+
+
+        public void AddModificator(Modificator modificator)
+        {
+            var nextId = Modificators
+                .Select(p => p.Id)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
+            modificator.Id = nextId;
+            ProfilesData.Modificators.Add(modificator);
+            SaveData();
+
+        }
+
+        public void RemoveModificator(int modId)
+        {
+            ProfilesData.Modificators.Remove(ProfilesData.Modificators.FirstOrDefault(p => p.Id == modId));
+
+            foreach (var pattern in KeyPatterns)
+            {
+                if (pattern.Modificator?.Id == modId)
+                {
+                    pattern.Modificator = null;
+                }
+            }
+
+            SaveData();
+        }
+
 
         /// <summary> Сохранить профили и настройки </summary>
         public void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
