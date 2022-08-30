@@ -40,11 +40,13 @@ namespace JoyMapper.ViewModels
                 case SimpleButtonJoyActionViewModel sm:
                     _SimpleButtonJoyActionViewModel = sm;
                     _ExtendedButtonJoyActionViewModel.Button = sm.Button;
+                    IsExtendedButtonMode = false;
                     CurrentActionType = ActionType.SimpleButton;
                     break;
                 case ExtendedButtonJoyActionViewModel extended:
                     _ExtendedButtonJoyActionViewModel = extended;
                     _SimpleButtonJoyActionViewModel.Button = extended.Button;
+                    IsExtendedButtonMode = true;
                     CurrentActionType = ActionType.ExtendedButton;
                     break;
                 default:
@@ -170,6 +172,7 @@ namespace JoyMapper.ViewModels
             get => _CurrentActionType;
             private set
             {
+                if(Equals(_CurrentActionType, value)) return;
                 _CurrentActionType = value;
                 OnPropertyChanged(nameof(CurrentActionType));
                 WatcherLogText = string.Empty;
