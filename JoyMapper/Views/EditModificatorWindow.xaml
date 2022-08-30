@@ -10,6 +10,7 @@
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
+        SizeToContent="Height"
         mc:Ignorable="d"
         Title="{Binding Title}" Width="500">
     <d:Window.DataContext>

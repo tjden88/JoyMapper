@@ -144,6 +144,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
         #region Command AttachJoyButtonCommand - Определить кнопку джойстика
 
         /// <summary>Определить кнопку джойстика</summary>

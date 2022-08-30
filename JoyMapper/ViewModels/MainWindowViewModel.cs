@@ -398,11 +398,19 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать модификатор</summary>
         private void OnCreateModificatorCommandExecuted()
         {
-            // TODO: заглушка
+            var vm = new EditModificatorWindowViewModel();
+            var wnd = new EditModificatorWindow()
+            {
+                Owner = Application.Current.MainWindow,
+                DataContext = vm
+            };
+            if (wnd.ShowDialog() != true) return;
+
             var modif = new Modificator()
             {
-                Name = "Test",
-                JoyName = "TestJoy"
+                Name = vm.Name,
+                JoyName = vm.JoyName,
+                Button = vm.Button,
             };
 
             App.DataManager.AddModificator(modif);
