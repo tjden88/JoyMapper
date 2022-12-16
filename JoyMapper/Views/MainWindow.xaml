@@ -58,6 +58,7 @@
                                     <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
                                 </Button.Content>
                             </Button>
+                            <Button Content="Test" Click="ButtonBase_OnClick"></Button>
                         </ToolBar>
 
                         <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"

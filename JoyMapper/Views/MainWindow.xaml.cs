@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using JoyMapper.ViewModels;
+using JoyMapper.Views.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JoyMapper.Views
 {
@@ -15,6 +17,12 @@ namespace JoyMapper.Views
         {
             InitializeComponent();
             DataContext = ViewModel;
+        }
+
+        private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
+        {
+            var wnd = App.Services.GetRequiredService<AddJoyBinding>();
+            wnd.Show();
         }
     }
 }

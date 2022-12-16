@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
+using JoyMapper.ViewModels.Windows;
 
 namespace JoyMapper.Views.Windows
 {
@@ -10,16 +10,13 @@ namespace JoyMapper.Views.Windows
     {
         public AddJoyBinding(AddJoyBindingViewModel viewModel)
         {
-            InitializeComponent();
             ViewModel = viewModel;
+            InitializeComponent();
         }
 
         public AddJoyBindingViewModel ViewModel { get; set; }
 
 
-        public class AddJoyBindingViewModel
-        {
 
-        }
     }
 }

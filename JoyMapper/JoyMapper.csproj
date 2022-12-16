@@ -30,8 +30,4 @@
     <ProjectReference Include="..\..\WPR\WPR\WPR.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\Windows\" />
-  </ItemGroup>
-
 </Project>
