@@ -55,8 +55,8 @@ namespace JoyMapper.ViewModels.Windows
 
         #endregion
 
-        
 
+        /// <summary> Начать отслеживание кнопок </summary>
         public void StartWatching()
         {
             var allBindings = new List<JoyBindingBase>();
@@ -71,8 +71,10 @@ namespace JoyMapper.ViewModels.Windows
 
         }
 
+        /// <summary> Остановить отслеживание </summary>
         public void StopWatching() => _IsWatching = false;
 
+        // Цикл проверки нажатых осей и кнопок
         private async Task WatchChanges()
         {
             while (_IsWatching)

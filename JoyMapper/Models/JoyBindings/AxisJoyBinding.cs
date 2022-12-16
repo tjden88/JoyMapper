@@ -20,11 +20,51 @@ public class AxisJoyBinding : JoyBindingBase
         Slider2,
     }
 
-    public Axises Axis { get; set; }
+    #region Axis : Axises - Выбранная ось
 
-    public int StartValue { get; set; }
+    /// <summary>Выбранная ось</summary>
+    private Axises _Axis;
 
-    public int EndValue { get; set; }
+    /// <summary>Выбранная ось</summary>
+    public Axises Axis
+    {
+        get => _Axis;
+        set => IfSet(ref _Axis, value).CallPropertyChanged(nameof(Description));
+    }
+
+    #endregion
+
+
+    #region StartValue : int - Начальное значение активации оси
+
+    /// <summary>Начальное значение активации оси</summary>
+    private int _StartValue;
+
+    /// <summary>Начальное значение активации оси</summary>
+    public int StartValue
+    {
+        get => _StartValue;
+        set => Set(ref _StartValue, value);
+    }
+
+    #endregion
+
+
+    #region EndValue : int - Значение выхода из активированной зоны оси
+
+    /// <summary>Значение выхода из активированной зоны оси</summary>
+    private int _EndValue;
+
+    /// <summary>Значение выхода из активированной зоны оси</summary>
+    public int EndValue
+    {
+        get => _EndValue;
+        set => Set(ref _EndValue, value);
+    }
+
+    #endregion
+
+    
 
     protected override bool IsPressed(JoyState joyState)
     {

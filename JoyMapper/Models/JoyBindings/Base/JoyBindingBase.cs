@@ -1,11 +1,13 @@
 ﻿using System;
+using Newtonsoft.Json;
+using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.Models.JoyBindings.Base
 {
     /// <summary>
     /// Выбранная кнопка или ось джойстика
     /// </summary>
-    public abstract class JoyBindingBase
+    public abstract class JoyBindingBase : ViewModel
     {
         /// <summary>
         /// Тип активациии действия - нормальный, обратный (активно при отпускании), переключатель
@@ -18,29 +20,55 @@ namespace JoyMapper.Models.JoyBindings.Base
         }
 
 
-        /// <summary>
-        /// Имя привязанного джойстика
-        /// </summary>
-        public string JoyName { get; set; }
+        #region JoyName : string - Имя привязанного джойстика
+
+        /// <summary>Имя привязанного джойстика</summary>
+        private string _JoyName;
+
+        /// <summary>Имя привязанного джойстика</summary>
+        public string JoyName
+        {
+            get => _JoyName;
+            set => Set(ref _JoyName, value);
+        }
+
+        #endregion
 
 
-        /// <summary>
-        /// Активно ли действие с учётом типа активации
-        /// </summary>
-        public bool IsActive { get; private set; }
+        #region IsActive : bool - Активно ли действие с учётом типа активации
+
+        /// <summary>Активно ли действие с учётом типа активации</summary>
+        private bool _IsActive;
+
+        /// <summary>Активно ли действие с учётом типа активации</summary>
+        public bool IsActive
+        {
+            get => _IsActive;
+            set => Set(ref _IsActive, value);
+        }
+
+        #endregion
 
 
-        /// <summary>
-        /// Тип активациии действия
-        /// </summary>
-        public ActivationTypes ActivationType { get; set; }
+        #region ActivationType : ActivationTypes - Тип активации действия
+
+        /// <summary>Тип активации действия</summary>
+        private ActivationTypes _ActivationType;
+
+        /// <summary>Тип активации действия</summary>
+        public ActivationTypes ActivationType
+        {
+            get => _ActivationType;
+            set => Set(ref _ActivationType, value);
+        }
+
+        #endregion
 
 
         /// <summary>
         /// Обновить статус действия с учётом типа активации
         /// </summary>
         /// <param name="joyState">Статус джойстика</param>
-        /// <returns></returns>
         public bool UpdateIsActive(JoyState joyState)
         {
             var pressed = IsPressed(joyState);
@@ -66,6 +94,7 @@ namespace JoyMapper.Models.JoyBindings.Base
         /// <summary>
         /// Описание действия
         /// </summary>
+        [JsonIgnore]
         public abstract string Description { get; }
 
         #endregion

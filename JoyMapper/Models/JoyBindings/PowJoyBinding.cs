@@ -14,16 +14,34 @@ public class PowJoyBinding : JoyBindingBase
         Pow2,
     }
 
-    /// <summary>
-    /// Номер указателя вида
-    /// </summary>
-    public PowNumbers PowNumber { get; set; }
+    #region PowNumber : PowNumbers - Номер указателя вида
+
+    /// <summary>Номер указателя вида</summary>
+    private PowNumbers _PowNumber;
+
+    /// <summary>Номер указателя вида</summary>
+    public PowNumbers PowNumber
+    {
+        get => _PowNumber;
+        set => IfSet(ref _PowNumber, value).CallPropertyChanged(nameof(Description));
+    }
+
+    #endregion
 
 
-    /// <summary>
-    /// Значение указателя
-    /// </summary>
-    public int PowValue { get; set; }
+    #region PowValue : int - Значение указателя
+
+    /// <summary>Значение указателя</summary>
+    private int _PowValue;
+
+    /// <summary>Значение указателя</summary>
+    public int PowValue
+    {
+        get => _PowValue;
+        set => IfSet(ref _PowValue, value).CallPropertyChanged(nameof(Description));
+    }
+
+    #endregion
 
 
     protected override bool IsPressed(JoyState joyState) => PowNumber switch
