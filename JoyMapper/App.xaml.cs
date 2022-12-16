@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
+using JoyMapper.Views.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JoyMapper
 {
@@ -23,6 +26,19 @@ namespace JoyMapper
         internal static UpdateChecker UpdateChecker { get; } = new();
 
 
+        private static IServiceProvider _Services;
+
+        public static IServiceProvider Services => _Services ??= ConfigureServices();
+
+        private static IServiceProvider ConfigureServices()
+        {
+            var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddSingleton<AddJoyBinding>();
+            serviceCollection.AddSingleton<AddJoyBinding.AddJoyBindingViewModel>();
+
+            return serviceCollection.BuildServiceProvider();
+        }
     }
 
 }
