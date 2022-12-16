@@ -5,8 +5,11 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using JoyMapper.Models.JoyBindings;
 using WPR.MVVM.ViewModels;
+using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels.Windows
 {
@@ -35,8 +38,41 @@ namespace JoyMapper.ViewModels.Windows
         public JoyBindingBase JoyBinding
         {
             get => _JoyBinding;
-            set => Set(ref _JoyBinding, value);
+            set => IfSet(ref _JoyBinding, value)
+                .CallPropertyChanged(nameof(JoyName))
+                .CallPropertyChanged(nameof(Description));
         }
+
+        #endregion
+
+        public string JoyName => JoyBinding?.JoyName ?? "Нажмите кнопку или сдвиньте ось джойстика";
+
+        public string Description => JoyBinding?.Description;
+
+
+        #endregion
+
+
+        #region Commands
+
+        #region Command AcceptButtonCommand - Принять изменения
+
+        /// <summary>Принять изменения</summary>
+        private Command _AcceptButtonCommand;
+
+        /// <summary>Принять изменения</summary>
+        public Command AcceptButtonCommand => _AcceptButtonCommand
+            ??= new Command(OnAcceptButtonCommandExecuted, CanAcceptButtonCommandExecute, "Принять изменения");
+
+        /// <summary>Проверка возможности выполнения - Принять изменения</summary>
+        private bool CanAcceptButtonCommandExecute() => JoyBinding != null;
+
+        /// <summary>Логика выполнения - Принять изменения</summary>
+        private void OnAcceptButtonCommandExecuted()
+        {
+            // TODO
+        }
+
 
         #endregion
 
@@ -58,28 +94,24 @@ namespace JoyMapper.ViewModels.Windows
 
         }
 
-        public void StopWatching()
-        {
-            _IsWatching = false;
-        }
+        public void StopWatching() => _IsWatching = false;
 
         private async Task WatchChanges()
         {
             while (_IsWatching)
             {
-                var timer = Stopwatch.StartNew();
                 var changes = _JoyBindingsWatcher.GetChanges();
-                if (changes.FirstOrDefault() is { } change)
+                if (changes.FirstOrDefault() is { IsActive: true } change)
                 {
                     Debug.WriteLine(change.Description);
                     JoyBinding = change;
+                    Application.Current.Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
                 }
-                Debug.WriteLine(timer.ElapsedMilliseconds);
                 await Task.Delay(100);
             }
         }
 
-        #region AllActions
+        #region AllBindings
 
         private List<JoyBindingBase> AllJoyBindings(string JoyName)
         {

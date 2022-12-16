@@ -20,8 +20,8 @@
         Title="{Binding Title}">
 
     <StackPanel Margin="10" VerticalAlignment="Center">
-        <TextBlock HorizontalAlignment="Center" Text="{Binding JoyBinding.JoyName}"  FontSize="14" Margin="5" />
-        <TextBlock Name="ButtonActionText" HorizontalAlignment="Center" Text="{Binding JoyBinding.Description}" FontSize="14"/>
+        <TextBlock HorizontalAlignment="Center" Text="{Binding JoyName}" TextAlignment="Center"  FontSize="14" Margin="5" />
+        <TextBlock Name="ButtonActionText" HorizontalAlignment="Center" Text="{Binding Description}" FontSize="14"/>
         <Button Content="ПРИНЯТЬ" IsDefault="True"
                 Command="{Binding AcceptButtonCommand}" HorizontalAlignment="Center" Margin="10"/>
     </StackPanel>

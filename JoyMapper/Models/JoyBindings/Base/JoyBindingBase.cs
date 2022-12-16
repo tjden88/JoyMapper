@@ -25,27 +25,36 @@ namespace JoyMapper.Models.JoyBindings.Base
 
 
         /// <summary>
+        /// Активно ли действие с учётом типа активации
+        /// </summary>
+        public bool IsActive { get; private set; }
+
+
+        /// <summary>
         /// Тип активациии действия
         /// </summary>
         public ActivationTypes ActivationType { get; set; }
 
 
         /// <summary>
-        /// Активно ли действие в текущий момент с учётом типа активации
+        /// Обновить статус действия с учётом типа активации
         /// </summary>
         /// <param name="joyState">Статус джойстика</param>
         /// <returns></returns>
-        public bool IsActive(JoyState joyState)
+        public bool UpdateIsActive(JoyState joyState)
         {
             var pressed = IsPressed(joyState);
 
-            return ActivationType switch
+            var result = ActivationType switch
             {
                 ActivationTypes.Normal => pressed,
                 ActivationTypes.Reverse => !pressed,
                 ActivationTypes.Switch => CheckSwitchStatus(pressed),
                 _ => throw new ArgumentOutOfRangeException(nameof(ActivationType))
             };
+
+            IsActive = result;
+            return result;
         }
 
         #region Abstract

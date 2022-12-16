@@ -22,7 +22,8 @@ namespace JoyMapper.Views
         private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
         {
             var wnd = App.Services.GetRequiredService<AddJoyBinding>();
-            wnd.Show();
+            wnd.Owner = this;
+            wnd.ShowDialog();
         }
     }
 }

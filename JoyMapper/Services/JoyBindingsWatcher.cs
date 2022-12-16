@@ -39,7 +39,7 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
             {
                 joyBindingsGroup.BindingStates.ForEach(gr =>
                 {
-                    var newState = gr.Binding.IsActive(state);
+                    var newState = gr.Binding.UpdateIsActive(state);
                     if (gr.LastState != newState)
                     {
                         gr.LastState = newState;
@@ -66,7 +66,7 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
             {
                 joyBindingsGroup.BindingStates.ForEach(gr =>
                 {
-                    gr.LastState = gr.Binding.IsActive(state);
+                    gr.LastState = gr.Binding.UpdateIsActive(state);
                 });
             }
         }
