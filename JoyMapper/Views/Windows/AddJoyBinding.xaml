@@ -11,24 +11,17 @@
         BorderBrush="{DynamicResource BackgroundColorBrush}"
         helpers:WindowHelper.WindowHeaderForeground="{DynamicResource PrimaryTextColorBrush}"
         mc:Ignorable="d"
+        Loaded="AddJoyBinding_OnLoaded"
+        Closed="AddJoyBinding_OnClosed"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         Width = "320" Height="150"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Title="{Binding Title}">
-    <b:Interaction.Triggers>
-        <b:DataTrigger Binding="{Binding Accepted}" Value="True">
-            <b:ChangePropertyAction PropertyName="DialogResult" Value="True"/>
-        </b:DataTrigger>
-        <b:EventTrigger EventName="Loaded">
-            <b:EventTrigger.Actions>
-                <b:InvokeCommandAction Command="{Binding LoadConnectedJoysticksCommand}"/>
-            </b:EventTrigger.Actions>
-        </b:EventTrigger>
-    </b:Interaction.Triggers>
+
     <StackPanel Margin="10" VerticalAlignment="Center">
-        <TextBlock HorizontalAlignment="Center" Text="{Binding JoyName}"  FontSize="14" Margin="5" />
-        <TextBlock Name="ButtonActionText" HorizontalAlignment="Center" Text="{Binding JoyActionName}" FontSize="14"/>
+        <TextBlock HorizontalAlignment="Center" Text="{Binding JoyBinding.JoyName}"  FontSize="14" Margin="5" />
+        <TextBlock Name="ButtonActionText" HorizontalAlignment="Center" Text="{Binding JoyBinding.Description}" FontSize="14"/>
         <Button Content="ПРИНЯТЬ" IsDefault="True"
                 Command="{Binding AcceptButtonCommand}" HorizontalAlignment="Center" Margin="10"/>
     </StackPanel>

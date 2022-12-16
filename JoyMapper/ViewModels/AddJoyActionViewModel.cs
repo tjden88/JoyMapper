@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -160,6 +161,7 @@ namespace JoyMapper.ViewModels
 
             while (_Listen)
             {
+                var timer = Stopwatch.StartNew();
                 foreach (var poller in pollers)
                 {
                     var diff = poller.GetActiveDifferents();
@@ -172,6 +174,7 @@ namespace JoyMapper.ViewModels
                         break;
                     }
                 }
+                Debug.WriteLine(timer.ElapsedMilliseconds);
                 await Task.Delay(100);
             }
 

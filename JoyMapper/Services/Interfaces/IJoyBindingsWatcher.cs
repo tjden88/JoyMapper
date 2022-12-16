@@ -13,7 +13,7 @@ public interface IJoyBindingsWatcher
 
 
     /// <summary> Получить изменения привязок с предыдущего опроса </summary>
-    IEnumerable<JoyBindingBase> GetChanges();
+    ICollection<JoyBindingBase> GetChanges();
 
 
     /// <summary> Остановить отслеживание, очистить данные </summary>

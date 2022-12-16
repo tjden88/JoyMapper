@@ -9,7 +9,7 @@ using SharpDX.DirectInput;
 
 namespace JoyMapper.Services;
 
-public class JoystickStateManager : IJoystickStateManager
+public class JoystickStateManager : IJoystickStateManager, IDisposable
 {
     public IEnumerable<string> GetConnectedJoysticks()
     {
@@ -19,22 +19,35 @@ public class JoystickStateManager : IJoystickStateManager
         return connectedDevices.Select(cd => cd.InstanceName);
     }
 
+    private readonly List<Joystick> _Joysticks = new();
 
     public JoyState GetJoyState(string joystickName)
     {
         try
         {
-            var deviceInstance = new DirectInput()
-                .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                .FirstOrDefault(d => d.InstanceName == joystickName);
+            Joystick joystick;
+            if (_Joysticks.Find(j => j.Information.InstanceName == joystickName) is { } joy)
+            {
+                joystick = joy;
+            }
+            else
+            {
+                var deviceInstance = new DirectInput()
+                    .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+                    .FirstOrDefault(d => d.InstanceName == joystickName);
 
-            if (deviceInstance == null) 
-                return null;
+                if (deviceInstance == null)
+                    return null;
+                joystick = new Joystick(new DirectInput(), deviceInstance.InstanceGuid);
+                _Joysticks.Add(joystick);
+                joystick.Acquire();
+            }
 
-            using var joystick = new Joystick(new DirectInput(), deviceInstance.InstanceGuid);
-            joystick.Acquire();
-            joystick.Poll();
-            return joystick.GetCurrentState().ToModel();
+            
+            //joystick.Poll();
+            var joyState = joystick.GetCurrentState();
+
+            return joyState.ToModel();
         }
         catch (Exception e)
         {
@@ -42,5 +55,13 @@ public class JoystickStateManager : IJoystickStateManager
             AppLog.LogMessage($"Ошибка опроса устройства - {joystickName}", LogMessage.MessageType.Error);
             return null;
         }
+    }
+
+    public void Dispose()
+    {
+        foreach (var joystick in _Joysticks)
+            joystick.Dispose();
+
+        _Joysticks.Clear();
     }
 }

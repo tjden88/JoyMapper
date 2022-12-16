@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using JoyMapper.ViewModels.Windows;
 
 namespace JoyMapper.Views.Windows
@@ -17,6 +18,14 @@ namespace JoyMapper.Views.Windows
         public AddJoyBindingViewModel ViewModel { get; set; }
 
 
+        private void AddJoyBinding_OnLoaded(object Sender, RoutedEventArgs E)
+        {
+            ViewModel.StartWatching();
+        }
 
+        private void AddJoyBinding_OnClosed(object Sender, EventArgs E)
+        {
+            ViewModel.StopWatching();
+        }
     }
 }

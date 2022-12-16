@@ -13,7 +13,7 @@ public class ButtonJoyBinding : JoyBindingBase
     /// </summary>
     public int ButtonNumber { get; set; }
 
-    protected override bool IsPressed(JoyState joyState) => joyState.Buttons[ButtonNumber + 1];
+    protected override bool IsPressed(JoyState joyState) => joyState.Buttons[ButtonNumber - 1];
 
     public override string Description => $"Кнопка {ButtonNumber}";
 }

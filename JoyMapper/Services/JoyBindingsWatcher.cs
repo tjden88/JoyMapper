@@ -21,14 +21,15 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
     {
         var joyGroups = bindings
             .GroupBy(b => b.JoyName)
-            .Select(g => new JoyBindingsGroup(g.Key, g.Select(gg=> (false, gg)).ToList() ))
+            .Select(g => new JoyBindingsGroup(g.Key, g.Select(gg=> new JoyBindingState {Binding = gg}).ToList() ))
+            .Where(g=>!string.IsNullOrEmpty(g.JoyName))
             .ToList();
         _BindingsGroups = joyGroups;
 
         SyncState();
     }
 
-    public IEnumerable<JoyBindingBase> GetChanges()
+    public ICollection<JoyBindingBase> GetChanges()
     {
         var changes = new List<JoyBindingBase>();
         foreach (var joyBindingsGroup in _BindingsGroups)
@@ -39,7 +40,7 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
                 joyBindingsGroup.BindingStates.ForEach(gr =>
                 {
                     var newState = gr.Binding.IsActive(state);
-                    if (gr is {LastState: true} != newState)
+                    if (gr.LastState != newState)
                     {
                         gr.LastState = newState;
                         changes.Add(gr.Binding);
@@ -72,5 +73,12 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
     }
 
 
-    private record JoyBindingsGroup(string JoyName, List<(bool LastState, JoyBindingBase Binding)> BindingStates);
+    private record JoyBindingsGroup(string JoyName, List<JoyBindingState> BindingStates);
+
+    private class JoyBindingState
+    {
+        public bool LastState { get; set; }
+
+        public JoyBindingBase Binding { get; init; }
+    }
 }

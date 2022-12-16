@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
+using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.Windows;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,8 +36,12 @@ namespace JoyMapper
         {
             var serviceCollection = new ServiceCollection();
 
-            serviceCollection.AddSingleton<AddJoyBinding>();
-            serviceCollection.AddSingleton<AddJoyBindingViewModel>();
+            serviceCollection.AddTransient<AddJoyBinding>()
+            .AddTransient<AddJoyBindingViewModel>()
+            .AddTransient<IJoystickStateManager, JoystickStateManager>()
+            .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()
+
+            ;
 
             return serviceCollection.BuildServiceProvider();
         }
