@@ -5,7 +5,7 @@ namespace JoyMapper.Models.JoyBindings;
 /// <summary>
 /// Биндинг обычной кнопки джойстика
 /// </summary>
-internal class ButtonJoyBinding : JoyBindingBase
+public class ButtonJoyBinding : JoyBindingBase
 {
 
     /// <summary>

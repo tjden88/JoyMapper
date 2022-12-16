@@ -6,7 +6,7 @@ namespace JoyMapper.Models.JoyBindings;
 /// <summary>
 /// Биндинг указателя вида
 /// </summary>
-internal class PowJoyBinding : JoyBindingBase
+public class PowJoyBinding : JoyBindingBase
 {
     public enum PowNumbers
     {

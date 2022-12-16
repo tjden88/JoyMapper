@@ -5,7 +5,7 @@ namespace JoyMapper.Models.JoyBindings.Base
     /// <summary>
     /// Выбранная кнопка или ось джойстика
     /// </summary>
-    internal abstract class JoyBindingBase
+    public abstract class JoyBindingBase
     {
         /// <summary>
         /// Тип активациии действия - нормальный, обратный (активно при отпускании), переключатель

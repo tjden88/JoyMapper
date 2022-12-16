@@ -6,7 +6,7 @@ namespace JoyMapper.Models.JoyBindings;
 /// <summary>
 /// Биндинг оси джойстика
 /// </summary>
-internal class AxisJoyBinding : JoyBindingBase
+public class AxisJoyBinding : JoyBindingBase
 {
     public enum Axises
     {

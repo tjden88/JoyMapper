@@ -3,7 +3,7 @@
     /// <summary>
     /// Состояние кнопок и осей джойстика
     /// </summary>
-    internal class JoyState
+    public class JoyState
     {
         public struct AxisState
         {
