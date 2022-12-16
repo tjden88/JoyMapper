@@ -40,7 +40,8 @@ namespace JoyMapper.ViewModels.Windows
             get => _JoyBinding;
             set => IfSet(ref _JoyBinding, value)
                 .CallPropertyChanged(nameof(JoyName))
-                .CallPropertyChanged(nameof(Description));
+                .CallPropertyChanged(nameof(Description))
+                .CallPropertyChanged(nameof(IsBindingSelected));
         }
 
         #endregion
@@ -49,36 +50,12 @@ namespace JoyMapper.ViewModels.Windows
 
         public string Description => JoyBinding?.Description;
 
-
-        #endregion
-
-
-        #region Commands
-
-        #region Command AcceptButtonCommand - Принять изменения
-
-        /// <summary>Принять изменения</summary>
-        private Command _AcceptButtonCommand;
-
-        /// <summary>Принять изменения</summary>
-        public Command AcceptButtonCommand => _AcceptButtonCommand
-            ??= new Command(OnAcceptButtonCommandExecuted, CanAcceptButtonCommandExecute, "Принять изменения");
-
-        /// <summary>Проверка возможности выполнения - Принять изменения</summary>
-        private bool CanAcceptButtonCommandExecute() => JoyBinding != null;
-
-        /// <summary>Логика выполнения - Принять изменения</summary>
-        private void OnAcceptButtonCommandExecuted()
-        {
-            // TODO
-        }
+        public bool IsBindingSelected => JoyBinding != null;
 
 
         #endregion
 
-
-        #endregion
-
+        
 
         public void StartWatching()
         {

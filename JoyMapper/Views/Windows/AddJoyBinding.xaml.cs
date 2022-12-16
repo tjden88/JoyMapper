@@ -27,5 +27,10 @@ namespace JoyMapper.Views.Windows
         {
             ViewModel.StopWatching();
         }
+
+        private void ButtonAccept_OnClick(object Sender, RoutedEventArgs E)
+        {
+            DialogResult = true;
+        }
     }
 }
