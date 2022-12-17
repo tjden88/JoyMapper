@@ -57,7 +57,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding SelectedPatterns}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewModels:SelectedPatternViewModel}">
+                    <DataTemplate>
                         <CheckBox IsChecked="{Binding IsSelected}">
                             <CheckBox.Content>
                                 <DockPanel Margin="0,5">

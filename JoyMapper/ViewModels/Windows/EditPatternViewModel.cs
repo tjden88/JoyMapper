@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using JoyMapper.Helpers;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
-using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.Views.UserControls;
 using WPR.MVVM.Commands;
@@ -14,13 +14,11 @@ namespace JoyMapper.ViewModels.Windows
     public class EditPatternViewModel : WindowViewModel, IDisposable
     {
 
-        private readonly AppWindowsService _AppWindowsService;
         private readonly IJoyBindingsWatcher _BindingsWatcher;
 
-        public EditPatternViewModel(AppWindowsService AppWindowsService, IJoyBindingsWatcher BindingsWatcher, PatternActionView PatternActionView)
+        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionView PatternActionView)
         {
             this.PatternActionView = PatternActionView;
-            _AppWindowsService = AppWindowsService;
             _BindingsWatcher = BindingsWatcher;
         }
 
@@ -70,10 +68,10 @@ namespace JoyMapper.ViewModels.Windows
         #region AxisJoyBinding : AxisJoyBinding - Настройки диапазона оси
 
         /// <summary>Настройки диапазона оси</summary>
-        public AxisJoyBinding AxisJoyBinding => JoyBinding is AxisJoyBinding {} ax ? ax : null;
+        public AxisJoyBinding AxisJoyBinding => JoyBinding is AxisJoyBinding { } ax ? ax : null;
 
         #endregion
-        
+
 
         #region JoyBindingText - string
 
@@ -165,16 +163,11 @@ namespace JoyMapper.ViewModels.Windows
         /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
         private void OnAttachJoyButtonCommandExecuted()
         {
+            var bind = JoyBindingHelper.GetBinding();
 
-            var wnd = _AppWindowsService.AddJoyBinding;
+            if (bind is null) return;
 
-            wnd.Owner = _AppWindowsService.ActiveWindow;
-
-            if (!wnd.ShowDialog() == true)
-                return;
-
-            JoyBinding = wnd.ViewModel.JoyBinding;
-
+            JoyBinding = bind;
         }
 
         #endregion
