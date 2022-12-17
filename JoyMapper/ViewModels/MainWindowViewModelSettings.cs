@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using JoyMapper.Models;
-using JoyMapper.Views;
 using WPR;
 using WPR.MVVM.Commands;
 
@@ -233,18 +232,8 @@ namespace JoyMapper.ViewModels
         private void ShowUpdateWindow(bool Clicked)
         {
             if (!Clicked) return;
+            _UpdateChecker.ShowUpdateWindow();
 
-            var vm = new UpdateWindowViewModel()
-            {
-                DownloadLink = UpdateDownloadUrl,
-                ReleaseNotes = LastUpdateReleaseNotes,
-            };
-            var wnd = new UpdateWindow()
-            {
-                DataContext = vm,
-                Owner = App.ActiveWindow,
-            };
-            wnd.ShowDialog();
         }
 
 

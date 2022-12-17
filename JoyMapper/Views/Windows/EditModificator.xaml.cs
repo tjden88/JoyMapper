@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;

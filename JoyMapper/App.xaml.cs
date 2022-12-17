@@ -21,7 +21,7 @@ namespace JoyMapper
     {
 
         /// <summary> Версия приложения </summary>
-        internal const string AppVersion = "1.3.3";
+        internal const string AppVersion = "1.3";
 
         /// <summary> Менеджер данных профилей текущей сессии </summary>
         [Obsolete]
@@ -67,6 +67,8 @@ namespace JoyMapper
                 .AddTransient<PatternActionViewModel>()
                 .AddTransient<EditProfile>()
                 .AddTransient<EditProfileWindowViewModel>()
+                .AddTransient<UpdateWindow>()
+                .AddTransient<UpdateWindow.UpdateWindowViewModel>()
                 .AddTransient<IJoystickStateManager, JoystickStateManager>()
                 .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()
 

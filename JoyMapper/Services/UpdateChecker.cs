@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JoyMapper.Views;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,16 +11,20 @@ namespace JoyMapper.Services
     /// </summary>
     public class UpdateChecker
     {
+        private readonly AppWindowsService _AppWindowsService;
 
         //private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/v1.4/JoyMapper/LatestVersion.txt"; // Debug
         private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/master/JoyMapper/LatestVersion.txt";
 
-        private record LastVersion(string Version, string UpdateUrl, string ReleaseNotes);
 
         private static string CurrentVersion => App.AppVersion;
 
         private LastVersion _LastVersion;
 
+        public UpdateChecker(AppWindowsService AppWindowsService)
+        {
+            _AppWindowsService = AppWindowsService;
+        }
 
         /// <summary>
         /// Проверить, есть ли новая версия
@@ -87,5 +92,17 @@ namespace JoyMapper.Services
             return _LastVersion;
         }
 
+        /// <summary> Показать окно обновления </summary>
+        public void ShowUpdateWindow()
+        {
+            var wnd = _AppWindowsService.GetDialogWindow<UpdateWindow>();
+            var vm = wnd.ViewModel;
+            vm.DownloadLink = _LastVersion.UpdateUrl;
+            vm.ReleaseNotes = _LastVersion.ReleaseNotes;
+            
+            wnd.ShowDialog();
+        }
+
+        private record LastVersion(string Version, string UpdateUrl, string ReleaseNotes);
     }
 }

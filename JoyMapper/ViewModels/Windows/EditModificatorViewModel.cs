@@ -1,8 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using JoyMapper.Models.JoyBindings.Base;
+﻿using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
-using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
