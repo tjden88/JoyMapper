@@ -52,8 +52,10 @@ namespace JoyMapper.Services.Data
         {
             var profile = _ProfilesManager.AddProfile();
 
-            SaveProfile(profile);
+            if (profile == null) 
+                return null;
 
+            SaveProfile(profile);
             return profile;
         }
 
@@ -89,10 +91,11 @@ namespace JoyMapper.Services.Data
         /// <summary> Обновить паттерн (заменить по Id) </summary>
         public Profile UpdateProfile(int Id)
         {
-            var updated = _ProfilesManager.UpdateProfile(Id);
+            var editProfile = ProfilesData.Profiles.First(p => p.Id == Id);
+
+            var updated = _ProfilesManager.UpdateProfile(editProfile);
             if (updated == null) return null;
 
-            var editProfile = ProfilesData.Profiles.First(p => p.Id == updated.Id);
 
             var index = ProfilesData.Profiles.IndexOf(editProfile);
             ProfilesData.Profiles.Remove(editProfile);

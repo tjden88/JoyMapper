@@ -1,33 +1,21 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using JoyMapper.Models;
-using JoyMapper.Services.Data;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows
 {
-    internal class ProfileEditWindowViewModel : WindowViewModel
+    public class ProfileEditWindowViewModel : WindowViewModel
     {
-        private static DataManager DataManager => App.DataManager;
 
         public ProfileEditWindowViewModel()
         {
             Title = "Добавление профиля";
         }
 
-        public ProfileEditWindowViewModel(int id)
-        {
-            if (id < 1)
-                throw new ArgumentOutOfRangeException(nameof(id), "Неверный профиль!");
-
-            Title = "Редактирование профиля";
-            Id = id;
-        }
 
         #region Id : int - ID профиля (0 - новый профиль)
 
@@ -88,42 +76,6 @@ namespace JoyMapper.ViewModels.Windows
 
         #endregion
 
-
-        #region Command LoadDataCommand - Загрузить данные профиля
-
-        /// <summary>Загрузить данные профиля</summary>
-        private Command _LoadDataCommand;
-
-        /// <summary>Загрузить данные профиля</summary>
-        public Command LoadDataCommand => _LoadDataCommand
-            ??= new Command(OnLoadDataCommandExecuted, CanLoadDataCommandExecute, "Загрузить данные профиля");
-
-        /// <summary>Проверка возможности выполнения - Загрузить данные профиля</summary>
-        private bool CanLoadDataCommandExecute() => true;
-
-        /// <summary>Логика выполнения - Загрузить данные профиля</summary>
-        private void OnLoadDataCommandExecuted()
-        {
-            var allPatterns = DataManager.JoyPatterns;
-
-            var profile = Id > 0
-                ? DataManager.Profiles.First(pr => pr.Id == Id)
-                : new Profile();
-
-            var mapped = allPatterns.Select(p => new SelectedPatternViewModel
-            {
-                IsSelected = profile.PatternsIds.Contains(p.Id),
-                PatternName = p.Name,
-                PatternId = p.Id,
-                Description = p.ToString()
-            });
-
-            SelectedPatterns = new(mapped);
-            Name = profile.Name;
-            Description = profile.Description;
-        }
-
-        #endregion
 
 
         #region AsyncCommand SaveProfileCommandCommand - Сохранить профиль

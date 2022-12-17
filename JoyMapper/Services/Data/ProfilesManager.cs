@@ -1,14 +1,10 @@
-﻿using System.Linq;
-using JoyMapper.Models;
-using JoyMapper.ViewModels;
-using JoyMapper.ViewModels.Windows;
-using JoyMapper.Views;
+﻿using JoyMapper.Models;
 using JoyMapper.Views.Windows;
 
 namespace JoyMapper.Services.Data;
 
 /// <summary>
-/// Создание, изменение, удаление профилей
+/// Создание, изменение, копирование профилей
 /// </summary>
 public class ProfilesManager
 {
@@ -23,24 +19,8 @@ public class ProfilesManager
 
     public Profile AddProfile()
     {
-        var vm = new ProfileEditWindowViewModel();
-        var wnd = new ProfileEditWindow
-        {
-            Owner = _AppWindowsService.ActiveWindow,
-            DataContext = vm
-        };
-        if (wnd.ShowDialog() != true) return null;
-
-        var profile = new Profile
-        {
-            Name = vm.Name,
-            Description = vm.Description,
-            PatternsIds = vm.SelectedPatterns
-                .Where(p => p.IsSelected)
-                .Select(p => p.PatternId)
-                .ToList()
-        };
-        return profile;
+        var wnd = _AppWindowsService.GetDialogWindow<ProfileEditWindow>();
+        return wnd.ShowDialog() != true ? null : wnd.GetModel();
     }
 
     public Profile CopyProfile(Profile profile)
@@ -49,27 +29,11 @@ public class ProfilesManager
         return newProf;
     }
 
-    public Profile UpdateProfile(int Id)
+    public Profile UpdateProfile(Profile profile)
     {
-        var vm = new ProfileEditWindowViewModel(Id);
-        var wnd = new ProfileEditWindow
-        {
-            Owner = _AppWindowsService.ActiveWindow,
-            DataContext = vm
-        };
-        if (wnd.ShowDialog() != true) return null;
-
-        var profile = new Profile
-        {
-            Name = vm.Name,
-            Description = vm.Description,
-            PatternsIds = vm.SelectedPatterns
-                .Where(p => p.IsSelected)
-                .Select(p => p.PatternId)
-                .ToList(),
-            Id = Id,
-        };
-        return profile;
+        var wnd = _AppWindowsService.GetDialogWindow<ProfileEditWindow>();
+        wnd.SetModel(profile);
+        return wnd.ShowDialog() != true ? null : wnd.GetModel();
     }
 
 }

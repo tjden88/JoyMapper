@@ -10,18 +10,10 @@
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:windows="clr-namespace:JoyMapper.ViewModels.Windows"
         mc:Ignorable="d"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="550" Width="500">
-    <b:Interaction.Triggers>
-        <b:EventTrigger EventName="Loaded">
-            <b:EventTrigger.Actions>
-                <b:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
-            </b:EventTrigger.Actions>
-        </b:EventTrigger>
-    </b:Interaction.Triggers>
-    <d:Window.DataContext>
-        <windows:ProfileEditWindowViewModel/>
-    </d:Window.DataContext>
+
     <DockPanel Margin="10,15,10,10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <TextBox helpers:TextHelper.Hint="Имя профиля" Name="NameText" DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox helpers:TextHelper.Hint="Описание" helpers:TextHelper.Description="Необязательно" Name="DescriptionText" DockPanel.Dock="Top" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
