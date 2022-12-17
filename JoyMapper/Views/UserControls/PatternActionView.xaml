@@ -11,8 +11,8 @@
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Description}"/>
+                        <TextBlock Margin="0,0,0,5" FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name}"/>
+                        <TextBlock Margin="0,0,0,5" Text="{Binding Description}"/>
                     </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>

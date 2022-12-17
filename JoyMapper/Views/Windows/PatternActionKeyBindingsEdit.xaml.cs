@@ -2,6 +2,7 @@
 using JoyMapper.ViewModels.PatternActions.Base;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -20,10 +21,46 @@ namespace JoyMapper.Views.Windows
             InitializeComponent();
         }
 
+        private void ButtonOk_OnClick(object Sender, RoutedEventArgs E)
+        {
+            DialogResult = true;
+        }
+
+        private void AddPattern_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (!ViewModel.IsRecorded) return;
+            if (!e.IsRepeat)
+            {
+                var key = e.Key == Key.System ? e.SystemKey : e.Key;
+                ViewModel.KeysBindingViewModel.KeyBindings.Add(new KeyboardKeyBinding
+                {
+                    Action = KeyboardKeyBinding.KeyboardAction.KeyPress,
+                    KeyCode = key
+                });
+            }
+            e.Handled = true;
+        }
+
+
+        private void AddPattern_OnPreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (!ViewModel.IsRecorded) return;
+            if (!e.IsRepeat)
+            {
+                var key = e.Key == Key.System ? e.SystemKey : e.Key;
+                ViewModel.KeysBindingViewModel.KeyBindings.Add(new KeyboardKeyBinding
+                {
+                    Action = KeyboardKeyBinding.KeyboardAction.KeyUp,
+                    KeyCode = key
+                });
+            }
+            e.Handled = true;
+        }
+
 
         public class PatternActionKeyBindingsEditViewModel : ViewModel
         {
-
             public PatternActionKeysBindingViewModel KeysBindingViewModel { get; init; }
 
 
@@ -106,5 +143,6 @@ namespace JoyMapper.Views.Windows
 
             #endregion
         }
+
     }
 }

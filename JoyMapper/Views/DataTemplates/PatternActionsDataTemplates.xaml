@@ -13,18 +13,20 @@
                             ToolTip="{Binding EditCommand}"
                             Command="{Binding EditCommand}">
                     <Button.Content>
-                        <controls:WPRIconText Text="Редактировать" IconSource="EditOutline"/>
+                        <controls:WPRIconText Foreground="{DynamicResource AccentColorBrush}" Text="Редактировать" IconSource="EditOutline"/>
                     </Button.Content>
                 </Button>
             </ToolBar>
             <Grid>
-                <ItemsControl ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-                            <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
+                                <TextBlock Foreground="{DynamicResource PrimaryTextColorBrush}" Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
         </DockPanel>
 
