@@ -1,11 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.Views.Windows;
-using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -83,41 +79,6 @@ public class EditProfileWindowViewModel : WindowViewModel
 
     #endregion
 
-
-
-    #region AsyncCommand SaveProfileCommandCommand - Сохранить профиль
-
-    /// <summary>Сохранить профиль</summary>
-    private AsyncCommand _SaveProfileCommandCommand;
-
-    /// <summary>Сохранить профиль</summary>
-    public AsyncCommand SaveProfileCommand => _SaveProfileCommandCommand
-        ??= new AsyncCommand(OnSaveProfileCommandCommandExecutedAsync, CanSaveProfileCommandCommandExecute, "Сохранить профиль");
-
-    /// <summary>Проверка возможности выполнения - Сохранить профиль</summary>
-    private bool CanSaveProfileCommandCommandExecute() => true;
-
-    /// <summary>Логика выполнения - Сохранить профиль</summary>
-    private async Task OnSaveProfileCommandCommandExecutedAsync(CancellationToken cancel)
-    {
-        var wnd = App.ActiveWindow;
-        if (string.IsNullOrWhiteSpace(Name))
-        {
-            await WPRMessageBox.InformationAsync(wnd, "Введите имя профиля");
-            return;
-        }
-
-        if (!SelectedPatterns.Any(p => p.IsSelected))
-        {
-            await WPRMessageBox.InformationAsync(wnd, "Не выбрано ни одного паттерна!");
-            return;
-        }
-
-        Name = Name.Trim();
-        wnd.DialogResult = true;
-    }
-
-    #endregion
 
 
     #region Command AddPatternCommand - Добавить паттерн

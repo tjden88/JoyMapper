@@ -42,9 +42,8 @@
                     <controls:WPRIconText Text="Добавить паттерн" IconSource="GamepadVariantOutline"/>
                 </Button.Content>
             </Button>
-            <Button Content="Сохранить" IsDefault="True"
-                    HorizontalAlignment="Right" 
-                    Command="{Binding SaveProfileCommand}"/>
+            <Button Content="Сохранить" IsDefault="True" Click="ButtonSave_OnClick"
+                    HorizontalAlignment="Right" />
         </Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding SelectedPatterns}">

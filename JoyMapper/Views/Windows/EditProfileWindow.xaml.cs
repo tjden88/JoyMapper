@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.Windows;
-using static JoyMapper.ViewModels.Windows.EditProfileWindowViewModel;
+using WPR;
 
 namespace JoyMapper.Views.Windows
 {
@@ -26,7 +27,7 @@ namespace JoyMapper.Views.Windows
         private void LoadData(IEnumerable<JoyPattern> Patterns)
         {
 
-            var mapped = Patterns.Select(p => new SelectedPatternViewModel
+            var mapped = Patterns.Select(p => new EditProfileWindowViewModel.SelectedPatternViewModel
             {
                 PatternName = p.Name,
                 PatternId = p.Id,
@@ -61,6 +62,24 @@ namespace JoyMapper.Views.Windows
                 selectedPattern.IsSelected = model.PatternsIds.Contains(selectedPattern.PatternId);
 
             ViewModel.Title = $"Редактирование профиля {model.Name}";
+        }
+
+        private async void ButtonSave_OnClick(object Sender, RoutedEventArgs E)
+        {
+            if (string.IsNullOrWhiteSpace(ViewModel.Name))
+            {
+                await WPRMessageBox.InformationAsync(this, "Введите имя профиля");
+                return;
+            }
+
+            if (!ViewModel.SelectedPatterns.Any(p => p.IsSelected))
+            {
+                await WPRMessageBox.InformationAsync(this, "Не выбрано ни одного паттерна!");
+                return;
+            }
+
+            ViewModel.Name = ViewModel.Name.Trim();
+            DialogResult = true;
         }
     }
 }

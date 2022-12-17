@@ -2,7 +2,6 @@
 using System.Windows;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
-using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.Windows;
 using WPR;
 
