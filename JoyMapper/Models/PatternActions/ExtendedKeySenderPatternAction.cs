@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.PatternActions;
@@ -15,8 +16,19 @@ namespace JoyMapper.Models.PatternActions;
 /// </summary>
 public class ExtendedKeySenderPatternAction : PatternActionBase
 {
-    public override PatternActionViewModelBase ToViewModel() => 
+    public override PatternActionViewModelBase ToViewModel() =>
         new ExtendedKeySenderPatternActionViewModel(this);
+
+
+
+    public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
+
+    public ICollection<KeyboardKeyBinding> DoublePressKeyBindings { get; set; }
+
+    public ICollection<KeyboardKeyBinding> LongPressKeyBindings { get; set; }
+
+
+    #region KeyWatching
 
     public override void Initialize(IServiceProvider Services)
     {
@@ -25,16 +37,6 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
         _LongPressDelay = appsett.AppSettings.LongPressDelay;
         _IsDoublePressActionsExist = DoublePressKeyBindings?.Any() ?? false;
     }
-
-    public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
-
-    public ICollection<KeyboardKeyBinding> DoublePressKeyBindings { get; set; } 
-
-    public ICollection<KeyboardKeyBinding> LongPressKeyBindings { get; set; }
-
-
-
-    #region KeyWatching
 
     private bool _IsDoublePressActionsExist; // Существуют ли действия двойного нажатия
 
@@ -46,48 +48,53 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     private bool _FirstPressHandled; // Первое нажатие поймано
 
-    // Оптимизировать одиночное нажатие, если для двойного не назначено действий
-    public bool OptimizeSingleClick { get; set; } = true;
 
+    private bool _NowPressed;
 
-    public override void BindingStateChanged(bool newState)
+    public override async void BindingStateChanged(bool newState)
     {
-        
-        // Кнопка не нажата и прошло время двойного клика или
-        // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
-        if (_FirstPressHandled && !newState && (!_IsDoublePressActionsExist && OptimizeSingleClick || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
+        _NowPressed = newState;
+
+        if(newState && _DelayMeter is null)
+            _DelayMeter = Stopwatch.StartNew();
+
+        while (_DelayMeter is not null )
         {
-            ReportMessage?.Invoke("Одиночное нажатие");
 
-            Debug.WriteLine("SinglePressSend: ");
-            _FirstPressHandled = false;
-            _DelayMeter = null;
-        }
-
-
-        if (newState) // Состояние изменилось на нажатое
-        {
-            if (!_FirstPressHandled) // Регистрируем первое нажатие
+            // Кнопка не нажата и прошло время двойного клика или
+            // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
+            if (_FirstPressHandled && !newState && (!_IsDoublePressActionsExist || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
             {
-                _FirstPressHandled = true;
-                _DelayMeter = Stopwatch.StartNew();
-            }
-            else // Второе нажатие
-            {
-                ReportMessage?.Invoke("Двойное нажатие");
-                Debug.WriteLine("DoublePressSend: ");
+                ReportMessage?.Invoke("Одиночное нажатие");
+
                 _FirstPressHandled = false;
                 _DelayMeter = null;
             }
-        }
 
-        // Кнопка нажата больше времени долгого нажатия
-        if (_FirstPressHandled && newState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
-        {
-            ReportMessage?.Invoke("Долгое нажатие");
-            Debug.WriteLine("LongPressSend: ");
-            _FirstPressHandled = false;
-            _DelayMeter = null;
+
+            if (_NowPressed) // Состояние изменилось на нажатое
+            {
+                _NowPressed = false;
+                if (!_FirstPressHandled) // Регистрируем первое нажатие
+                {
+                    _FirstPressHandled = true;
+                }
+                else // Второе нажатие
+                {
+                    ReportMessage?.Invoke("Двойное нажатие");
+                    _FirstPressHandled = false;
+                    _DelayMeter = null;
+                }
+            }
+
+            // Кнопка нажата больше времени долгого нажатия
+            if (_FirstPressHandled && newState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
+            {
+                ReportMessage?.Invoke("Долгое нажатие");
+                _FirstPressHandled = false;
+                _DelayMeter = null;
+            }
+            await Task.Delay(20);
         }
     }
 
