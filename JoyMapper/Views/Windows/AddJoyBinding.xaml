@@ -4,8 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
-        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource ChromeWindow}"
         BorderBrush="{DynamicResource BackgroundColorBrush}"

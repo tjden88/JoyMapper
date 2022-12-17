@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:models="clr-namespace:JoyMapper.Models"
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
@@ -62,7 +61,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Vertical">
                             <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
-                            <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось"></TextBlock>
+                            <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -78,7 +77,7 @@
                                 <Style TargetType="Ellipse">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding ActionIsActive}" Value="True">
-                                            <Setter Property="Fill" Value="Green"></Setter>
+                                            <Setter Property="Fill" Value="Green" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                     <Style.Setters>
@@ -120,6 +119,6 @@
                 Command="{Binding SaveCommand}" />
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
 
-        <ContentControl Content="{Binding JoyAction}"></ContentControl>
+        <ContentControl Content="{Binding JoyAction}" />
     </DockPanel>
 </Window>

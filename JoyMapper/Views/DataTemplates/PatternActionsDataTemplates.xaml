@@ -1,8 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:joyActions="clr-namespace:JoyMapper.ViewModels.JoyActions"
                     xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
-                    xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
                     xmlns:models="clr-namespace:JoyMapper.Models"
                     xmlns:base="clr-namespace:JoyMapper.ViewModels.PatternActions.Base"
                     xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions">

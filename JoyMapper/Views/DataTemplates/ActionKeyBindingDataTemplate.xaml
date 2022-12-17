@@ -19,7 +19,7 @@
                             Command="{Binding ClearBindingsCommand}" 
                             ToolTip="{Binding ClearBindingsCommand}">
                     <Button.Content>
-                        <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}"></controls:WPRIcon>
+                        <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}" />
                     </Button.Content>
                 </Button>
             </ToolBar>

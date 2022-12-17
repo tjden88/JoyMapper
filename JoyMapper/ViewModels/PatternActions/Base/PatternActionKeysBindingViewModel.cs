@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using JoyMapper.Models;
+using JoyMapper.Views.Windows;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -51,7 +52,11 @@ public class PatternActionKeysBindingViewModel : ViewModel
     /// <summary>Логика выполнения - Редактировать команды</summary>
     private void OnEditCommandExecuted()
     {
-        
+        var wnd = new PatternActionKeyBindingsEdit(this)
+        {
+            Owner = App.ActiveWindow
+        };
+        wnd.ShowDialog();
     }
 
     #endregion

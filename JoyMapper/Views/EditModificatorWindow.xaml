@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JoyMapper.Views"
         xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
@@ -35,7 +34,7 @@
                 <Button.Content>
                     <StackPanel Orientation="Vertical">
                         <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
-                        <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку"></TextBlock>
+                        <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку" />
                     </StackPanel>
                 </Button.Content>
             </Button>

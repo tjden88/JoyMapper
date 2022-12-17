@@ -3,9 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:models="clr-namespace:JoyMapper.Models"
-        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
         Style="{StaticResource ChromeWindow}"
@@ -69,7 +66,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Vertical">
                             <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
-                            <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось"></TextBlock>
+                            <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -85,7 +82,7 @@
                                 <Style TargetType="Ellipse">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding JoyBinding.IsActive}" Value="True">
-                                            <Setter Property="Fill" Value="Green"></Setter>
+                                            <Setter Property="Fill" Value="Green" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                     <Style.Setters>
@@ -177,6 +174,6 @@
 
         <TextBlock DockPanel.Dock="Top"  Text="Действия паттерна" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
 
-        <ContentControl Margin="5" Content="{Binding PatternActionView}"></ContentControl>
+        <ContentControl Margin="5" Content="{Binding PatternActionView}" />
     </DockPanel>
 </Window>
