@@ -19,5 +19,7 @@ namespace JoyMapper.Models
         public int? ModificatorId { get; set; }
 
         public override string ToString() => $"{Binding.JoyName} - {Binding.Description}";
+
+        public bool HasModificator => ModificatorId != null ;
     }
 }

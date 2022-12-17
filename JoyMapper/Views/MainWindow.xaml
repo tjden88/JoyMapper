@@ -156,10 +156,11 @@
                                 <DataTemplate DataType="{x:Type models:JoyPattern}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
-                                        <WrapPanel>
-                                            <TextBlock Margin="5" Text="{Binding Binding.JoyName}"/>
-                                            <TextBlock Margin="0,5" Text="{Binding Binding.Description, StringFormat='({0})'}"/>
-                                        </WrapPanel>
+                                        <DockPanel>
+                                            <TextBlock Margin="5" Text="{Binding Binding}"/>
+                                            <controls:WPRIcon Foreground="{DynamicResource AccentColorBrush}" Source="AxisArrow" Margin="5"
+                                                              Visibility="{Binding HasModificator, Converter={StaticResource Bool2VisibilityConverter}}"/>
+                                        </DockPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
