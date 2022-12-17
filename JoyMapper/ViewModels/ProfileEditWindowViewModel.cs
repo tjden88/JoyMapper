@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
-using JoyMapper.Services;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;

@@ -4,15 +4,16 @@ using System.IO;
 using System.Linq;
 using JoyMapper.Models;
 
-namespace JoyMapper.Services
+namespace JoyMapper.Services.Data
 {
     /// <summary>
     /// Загрузка и сохранение профилей
     /// </summary>
     public class DataManager
     {
-
-        private readonly DataSerializer _DataSerializer = new();
+        private readonly JoyPatternManager _JoyPatternManager;
+        private readonly ProfilesManager _ProfilesManager;
+        private readonly DataSerializer _DataSerializer;
 
         private class Data
         {
@@ -36,12 +37,27 @@ namespace JoyMapper.Services
 
         public AppSettings AppSettings => ProfilesData.AppSettings;
 
+        public DataManager(JoyPatternManager JoyPatternManager, ProfilesManager ProfilesManager, DataSerializer DataSerializer)
+        {
+            _JoyPatternManager = JoyPatternManager;
+            _ProfilesManager = ProfilesManager;
+            _DataSerializer = DataSerializer;
+        }
 
         #region Public Methods
 
 
         /// <summary> Добавить профиль </summary>
-        public void AddProfile(Profile profile)
+        public Profile AddProfile()
+        {
+            var profile = _ProfilesManager.AddProfile();
+
+            SaveProfile(profile);
+
+            return profile;
+        }
+
+        private void SaveProfile(Profile profile)
         {
             var nextId = Profiles
                 .Select(p => p.Id)
@@ -51,8 +67,8 @@ namespace JoyMapper.Services
             profile.Id = nextId;
             ProfilesData.Profiles.Add(profile);
             SaveData();
-        }
 
+        }
 
         /// <summary>
         /// Копировать профиль
@@ -62,25 +78,28 @@ namespace JoyMapper.Services
         public Profile CopyProfile(int id)
         {
             var oldProf = Profiles.First(p => p.Id == id);
+            var newProfile = _ProfilesManager.CopyProfile(oldProf);
+            SaveProfile(newProfile);
 
-            var newProfile = _DataSerializer.CopyObject(oldProf);
-            AddProfile(newProfile);
             return newProfile;
         }
 
 
 
         /// <summary> Обновить паттерн (заменить по Id) </summary>
-        public void UpdateProfile(Profile profile)
+        public Profile UpdateProfile(int Id)
         {
-            var editProfile = ProfilesData.Profiles.FirstOrDefault(p => p.Id == profile.Id);
-            if (editProfile != null)
-            {
-                var index = ProfilesData.Profiles.IndexOf(editProfile);
-                ProfilesData.Profiles.Remove(editProfile);
-                ProfilesData.Profiles.Insert(index, profile);
-                SaveData();
-            }
+            var updated = _ProfilesManager.UpdateProfile(Id);
+            if (updated == null) return null;
+
+            var editProfile = ProfilesData.Profiles.First(p => p.Id == updated.Id);
+
+            var index = ProfilesData.Profiles.IndexOf(editProfile);
+            ProfilesData.Profiles.Remove(editProfile);
+            ProfilesData.Profiles.Insert(index, updated);
+            SaveData();
+
+            return updated;
         }
 
 

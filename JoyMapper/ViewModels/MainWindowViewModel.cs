@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
+using JoyMapper.Services.Data;
+using JoyMapper.ViewModels.Windows;
 using JoyMapper.Views;
 using WPR;
 using WPR.MVVM.Commands;
@@ -15,10 +17,12 @@ namespace JoyMapper.ViewModels
     public partial class MainWindowViewModel : WindowViewModel
     {
         private readonly JoyPatternManager _JoyPatternManager;
+        private readonly AppWindowsService _AppWindowsService;
         private readonly DataManager _DataManager;
 
-        public MainWindowViewModel(JoyPatternManager JoyPatternManager, DataManager DataManager)
+        public MainWindowViewModel(AppWindowsService AppWindowsService, JoyPatternManager JoyPatternManager, DataManager DataManager)
         {
+            _AppWindowsService = AppWindowsService;
             _JoyPatternManager = JoyPatternManager;
             _DataManager = DataManager;
             AppLog.Report += msg => LogMessages.Add(msg);
@@ -165,27 +169,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать профиль</summary>
         private void OnCreateProfileCommandExecuted()
         {
-            var vm = new ProfileEditWindowViewModel();
-            var wnd = new ProfileEditWindow()
-            {
-                Owner = Application.Current.MainWindow,
-                DataContext = vm
-            };
-            if (wnd.ShowDialog() != true) return;
+            var newProfile = _DataManager.AddProfile();
+            if(newProfile == null)return;
 
-            var profile = new Profile
-            {
-                Name = vm.Name,
-                PatternsIds = vm.SelectedPatterns
-                    .Where(p => p.IsSelected)
-                    .Select(p => p.PatternId)
-                    .ToList()
-            };
-
-            _DataManager.AddProfile(profile);
-            LoadDataCommand.Execute();
-            SelectedProfile = Profiles.Last();
-
+            Profiles.Add(newProfile);
+            SelectedProfile = newProfile;
         }
 
         #endregion
@@ -207,6 +195,7 @@ namespace JoyMapper.ViewModels
         private void OnCopyProfileCommandExecuted()
         {
             var prof = _DataManager.CopyProfile(SelectedProfile.Id);
+            if(prof == null) return;
             Profiles.Add(prof);
             SelectedProfile = prof;
             WPRMessageBox.Bubble(App.ActiveWindow, "Профиль скопирован");
@@ -230,26 +219,14 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать профиль</summary>
         private void OnEditProfileCommandExecuted()
         {
-            var vm = new ProfileEditWindowViewModel(SelectedProfile.Id);
-            var wnd = new ProfileEditWindow
-            {
-                Owner = Application.Current.MainWindow,
-                DataContext = vm
-            };
-            if (wnd.ShowDialog() != true) return;
+            var updated = _DataManager.UpdateProfile(SelectedProfile.Id);
+            if(updated == null) return;
 
-            var profile = new Profile
-            {
-                Name = vm.Name,
-                PatternsIds = vm.SelectedPatterns
-                    .Where(p => p.IsSelected)
-                    .Select(p => p.PatternId)
-                    .ToList(),
-                Id = vm.Id,
-            };
+            var index = Profiles.IndexOf(SelectedProfile);
 
-            _DataManager.UpdateProfile(profile);
-            LoadDataCommand.Execute();
+            Profiles.Remove(SelectedProfile);
+            Profiles.Insert(index, updated);
+            SelectedProfile = updated;
         }
 
         #endregion
@@ -297,10 +274,16 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var added = _JoyPatternManager.AddPattern();
-            if (added == null) return;
-            JoyPatterns.Add(added);
-            SelectedPattern = added;
+            var patternWindow = _AppWindowsService.EditPatternWindow;
+            patternWindow.Owner = App.ActiveWindow;
+
+            if (patternWindow.ShowDialog() != true) return;
+
+            var pattern = BuildPattern(patternWindow.ViewModel);
+            _DataManager.AddJoyPattern(pattern);
+            if (pattern == null) return;
+            JoyPatterns.Add(pattern);
+            SelectedPattern = pattern;
         }
 
         #endregion
@@ -321,7 +304,19 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать паттерн</summary>
         private void OnEditPatternCommandExecuted()
         {
-            var edited = _JoyPatternManager.EditPattern(SelectedPattern);
+            var pattern = SelectedPattern;
+            var patternWindow = _AppWindowsService.EditPatternWindow;
+            var viewModel = patternWindow.ViewModel;
+            viewModel.PatternName = pattern.Name;
+            viewModel.JoyBinding = pattern.Binding;
+            viewModel.Title = $"Редактировние паттерна: {pattern.Name}";
+            viewModel.PatternActionView.ViewModel.SetSelectedPatternAction(pattern.PatternAction.ToViewModel());
+            patternWindow.Owner = App.ActiveWindow;
+
+            if (patternWindow.ShowDialog() != true) return;
+
+            var edited = BuildPattern(viewModel);
+            _DataManager.UpdateJoyPattern(edited);
             if (edited == null) return;
 
             LoadDataCommand.Execute();
@@ -488,6 +483,17 @@ namespace JoyMapper.ViewModels
 
 
         #endregion
+
+        private JoyPattern BuildPattern(EditPatternViewModel ViewModel)
+        {
+            var pattern = new JoyPattern
+            {
+                Name = ViewModel.PatternName,
+                Binding = ViewModel.JoyBinding,
+                PatternAction = ViewModel.PatternActionView.ViewModel.SelectedPatternAction.ToModel(),
+            };
+            return pattern;
+        }
 
     }
 }

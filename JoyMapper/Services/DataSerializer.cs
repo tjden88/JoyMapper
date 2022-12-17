@@ -9,7 +9,7 @@ namespace JoyMapper.Services
     /// <summary>
     /// Методы для сохранения, загрузки и копирования объектов
     /// </summary>
-    internal class DataSerializer
+    public class DataSerializer
     {
         private readonly JsonSerializerSettings _Settings = new()
         {

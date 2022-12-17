@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
+using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels;
 using JoyMapper.ViewModels.UserControls;
@@ -24,7 +25,7 @@ namespace JoyMapper
         internal const string AppVersion = "1.3";
 
         /// <summary> Менеджер данных профилей текущей сессии </summary>
-        internal static DataManager DataManager { get; } = new();
+        internal static DataManager DataManager => Services.GetRequiredService<DataManager>();
 
         /// <summary> Активное окно </summary>
         internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);

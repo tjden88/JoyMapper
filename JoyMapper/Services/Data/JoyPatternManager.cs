@@ -1,7 +1,7 @@
 ﻿using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
 
-namespace JoyMapper.Services;
+namespace JoyMapper.Services.Data;
 
 /// <summary>
 /// Создание, изменение и удаление паттернов
@@ -22,7 +22,7 @@ public class JoyPatternManager
         var patternWindow = _AppWindowsService.EditPatternWindow;
         patternWindow.Owner = App.ActiveWindow;
 
-        if(patternWindow.ShowDialog() != true) return null;
+        if (patternWindow.ShowDialog() != true) return null;
 
         var pattern = BuildPattern(patternWindow.ViewModel);
         _DataManager.AddJoyPattern(pattern);
