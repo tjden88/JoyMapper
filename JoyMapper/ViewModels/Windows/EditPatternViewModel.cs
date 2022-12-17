@@ -51,6 +51,7 @@ namespace JoyMapper.ViewModels.Windows
                 .CallPropertyChanged(nameof(IsNormal))
                 .CallPropertyChanged(nameof(IsReverse))
                 .CallPropertyChanged(nameof(IsSwitch))
+                .CallPropertyChanged(nameof(ActionTypeInfo))
 
                 .Then(WatchAction)
             ;
@@ -66,8 +67,6 @@ namespace JoyMapper.ViewModels.Windows
         #endregion
 
 
-
-
         #region ActionType - тип действия
 
         public bool IsNormal
@@ -75,7 +74,11 @@ namespace JoyMapper.ViewModels.Windows
             get => JoyBinding?.ActivationType == JoyBindingBase.ActivationTypes.Normal;
             set
             {
-                if (value && JoyBinding != null) JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Normal;
+                if (value && JoyBinding != null)
+                {
+                    JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Normal;
+                    OnPropertyChanged(nameof(ActionTypeInfo));
+                }
             }
         }
 
@@ -84,7 +87,11 @@ namespace JoyMapper.ViewModels.Windows
             get => JoyBinding?.ActivationType == JoyBindingBase.ActivationTypes.Reverse;
             set
             {
-                if (value && JoyBinding != null) JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Reverse;
+                if (value && JoyBinding != null)
+                {
+                    JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Reverse;
+                    OnPropertyChanged(nameof(ActionTypeInfo));
+                }
             }
         }
 
@@ -93,9 +100,34 @@ namespace JoyMapper.ViewModels.Windows
             get => JoyBinding?.ActivationType == JoyBindingBase.ActivationTypes.Switch;
             set
             {
-                if (value && JoyBinding != null) JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Switch;
+                if (value && JoyBinding != null)
+                {
+                    JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Switch;
+                    OnPropertyChanged(nameof(ActionTypeInfo));
+                }
             }
         }
+
+        #endregion
+
+
+        #region ActionTypeInfo
+
+        public string ActionTypeInfo => JoyBinding?.ActivationType switch
+        {
+            JoyBindingBase.ActivationTypes.Normal =>
+                "Действие становится активным, когда нажата кнопка или ось находится в назначенном диапазоне\n" +
+                "Когда кнопка отпускается или ось выходит за назначенный диапазон, действие деактивируется",
+            JoyBindingBase.ActivationTypes.Reverse =>
+                "Действие становится активным, когда кнопка отпущена или ось находится вне назначенного диапазона\n" +
+                "Когда кнопка нажимается или ось входит в назначенный диапазон, действие деактивируется\n" +
+                "Этот режим является противоположным обычному, то есть действия при активации сработают, когда кнопка будет отпущена",
+            JoyBindingBase.ActivationTypes.Switch =>
+                "Действие будет активировано / деактивировано каждый раз, когда кнопка нажимается или отпускается, или когда ось входит в назначенный диапазон\n" +
+                "При отпускании кнопки или выходе из назначенной зоны оси, статус действия не изменяется",
+            null => "Назначьте кнопку или ось",
+            _ => "Не выбрано"
+        };
 
         #endregion
 
@@ -132,6 +164,7 @@ namespace JoyMapper.ViewModels.Windows
         #endregion
 
 
+        #region WatchStatus
 
         private void WatchAction()
         {
@@ -159,10 +192,13 @@ namespace JoyMapper.ViewModels.Windows
             while (_StatusChecked)
             {
                 _BindingsWatcher.UpdateStatus();
-                await Task.Delay(100);
+                await Task.Delay(50);
             }
             Debug.WriteLine("Выход из отслеживания кнопки");
         }
+
+        #endregion
+
 
         public void Dispose() => _StatusChecked = false;
     }

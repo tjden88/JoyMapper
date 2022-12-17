@@ -44,10 +44,14 @@ namespace JoyMapper.Models.JoyBindings.Base
         public bool IsActive
         {
             get => _IsActive;
-            set => Set(ref _IsActive, value);
+            set => IfSet(ref _IsActive, value)
+                .CallPropertyChanged(nameof(IsActiveText));
         }
 
         #endregion
+
+
+        public string IsActiveText => IsActive ? "Активно" : "Неактивно";
 
 
         #region ActivationType : ActivationTypes - Тип активации действия

@@ -93,7 +93,7 @@
                                 </Style>
                             </Ellipse.Style>
                         </Ellipse>
-                        <TextBlock Text="{Binding JoyBinding.IsActive}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding JoyBinding.IsActiveText}" VerticalAlignment="Center"/>
                     </DockPanel>
 
                 </StackPanel>
@@ -116,10 +116,10 @@
                 <RadioButton Margin="5" Content="Обратное" IsChecked="{Binding IsReverse}" FontWeight="Bold"/>
                 <RadioButton Margin="5" Content="Переключатель" IsChecked="{Binding IsSwitch}" FontWeight="Bold"/>
             </StackPanel>
-            <WrapPanel Margin="5,8,5,5">
+            <DockPanel Margin="5,8,5,5">
                 <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
-                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}" Text="{Binding ButtonModeInfo}"/>
-            </WrapPanel>
+                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}" Text="{Binding ActionTypeInfo}"/>
+            </DockPanel>
         </DockPanel>
 
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
