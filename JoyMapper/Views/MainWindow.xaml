@@ -56,7 +56,6 @@
                                     <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
                                 </Button.Content>
                             </Button>
-                            <Button Content="Test" Click="ButtonBase_OnClick" />
                         </ToolBar>
 
                         <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
@@ -220,8 +219,7 @@
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
                                         <WrapPanel>
-                                            <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                            <TextBlock Margin="0,5" Text="{Binding Button, StringFormat='({0})'}"/>
+                                            <TextBlock Margin="5" Text="{Binding Binding}"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </DataTemplate>

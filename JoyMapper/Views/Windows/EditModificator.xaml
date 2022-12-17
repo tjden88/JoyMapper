@@ -10,16 +10,10 @@
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
         Title="{Binding Title}" Width="500">
-    <d:Window.DataContext>
-        <viewModels:EditModificatorViewModel/>
-    </d:Window.DataContext>
-    <b:Interaction.Triggers>
-        <b:DataTrigger Binding="{Binding ChangesSaved}" Value="True">
-            <b:ChangePropertyAction PropertyName="DialogResult" Value="True"/>
-        </b:DataTrigger>
-    </b:Interaction.Triggers>
+
 
     <DockPanel LastChildFill="False" Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <TextBox helpers:TextHelper.Hint="Имя модификатора" Name="NameText" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" Margin="5"/>
@@ -43,7 +37,7 @@
                 <!--Инфо о назначенном действии-->
                 <StackPanel  Orientation="Vertical" Margin="10">
                     <TextBlock Text="Назначенная кнопка" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                    <TextBlock Text="{Binding BtnText}"  Margin="0,5,0,0"/>
+                    <TextBlock Text="{Binding JoyBinding}"  Margin="0,5,0,0"/>
 
                 </StackPanel>
 
@@ -52,9 +46,8 @@
 
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
 
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
-                Content="Сохранить" IsDefault="True"
-                Command="{Binding SaveCommand}" />
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Click="ButtonSave_Click"
+                Content="Сохранить" IsDefault="True"/>
     </DockPanel>
 
 </Window>

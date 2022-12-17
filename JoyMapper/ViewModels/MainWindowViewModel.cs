@@ -374,24 +374,13 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать модификатор</summary>
         private void OnCreateModificatorCommandExecuted()
         {
-            //var vm = new EditModificatorViewModel();
-            //var wnd = new EditModificator()
-            //{
-            //    Owner = Application.Current.MainWindow,
-            //    DataContext = vm
-            //};
-            //if (wnd.ShowDialog() != true) return;
+            var modificator = _DataManager.AddModificator();
 
-            //var modif = new Modificator()
-            //{
-            //    Name = vm.Name,
-            //    JoyName = vm.JoyName,
-            //    Button = vm.Button,
-            //};
+            if(modificator is null)
+                return;
 
-            //_DataManager.AddModificator(modif);
-            //LoadDataCommand.Execute();
-            //SelectedModificator = Modificators.Last();
+            Modificators.Add(modificator);
+            SelectedModificator = modificator;
 
         }
 
@@ -413,25 +402,16 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать модификатор</summary>
         private void OnEditModificatorCommandExecuted()
         {
-            //var vm = new EditModificatorViewModel(SelectedModificator);
-            //var wnd = new EditModificator
-            //{
-            //    Owner = Application.Current.MainWindow,
-            //    DataContext = vm
-            //};
-            //if (wnd.ShowDialog() != true) return;
+            var edited = _DataManager.UpdateModificator(SelectedModificator.Id);
 
-            //var modificator = new Modificator()
-            //{
-            //    Id = vm.Id,
-            //    Name = vm.Name,
-            //    Button = vm.Button,
-            //    JoyName = vm.JoyName
-            //};
+            if(edited is null)
+                return;
 
-            //_DataManager.UpdateModificator(modificator);
-            //LoadDataCommand.Execute();
+            var index = Modificators.IndexOf(SelectedModificator);
 
+            Modificators.Remove(SelectedModificator);
+            Modificators.Insert(index, edited);
+            SelectedModificator = edited;
         }
 
         #endregion
@@ -455,7 +435,7 @@ namespace JoyMapper.ViewModels
             var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить модификатор {SelectedModificator.Name}?");
             if (result)
             {
-                //_DataManager.RemoveModificator(SelectedModificator.Id);
+                _DataManager.RemoveModificator(SelectedModificator.Id);
                 Modificators.Remove(SelectedModificator);
                 SelectedModificator = null;
             }

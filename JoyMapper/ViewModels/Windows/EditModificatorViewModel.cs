@@ -86,42 +86,6 @@ namespace JoyMapper.ViewModels.Windows
 
         #region Commands
 
-        #region AsyncCommand SaveCommand - Сохранить модификатор
-
-        /// <summary>Сохранить модификатор</summary>
-        private AsyncCommand _SaveCommand;
-
-        /// <summary>Сохранить модификатор</summary>
-        public AsyncCommand SaveCommand => _SaveCommand
-            ??= new AsyncCommand(OnSaveCommandExecutedAsync, CanSaveCommandExecute, "Сохранить модификатор");
-
-        /// <summary>Проверка возможности выполнения - Сохранить модификатор</summary>
-        private bool CanSaveCommandExecute() => true;
-
-        /// <summary>Логика выполнения - Сохранить модификатор</summary>
-        private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
-        {
-            if (JoyBinding == null)
-            {
-                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка модификатора");
-                return;
-            }
-
-
-            var name = Name?.Trim();
-
-            if (string.IsNullOrEmpty(name))
-            {
-                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Введите имя модификатора");
-                return;
-            }
-
-            Name = name;
-            ChangesSaved = true;
-        }
-
-        #endregion
-
 
         #region Command AttachJoyButtonCommand - Определить кнопку джойстика
 

@@ -16,7 +16,7 @@ namespace JoyMapper.Models
 
         public PatternActionBase PatternAction { get; set; }
 
-        public Modificator Modificator { get; set; }
+        public int? ModificatorId { get; set; }
 
         public override string ToString() => $"{Binding.JoyName} - {Binding.Description}";
     }
