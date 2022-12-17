@@ -117,12 +117,12 @@
 
                         <ListBox Margin="5" ItemsSource="{Binding JoyPatterns}" SelectedItem="{Binding SelectedPattern}">
                             <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                <DataTemplate DataType="{x:Type models:JoyPattern}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
                                         <WrapPanel>
-                                            <TextBlock Margin="5" Text="{Binding JoyName}"/>
-                                            <TextBlock Margin="0,5" Text="{Binding JoyAction.Description, StringFormat='({0})'}"/>
+                                            <TextBlock Margin="5" Text="{Binding Binding.JoyName}"/>
+                                            <TextBlock Margin="0,5" Text="{Binding Binding.Description, StringFormat='({0})'}"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </DataTemplate>
