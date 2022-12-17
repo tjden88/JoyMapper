@@ -2,7 +2,7 @@
 
 namespace JoyMapper.Models
 {
-    internal class Profile
+    public class Profile
     {
         public int Id { get; set; }
 

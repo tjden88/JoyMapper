@@ -20,5 +20,7 @@ namespace JoyMapper.Services
         public Window ActiveWindow => App.ActiveWindow;
 
         public AddJoyBinding AddJoyBinding => _ServiceProvider.GetRequiredService<AddJoyBinding>();
+
+        public EditPatternWindow EditPatternWindow => _ServiceProvider.GetRequiredService<EditPatternWindow>();
     }
 }

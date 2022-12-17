@@ -6,7 +6,7 @@ namespace JoyMapper.Models
     /// <summary>
     /// Сообщение состояния программы
     /// </summary>
-    internal class LogMessage
+    public class LogMessage
     {
         public enum MessageType
         {

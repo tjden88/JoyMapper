@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JoyMapper.Models;
+﻿using System.Linq;
 using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.PatternActions.Base;
@@ -43,5 +41,9 @@ public class SimpleKeySenderPatternActionViewModel : PatternActionViewModelBase
             ReleaseKeyBindings = ReleaseKeyBindings.KeyBindings
         };
 
-    public override bool IsValid() => PressKeyBindings.KeyBindings.Any() || ReleaseKeyBindings.KeyBindings.Any();
+    public override bool IsValid(out string ErrorMessage)
+    {
+        ErrorMessage = "Клавиатурные команды не назначены";
+        return PressKeyBindings.KeyBindings.Any() || ReleaseKeyBindings.KeyBindings.Any();
+    }
 }

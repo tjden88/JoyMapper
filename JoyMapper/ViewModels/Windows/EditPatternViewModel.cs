@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.Views.UserControls;
+using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -13,7 +15,6 @@ namespace JoyMapper.ViewModels.Windows
 {
     public class EditPatternViewModel : WindowViewModel, IDisposable
     {
-        public PatternActionView PatternActionView { get; }
 
         private readonly AppWindowsService _AppWindowsService;
         private readonly IJoyBindingsWatcher _BindingsWatcher;
@@ -26,6 +27,8 @@ namespace JoyMapper.ViewModels.Windows
         }
 
         #region Prop
+
+        public PatternActionView PatternActionView { get; }
 
         #region PatternName : string - Имя паттерна
 
@@ -147,6 +150,7 @@ namespace JoyMapper.ViewModels.Windows
 
         #endregion
 
+        #region Commands
 
         #region Command AttachJoyButtonCommand - Определить кнопку джойстика
 
@@ -174,6 +178,9 @@ namespace JoyMapper.ViewModels.Windows
             JoyBinding = wnd.ViewModel.JoyBinding;
 
         }
+
+        #endregion
+
 
         #endregion
 

@@ -13,7 +13,7 @@ namespace JoyMapper.Models
     /// <summary>
     /// Описание и тип кнопки джойстика
     /// </summary>
-    internal class JoyButton
+    public class JoyButton
     {
         public ButtonType Type { get; set; }
 

@@ -50,5 +50,9 @@ public class ExtendedKeySenderPatternActionViewModel : PatternActionViewModelBas
             LongPressKeyBindings = LongPressKeyBindings.KeyBindings
         };
 
-    public override bool IsValid() => SinglePressKeyBindings.KeyBindings.Any() || DoublePressKeyBindings.KeyBindings.Any() || LongPressKeyBindings.KeyBindings.Any();
+    public override bool IsValid(out string ErrorMessage)
+    {
+        ErrorMessage = "Клавиатурные команды не назначены";
+        return SinglePressKeyBindings.KeyBindings.Any() || DoublePressKeyBindings.KeyBindings.Any() || LongPressKeyBindings.KeyBindings.Any();
+    }
 }

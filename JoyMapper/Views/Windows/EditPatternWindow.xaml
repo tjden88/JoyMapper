@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
+        Loaded="EditPatternWindow_OnLoaded"
+        Closed="EditPatternWindow_OnClosed"
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
         Focusable="True"
@@ -168,8 +170,8 @@
         </DockPanel>
 
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
-                Content="Сохранить" IsDefault="True"
-                Command="{Binding SaveCommand}" />
+                Click="ButtonSave_OnClick"
+                Content="Сохранить" IsDefault="True"/>
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
 
         <TextBlock DockPanel.Dock="Top"  Text="Действия паттерна" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>

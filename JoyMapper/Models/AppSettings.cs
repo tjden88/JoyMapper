@@ -3,7 +3,7 @@
     /// <summary>
     /// Настройки программы
     /// </summary>
-    internal class AppSettings
+    public class AppSettings
     {
         public string AppVersion { get; set; } = App.AppVersion;
 

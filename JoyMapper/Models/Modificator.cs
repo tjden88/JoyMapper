@@ -1,6 +1,6 @@
 ﻿namespace JoyMapper.Models
 {
-    internal class Modificator
+    public class Modificator
     {
         public int Id { get; set; }
         public string Name { get; set; }

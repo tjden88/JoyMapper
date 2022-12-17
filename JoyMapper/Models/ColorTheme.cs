@@ -6,7 +6,7 @@ namespace JoyMapper.Models
     /// <summary>
     /// Цветовая схема программы
     /// </summary>
-    internal class ColorTheme
+    public class ColorTheme
     {
         public int Id { get; set; }
 

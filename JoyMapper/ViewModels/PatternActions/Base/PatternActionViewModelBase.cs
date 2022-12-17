@@ -16,6 +16,6 @@ namespace JoyMapper.ViewModels.PatternActions.Base
         public abstract PatternActionBase ToModel();
 
         /// <summary> Проверка, что действие допустимо и все необходимые свойства заданы </summary>
-        public abstract bool IsValid();
+        public abstract bool IsValid(out string ErrorMessage);
     }
 }

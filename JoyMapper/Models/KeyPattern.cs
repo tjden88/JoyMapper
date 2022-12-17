@@ -2,7 +2,7 @@
 
 namespace JoyMapper.Models
 {
-    internal class KeyPattern
+    public class KeyPattern
     {
         public int Id { get; set; }
 
