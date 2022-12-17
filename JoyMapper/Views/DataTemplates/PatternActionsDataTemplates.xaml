@@ -51,5 +51,34 @@
 
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type patternActions:ExtendedKeySenderPatternActionViewModel}">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ContentControl Content="{Binding SinglePressKeyBindings}" Margin="5"/>
+
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
+
+            <ContentControl Grid.Column="2" Content="{Binding DoublePressKeyBindings}" Margin="5"/>
+
+            <Rectangle Grid.Column="3" Width="1" Fill="{DynamicResource DividerColorBrush}"/>
+
+            <GridSplitter Grid.Column="3" HorizontalAlignment="Center"/>
+
+            <ContentControl Grid.Column="4" Content="{Binding LongPressKeyBindings}" Margin="5"/>
+
+        </Grid>
+
+    </DataTemplate>
+
 
 </ResourceDictionary>

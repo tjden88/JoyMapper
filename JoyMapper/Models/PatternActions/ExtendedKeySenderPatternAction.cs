@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JoyMapper.Models.PatternActions.Base;
+using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 
 namespace JoyMapper.Models.PatternActions;
@@ -9,15 +10,13 @@ namespace JoyMapper.Models.PatternActions;
 /// </summary>
 public class ExtendedKeySenderPatternAction : PatternActionBase
 {
-    public override PatternActionViewModelBase ToViewModel()
-    {
-        throw new System.NotImplementedException();
-    }
+    public override PatternActionViewModelBase ToViewModel() => 
+        new ExtendedKeySenderPatternActionViewModel(this);
 
-    public List<KeyboardKeyBinding> SinglePressKeyBindings { get; set; } = new();
+    public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
 
-    public List<KeyboardKeyBinding> DoublePressKeyBindings { get; set; } = new();
+    public ICollection<KeyboardKeyBinding> DoublePressKeyBindings { get; set; } 
 
-    public List<KeyboardKeyBinding> LongPressKeyBindings { get; set; } = new();
+    public ICollection<KeyboardKeyBinding> LongPressKeyBindings { get; set; } 
 
 }

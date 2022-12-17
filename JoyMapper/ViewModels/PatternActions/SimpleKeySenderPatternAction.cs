@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
@@ -11,21 +12,28 @@ namespace JoyMapper.ViewModels.PatternActions;
 /// </summary>
 public class SimpleKeySenderPatternActionViewModel : PatternActionViewModelBase
 {
-    public SimpleKeySenderPatternActionViewModel() { }
 
-    public SimpleKeySenderPatternActionViewModel(IEnumerable<KeyboardKeyBinding> pressKeyBindings, IEnumerable<KeyboardKeyBinding> releaseKeyBindings)
+    public SimpleKeySenderPatternActionViewModel(SimpleKeySenderPatternAction Model = null)
     {
-        PressKeyBindings = new("Команды при активации") {KeyBindings = new(pressKeyBindings)};
-        ReleaseKeyBindings = new("Команды при деактивации") {KeyBindings = new(releaseKeyBindings)};
+        PressKeyBindings = new("Команды при активации");
+        ReleaseKeyBindings = new("Команды при деактивации");
+
+        if (Model == null) return;
+
+        if (Model.PressKeyBindings?.Any() == true)
+            PressKeyBindings.KeyBindings = new(Model.PressKeyBindings);
+
+        if (Model.ReleaseKeyBindings?.Any() == true)
+            ReleaseKeyBindings.KeyBindings = new(Model.ReleaseKeyBindings);
     }
 
     public override string Name => "Простой триггер";
 
     public override string Description => "Отправка команд клавиатуры при активации и деактивации действия";
 
-    public PatternActionKeysBindingViewModel PressKeyBindings { get; set; } = new("Команды при активации");
+    public PatternActionKeysBindingViewModel PressKeyBindings { get; set; }
 
-    public PatternActionKeysBindingViewModel ReleaseKeyBindings { get; set; } = new("Команды при деактивации");
+    public PatternActionKeysBindingViewModel ReleaseKeyBindings { get; set; }
 
 
     public override PatternActionBase ToModel() =>

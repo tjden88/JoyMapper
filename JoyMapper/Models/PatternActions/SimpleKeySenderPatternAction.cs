@@ -11,7 +11,7 @@ namespace JoyMapper.Models.PatternActions;
 public class SimpleKeySenderPatternAction : PatternActionBase
 {
     public override PatternActionViewModelBase ToViewModel() => 
-        new SimpleKeySenderPatternActionViewModel(PressKeyBindings, ReleaseKeyBindings);
+        new SimpleKeySenderPatternActionViewModel(this);
 
     public ICollection<KeyboardKeyBinding> PressKeyBindings { get; set; }
 

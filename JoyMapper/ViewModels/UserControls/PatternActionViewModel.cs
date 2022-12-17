@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JoyMapper.Models.PatternActions;
-using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 using WPR.MVVM.ViewModels;
@@ -16,6 +14,7 @@ public class PatternActionViewModel : ViewModel
         AllPatternActions = new List<PatternActionViewModelBase>
         {
             new SimpleKeySenderPatternActionViewModel(),
+            new ExtendedKeySenderPatternActionViewModel(),
         };
 
         SelectedPatternAction = AllPatternActions.First();
