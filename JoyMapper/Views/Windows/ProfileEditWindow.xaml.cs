@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace JoyMapper.Views
+namespace JoyMapper.Views.Windows
 {
     /// <summary>
     /// Логика взаимодействия для ProfileEditWindow.xaml

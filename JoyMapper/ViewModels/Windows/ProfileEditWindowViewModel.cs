@@ -8,7 +8,7 @@ using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
-namespace JoyMapper.ViewModels
+namespace JoyMapper.ViewModels.Windows
 {
     internal class ProfileEditWindowViewModel : WindowViewModel
     {

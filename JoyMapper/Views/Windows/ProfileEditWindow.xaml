@@ -1,4 +1,4 @@
-﻿<Window x:Class="JoyMapper.Views.ProfileEditWindow"
+﻿<Window x:Class="JoyMapper.Views.Windows.ProfileEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,6 +8,7 @@
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:windows="clr-namespace:JoyMapper.ViewModels.Windows"
         mc:Ignorable="d"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="550" Width="500">
@@ -19,7 +20,7 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <d:Window.DataContext>
-        <viewModels:ProfileEditWindowViewModel/>
+        <windows:ProfileEditWindowViewModel/>
     </d:Window.DataContext>
     <DockPanel Margin="10,15,10,10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <TextBox helpers:TextHelper.Hint="Имя профиля" Name="NameText" DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>

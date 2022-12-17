@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
+using JoyMapper.ViewModels.Windows;
 using JoyMapper.Views;
+using JoyMapper.Views.Windows;
 
 namespace JoyMapper.Services.Data;
 

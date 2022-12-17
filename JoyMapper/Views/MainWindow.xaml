@@ -65,7 +65,10 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:Profile}">
                                     <DockPanel LastChildFill="False" Margin="10,5" >
-                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"  FontWeight="Bold" FontSize="18"/>
+                                            <TextBlock Text="{Binding Description}" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                                        </StackPanel>
                                         <Button DockPanel.Dock="Right" Padding="30,10" Content="Запуск" FontSize="20"
                                                     Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
                                                     CommandParameter="{Binding}"/>
