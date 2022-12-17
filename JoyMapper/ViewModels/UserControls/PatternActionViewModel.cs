@@ -2,6 +2,8 @@
 using System.Linq;
 using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
+using JoyMapper.ViewModels.PatternActions;
+using JoyMapper.ViewModels.PatternActions.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.UserControls;
@@ -11,23 +13,22 @@ public class PatternActionViewModel : ViewModel
 
     public PatternActionViewModel()
     {
-        AllPatternActions = new List<PatternActionBase>
+        AllPatternActions = new List<PatternActionViewModelBase>
         {
-            new SimpleKeySenderPatternAction(),
-            new ExtendedKeySenderPatternAction(),
+            new SimpleKeySenderPatternActionViewModel(),
         };
 
         SelectedPatternAction = AllPatternActions.First();
     }
 
 
-    #region AllPatternActions : ICollection<PatternActionBase> - Все существующие виды действий паттернов
+    #region AllPatternActions : ICollection<PatternActionViewModelBase> - Все существующие виды действий паттернов
 
     /// <summary>Все существующие виды действий паттернов</summary>
-    private ICollection<PatternActionBase> _AllPatternActions;
+    private ICollection<PatternActionViewModelBase> _AllPatternActions;
 
     /// <summary>Все существующие виды действий паттернов</summary>
-    public ICollection<PatternActionBase> AllPatternActions
+    public ICollection<PatternActionViewModelBase> AllPatternActions
     {
         get => _AllPatternActions;
         set => Set(ref _AllPatternActions, value);
@@ -37,13 +38,13 @@ public class PatternActionViewModel : ViewModel
 
 
 
-    #region SelectedPatternAction : PatternActionBase - Выбранный паттерн
+    #region SelectedPatternAction : PatternActionViewModelBase - Выбранный паттерн
 
     /// <summary>Выбранный паттерн</summary>
-    private PatternActionBase _SelectedPatternAction;
+    private PatternActionViewModelBase _SelectedPatternAction;
 
     /// <summary>Выбранный паттерн</summary>
-    public PatternActionBase SelectedPatternAction
+    public PatternActionViewModelBase SelectedPatternAction
     {
         get => _SelectedPatternAction;
         set => Set(ref _SelectedPatternAction, value);

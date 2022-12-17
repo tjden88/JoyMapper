@@ -14,9 +14,9 @@ public class SimpleKeySenderPatternAction : PatternActionBase
         throw new System.NotImplementedException();
     }
 
-    public List<KeyboardKeyBinding> PressKeyBindings { get; set; } = new();
+    public ICollection<KeyboardKeyBinding> PressKeyBindings { get; set; }
 
-    public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; } = new();
+    public ICollection<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
 
     
 
