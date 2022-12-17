@@ -11,7 +11,6 @@ using JoyMapper.Views;
 using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using EditPatternWindow = JoyMapper.Views.Windows.EditPatternWindow;
 
 namespace JoyMapper
 {
@@ -59,11 +58,11 @@ namespace JoyMapper
                 .AddSingleton<MainWindowViewModel>()
                 .AddTransient<AddJoyBinding>()
                 .AddTransient<PatternActionView>()
-                .AddTransient<EditPatternWindow>()
+                .AddTransient<EditPattern>()
             .AddTransient<AddJoyBindingViewModel>()
             .AddTransient<EditPatternViewModel>()
             .AddTransient<PatternActionViewModel>()
-            .AddTransient<EditProfileWindow>()
+            .AddTransient<EditProfile>()
             .AddTransient<EditProfileWindowViewModel>()
                 .AddTransient<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()

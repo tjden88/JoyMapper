@@ -1,10 +1,11 @@
-﻿<Window x:Class="JoyMapper.Views.Windows.EditPatternWindow"
+﻿<Window x:Class="JoyMapper.Views.Windows.EditPattern"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
+        xmlns:userControls="clr-namespace:JoyMapper.Views.UserControls"
         Loaded="EditPatternWindow_OnLoaded"
         Closed="EditPatternWindow_OnClosed"
         Style="{StaticResource ChromeWindow}"
@@ -176,6 +177,6 @@
 
         <TextBlock DockPanel.Dock="Top"  Text="Действия паттерна" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
 
-        <ContentControl Margin="5" Content="{Binding PatternActionView}" />
+        <userControls:PatternActionView Margin="5" DataContext="{Binding PatternActionViewModel}" />
     </DockPanel>
 </Window>

@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JoyMapper.Interfaces;
+using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.UserControls;
 
-public class PatternActionViewModel : ViewModel
+public class PatternActionViewModel : ViewModel, IEditModel<PatternActionBase>
 {
 
     public PatternActionViewModel()
@@ -19,17 +21,6 @@ public class PatternActionViewModel : ViewModel
 
         SelectedPatternAction = AllPatternActions.First();
     }
-
-    public void SetSelectedPatternAction(PatternActionViewModelBase patternAction)
-    {
-        var type = patternAction.GetType();
-        var replace = AllPatternActions.First(p => p.GetType() == type);
-        var index = AllPatternActions.IndexOf(replace);
-        AllPatternActions.Remove(replace);
-        AllPatternActions.Insert(index, patternAction);
-        SelectedPatternAction = patternAction;
-    }
-
 
     #region AllPatternActions : ICollection<PatternActionViewModelBase> - Все существующие виды действий паттернов
 
@@ -61,6 +52,20 @@ public class PatternActionViewModel : ViewModel
 
     #endregion
 
-    
-    
+
+    public PatternActionBase GetModel() => 
+        SelectedPatternAction.ToModel();
+
+
+    public void SetModel(PatternActionBase model)
+    {
+        var viewModel = model.ToViewModel();
+        var type = viewModel.GetType();
+        var replace = AllPatternActions.First(p => p.GetType() == type);
+        var index = AllPatternActions.IndexOf(replace);
+        AllPatternActions.Remove(replace);
+        AllPatternActions.Insert(index, viewModel);
+        SelectedPatternAction = viewModel;
+    }
+
 }

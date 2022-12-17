@@ -6,7 +6,7 @@ namespace JoyMapper.Interfaces
     /// Интерфейс, обозначающий, что данное представление предназначено для редактирования или создания новой сущности
     /// </summary>
     /// <typeparam name="TModel">Тип модели сущности</typeparam>
-    public interface IEditModelWindow<TModel>
+    public interface IEditModel<TModel>
     {
         /// <summary>
         /// Получить модель из представления

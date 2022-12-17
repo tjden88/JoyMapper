@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using JoyMapper.ViewModels.UserControls;
 
 namespace JoyMapper.Views.UserControls
 {
@@ -8,11 +7,8 @@ namespace JoyMapper.Views.UserControls
     /// </summary>
     public partial class PatternActionView : UserControl
     {
-        public PatternActionViewModel ViewModel { get; }
-
-        public PatternActionView(PatternActionViewModel patternActionViewModel)
+        public PatternActionView()
         {
-            ViewModel = patternActionViewModel;
             InitializeComponent();
         }
     }

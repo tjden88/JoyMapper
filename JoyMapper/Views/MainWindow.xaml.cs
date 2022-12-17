@@ -21,7 +21,7 @@ namespace JoyMapper.Views
 
         private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
         {
-            var wnd = App.Services.GetRequiredService<Windows.EditPatternWindow>();
+            var wnd = App.Services.GetRequiredService<Windows.EditPattern>();
             wnd.Owner = this;
             wnd.ShowDialog();
         }

@@ -5,7 +5,7 @@ using JoyMapper.Helpers;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services.Interfaces;
-using JoyMapper.Views.UserControls;
+using JoyMapper.ViewModels.UserControls;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -16,15 +16,31 @@ namespace JoyMapper.ViewModels.Windows
 
         private readonly IJoyBindingsWatcher _BindingsWatcher;
 
-        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionView PatternActionView)
+        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionViewModel PatternActionViewModel)
         {
-            this.PatternActionView = PatternActionView;
+            this.PatternActionViewModel = PatternActionViewModel;
             _BindingsWatcher = BindingsWatcher;
+            Title = "Добавить паттерн";
         }
 
         #region Prop
 
-        public PatternActionView PatternActionView { get; }
+        public PatternActionViewModel PatternActionViewModel { get; }
+
+        #region Id : int - Идентификатор редактируемого паттерна
+
+        /// <summary>Идентификатор редактируемого паттерна</summary>
+        private int _Id;
+
+        /// <summary>Идентификатор редактируемого паттерна</summary>
+        public int Id
+        {
+            get => _Id;
+            set => Set(ref _Id, value);
+        }
+
+        #endregion
+
 
         #region PatternName : string - Имя паттерна
 

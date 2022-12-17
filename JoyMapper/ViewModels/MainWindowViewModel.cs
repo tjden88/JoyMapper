@@ -272,7 +272,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var patternWindow = _AppWindowsService.EditPatternWindow;
+            var patternWindow = _AppWindowsService.EditPattern;
             patternWindow.Owner = App.ActiveWindow;
 
             if (patternWindow.ShowDialog() != true) return;
@@ -303,7 +303,7 @@ namespace JoyMapper.ViewModels
         private void OnEditPatternCommandExecuted()
         {
             var pattern = SelectedPattern;
-            var patternWindow = _AppWindowsService.EditPatternWindow;
+            var patternWindow = _AppWindowsService.EditPattern;
             var viewModel = patternWindow.ViewModel;
             viewModel.PatternName = pattern.Name;
             viewModel.JoyBinding = pattern.Binding;

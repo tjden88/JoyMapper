@@ -17,7 +17,7 @@ public class JoyPatternManager
 
     public JoyPattern AddPattern()
     {
-        var patternWindow = _AppWindowsService.EditPatternWindow;
+        var patternWindow = _AppWindowsService.EditPattern;
         patternWindow.Owner = App.ActiveWindow;
 
         if (patternWindow.ShowDialog() != true) return null;
@@ -29,7 +29,7 @@ public class JoyPatternManager
 
     public JoyPattern EditPattern(JoyPattern Pattern)
     {
-        var patternWindow = _AppWindowsService.EditPatternWindow;
+        var patternWindow = _AppWindowsService.EditPattern;
         var viewModel = patternWindow.ViewModel;
         viewModel.PatternName = Pattern.Name;
         viewModel.JoyBinding = Pattern.Binding;

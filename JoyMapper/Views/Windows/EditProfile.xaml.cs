@@ -10,13 +10,13 @@ using WPR;
 namespace JoyMapper.Views.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для EditProfileWindow.xaml
+    /// Логика взаимодействия для EditProfile.xaml
     /// </summary>
-    public partial class EditProfileWindow : IEditModelWindow<Profile>
+    public partial class EditProfile : IEditModel<Profile>
     {
         public EditProfileWindowViewModel ViewModel { get; }
 
-        public EditProfileWindow(EditProfileWindowViewModel viewModel, DataManager DataManager)
+        public EditProfile(EditProfileWindowViewModel viewModel, DataManager DataManager)
         {
             ViewModel = viewModel;
             LoadData(DataManager.JoyPatterns);

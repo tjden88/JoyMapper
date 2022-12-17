@@ -33,6 +33,6 @@ namespace JoyMapper.Services
 
         public AddJoyBinding AddJoyBinding => _ServiceProvider.GetRequiredService<AddJoyBinding>();
 
-        public EditPatternWindow EditPatternWindow => _ServiceProvider.GetRequiredService<EditPatternWindow>();
+        public EditPattern EditPattern => _ServiceProvider.GetRequiredService<EditPattern>();
     }
 }

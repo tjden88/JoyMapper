@@ -8,13 +8,13 @@ using WPR;
 namespace JoyMapper.Views.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для EditPatternWindow.xaml
+    /// Логика взаимодействия для EditPattern.xaml
     /// </summary>
-    public partial class EditPatternWindow : IEditModelWindow<JoyPattern>
+    public partial class EditPattern : IEditModel<JoyPattern>
     {
         public EditPatternViewModel ViewModel { get; }
 
-        public EditPatternWindow(EditPatternViewModel ViewModel)
+        public EditPattern(EditPatternViewModel ViewModel)
         {
             this.ViewModel = ViewModel;
             InitializeComponent();
@@ -42,13 +42,13 @@ namespace JoyMapper.Views.Windows
                 return;
             }
 
-            if (vm.PatternActionView.ViewModel.SelectedPatternAction == null)
+            if (vm.PatternActionViewModel.SelectedPatternAction == null)
             {
                 await WPRMessageBox.InformationAsync(this, "Не выбрано действие паттерна");
                 return;
             }
 
-            if (!vm.PatternActionView.ViewModel.SelectedPatternAction.IsValid(out var errorMessage))
+            if (!vm.PatternActionViewModel.SelectedPatternAction.IsValid(out var errorMessage))
             {
                 await WPRMessageBox.InformationAsync(this, errorMessage);
                 return;
@@ -70,16 +70,22 @@ namespace JoyMapper.Views.Windows
         {
             var pattern = new JoyPattern
             {
+                Id = ViewModel.Id,
                 Name = ViewModel.PatternName,
                 Binding = ViewModel.JoyBinding,
-                PatternAction = ViewModel.PatternActionView.ViewModel.SelectedPatternAction.ToModel()
+                PatternAction = ViewModel.PatternActionViewModel.GetModel()
             };
             return pattern;
         }
 
         public void SetModel(JoyPattern model)
         {
-            throw new NotImplementedException();
+            ViewModel.Id = model.Id;
+            ViewModel.PatternName = model.Name;
+            ViewModel.JoyBinding = model.Binding;
+            ViewModel.PatternActionViewModel.SetModel(model.PatternAction);
+
+            Title = $"Редактирование паттерна {model.Name}";
         }
     }
 }

@@ -19,7 +19,7 @@ public class ProfilesManager
 
     public Profile AddProfile()
     {
-        var wnd = _AppWindowsService.GetDialogWindow<EditProfileWindow>();
+        var wnd = _AppWindowsService.GetDialogWindow<EditProfile>();
         return wnd.ShowDialog() != true ? null : wnd.GetModel();
     }
 
@@ -31,7 +31,7 @@ public class ProfilesManager
 
     public Profile UpdateProfile(Profile profile)
     {
-        var wnd = _AppWindowsService.GetDialogWindow<EditProfileWindow>();
+        var wnd = _AppWindowsService.GetDialogWindow<EditProfile>();
         wnd.SetModel(profile);
         return wnd.ShowDialog() != true ? null : wnd.GetModel();
     }
