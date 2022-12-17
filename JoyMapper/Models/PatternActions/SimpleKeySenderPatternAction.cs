@@ -1,5 +1,6 @@
 ﻿using JoyMapper.Models.PatternActions.Base;
 using System.Collections.Generic;
+using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 
 namespace JoyMapper.Models.PatternActions;
@@ -9,10 +10,8 @@ namespace JoyMapper.Models.PatternActions;
 /// </summary>
 public class SimpleKeySenderPatternAction : PatternActionBase
 {
-    public override PatternActionViewModelBase ToViewModel()
-    {
-        throw new System.NotImplementedException();
-    }
+    public override PatternActionViewModelBase ToViewModel() => 
+        new SimpleKeySenderPatternActionViewModel(PressKeyBindings, ReleaseKeyBindings);
 
     public ICollection<KeyboardKeyBinding> PressKeyBindings { get; set; }
 
