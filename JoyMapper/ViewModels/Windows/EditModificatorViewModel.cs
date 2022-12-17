@@ -6,14 +6,14 @@ using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
-namespace JoyMapper.ViewModels
+namespace JoyMapper.ViewModels.Windows
 {
-    internal class EditModificatorWindowViewModel : WindowViewModel
+    public class EditModificatorViewModel : WindowViewModel
     {
         private readonly AppWindowsService _AppWindowsService;
 
 
-        public EditModificatorWindowViewModel(AppWindowsService AppWindowsService)
+        public EditModificatorViewModel(AppWindowsService AppWindowsService)
         {
             _AppWindowsService = AppWindowsService;
             Title = "Добавление модификатора";
@@ -66,7 +66,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
+
         #region ChangesSaved : bool - Изменения приняты
 
         /// <summary>Изменения приняты</summary>
@@ -139,7 +139,7 @@ namespace JoyMapper.ViewModels
         private void OnAttachJoyButtonCommandExecuted()
         {
             var bind = _AppWindowsService.GetJoyBinding();
-            if(bind is null)
+            if (bind is null)
                 return;
 
             JoyBinding = bind;

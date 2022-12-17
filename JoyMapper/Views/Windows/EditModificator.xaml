@@ -1,4 +1,4 @@
-﻿<Window x:Class="JoyMapper.Views.EditModificatorWindow"
+﻿<Window x:Class="JoyMapper.Views.Windows.EditModificator"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,7 +13,7 @@
         mc:Ignorable="d"
         Title="{Binding Title}" Width="500">
     <d:Window.DataContext>
-        <viewModels:EditModificatorWindowViewModel/>
+        <viewModels:EditModificatorViewModel/>
     </d:Window.DataContext>
     <b:Interaction.Triggers>
         <b:DataTrigger Binding="{Binding ChangesSaved}" Value="True">

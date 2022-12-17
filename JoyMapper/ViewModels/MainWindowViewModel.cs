@@ -374,8 +374,8 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать модификатор</summary>
         private void OnCreateModificatorCommandExecuted()
         {
-            //var vm = new EditModificatorWindowViewModel();
-            //var wnd = new EditModificatorWindow()
+            //var vm = new EditModificatorViewModel();
+            //var wnd = new EditModificator()
             //{
             //    Owner = Application.Current.MainWindow,
             //    DataContext = vm
@@ -413,8 +413,8 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать модификатор</summary>
         private void OnEditModificatorCommandExecuted()
         {
-            //var vm = new EditModificatorWindowViewModel(SelectedModificator);
-            //var wnd = new EditModificatorWindow
+            //var vm = new EditModificatorViewModel(SelectedModificator);
+            //var wnd = new EditModificator
             //{
             //    Owner = Application.Current.MainWindow,
             //    DataContext = vm
