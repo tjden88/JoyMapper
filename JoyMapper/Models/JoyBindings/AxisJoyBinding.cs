@@ -47,7 +47,8 @@ public class AxisJoyBinding : JoyBindingBase
         set
         {
             if (Equals(_StartValue, value)) return;
-            _StartValue = Math.Min(value, EndValue);
+            _StartValue = value;
+            EndValue = Math.Max(value, EndValue);
 
             OnPropertyChanged(nameof(StartValue));
         }
@@ -68,7 +69,8 @@ public class AxisJoyBinding : JoyBindingBase
         set
         {
             if (Equals(_EndValue, value)) return;
-            _EndValue = Math.Max(value, StartValue);
+            _EndValue = value;
+            StartValue = Math.Min(value, StartValue);
 
             OnPropertyChanged(nameof(EndValue));
         }

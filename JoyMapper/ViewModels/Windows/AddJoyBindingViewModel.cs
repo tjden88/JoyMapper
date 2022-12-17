@@ -136,7 +136,7 @@ namespace JoyMapper.ViewModels.Windows
                     EndValue = 20000,
                     JoyName = JoyName
                 });
-                list.Add(new AxisJoyBinding()
+                list.Add(new AxisJoyBinding
                 {
                     Axis = axis,
                     StartValue = 45000,

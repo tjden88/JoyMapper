@@ -3,7 +3,9 @@ using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.ViewModels.UserControls;
 using JoyMapper.ViewModels.Windows;
+using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,9 +41,11 @@ namespace JoyMapper
             serviceCollection
                 .AddSingleton<AppWindowsService>()
                 .AddTransient<AddJoyBinding>()
+                .AddTransient<PatternActionView>()
                 .AddTransient<EditPatternWindow>()
             .AddTransient<AddJoyBindingViewModel>()
             .AddTransient<EditPatternViewModel>()
+            .AddTransient<PatternActionViewModel>()
                 .AddTransient<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()
 

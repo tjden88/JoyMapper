@@ -155,10 +155,10 @@
 
 
         <!--Тип биндинга -->
-        <DockPanel DockPanel.Dock="Top" Visibility="{Binding IsButton, Converter={StaticResource Bool2VisibilityConverter}}">
+        <DockPanel DockPanel.Dock="Top">
             <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
                        VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
-            <StackPanel >
+            <StackPanel>
                 <TextBlock DockPanel.Dock="Top"  Text="Тип активации действия" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
                 <RadioButton Margin="5" Content="Стандартное" IsChecked="{Binding IsNormal}" FontWeight="Bold"/>
                 <RadioButton Margin="5" Content="Обратное" IsChecked="{Binding IsReverse}" FontWeight="Bold"/>
@@ -175,6 +175,8 @@
                 Command="{Binding SaveCommand}" />
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
 
-        <ContentControl Content="{Binding JoyAction}"></ContentControl>
+        <TextBlock DockPanel.Dock="Top"  Text="Действия паттерна" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+
+        <ContentControl Margin="5" Content="{Binding PatternActionView}"></ContentControl>
     </DockPanel>
 </Window>

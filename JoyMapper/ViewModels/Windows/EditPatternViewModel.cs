@@ -5,6 +5,7 @@ using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.Views.UserControls;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
@@ -12,11 +13,14 @@ namespace JoyMapper.ViewModels.Windows
 {
     public class EditPatternViewModel : WindowViewModel, IDisposable
     {
+        public PatternActionView PatternActionView { get; }
+
         private readonly AppWindowsService _AppWindowsService;
         private readonly IJoyBindingsWatcher _BindingsWatcher;
 
-        public EditPatternViewModel(AppWindowsService AppWindowsService, IJoyBindingsWatcher BindingsWatcher)
+        public EditPatternViewModel(AppWindowsService AppWindowsService, IJoyBindingsWatcher BindingsWatcher, PatternActionView PatternActionView)
         {
+            this.PatternActionView = PatternActionView;
             _AppWindowsService = AppWindowsService;
             _BindingsWatcher = BindingsWatcher;
         }
