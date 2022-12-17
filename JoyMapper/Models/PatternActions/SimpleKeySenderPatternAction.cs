@@ -1,4 +1,5 @@
-﻿using JoyMapper.Models.PatternActions.Base;
+﻿using System;
+using JoyMapper.Models.PatternActions.Base;
 using System.Collections.Generic;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
@@ -12,6 +13,11 @@ public class SimpleKeySenderPatternAction : PatternActionBase
 {
     public override PatternActionViewModelBase ToViewModel() => 
         new SimpleKeySenderPatternActionViewModel(this);
+
+    public override void Initialize(IServiceProvider Services)
+    {
+        
+    }
 
     public override void BindingStateChanged(bool newState)
     {

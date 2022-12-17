@@ -13,13 +13,15 @@ namespace JoyMapper.Services.Watchers
     {
         private readonly IJoystickStateManager _JoystickStateManager;
         private readonly DataManager _DataManager;
+        private readonly IServiceProvider _ServiceProvider;
 
         private readonly int _PollingDelay; 
 
-        public JoyPatternWatcher(IJoystickStateManager JoystickStateManager, DataManager DataManager)
+        public JoyPatternWatcher(IJoystickStateManager JoystickStateManager, DataManager DataManager, IServiceProvider ServiceProvider)
         {
             _JoystickStateManager = JoystickStateManager;
             _DataManager = DataManager;
+            _ServiceProvider = ServiceProvider;
             _PollingDelay = DataManager.AppSettings.JoystickPollingDelay;
         }
 
@@ -30,7 +32,10 @@ namespace JoyMapper.Services.Watchers
         public void StartWatching(ICollection<JoyPattern> Patterns)
         {
             foreach (var joyPattern in Patterns)
+            {
+                joyPattern.PatternAction.Initialize(_ServiceProvider);
                 joyPattern.PatternAction.ReportMessage += OnActionReportMessage;
+            }
 
 
             _PatternsByJoyName = Patterns.GroupBy(p => p.Binding.JoyName)

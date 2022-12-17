@@ -12,6 +12,9 @@ public abstract class PatternActionBase
     public abstract PatternActionViewModelBase ToViewModel();
 
 
+    /// <summary> Проинициализировать необходимые данные для запуска отслеживания состояний </summary>
+    public abstract void Initialize(IServiceProvider Services);
+
     /// <summary>
     /// Сообщает, что привязка кнопки изменила своё состояние
     /// </summary>
