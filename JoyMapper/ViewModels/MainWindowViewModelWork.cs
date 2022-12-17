@@ -29,10 +29,7 @@ namespace JoyMapper.ViewModels
         #region IsProfileStarted : bool - Запущен ли профиль
 
         /// <summary>Запущен ли профиль</summary>
-        public bool IsProfileStarted
-        {
-            get => ActiveProfile != null;
-        }
+        public bool IsProfileStarted => ActiveProfile != null;
 
         #endregion
 

@@ -279,6 +279,7 @@
 
         <!--Индикатор запущенного профиля-->
         <Border Background="{DynamicResource LightPrimaryColorBrush}"
+                d:IsHidden="true"
                 Visibility="{Binding IsProfileStarted, Converter={StaticResource Bool2VisibilityConverter}}">
             <Grid>
                 <Grid.RowDefinitions>

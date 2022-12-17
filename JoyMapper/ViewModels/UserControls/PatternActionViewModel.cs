@@ -20,14 +20,24 @@ public class PatternActionViewModel : ViewModel
         SelectedPatternAction = AllPatternActions.First();
     }
 
+    public void SetSelectedPatternAction(PatternActionViewModelBase patternAction)
+    {
+        var type = patternAction.GetType();
+        var replace = AllPatternActions.First(p => p.GetType() == type);
+        var index = AllPatternActions.IndexOf(replace);
+        AllPatternActions.Remove(replace);
+        AllPatternActions.Insert(index, patternAction);
+        SelectedPatternAction = patternAction;
+    }
+
 
     #region AllPatternActions : ICollection<PatternActionViewModelBase> - Все существующие виды действий паттернов
 
     /// <summary>Все существующие виды действий паттернов</summary>
-    private ICollection<PatternActionViewModelBase> _AllPatternActions;
+    private List<PatternActionViewModelBase> _AllPatternActions;
 
     /// <summary>Все существующие виды действий паттернов</summary>
-    public ICollection<PatternActionViewModelBase> AllPatternActions
+    public List<PatternActionViewModelBase> AllPatternActions
     {
         get => _AllPatternActions;
         set => Set(ref _AllPatternActions, value);

@@ -141,9 +141,9 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Загрузить данные</summary>
         private void OnLoadProfilesCommandExecuted()
         {
-            Profiles = new(App.DataManager.Profiles);
-            JoyPatterns = new(App.DataManager.JoyPatterns);
-            Modificators = new(App.DataManager.Modificators);
+            Profiles = new(_DataManager.Profiles);
+            JoyPatterns = new(_DataManager.JoyPatterns);
+            Modificators = new(_DataManager.Modificators);
 
         }
 
@@ -182,7 +182,7 @@ namespace JoyMapper.ViewModels
                     .ToList()
             };
 
-            App.DataManager.AddProfile(profile);
+            _DataManager.AddProfile(profile);
             LoadDataCommand.Execute();
             SelectedProfile = Profiles.Last();
 
@@ -206,7 +206,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Копировать профиль</summary>
         private void OnCopyProfileCommandExecuted()
         {
-            var prof = App.DataManager.CopyProfile(SelectedProfile.Id);
+            var prof = _DataManager.CopyProfile(SelectedProfile.Id);
             Profiles.Add(prof);
             SelectedProfile = prof;
             WPRMessageBox.Bubble(App.ActiveWindow, "Профиль скопирован");
@@ -248,7 +248,7 @@ namespace JoyMapper.ViewModels
                 Id = vm.Id,
             };
 
-            App.DataManager.UpdateProfile(profile);
+            _DataManager.UpdateProfile(profile);
             LoadDataCommand.Execute();
         }
 
@@ -273,7 +273,7 @@ namespace JoyMapper.ViewModels
             var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить профиль {SelectedProfile.Name}?");
             if (result)
             {
-                App.DataManager.RemoveProfile(SelectedProfile.Id);
+                _DataManager.RemoveProfile(SelectedProfile.Id);
                 Profiles.Remove(SelectedProfile);
                 SelectedProfile = null;
             }
@@ -321,11 +321,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать паттерн</summary>
         private void OnEditPatternCommandExecuted()
         {
-            //var edited = _PatternService.EditPattern(SelectedPattern);
-            //if (edited == null) return;
+            var edited = _JoyPatternManager.EditPattern(SelectedPattern);
+            if (edited == null) return;
 
-            //LoadDataCommand.Execute();
-            //SelectedPattern = edited;
+            LoadDataCommand.Execute();
+            SelectedPattern = edited;
 
         }
 
@@ -347,7 +347,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать копию паттерна</summary>
         private void OnCopyPatternCommandExecuted()
         {
-            var newPattern = App.DataManager.CopyJoyPattern(SelectedPattern.Id);
+            var newPattern = _DataManager.CopyJoyPattern(SelectedPattern.Id);
             JoyPatterns.Add(newPattern);
             SelectedPattern = newPattern;
             WPRMessageBox.Bubble(App.ActiveWindow, "Паттерн скопирован");
@@ -374,7 +374,7 @@ namespace JoyMapper.ViewModels
             var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить паттерн {SelectedPattern.Name}?");
             if (result)
             {
-                App.DataManager.RemoveJoyPattern(SelectedPattern.Id);
+                _DataManager.RemoveJoyPattern(SelectedPattern.Id);
                 JoyPatterns.Remove(SelectedPattern);
                 SelectedPattern = null;
             }
@@ -413,7 +413,7 @@ namespace JoyMapper.ViewModels
                 Button = vm.Button,
             };
 
-            App.DataManager.AddModificator(modif);
+            _DataManager.AddModificator(modif);
             LoadDataCommand.Execute();
             SelectedModificator = Modificators.Last();
 
@@ -453,7 +453,7 @@ namespace JoyMapper.ViewModels
                 JoyName = vm.JoyName
             };
 
-            App.DataManager.UpdateModificator(modificator);
+            _DataManager.UpdateModificator(modificator);
             LoadDataCommand.Execute();
 
         }
@@ -478,7 +478,7 @@ namespace JoyMapper.ViewModels
             var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить модификатор {SelectedModificator.Name}?");
             if (result)
             {
-                //App.DataManager.RemoveModificator(SelectedModificator.Id);
+                //_DataManager.RemoveModificator(SelectedModificator.Id);
                 Modificators.Remove(SelectedModificator);
                 SelectedModificator = null;
             }
