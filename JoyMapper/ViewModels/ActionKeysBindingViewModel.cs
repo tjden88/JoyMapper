@@ -9,7 +9,7 @@ namespace JoyMapper.ViewModels
     /// <summary>
     /// Список назначаемых клавиш на то или иное действие
     /// </summary>
-    internal class ActionKeysBindingViewModel : ViewModel
+    public class ActionKeysBindingViewModel : ViewModel
     {
 
         public ActionKeysBindingViewModel(string name) => Name = name;

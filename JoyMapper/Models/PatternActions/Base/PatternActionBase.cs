@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using WPR.MVVM.ViewModels;
+﻿using JoyMapper.ViewModels.PatternActions.Base;
 
 namespace JoyMapper.Models.PatternActions.Base;
 
@@ -7,11 +6,9 @@ namespace JoyMapper.Models.PatternActions.Base;
 /// <summary>
 /// Базовый класс для возможных действий паттернов
 /// </summary>
-public abstract class PatternActionBase : ViewModel
+public abstract class PatternActionBase 
 {
-    [JsonIgnore]
-    public abstract string Name { get; }
 
-    [JsonIgnore]
-    public abstract string Description { get; }
+
+    public abstract PatternActionViewModel ToViewModel();
 }

@@ -1,6 +1,7 @@
 ﻿using JoyMapper.Models.PatternActions.Base;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using JoyMapper.ViewModels.PatternActions.Base;
 
 namespace JoyMapper.Models.PatternActions;
 
@@ -9,13 +10,14 @@ namespace JoyMapper.Models.PatternActions;
 /// </summary>
 public class SimpleKeySenderPatternAction : PatternActionBase
 {
-    public override string Name => "Простой триггер";
+    public override PatternActionViewModel ToViewModel()
+    {
+        throw new System.NotImplementedException();
+    }
 
-    public override string Description => "Отправка команд клавиатуры при активации и деактивации действия";
+    public List<KeyboardKeyBinding> PressKeyBindings { get; set; } = new();
 
-    public KeyboardKeyBindingGroup PressKeyBindings { get; set; } = new();
-
-    public KeyboardKeyBindingGroup ReleaseKeyBindings { get; set; } = new();
+    public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; } = new();
 
     
 
