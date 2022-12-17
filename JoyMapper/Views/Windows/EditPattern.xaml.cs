@@ -73,6 +73,7 @@ namespace JoyMapper.Views.Windows
                 Id = ViewModel.Id,
                 Name = ViewModel.PatternName,
                 Binding = ViewModel.JoyBinding,
+                GroupName = ViewModel.GroupName,
                 PatternAction = ViewModel.PatternActionViewModel.GetModel()
             };
             return pattern;
@@ -81,6 +82,7 @@ namespace JoyMapper.Views.Windows
         public void SetModel(JoyPattern model)
         {
             ViewModel.Id = model.Id;
+            ViewModel.GroupName = model.GroupName;
             ViewModel.PatternName = model.Name;
             ViewModel.JoyBinding = model.Binding;
             ViewModel.PatternActionViewModel.SetModel(model.PatternAction);

@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
-using JoyMapper.Views.Windows;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 

@@ -23,20 +23,13 @@
             </Grid.ColumnDefinitions>
             <TextBox helpers:TextHelper.Hint="Имя паттерна" VerticalAlignment="Center" Name="NameText" Text="{Binding PatternName, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
             <DockPanel Grid.Column="1" LastChildFill="False">
-                <ComboBox Width="280" ItemsSource="{Binding Modificators}" 
+                <ComboBox Width="280" ItemsSource="{Binding GroupsNames}" 
                           Margin="5,2,0,-2"
                           VerticalAlignment="Center"
-                          SelectedItem="{Binding SelectedModificator}"
-                          helpers:TextHelper.Hint="Группа" DisplayMemberPath="Name"/>
-                <Button Style="{StaticResource WPRToolButton}" Margin="10,0"
-                        VerticalAlignment="Center"
-                        Command="{Binding ClearModificatorCommand}"
-                        Visibility="{Binding ClearModificatorCommand.Visibility}"
-                        ToolTip="Без модификатора">
-                    <Button.Content>
-                        <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}" />
-                    </Button.Content>
-                </Button>
+                          IsEditable="True"
+                          Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}"
+                          IsSynchronizedWithCurrentItem="True"
+                          helpers:TextHelper.Hint="Группа"/>
             </DockPanel>
         </Grid>
 

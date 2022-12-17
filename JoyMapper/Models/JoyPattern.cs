@@ -10,6 +10,8 @@ namespace JoyMapper.Models
 
         public string Name { get; set; }
 
+        public string GroupName { get; set; }
+
         public JoyBindingBase Binding { get; set; }
 
         public PatternActionBase PatternAction { get; set; }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
+using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.UserControls;
 using WPR.MVVM.Commands;
@@ -17,11 +20,17 @@ namespace JoyMapper.ViewModels.Windows
         private readonly IJoyBindingsWatcher _BindingsWatcher;
         private readonly AppWindowsService _AppWindowsService;
 
-        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionViewModel PatternActionViewModel, AppWindowsService AppWindowsService)
+        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionViewModel PatternActionViewModel, AppWindowsService AppWindowsService, DataManager DataManager)
         {
             this.PatternActionViewModel = PatternActionViewModel;
             _BindingsWatcher = BindingsWatcher;
             _AppWindowsService = AppWindowsService;
+
+            GroupsNames = DataManager.JoyPatterns
+                .Select(p => p.GroupName)
+                .Distinct()
+                .Where(p => p != null);
+
             Title = "Добавить паттерн";
         }
 
@@ -54,6 +63,36 @@ namespace JoyMapper.ViewModels.Windows
         {
             get => _PatternName;
             set => Set(ref _PatternName, value);
+        }
+
+        #endregion
+
+
+        #region GroupsNames : IEnumerable<string> - Все группы
+
+        /// <summary>Все группы</summary>
+        private IEnumerable<string> _GroupsNames;
+
+        /// <summary>Все группы</summary>
+        public IEnumerable<string> GroupsNames
+        {
+            get => _GroupsNames;
+            set => Set(ref _GroupsNames, value);
+        }
+
+        #endregion
+
+
+        #region GroupName : string - Имя группы паттерна
+
+        /// <summary>Имя группы паттерна</summary>
+        private string _GroupName;
+
+        /// <summary>Имя группы паттерна</summary>
+        public string GroupName
+        {
+            get => _GroupName;
+            set => Set(ref _GroupName, value);
         }
 
         #endregion
@@ -187,6 +226,7 @@ namespace JoyMapper.ViewModels.Windows
         }
 
         #endregion
+
 
 
         #endregion
