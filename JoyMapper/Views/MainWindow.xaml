@@ -88,6 +88,14 @@
                 <!--Паттерны-->
                 <controls:WPRCard>
                     <DockPanel>
+                        <DockPanel.Resources>
+                            <CollectionViewSource x:Key="PatternsItems" Source="{Binding Path=JoyPatterns}">
+                                <CollectionViewSource.GroupDescriptions>
+                                    <PropertyGroupDescription PropertyName="GroupName" />
+                                </CollectionViewSource.GroupDescriptions>
+                            </CollectionViewSource>
+                        </DockPanel.Resources>
+
                         <ToolBar DockPanel.Dock="Top" Margin="5">
                             <Button Command="{Binding CreatePatternCommand}"
                                     ToolTip="{Binding CreatePatternCommand}">
@@ -118,7 +126,34 @@
                         <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}" />
 
-                        <ListBox Margin="5" ItemsSource="{Binding JoyPatterns}" SelectedItem="{Binding SelectedPattern}">
+                        <ListBox Margin="5" ItemsSource="{Binding Source={StaticResource PatternsItems} }" SelectedItem="{Binding SelectedPattern}">
+
+                            <ListBox.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.Panel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </GroupStyle.Panel>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <Expander
+                                                            IsExpanded="True">
+                                                            <Expander.Header>
+                                                                <TextBlock FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}"></TextBlock>
+                                                            </Expander.Header>
+                                                            <ItemsPresenter/>
+                                                        </Expander>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
+                                </GroupStyle>
+                            </ListBox.GroupStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:JoyPattern}">
                                     <StackPanel Orientation="Vertical">
