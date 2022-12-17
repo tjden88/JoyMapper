@@ -80,7 +80,6 @@ public class EditProfileWindowViewModel : WindowViewModel
     #endregion
 
 
-
     #region Command AddPatternCommand - Добавить паттерн
 
     /// <summary>Добавить паттерн</summary>
@@ -100,9 +99,9 @@ public class EditProfileWindowViewModel : WindowViewModel
         if(wnd.ShowDialog() != true)
             return;
 
-        //TODO: вернуть сущность
-        var joyPattern = wnd.GetModel();
-        _DataManager.AddJoyPattern(joyPattern);
+        var joyPattern = _DataManager.AddJoyPattern();
+
+        if(joyPattern == null) return;
 
         SelectedPatterns.Add(new SelectedPatternViewModel
         {
@@ -111,6 +110,8 @@ public class EditProfileWindowViewModel : WindowViewModel
             PatternId = joyPattern.Id,
             PatternName = joyPattern.Name,
         });
+
+        _AppWindowsService.GetViewModel<MainWindowViewModel>().JoyPatterns.Add(joyPattern);
     }
 
     #endregion
@@ -174,7 +175,6 @@ public class EditProfileWindowViewModel : WindowViewModel
         }
 
         #endregion
-
 
     }
 }

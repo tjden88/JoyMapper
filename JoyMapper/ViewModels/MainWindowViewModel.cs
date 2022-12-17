@@ -272,7 +272,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var pattern = _DataManager.AddJoyPattern()
+            var pattern = _DataManager.AddJoyPattern();
+            if(pattern == null) return;
+
+            JoyPatterns.Add(pattern);
+            SelectedPattern = pattern;
         }
 
         #endregion
@@ -293,24 +297,15 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать паттерн</summary>
         private void OnEditPatternCommandExecuted()
         {
-            var pattern = SelectedPattern;
-            var patternWindow = _AppWindowsService.EditPattern;
-            var viewModel = patternWindow.ViewModel;
-            viewModel.PatternName = pattern.Name;
-            viewModel.JoyBinding = pattern.Binding;
-            viewModel.Title = $"Редактировние паттерна: {pattern.Name}";
-            viewModel.PatternActionView.ViewModel.SetSelectedPatternAction(pattern.PatternAction.ToViewModel());
-            patternWindow.Owner = App.ActiveWindow;
+            var pattern = _DataManager.UpdateJoyPattern(SelectedPattern.Id);
+            
+            if(pattern == null) return;
 
-            if (patternWindow.ShowDialog() != true) return;
+            var index = JoyPatterns.IndexOf(SelectedPattern);
 
-            var edited = BuildPattern(viewModel);
-            _DataManager.UpdateJoyPattern(edited);
-            if (edited == null) return;
-
-            LoadDataCommand.Execute();
-            SelectedPattern = edited;
-
+            JoyPatterns.Remove(SelectedPattern);
+            JoyPatterns.Insert(index, pattern);
+            SelectedPattern = pattern;
         }
 
         #endregion
@@ -444,6 +439,7 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
+
         #region AsyncCommand DeleteModificatorCommand - Удалить модификатор
 
         /// <summary>Удалить модификатор</summary>
@@ -472,17 +468,6 @@ namespace JoyMapper.ViewModels
 
 
         #endregion
-
-        private JoyPattern BuildPattern(EditPatternViewModel ViewModel)
-        {
-            var pattern = new JoyPattern
-            {
-                Name = ViewModel.PatternName,
-                Binding = ViewModel.JoyBinding,
-                PatternAction = ViewModel.PatternActionView.ViewModel.SelectedPatternAction.ToModel(),
-            };
-            return pattern;
-        }
 
     }
 }

@@ -33,6 +33,6 @@ namespace JoyMapper.Services
         }
 
         /// <summary> Получить экземпляр вьюмодели представления из коллекции сервисов </summary>
-        public ViewModel GetViewModel<T>() where T: ViewModel => _ServiceProvider.GetRequiredService<T>();
+        public T GetViewModel<T>() where T: ViewModel => _ServiceProvider.GetRequiredService<T>();
     }
 }
