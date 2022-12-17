@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JoyMapper.Models;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.UserControls;
+using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows
@@ -17,6 +19,8 @@ namespace JoyMapper.ViewModels.Windows
                 .Select(p => p.GroupName)
                 .Distinct()
                 .Where(p => p != null);
+
+            Modificators = DataManager.Modificators;
 
             Title = "Добавить паттерн";
         }
@@ -86,6 +90,55 @@ namespace JoyMapper.ViewModels.Windows
         }
 
         #endregion
+
+
+        #region Modificators : IEnumerable<Modificator> - Модификаторы
+
+        /// <summary>Модификаторы</summary>
+        private IEnumerable<Modificator> _Modificators;
+
+        /// <summary>Модификаторы</summary>
+        public IEnumerable<Modificator> Modificators
+        {
+            get => _Modificators;
+            set => Set(ref _Modificators, value);
+        }
+
+        #endregion
+
+
+        #region SelectedModificator : Modificator - Выбранный модификатор
+
+        /// <summary>Выбранный модификатор</summary>
+        private Modificator _SelectedModificator;
+
+        /// <summary>Выбранный модификатор</summary>
+        public Modificator SelectedModificator
+        {
+            get => _SelectedModificator;
+            set => Set(ref _SelectedModificator, value);
+        }
+
+        #endregion
+
+
+        #endregion
+
+
+        #region Command ClearModificatorCommand - Убрать модификатор
+
+        /// <summary>Убрать модификатор</summary>
+        private Command _ClearModificatorCommand;
+
+        /// <summary>Убрать модификатор</summary>
+        public Command ClearModificatorCommand => _ClearModificatorCommand
+            ??= new Command(OnClearModificatorCommandExecuted, CanClearModificatorCommandExecute, "Убрать модификатор");
+
+        /// <summary>Проверка возможности выполнения - Убрать модификатор</summary>
+        private bool CanClearModificatorCommandExecute() => SelectedModificator != null;
+
+        /// <summary>Логика выполнения - Убрать модификатор</summary>
+        private void OnClearModificatorCommandExecuted() => SelectedModificator = null;
 
         #endregion
 
