@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:models="clr-namespace:JoyMapper.Models"
-        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
         Topmost="False"
@@ -142,7 +141,7 @@
                                                         <Expander
                                                             IsExpanded="True">
                                                             <Expander.Header>
-                                                                <TextBlock FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}"></TextBlock>
+                                                                <TextBlock FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}" />
                                                             </Expander.Header>
                                                             <ItemsPresenter/>
                                                         </Expander>
