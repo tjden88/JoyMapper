@@ -30,12 +30,12 @@ namespace JoyMapper.ViewModels
         /// <summary>Интервал двойного нажатия</summary>
         public int DoublePressDelay
         {
-            get => App.DataManager.AppSettings.DoublePressDelay;
+            get => _DataManager.AppSettings.DoublePressDelay;
             set
             {
-                if(Equals(App.DataManager.AppSettings.DoublePressDelay, value)) return;
-                App.DataManager.AppSettings.DoublePressDelay = value;
-                App.DataManager.SaveData();
+                if(Equals(_DataManager.AppSettings.DoublePressDelay, value)) return;
+                _DataManager.AppSettings.DoublePressDelay = value;
+                _DataManager.SaveData();
                 OnPropertyChanged(nameof(DoublePressDelay));
             }
         }
@@ -47,12 +47,12 @@ namespace JoyMapper.ViewModels
         /// <summary>Интервал длинного нажатия</summary>
         public int LongPressDelay
         {
-            get => App.DataManager.AppSettings.LongPressDelay;
+            get => _DataManager.AppSettings.LongPressDelay;
             set
             {
-                if (Equals(App.DataManager.AppSettings.LongPressDelay, value)) return;
-                App.DataManager.AppSettings.LongPressDelay = value;
-                App.DataManager.SaveData();
+                if (Equals(_DataManager.AppSettings.LongPressDelay, value)) return;
+                _DataManager.AppSettings.LongPressDelay = value;
+                _DataManager.SaveData();
                 OnPropertyChanged(nameof(LongPressDelay));
             }
         }
@@ -71,8 +71,8 @@ namespace JoyMapper.ViewModels
             set => IfSet(ref _CurrentColorTheme, value).Then(v =>
             {
                 v.SetTheme();
-                App.DataManager.AppSettings.CurrentColorCheme = v.Id;
-                App.DataManager.SaveData();
+                _DataManager.AppSettings.CurrentColorCheme = v.Id;
+                _DataManager.SaveData();
             });
         }
 
@@ -192,12 +192,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Проверить обновления при запуске</summary>
         private async Task OnCheckUpdatesCommandExecutedAsync(CancellationToken cancel)
         {
-            var updater = App.UpdateChecker;
-            var updateAvaliable = await updater.CheckUpdate(App.AppVersion);
+            var updateAvaliable = await _UpdateChecker.CheckUpdate();
             IsNewVersionAvaliable = updateAvaliable;
             if (!updateAvaliable) return;
-            LastUpdateReleaseNotes = await updater.GetLastReleaseNotes();
-            UpdateDownloadUrl = await updater.GetDownloadLink();
+            LastUpdateReleaseNotes = await _UpdateChecker.GetLastReleaseNotes();
+            UpdateDownloadUrl = await _UpdateChecker.GetDownloadLink();
 
             WPRMessageBox.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
 

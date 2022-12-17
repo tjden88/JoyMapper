@@ -8,7 +8,7 @@ namespace JoyMapper.Services
     /// <summary>
     /// Сервис проверки обновлений
     /// </summary>
-    internal class UpdateChecker
+    public class UpdateChecker
     {
 
         //private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/v1.4/JoyMapper/LatestVersion.txt"; // Debug
@@ -16,6 +16,7 @@ namespace JoyMapper.Services
 
         private record LastVersion(string Version, string UpdateUrl, string ReleaseNotes);
 
+        private static string CurrentVersion => App.AppVersion;
 
         private LastVersion _LastVersion;
 
@@ -23,9 +24,8 @@ namespace JoyMapper.Services
         /// <summary>
         /// Проверить, есть ли новая версия
         /// </summary>
-        /// <param name="CurrentVersion">Текущая версия</param>
         /// <returns></returns>
-        public async Task<bool> CheckUpdate(string CurrentVersion)
+        public async Task<bool> CheckUpdate()
         {
             var lv = await GetLastVersion();
             if (lv == null) return false;

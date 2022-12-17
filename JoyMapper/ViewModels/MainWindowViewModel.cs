@@ -13,13 +13,13 @@ namespace JoyMapper.ViewModels
 {
     public partial class MainWindowViewModel : WindowViewModel
     {
-        private readonly AppWindowsService _AppWindowsService;
         private readonly DataManager _DataManager;
+        private readonly UpdateChecker _UpdateChecker;
 
-        public MainWindowViewModel(AppWindowsService AppWindowsService, DataManager DataManager)
+        public MainWindowViewModel(DataManager DataManager, UpdateChecker UpdateChecker)
         {
-            _AppWindowsService = AppWindowsService;
             _DataManager = DataManager;
+            _UpdateChecker = UpdateChecker;
             AppLog.Report += msg => LogMessages.Add(msg);
             Title = "JoyMapper " + App.AppVersion;
             CurrentColorTheme = ColorThemes

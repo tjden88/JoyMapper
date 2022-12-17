@@ -21,16 +21,15 @@ namespace JoyMapper
     {
 
         /// <summary> Версия приложения </summary>
-        internal const string AppVersion = "1.3";
+        internal const string AppVersion = "1.3.3";
 
         /// <summary> Менеджер данных профилей текущей сессии </summary>
+        [Obsolete]
         internal static DataManager DataManager => Services.GetRequiredService<DataManager>();
 
         /// <summary> Активное окно </summary>
         internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
 
-        /// <summary> Сервис проверки обновлений </summary>
-        internal static UpdateChecker UpdateChecker { get; } = new();
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -49,6 +48,7 @@ namespace JoyMapper
             var serviceCollection = new ServiceCollection();
 
             serviceCollection
+                .AddSingleton<UpdateChecker>()
                 .AddSingleton<DataManager>()
                 .AddSingleton<ProfilesManager>()
                 .AddSingleton<JoyPatternManager>()
