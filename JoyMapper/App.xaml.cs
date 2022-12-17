@@ -49,6 +49,7 @@ namespace JoyMapper
             var serviceCollection = new ServiceCollection();
 
             serviceCollection
+                .AddSingleton<DataManager>()
                 .AddSingleton<AppWindowsService>()
                 .AddSingleton<JoyPatternManager>()
                 .AddSingleton<MainWindow>()

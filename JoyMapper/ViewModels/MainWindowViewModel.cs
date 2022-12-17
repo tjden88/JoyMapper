@@ -15,14 +15,16 @@ namespace JoyMapper.ViewModels
     public partial class MainWindowViewModel : WindowViewModel
     {
         private readonly JoyPatternManager _JoyPatternManager;
+        private readonly DataManager _DataManager;
 
-        public MainWindowViewModel(JoyPatternManager JoyPatternManager)
+        public MainWindowViewModel(JoyPatternManager JoyPatternManager, DataManager DataManager)
         {
             _JoyPatternManager = JoyPatternManager;
+            _DataManager = DataManager;
             AppLog.Report += msg => LogMessages.Add(msg);
             Title = "JoyMapper " + App.AppVersion;
             CurrentColorTheme = ColorThemes
-                .FirstOrDefault(c => c.Id == App.DataManager.AppSettings.CurrentColorCheme)
+                .FirstOrDefault(c => c.Id == _DataManager.AppSettings.CurrentColorCheme)
                                 ?? ColorThemes.First();
         }
 
@@ -59,16 +61,16 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region KeyPatterns : ObservableCollection<JoyPattern> - Список паттернов
+        #region JoyPatterns : ObservableCollection<JoyPattern> - Список паттернов
 
         /// <summary>Список паттернов</summary>
-        private ObservableCollection<JoyPattern> _KeyPatterns;
+        private ObservableCollection<JoyPattern> _JoyPatterns;
 
         /// <summary>Список паттернов</summary>
-        public ObservableCollection<JoyPattern> KeyPatterns
+        public ObservableCollection<JoyPattern> JoyPatterns
         {
-            get => _KeyPatterns;
-            set => Set(ref _KeyPatterns, value);
+            get => _JoyPatterns;
+            set => Set(ref _JoyPatterns, value);
         }
 
         #endregion
@@ -118,8 +120,6 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-        
-
 
         #endregion
 
@@ -142,7 +142,7 @@ namespace JoyMapper.ViewModels
         private void OnLoadProfilesCommandExecuted()
         {
             Profiles = new(App.DataManager.Profiles);
-            KeyPatterns = new(App.DataManager.JoyPatterns);
+            JoyPatterns = new(App.DataManager.JoyPatterns);
             Modificators = new(App.DataManager.Modificators);
 
         }
@@ -297,11 +297,10 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var pattern = _JoyPatternManager.AddPattern();
-            //var added = _PatternService.AddPattern();
-            //if (added == null) return;
-            //KeyPatterns.Add(added);
-            //SelectedPattern = added;
+            var added = _JoyPatternManager.AddPattern();
+            if (added == null) return;
+            JoyPatterns.Add(added);
+            SelectedPattern = added;
         }
 
         #endregion
@@ -348,8 +347,8 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать копию паттерна</summary>
         private void OnCopyPatternCommandExecuted()
         {
-            var newPattern = App.DataManager.CopyKeyPattern(SelectedPattern.Id);
-            KeyPatterns.Add(newPattern);
+            var newPattern = App.DataManager.CopyJoyPattern(SelectedPattern.Id);
+            JoyPatterns.Add(newPattern);
             SelectedPattern = newPattern;
             WPRMessageBox.Bubble(App.ActiveWindow, "Паттерн скопирован");
         }
@@ -375,8 +374,8 @@ namespace JoyMapper.ViewModels
             var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить паттерн {SelectedPattern.Name}?");
             if (result)
             {
-                App.DataManager.RemoveKeyPattern(SelectedPattern.Id);
-                KeyPatterns.Remove(SelectedPattern);
+                App.DataManager.RemoveJoyPattern(SelectedPattern.Id);
+                JoyPatterns.Remove(SelectedPattern);
                 SelectedPattern = null;
             }
         }

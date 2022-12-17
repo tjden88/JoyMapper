@@ -9,7 +9,7 @@ namespace JoyMapper.Services
     /// <summary>
     /// Загрузка и сохранение профилей
     /// </summary>
-    internal class DataManager
+    public class DataManager
     {
 
         private readonly DataSerializer _DataSerializer = new();
@@ -93,7 +93,7 @@ namespace JoyMapper.Services
 
 
         /// <summary> Добавить паттерн </summary>
-        public void AddKeyPattern(JoyPattern JoyPattern)
+        public void AddJoyPattern(JoyPattern JoyPattern)
         {
             var nextId = JoyPatterns
                 .Select(p => p.Id)
@@ -111,18 +111,18 @@ namespace JoyMapper.Services
         /// </summary>
         /// <param name="id">ID копируемого паттерна</param>
         /// <returns>Скопированный паттерн</returns>
-        public JoyPattern CopyKeyPattern(int id)
+        public JoyPattern CopyJoyPattern(int id)
         {
             var oldPattern = JoyPatterns.First(p => p.Id == id);
 
             var newPattern = _DataSerializer.CopyObject(oldPattern);
-            AddKeyPattern(newPattern);
+            AddJoyPattern(newPattern);
             return newPattern;
         }
 
 
         /// <summary> Обновить паттерн (заменить по Id) </summary>
-        public void UpdateKeyPattern(JoyPattern pattern)
+        public void UpdateJoyPattern(JoyPattern pattern)
         {
             var editPattern = ProfilesData.JoyPatterns.FirstOrDefault(p => p.Id == pattern.Id);
             if (editPattern == null) return;
@@ -134,7 +134,7 @@ namespace JoyMapper.Services
 
 
         /// <summary> Удалить паттерн </summary>
-        public void RemoveKeyPattern(int patternId)
+        public void RemoveJoyPattern(int patternId)
         {
             ProfilesData.JoyPatterns.Remove(ProfilesData.JoyPatterns.FirstOrDefault(p => p.Id == patternId));
 

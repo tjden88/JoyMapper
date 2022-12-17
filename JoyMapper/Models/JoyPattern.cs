@@ -1,18 +1,19 @@
-﻿using JoyMapper.Models.JoyActions;
+﻿using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.PatternActions.Base;
 
 namespace JoyMapper.Models
 {
+    /// <summary> Паттерн привязки джойстика и действий </summary>
     public class JoyPattern
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string JoyName { get; set; }
+        public JoyBindingBase Binding { get; set; }
 
-        public JoyActionBase JoyAction { get; set; }
+        public PatternActionBase PatternAction { get; set; }
 
-        public Modificator Modificator { get; set; }
-
+        public override string ToString() => $"{Binding.JoyName} - {Binding.Description}";
     }
 }

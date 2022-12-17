@@ -1,4 +1,5 @@
-﻿using JoyMapper.ViewModels.Windows;
+﻿using JoyMapper.Models;
+using JoyMapper.ViewModels.Windows;
 
 namespace JoyMapper.Services;
 
@@ -8,10 +9,12 @@ namespace JoyMapper.Services;
 public class JoyPatternManager
 {
     private readonly AppWindowsService _AppWindowsService;
+    private readonly DataManager _DataManager;
 
-    public JoyPatternManager(AppWindowsService AppWindowsService)
+    public JoyPatternManager(AppWindowsService AppWindowsService, DataManager DataManager)
     {
         _AppWindowsService = AppWindowsService;
+        _DataManager = DataManager;
     }
 
     public JoyPattern AddPattern()
@@ -22,6 +25,7 @@ public class JoyPatternManager
         if(patternWindow.ShowDialog() != true) return null;
 
         var pattern = BuildPattern(patternWindow.ViewModel);
+        _DataManager.AddJoyPattern(pattern);
         return pattern;
     }
 
