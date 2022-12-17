@@ -12,7 +12,6 @@ namespace JoyMapper.Services.Watchers
     public class JoyPatternWatcher : IJoyPatternWatcher
     {
         private readonly IJoystickStateManager _JoystickStateManager;
-        private readonly DataManager _DataManager;
         private readonly IServiceProvider _ServiceProvider;
 
         private readonly int _PollingDelay; 
@@ -20,7 +19,6 @@ namespace JoyMapper.Services.Watchers
         public JoyPatternWatcher(IJoystickStateManager JoystickStateManager, DataManager DataManager, IServiceProvider ServiceProvider)
         {
             _JoystickStateManager = JoystickStateManager;
-            _DataManager = DataManager;
             _ServiceProvider = ServiceProvider;
             _PollingDelay = DataManager.AppSettings.JoystickPollingDelay;
         }
@@ -31,10 +29,15 @@ namespace JoyMapper.Services.Watchers
 
         public void StartWatching(ICollection<JoyPattern> Patterns)
         {
+            if (_PatternsByJoyName?.Count > 0)
+            {
+                StopWatching();
+            }
+
             foreach (var joyPattern in Patterns)
             {
                 joyPattern.PatternAction.Initialize(_ServiceProvider);
-                joyPattern.PatternAction.ReportMessage += OnActionReportMessage;
+                joyPattern.PatternAction.ReportMessage += ReportPatternAction;
             }
 
 
@@ -58,7 +61,14 @@ namespace JoyMapper.Services.Watchers
         public void StopWatching()
         {
             _IsRunning = false;
+            _PatternsByJoyName?.Clear();
+            //foreach (var d in ReportPatternAction?.GetInvocationList()) 
+            //    ReportPatternAction -= (Action<string>) d;
+
+            Debug.WriteLine("JoyPatternWatcher остановлен");
         }
+
+        public Action<string> ReportPatternAction { get; set; }
 
 
         private bool _IsRunning;

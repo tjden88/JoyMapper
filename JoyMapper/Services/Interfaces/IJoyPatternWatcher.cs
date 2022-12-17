@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JoyMapper.Models;
 
 namespace JoyMapper.Services.Interfaces;
@@ -13,4 +14,7 @@ public interface IJoyPatternWatcher
 
     /// <summary> Остановить отслеживание, очистить данные </summary>
     void StopWatching();
+
+
+    Action<string> ReportPatternAction { get; set; }
 }

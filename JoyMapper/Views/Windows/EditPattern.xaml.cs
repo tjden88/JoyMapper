@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
@@ -89,6 +91,12 @@ namespace JoyMapper.Views.Windows
                     .FirstOrDefault(m => m.Id == model.ModificatorId);
 
             Title = $"Редактирование паттерна {model.Name}";
+        }
+
+        private void EditPattern_OnClosed(object Sender, EventArgs E)
+        {
+            ViewModel.Dispose();
+            Debug.WriteLine("ViewModel паттерна уничтожена");
         }
     }
 }
