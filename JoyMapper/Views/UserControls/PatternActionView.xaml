@@ -18,6 +18,6 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ContentControl Content="{Binding SelectedPatternAction}"/>
+        <ContentControl Content="{Binding SelectedPatternAction}" Margin="0,10,0,0"/>
     </DockPanel>
 </UserControl>

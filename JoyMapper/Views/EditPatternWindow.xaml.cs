@@ -23,9 +23,7 @@ namespace JoyMapper.Views
             if (!e.IsRepeat)
             {
                 var key = e.Key == Key.System ? e.SystemKey : e.Key;
-
                 vm.JoyAction.AddKeyBinding(key, true);
-
             }
             e.Handled = true;
         }
@@ -38,9 +36,7 @@ namespace JoyMapper.Views
             if (!e.IsRepeat)
             {
                 var key = e.Key == Key.System ? e.SystemKey : e.Key;
-
                 vm.JoyAction.AddKeyBinding(key, false);
-
             }
             e.Handled = true;
         }

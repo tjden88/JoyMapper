@@ -13,7 +13,7 @@
         Focusable="True"
         mc:Ignorable="d"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
-        Title="{Binding Title}" Height="700" Width="850">
+        Title="{Binding Title}" Height="900" Width="850" MinHeight="700" MinWidth="600">
 
     <DockPanel Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <Grid DockPanel.Dock="Top">
