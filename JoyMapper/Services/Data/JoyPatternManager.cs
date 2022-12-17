@@ -9,10 +9,12 @@ namespace JoyMapper.Services.Data;
 public class JoyPatternManager
 {
     private readonly AppWindowsService _AppWindowsService;
+    private readonly DataSerializer _DataSerializer;
 
-    public JoyPatternManager(AppWindowsService AppWindowsService)
+    public JoyPatternManager(AppWindowsService AppWindowsService, DataSerializer DataSerializer)
     {
         _AppWindowsService = AppWindowsService;
+        _DataSerializer = DataSerializer;
     }
 
     public JoyPattern AddPattern()
@@ -35,4 +37,6 @@ public class JoyPatternManager
             : patternWindow.GetModel();
     }
 
+    public JoyPattern CopyPattern(JoyPattern pattern) => 
+        _DataSerializer.CopyObject(pattern);
 }

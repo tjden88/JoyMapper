@@ -59,18 +59,6 @@ namespace JoyMapper.Services.Data
             return profile;
         }
 
-        private void SaveProfile(Profile profile)
-        {
-            var nextId = Profiles
-                .Select(p => p.Id)
-                .DefaultIfEmpty()
-                .Max() + 1;
-
-            profile.Id = nextId;
-            ProfilesData.Profiles.Add(profile);
-            SaveData();
-
-        }
 
         /// <summary>
         /// Копировать профиль
@@ -115,16 +103,14 @@ namespace JoyMapper.Services.Data
 
 
         /// <summary> Добавить паттерн </summary>
-        public void AddJoyPattern(JoyPattern JoyPattern)
+        public JoyPattern AddJoyPattern()
         {
-            var nextId = JoyPatterns
-                .Select(p => p.Id)
-                .DefaultIfEmpty()
-                .Max() + 1;
+            var pattern = _JoyPatternManager.AddPattern();
+            if (pattern is null)
+                return null;
 
-            JoyPattern.Id = nextId;
-            ProfilesData.JoyPatterns.Add(JoyPattern);
-            SaveData();
+            SavePattern(pattern);
+            return pattern;
         }
 
 
@@ -137,33 +123,40 @@ namespace JoyMapper.Services.Data
         {
             var oldPattern = JoyPatterns.First(p => p.Id == id);
 
-            var newPattern = _DataSerializer.CopyObject(oldPattern);
-            AddJoyPattern(newPattern);
+            var newPattern = _JoyPatternManager.CopyPattern(oldPattern);
+            if (newPattern is null)
+                return null;
+
+            SavePattern(newPattern);
             return newPattern;
         }
 
 
         /// <summary> Обновить паттерн (заменить по Id) </summary>
-        public void UpdateJoyPattern(JoyPattern pattern)
+        public JoyPattern UpdateJoyPattern(int Id)
         {
-            var editPattern = ProfilesData.JoyPatterns.FirstOrDefault(p => p.Id == pattern.Id);
-            if (editPattern == null) return;
+            var editPattern = ProfilesData.JoyPatterns.First(p => p.Id == Id);
+
+            var updated = _JoyPatternManager.EditPattern(editPattern);
+
+            if (updated is null)
+                return null;
+
             var index = ProfilesData.JoyPatterns.IndexOf(editPattern);
             ProfilesData.JoyPatterns.Remove(editPattern);
-            ProfilesData.JoyPatterns.Insert(index, pattern);
+            ProfilesData.JoyPatterns.Insert(index, updated);
             SaveData();
+            return updated;
         }
 
 
         /// <summary> Удалить паттерн </summary>
         public void RemoveJoyPattern(int patternId)
         {
-            ProfilesData.JoyPatterns.Remove(ProfilesData.JoyPatterns.FirstOrDefault(p => p.Id == patternId));
+            ProfilesData.JoyPatterns.Remove(ProfilesData.JoyPatterns.First(p => p.Id == patternId));
 
-            foreach (var profile in Profiles)
-            {
+            foreach (var profile in Profiles) 
                 profile.PatternsIds.Remove(patternId);
-            }
 
             SaveData();
         }
@@ -221,6 +214,30 @@ namespace JoyMapper.Services.Data
                 File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion}-backup.json"), true);
 
             return _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
+        }
+
+        private void SaveProfile(Profile profile)
+        {
+            var nextId = Profiles
+                .Select(p => p.Id)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
+            profile.Id = nextId;
+            ProfilesData.Profiles.Add(profile);
+            SaveData();
+        }
+
+        private void SavePattern(JoyPattern pattern)
+        {
+            var nextId = JoyPatterns
+                .Select(p => p.Id)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
+            pattern.Id = nextId;
+            ProfilesData.JoyPatterns.Add(pattern);
+            SaveData();
         }
     }
 }

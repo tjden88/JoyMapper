@@ -272,16 +272,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var patternWindow = _AppWindowsService.EditPattern;
-            patternWindow.Owner = App.ActiveWindow;
-
-            if (patternWindow.ShowDialog() != true) return;
-
-            var pattern = BuildPattern(patternWindow.ViewModel);
-            _DataManager.AddJoyPattern(pattern);
-            if (pattern == null) return;
-            JoyPatterns.Add(pattern);
-            SelectedPattern = pattern;
+            var pattern = _DataManager.AddJoyPattern()
         }
 
         #endregion
