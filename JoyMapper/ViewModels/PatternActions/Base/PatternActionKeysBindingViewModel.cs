@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using JoyMapper.Models;
+using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.PatternActions.Base;
@@ -34,4 +35,24 @@ public class PatternActionKeysBindingViewModel : ViewModel
 
     #endregion
 
+
+    #region Command EditCommand - Редактировать команды
+
+    /// <summary>Редактировать команды</summary>
+    private Command _EditCommand;
+
+    /// <summary>Редактировать команды</summary>
+    public Command EditCommand => _EditCommand
+        ??= new Command(OnEditCommandExecuted, CanEditCommandExecute, "Редактировать команды");
+
+    /// <summary>Проверка возможности выполнения - Редактировать команды</summary>
+    private bool CanEditCommandExecute() => true;
+
+    /// <summary>Логика выполнения - Редактировать команды</summary>
+    private void OnEditCommandExecuted()
+    {
+        
+    }
+
+    #endregion
 }
