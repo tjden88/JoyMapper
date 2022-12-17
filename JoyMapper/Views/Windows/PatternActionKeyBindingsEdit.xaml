@@ -12,7 +12,7 @@
         Style="{StaticResource ChromeWindow}"
         DataContext="{Binding ViewModel,  RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
-        Title="{Binding KeysBindingViewModel.Name}"
+        Title="{Binding Name}"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         Width = "320" Height="400">
@@ -35,7 +35,7 @@
             </Button>
         </ToolBar>
         <Grid>
-            <ListBox ItemsSource="{Binding KeysBindingViewModel.KeyBindings}" HorizontalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
                         <Grid Background="{StaticResource TransparentBrush}" Name="Grid">

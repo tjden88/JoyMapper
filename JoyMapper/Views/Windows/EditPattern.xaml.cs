@@ -73,7 +73,7 @@ namespace JoyMapper.Views.Windows
                 Id = ViewModel.Id,
                 Name = ViewModel.PatternName,
                 Binding = ViewModel.JoyBinding,
-                GroupName = ViewModel.GroupName,
+                GroupName = string.IsNullOrWhiteSpace(ViewModel.GroupName) ? null : ViewModel.GroupName.Trim(),
                 PatternAction = ViewModel.PatternActionViewModel.GetModel()
             };
             return pattern;

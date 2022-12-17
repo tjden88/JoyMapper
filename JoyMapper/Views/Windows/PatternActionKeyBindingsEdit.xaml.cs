@@ -1,4 +1,6 @@
-﻿using JoyMapper.Models;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using JoyMapper.Models;
 using JoyMapper.ViewModels.PatternActions.Base;
 using System.Linq;
 using System.Windows;
@@ -15,9 +17,9 @@ namespace JoyMapper.Views.Windows
     {
         public PatternActionKeyBindingsEditViewModel ViewModel { get; }
 
-        public PatternActionKeyBindingsEdit(PatternActionKeysBindingViewModel ViewModel)
+        public PatternActionKeyBindingsEdit(IEnumerable<KeyboardKeyBinding> KeyBindings, string name)
         {
-            this.ViewModel = new() {KeysBindingViewModel = ViewModel};
+            ViewModel = new() {KeyBindings = new (KeyBindings), Name = name};
             InitializeComponent();
         }
 
@@ -33,7 +35,7 @@ namespace JoyMapper.Views.Windows
             if (!e.IsRepeat)
             {
                 var key = e.Key == Key.System ? e.SystemKey : e.Key;
-                ViewModel.KeysBindingViewModel.KeyBindings.Add(new KeyboardKeyBinding
+                ViewModel.KeyBindings.Add(new KeyboardKeyBinding
                 {
                     Action = KeyboardKeyBinding.KeyboardAction.KeyPress,
                     KeyCode = key
@@ -49,7 +51,7 @@ namespace JoyMapper.Views.Windows
             if (!e.IsRepeat)
             {
                 var key = e.Key == Key.System ? e.SystemKey : e.Key;
-                ViewModel.KeysBindingViewModel.KeyBindings.Add(new KeyboardKeyBinding
+                ViewModel.KeyBindings.Add(new KeyboardKeyBinding
                 {
                     Action = KeyboardKeyBinding.KeyboardAction.KeyUp,
                     KeyCode = key
@@ -61,13 +63,40 @@ namespace JoyMapper.Views.Windows
 
         public class PatternActionKeyBindingsEditViewModel : ViewModel
         {
-            public PatternActionKeysBindingViewModel KeysBindingViewModel { get; init; }
+            #region KeyBindings : ObservableCollection<KeyboardKeyBinding> - Команды клавиатуры
+
+            /// <summary>Команды клавиатуры</summary>
+            private ObservableCollection<KeyboardKeyBinding> _KeyBindings;
+
+            /// <summary>Команды клавиатуры</summary>
+            public ObservableCollection<KeyboardKeyBinding> KeyBindings
+            {
+                get => _KeyBindings;
+                set => Set(ref _KeyBindings, value);
+            }
+
+            #endregion
 
 
+            #region Name : string - Имя команд
+
+            /// <summary>Имя команд</summary>
+            private string _Name;
+
+            /// <summary>Имя команд</summary>
+            public string Name
+            {
+                get => _Name;
+                set => Set(ref _Name, value);
+            }
+
+            #endregion
+
+            
             #region IsRecorded : bool - Активна ли запись с клавиатуры
 
             /// <summary>Активна ли запись с клавиатуры</summary>
-            private bool _IsRecorded;
+            private bool _IsRecorded = true;
 
             /// <summary>Активна ли запись с клавиатуры</summary>
             public bool IsRecorded
@@ -115,12 +144,12 @@ namespace JoyMapper.Views.Windows
                 ??= new Command(OnClearBindingsCommandExecuted, CanClearBindingsCommandExecute, "Очистить назначенные клавиши");
 
             /// <summary>Проверка возможности выполнения - Очистить назначенные клавиши</summary>
-            private bool CanClearBindingsCommandExecute() => KeysBindingViewModel.KeyBindings.Any();
+            private bool CanClearBindingsCommandExecute() => KeyBindings.Any();
 
             /// <summary>Логика выполнения - Очистить назначенные клавиши</summary>
             private void OnClearBindingsCommandExecuted()
             {
-                KeysBindingViewModel.KeyBindings.Clear();
+                KeyBindings.Clear();
             }
 
             #endregion
@@ -139,7 +168,7 @@ namespace JoyMapper.Views.Windows
             private bool CanRemoveKeyBindingCommandExecute(object p) => p is KeyboardKeyBinding;
 
             /// <summary>Логика выполнения - Удалить действие клавиши</summary>
-            private void OnRemoveKeyBindingCommandExecuted(object p) => KeysBindingViewModel.KeyBindings.Remove((KeyboardKeyBinding)p);
+            private void OnRemoveKeyBindingCommandExecuted(object p) => KeyBindings.Remove((KeyboardKeyBinding)p);
 
             #endregion
         }

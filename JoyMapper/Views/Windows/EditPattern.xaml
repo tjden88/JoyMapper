@@ -28,7 +28,6 @@
                           VerticalAlignment="Center"
                           IsEditable="True"
                           Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}"
-                          IsSynchronizedWithCurrentItem="True"
                           helpers:TextHelper.Hint="Группа"/>
             </DockPanel>
         </Grid>

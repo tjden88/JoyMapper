@@ -52,11 +52,13 @@ public class PatternActionKeysBindingViewModel : ViewModel
     /// <summary>Логика выполнения - Редактировать команды</summary>
     private void OnEditCommandExecuted()
     {
-        var wnd = new PatternActionKeyBindingsEdit(this)
+        var wnd = new PatternActionKeyBindingsEdit(KeyBindings, Name)
         {
             Owner = App.ActiveWindow
         };
-        wnd.ShowDialog();
+        if (wnd.ShowDialog() != true) return;
+
+        KeyBindings=new(wnd.ViewModel.KeyBindings);
     }
 
     #endregion
