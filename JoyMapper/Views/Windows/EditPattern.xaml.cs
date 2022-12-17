@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
@@ -69,7 +70,8 @@ namespace JoyMapper.Views.Windows
                 Name = ViewModel.PatternName,
                 Binding = ViewModel.JoyBindingViewModel.GetModel(),
                 GroupName = string.IsNullOrWhiteSpace(ViewModel.GroupName) ? null : ViewModel.GroupName.Trim(),
-                PatternAction = ViewModel.PatternActionViewModel.GetModel()
+                PatternAction = ViewModel.PatternActionViewModel.GetModel(),
+                ModificatorId = ViewModel.SelectedModificator?.Id,
             };
             return pattern;
         }
@@ -81,6 +83,10 @@ namespace JoyMapper.Views.Windows
             ViewModel.PatternName = model.Name;
             ViewModel.JoyBindingViewModel.SetModel(model.Binding);
             ViewModel.PatternActionViewModel.SetModel(model.PatternAction);
+            ViewModel.SelectedModificator = model.ModificatorId is null
+                ? null
+                : ViewModel.Modificators
+                    .FirstOrDefault(m => m.Id == model.ModificatorId);
 
             Title = $"Редактирование паттерна {model.Name}";
         }
