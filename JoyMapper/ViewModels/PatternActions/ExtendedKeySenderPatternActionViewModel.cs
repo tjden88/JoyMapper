@@ -49,4 +49,6 @@ public class ExtendedKeySenderPatternActionViewModel : PatternActionViewModelBas
             DoublePressKeyBindings = DoublePressKeyBindings.KeyBindings,
             LongPressKeyBindings = LongPressKeyBindings.KeyBindings
         };
+
+    public override bool IsValid() => SinglePressKeyBindings.KeyBindings.Any() || DoublePressKeyBindings.KeyBindings.Any() || LongPressKeyBindings.KeyBindings.Any();
 }

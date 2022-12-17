@@ -42,4 +42,6 @@ public class SimpleKeySenderPatternActionViewModel : PatternActionViewModelBase
             PressKeyBindings = PressKeyBindings.KeyBindings,
             ReleaseKeyBindings = ReleaseKeyBindings.KeyBindings
         };
+
+    public override bool IsValid() => PressKeyBindings.KeyBindings.Any() || ReleaseKeyBindings.KeyBindings.Any();
 }
