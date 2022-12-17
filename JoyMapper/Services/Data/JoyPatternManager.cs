@@ -1,5 +1,5 @@
 ﻿using JoyMapper.Models;
-using JoyMapper.ViewModels.Windows;
+using JoyMapper.Views.Windows;
 
 namespace JoyMapper.Services.Data;
 
@@ -17,41 +17,22 @@ public class JoyPatternManager
 
     public JoyPattern AddPattern()
     {
-        var patternWindow = _AppWindowsService.EditPattern;
-        patternWindow.Owner = App.ActiveWindow;
+        var patternWindow = _AppWindowsService.GetDialogWindow<EditPattern>();
 
         if (patternWindow.ShowDialog() != true) return null;
 
-        var pattern = BuildPattern(patternWindow.ViewModel);
-        //_DataManager.AddJoyPattern(pattern);
+        var pattern = patternWindow.GetModel();
         return pattern;
     }
 
     public JoyPattern EditPattern(JoyPattern Pattern)
     {
-        var patternWindow = _AppWindowsService.EditPattern;
-        var viewModel = patternWindow.ViewModel;
-        viewModel.PatternName = Pattern.Name;
-        viewModel.JoyBinding = Pattern.Binding;
-        viewModel.Title = $"Редактировние паттерна: {Pattern.Name}";
-        viewModel.PatternActionView.ViewModel.SetSelectedPatternAction(Pattern.PatternAction.ToViewModel());
-        patternWindow.Owner = App.ActiveWindow;
+        var patternWindow = _AppWindowsService.GetDialogWindow<EditPattern>();
+        patternWindow.SetModel(Pattern);
 
-        if (patternWindow.ShowDialog() != true) return null;
-
-        var pattern = BuildPattern(viewModel);
-        //_DataManager.UpdateJoyPattern(pattern);
-        return pattern;
+        return patternWindow.ShowDialog() != true
+            ? null
+            : patternWindow.GetModel();
     }
 
-    private JoyPattern BuildPattern(EditPatternViewModel ViewModel)
-    {
-        var pattern = new JoyPattern
-        {
-            Name = ViewModel.PatternName,
-            Binding = ViewModel.JoyBinding,
-            PatternAction = ViewModel.PatternActionView.ViewModel.SelectedPatternAction.ToModel(),
-        };
-        return pattern;
-    }
 }
