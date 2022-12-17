@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using JoyMapper.Helpers;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.UserControls;
 using WPR.MVVM.Commands;
@@ -15,11 +15,13 @@ namespace JoyMapper.ViewModels.Windows
     {
 
         private readonly IJoyBindingsWatcher _BindingsWatcher;
+        private readonly AppWindowsService _AppWindowsService;
 
-        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionViewModel PatternActionViewModel)
+        public EditPatternViewModel( IJoyBindingsWatcher BindingsWatcher, PatternActionViewModel PatternActionViewModel, AppWindowsService AppWindowsService)
         {
             this.PatternActionViewModel = PatternActionViewModel;
             _BindingsWatcher = BindingsWatcher;
+            _AppWindowsService = AppWindowsService;
             Title = "Добавить паттерн";
         }
 
@@ -179,10 +181,8 @@ namespace JoyMapper.ViewModels.Windows
         /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
         private void OnAttachJoyButtonCommandExecuted()
         {
-            var bind = JoyBindingHelper.GetBinding();
-
+            var bind = _AppWindowsService.GetJoyBinding();
             if (bind is null) return;
-
             JoyBinding = bind;
         }
 

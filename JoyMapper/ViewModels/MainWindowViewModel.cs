@@ -6,7 +6,6 @@ using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
-using JoyMapper.ViewModels.Windows;
 using JoyMapper.Views;
 using WPR;
 using WPR.MVVM.Commands;
@@ -377,24 +376,24 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать модификатор</summary>
         private void OnCreateModificatorCommandExecuted()
         {
-            var vm = new EditModificatorWindowViewModel();
-            var wnd = new EditModificatorWindow()
-            {
-                Owner = Application.Current.MainWindow,
-                DataContext = vm
-            };
-            if (wnd.ShowDialog() != true) return;
+            //var vm = new EditModificatorWindowViewModel();
+            //var wnd = new EditModificatorWindow()
+            //{
+            //    Owner = Application.Current.MainWindow,
+            //    DataContext = vm
+            //};
+            //if (wnd.ShowDialog() != true) return;
 
-            var modif = new Modificator()
-            {
-                Name = vm.Name,
-                JoyName = vm.JoyName,
-                Button = vm.Button,
-            };
+            //var modif = new Modificator()
+            //{
+            //    Name = vm.Name,
+            //    JoyName = vm.JoyName,
+            //    Button = vm.Button,
+            //};
 
-            _DataManager.AddModificator(modif);
-            LoadDataCommand.Execute();
-            SelectedModificator = Modificators.Last();
+            //_DataManager.AddModificator(modif);
+            //LoadDataCommand.Execute();
+            //SelectedModificator = Modificators.Last();
 
         }
 
@@ -416,24 +415,24 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать модификатор</summary>
         private void OnEditModificatorCommandExecuted()
         {
-            var vm = new EditModificatorWindowViewModel(SelectedModificator);
-            var wnd = new EditModificatorWindow
-            {
-                Owner = Application.Current.MainWindow,
-                DataContext = vm
-            };
-            if (wnd.ShowDialog() != true) return;
+            //var vm = new EditModificatorWindowViewModel(SelectedModificator);
+            //var wnd = new EditModificatorWindow
+            //{
+            //    Owner = Application.Current.MainWindow,
+            //    DataContext = vm
+            //};
+            //if (wnd.ShowDialog() != true) return;
 
-            var modificator = new Modificator()
-            {
-                Id = vm.Id,
-                Name = vm.Name,
-                Button = vm.Button,
-                JoyName = vm.JoyName
-            };
+            //var modificator = new Modificator()
+            //{
+            //    Id = vm.Id,
+            //    Name = vm.Name,
+            //    Button = vm.Button,
+            //    JoyName = vm.JoyName
+            //};
 
-            _DataManager.UpdateModificator(modificator);
-            LoadDataCommand.Execute();
+            //_DataManager.UpdateModificator(modificator);
+            //LoadDataCommand.Execute();
 
         }
 

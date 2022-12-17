@@ -95,10 +95,6 @@ public class EditProfileWindowViewModel : WindowViewModel
     /// <summary>Логика выполнения - Добавить паттерн</summary>
     private void OnAddPatternCommandExecuted()
     {
-        var wnd = _AppWindowsService.GetDialogWindow<EditPattern>();
-        if(wnd.ShowDialog() != true)
-            return;
-
         var joyPattern = _DataManager.AddJoyPattern();
 
         if(joyPattern == null) return;

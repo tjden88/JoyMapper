@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using JoyMapper.Helpers;
-using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Services;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -10,18 +10,15 @@ namespace JoyMapper.ViewModels
 {
     internal class EditModificatorWindowViewModel : WindowViewModel
     {
+        private readonly AppWindowsService _AppWindowsService;
 
 
-        public EditModificatorWindowViewModel() => Title = "Добавление модификатора";
-
-        public EditModificatorWindowViewModel(Modificator modificator)
+        public EditModificatorWindowViewModel(AppWindowsService AppWindowsService)
         {
-            Title = $"Редактирование модификатора {modificator.Name}";
-            Id = modificator.Id;
-            Name = modificator.Name;
-            JoyName = modificator.JoyName;
-            Button = modificator.Button;
+            _AppWindowsService = AppWindowsService;
+            Title = "Добавление модификатора";
         }
+
 
         #region Prop
 
@@ -55,36 +52,21 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region JoyName : string - Имя джойстика
+        #region JoyBinding : JoyBindingBase - Привязка кнопки к модификатору
 
-        /// <summary>Имя джойстика</summary>
-        private string _JoyName;
+        /// <summary>Привязка кнопки к модификатору</summary>
+        private JoyBindingBase _JoyBinding;
 
-        /// <summary>Имя джойстика</summary>
-        public string JoyName
+        /// <summary>Привязка кнопки к модификатору</summary>
+        public JoyBindingBase JoyBinding
         {
-            get => _JoyName;
-            set => Set(ref _JoyName, value);
+            get => _JoyBinding;
+            set => Set(ref _JoyBinding, value);
         }
 
         #endregion
 
-
-        #region Button : JoyButton - Кнопка джойстика
-
-        /// <summary>Кнопка джойстика</summary>
-        private JoyButton _Button;
-
-        /// <summary>Кнопка джойстика</summary>
-        public JoyButton Button
-        {
-            get => _Button;
-            set => IfSet(ref _Button, value).CallPropertyChanged(nameof(BtnText));
-        }
-
-        #endregion
-
-
+        
         #region ChangesSaved : bool - Изменения приняты
 
         /// <summary>Изменения приняты</summary>
@@ -99,10 +81,6 @@ namespace JoyMapper.ViewModels
 
         #endregion
 
-
-        public string BtnText => Button is null
-            ? "Не назначено"
-            : $"{JoyName} ({Button})";
 
         #endregion
 
@@ -123,7 +101,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Сохранить модификатор</summary>
         private async Task OnSaveCommandExecutedAsync(CancellationToken cancel)
         {
-            if (Button == null || JoyName == null)
+            if (JoyBinding == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка модификатора");
                 return;
@@ -160,7 +138,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
         private void OnAttachJoyButtonCommandExecuted()
         {
-            var bind = JoyBindingHelper.GetBinding();
+            var bind = _AppWindowsService.GetJoyBinding();
+            if(bind is null)
+                return;
+
+            JoyBinding = bind;
         }
 
         #endregion

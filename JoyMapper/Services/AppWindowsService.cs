@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using WPR.MVVM.ViewModels;
 
@@ -32,7 +34,18 @@ namespace JoyMapper.Services
             return window;
         }
 
+
         /// <summary> Получить экземпляр вьюмодели представления из коллекции сервисов </summary>
         public T GetViewModel<T>() where T: ViewModel => _ServiceProvider.GetRequiredService<T>();
+
+
+        /// <summary> Показать окно выбора и получить привязку кнопки </summary>
+        public JoyBindingBase GetJoyBinding()
+        {
+            var wnd = GetDialogWindow<AddJoyBinding>();
+            return wnd.ShowDialog() == true
+                ? wnd.ViewModel.JoyBinding
+                : null;
+        }
     }
 }
