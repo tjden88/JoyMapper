@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
+using JoyMapper.Services.Data;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -12,19 +12,20 @@ namespace JoyMapper.ViewModels
 {
     internal class ProfileEditWindowViewModel : WindowViewModel
     {
+        private static DataManager DataManager => App.DataManager;
 
-        public ProfileEditWindowViewModel()
+        public ProfileEditWindowViewModel(int id = 0)
         {
-            Title = "Добавление профиля";
-        }
 
-        public ProfileEditWindowViewModel(int Id)
-        {
-            if (Id < 1)
-                throw new ArgumentOutOfRangeException(nameof(Id), "Неверный ID профиля!");
+            if (id == 0)
+            {
+                Title = "Добавление профиля";
+                return;
+            }
+
 
             Title = "Редактирование профиля";
-            this.Id = Id;
+            Id = id;
         }
 
         #region Id : int - ID профиля (0 - новый профиль)
@@ -52,6 +53,21 @@ namespace JoyMapper.ViewModels
         {
             get => _Name;
             set => Set(ref _Name, value);
+        }
+
+        #endregion
+
+
+        #region Description : string - Описание профиля
+
+        /// <summary>Описание профиля</summary>
+        private string _Description;
+
+        /// <summary>Описание профиля</summary>
+        public string Description
+        {
+            get => _Description;
+            set => Set(ref _Description, value);
         }
 
         #endregion
@@ -87,10 +103,10 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Загрузить данные профиля</summary>
         private void OnLoadDataCommandExecuted()
         {
-            var allPatterns = App.DataManager.JoyPatterns;
+            var allPatterns = DataManager.JoyPatterns;
 
             var profile = Id > 0
-                ? App.DataManager.Profiles.First(pr => pr.Id == Id)
+                ? DataManager.Profiles.First(pr => pr.Id == Id)
                 : new Profile();
 
             var mapped = allPatterns.Select(p => new SelectedPatternViewModel
@@ -103,6 +119,7 @@ namespace JoyMapper.ViewModels
 
             SelectedPatterns = new(mapped);
             Name = profile.Name;
+            Description = profile.Description;
         }
 
         #endregion

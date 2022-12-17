@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.Views.UserControls;
-using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
 

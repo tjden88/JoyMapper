@@ -23,6 +23,7 @@
     </d:Window.DataContext>
     <DockPanel Margin="10,15,10,10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <TextBox helpers:TextHelper.Hint="Имя профиля" Name="NameText" DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox helpers:TextHelper.Hint="Описание" helpers:TextHelper.Description="Необязательно" Name="DescriptionText" DockPanel.Dock="Top" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
         <Grid DockPanel.Dock="Top" Margin="0,15,0,5">
             <TextBlock  FontSize="16" Text="Выберите используемые паттерны:"/>
             <controls:WPRIcon Source="InfoCircleOutline" HorizontalAlignment="Right" 

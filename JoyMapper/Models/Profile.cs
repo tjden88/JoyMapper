@@ -8,6 +8,8 @@ namespace JoyMapper.Models
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public List<int> PatternsIds { get; set; } = new();
     }
 }

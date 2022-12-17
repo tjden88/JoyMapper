@@ -32,6 +32,7 @@ public class ProfilesManager
         var profile = new Profile
         {
             Name = vm.Name,
+            Description = vm.Description,
             PatternsIds = vm.SelectedPatterns
                 .Where(p => p.IsSelected)
                 .Select(p => p.PatternId)
@@ -59,6 +60,7 @@ public class ProfilesManager
         var profile = new Profile
         {
             Name = vm.Name,
+            Description = vm.Description,
             PatternsIds = vm.SelectedPatterns
                 .Where(p => p.IsSelected)
                 .Select(p => p.PatternId)
