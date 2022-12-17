@@ -21,5 +21,5 @@ public abstract class PatternActionBase
     /// <summary>
     /// Вызывает действие, сообщающее, какое действие было совершено
     /// </summary>
-    public Action<string> ReportMessage { get; }
+    public Action<string> ReportMessage { get; set; }
 }

@@ -9,7 +9,7 @@ namespace JoyMapper.Services.Interfaces;
 public interface IJoyPatternWatcher
 {
     /// <summary> Начать отслеживание выбранных паттернов в автоматическом режиме </summary>
-    void StartWatching(IEnumerable<JoyPattern> Patterns);
+    void StartWatching(ICollection<JoyPattern> Patterns);
 
     /// <summary> Остановить отслеживание, очистить данные </summary>
     void StopWatching();
