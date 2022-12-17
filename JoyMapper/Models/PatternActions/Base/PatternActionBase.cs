@@ -10,5 +10,5 @@ public abstract class PatternActionBase
 {
 
 
-    public abstract PatternActionViewModel ToViewModel();
+    public abstract PatternActionViewModelBase ToViewModel();
 }

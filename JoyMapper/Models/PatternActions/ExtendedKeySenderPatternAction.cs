@@ -9,7 +9,7 @@ namespace JoyMapper.Models.PatternActions;
 /// </summary>
 public class ExtendedKeySenderPatternAction : PatternActionBase
 {
-    public override PatternActionViewModel ToViewModel()
+    public override PatternActionViewModelBase ToViewModel()
     {
         throw new System.NotImplementedException();
     }

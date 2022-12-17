@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models.JoyBindings;
 using WPR.MVVM.ViewModels;
-using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels.Windows
 {

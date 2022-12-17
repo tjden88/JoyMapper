@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using JoyMapper.ViewModels;
-using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JoyMapper.Views

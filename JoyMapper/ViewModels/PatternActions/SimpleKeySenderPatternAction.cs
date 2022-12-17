@@ -6,7 +6,7 @@ namespace JoyMapper.ViewModels.PatternActions;
 /// <summary>
 /// Отправка клавиатурных команд при нажатии и отпускании
 /// </summary>
-public class SimpleKeySenderPatternActionViewModel : PatternActionViewModel
+public class SimpleKeySenderPatternActionViewModelBase : PatternActionViewModelBase
 {
     public override string Name => "Простой триггер";
 

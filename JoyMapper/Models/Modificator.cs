@@ -1,6 +1,4 @@
-﻿using JoyMapper.Models.JoyActions;
-
-namespace JoyMapper.Models
+﻿namespace JoyMapper.Models
 {
     internal class Modificator
     {
