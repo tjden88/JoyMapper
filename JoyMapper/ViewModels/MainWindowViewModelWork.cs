@@ -1,15 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using JoyMapper.Models;
-using JoyMapper.Services;
 using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
 {
     public partial class MainWindowViewModel
     {
-
-        private readonly ProfileWorker _ProfileWorker = new();
-
 
         #region LogMessages : ObservableCollection<LogMessage> - Лог запущенного профиля
 
@@ -66,8 +62,8 @@ namespace JoyMapper.ViewModels
         {
             LogMessages.Clear();
             var profile = (Profile)p;
-            ActiveProfile = profile;
-            _ProfileWorker.Start(profile);
+            ActiveProfile = profile; 
+                //_ProfileWorker.Start(profile);
         }
 
         #endregion
@@ -89,7 +85,7 @@ namespace JoyMapper.ViewModels
         private void OnStopProfileCommandExecuted()
         {
             ActiveProfile = null;
-            _ProfileWorker.Stop();
+            //_ProfileWorker.Stop();
         }
 
         #endregion

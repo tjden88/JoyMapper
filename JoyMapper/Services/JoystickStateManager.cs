@@ -43,8 +43,6 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 joystick.Acquire();
             }
 
-            
-            //joystick.Poll();
             var joyState = joystick.GetCurrentState();
 
             return joyState.ToModel();

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Input;
 using JoyMapper.Models;
-using JoyMapper.Models.JoyActions;
 
 namespace JoyMapper.ViewModels.JoyActions
 {
