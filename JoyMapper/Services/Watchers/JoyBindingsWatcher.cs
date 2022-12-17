@@ -3,7 +3,7 @@ using System.Linq;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services.Interfaces;
 
-namespace JoyMapper.Services;
+namespace JoyMapper.Services.Watchers;
 
 public class JoyBindingsWatcher : IJoyBindingsWatcher
 {
@@ -21,8 +21,8 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
     {
         var joyGroups = bindings
             .GroupBy(b => b.JoyName)
-            .Select(g => new JoyBindingsGroup(g.Key, g.ToList() ))
-            .Where(g=>!string.IsNullOrEmpty(g.JoyName))
+            .Select(g => new JoyBindingsGroup(g.Key, g.ToList()))
+            .Where(g => !string.IsNullOrEmpty(g.JoyName))
             .ToList();
         _BindingsGroups = joyGroups;
 
@@ -34,7 +34,7 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
         foreach (var joyBindingsGroup in _BindingsGroups)
         {
             var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
-            if (state != null) 
+            if (state != null)
                 joyBindingsGroup.Bindings.ForEach(binding => binding.UpdateIsActive(state));
         }
     }
@@ -51,7 +51,7 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
                 {
                     var lastState = binding.IsActive;
                     var newState = binding.UpdateIsActive(state);
-                    if (lastState != newState) 
+                    if (lastState != newState)
                         changes.Add(binding);
                 });
             }
@@ -61,9 +61,9 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
 
     public void StopWatching()
     {
-        
+
     }
 
-    
+
     private record JoyBindingsGroup(string JoyName, List<JoyBindingBase> Bindings);
 }

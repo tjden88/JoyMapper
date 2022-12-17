@@ -13,6 +13,11 @@ public class SimpleKeySenderPatternAction : PatternActionBase
     public override PatternActionViewModelBase ToViewModel() => 
         new SimpleKeySenderPatternActionViewModel(this);
 
+    public override void BindingStateChanged(bool newState)
+    {
+        ReportMessage?.Invoke(newState ? "Нажате кнопки/вход в зону оси" : "Отпускание кнопки/выход из зоны оси");
+    }
+
     public ICollection<KeyboardKeyBinding> PressKeyBindings { get; set; }
 
     public ICollection<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }

@@ -13,6 +13,11 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
     public override PatternActionViewModelBase ToViewModel() => 
         new ExtendedKeySenderPatternActionViewModel(this);
 
+    public override void BindingStateChanged(bool newState)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
 
     public ICollection<KeyboardKeyBinding> DoublePressKeyBindings { get; set; } 

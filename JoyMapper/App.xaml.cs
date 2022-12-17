@@ -4,6 +4,7 @@ using System.Windows;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.Services.Watchers;
 using JoyMapper.ViewModels;
 using JoyMapper.ViewModels.UserControls;
 using JoyMapper.ViewModels.Windows;
