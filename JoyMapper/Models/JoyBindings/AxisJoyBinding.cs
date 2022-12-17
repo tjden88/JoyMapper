@@ -44,7 +44,13 @@ public class AxisJoyBinding : JoyBindingBase
     public int StartValue
     {
         get => _StartValue;
-        set => Set(ref _StartValue, value);
+        set
+        {
+            if (Equals(_StartValue, value)) return;
+            _StartValue = Math.Min(value, EndValue);
+
+            OnPropertyChanged(nameof(StartValue));
+        }
     }
 
     #endregion
@@ -59,7 +65,28 @@ public class AxisJoyBinding : JoyBindingBase
     public int EndValue
     {
         get => _EndValue;
-        set => Set(ref _EndValue, value);
+        set
+        {
+            if (Equals(_EndValue, value)) return;
+            _EndValue = Math.Max(value, StartValue);
+
+            OnPropertyChanged(nameof(EndValue));
+        }
+    }
+
+    #endregion
+
+
+    #region CurrentValue : int - Текущее значение оси
+
+    /// <summary>Текущее значение оси</summary>
+    private int _CurrentValue;
+
+    /// <summary>Текущее значение оси</summary>
+    public int CurrentValue
+    {
+        get => _CurrentValue;
+        set => Set(ref _CurrentValue, value);
     }
 
     #endregion
@@ -80,7 +107,7 @@ public class AxisJoyBinding : JoyBindingBase
             Axises.Slider2 => joyState.AxisValues.Slider2,
             _ => throw new ArgumentOutOfRangeException(nameof(Axis))
         };
-
+        CurrentValue = value;
         return value >= StartValue && value <= EndValue;
     }
 

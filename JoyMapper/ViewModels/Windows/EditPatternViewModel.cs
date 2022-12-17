@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
@@ -52,6 +53,7 @@ namespace JoyMapper.ViewModels.Windows
                 .CallPropertyChanged(nameof(IsReverse))
                 .CallPropertyChanged(nameof(IsSwitch))
                 .CallPropertyChanged(nameof(ActionTypeInfo))
+                .CallPropertyChanged(nameof(AxisJoyBinding))
 
                 .Then(WatchAction)
             ;
@@ -59,6 +61,14 @@ namespace JoyMapper.ViewModels.Windows
 
         #endregion
 
+
+        #region AxisJoyBinding : AxisJoyBinding - Настройки диапазона оси
+
+        /// <summary>Настройки диапазона оси</summary>
+        public AxisJoyBinding AxisJoyBinding => JoyBinding is AxisJoyBinding {} ax ? ax : null;
+
+        #endregion
+        
 
         #region JoyBindingText - string
 
