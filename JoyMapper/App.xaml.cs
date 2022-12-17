@@ -63,8 +63,8 @@ namespace JoyMapper
             .AddTransient<AddJoyBindingViewModel>()
             .AddTransient<EditPatternViewModel>()
             .AddTransient<PatternActionViewModel>()
-            .AddTransient<ProfileEditWindow>()
-            .AddTransient<ProfileEditWindowViewModel>()
+            .AddTransient<EditProfileWindow>()
+            .AddTransient<EditProfileWindowViewModel>()
                 .AddTransient<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()
 

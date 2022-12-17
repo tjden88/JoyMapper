@@ -4,18 +4,18 @@ using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.Windows;
-using static JoyMapper.ViewModels.Windows.ProfileEditWindowViewModel;
+using static JoyMapper.ViewModels.Windows.EditProfileWindowViewModel;
 
 namespace JoyMapper.Views.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для ProfileEditWindow.xaml
+    /// Логика взаимодействия для EditProfileWindow.xaml
     /// </summary>
-    public partial class ProfileEditWindow : IEditModelWindow<Profile>
+    public partial class EditProfileWindow : IEditModelWindow<Profile>
     {
-        public ProfileEditWindowViewModel ViewModel { get; }
+        public EditProfileWindowViewModel ViewModel { get; }
 
-        public ProfileEditWindow(ProfileEditWindowViewModel viewModel, DataManager DataManager)
+        public EditProfileWindow(EditProfileWindowViewModel viewModel, DataManager DataManager)
         {
             ViewModel = viewModel;
             LoadData(DataManager.JoyPatterns);

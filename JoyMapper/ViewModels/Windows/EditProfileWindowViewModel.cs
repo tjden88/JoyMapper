@@ -8,10 +8,10 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows
 {
-    public class ProfileEditWindowViewModel : WindowViewModel
+    public class EditProfileWindowViewModel : WindowViewModel
     {
 
-        public ProfileEditWindowViewModel()
+        public EditProfileWindowViewModel()
         {
             Title = "Добавление профиля";
         }
