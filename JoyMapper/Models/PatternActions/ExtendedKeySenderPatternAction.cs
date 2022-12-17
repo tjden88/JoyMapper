@@ -15,7 +15,7 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     public override void BindingStateChanged(bool newState)
     {
-        throw new System.NotImplementedException();
+        ReportMessage?.Invoke("ExtendedKeySenderPatternAction Debug Report. State: " + newState);
     }
 
     public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
