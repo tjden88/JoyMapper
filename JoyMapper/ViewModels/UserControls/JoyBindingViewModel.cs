@@ -192,15 +192,7 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
 
     public void Dispose() => _StatusChecked = false;
 
-    public JoyBindingBase GetModel()
-    {
-        throw new NotImplementedException();
-    }
+    public JoyBindingBase GetModel() => JoyBinding;
 
-    public void SetModel(JoyBindingBase model)
-    {
-        throw new NotImplementedException();
-    }
-
-        
+    public void SetModel(JoyBindingBase model) => JoyBinding = model;
 }

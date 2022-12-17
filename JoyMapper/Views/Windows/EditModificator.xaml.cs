@@ -25,20 +25,20 @@ namespace JoyMapper.Views.Windows
             {
                 Id = ViewModel.Id,
                 Name = ViewModel.Name,
-                Binding = ViewModel.JoyBinding
+                Binding = ViewModel.JoyBindingViewModel.GetModel()
             };
 
         public void SetModel(Modificator model)
         {
             ViewModel.Id = model.Id;
             ViewModel.Name = model.Name;
-            ViewModel.JoyBinding = model.Binding;
+            ViewModel.JoyBindingViewModel.SetModel(model.Binding);
             ViewModel.Title = $"Редактирование модификатора {model.Name}";
         }
 
         private async void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.JoyBinding == null)
+            if (ViewModel.JoyBindingViewModel.JoyBinding == null)
             {
                 await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка модификатора");
                 return;

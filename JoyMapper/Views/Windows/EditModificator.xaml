@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:userControls="clr-namespace:JoyMapper.Views.UserControls"
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
@@ -16,33 +17,7 @@
     <DockPanel LastChildFill="False" Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <TextBox helpers:TextHelper.Hint="Имя модификатора" Name="NameText" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" Margin="5"/>
 
-        <!--Статус и настройки-->
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Button Command="{Binding AttachJoyButtonCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource WPRFlatButton}" BorderThickness="1">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
-                        <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку" />
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <DockPanel Grid.Column="1">
-
-                <!--Инфо о назначенном действии-->
-                <StackPanel  Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Назначенная кнопка" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                    <TextBlock Text="{Binding JoyBinding}"  Margin="0,5,0,0"/>
-
-                </StackPanel>
-
-            </DockPanel>
-        </Grid>
-
-        <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
+        <userControls:JoyBindingView DockPanel.Dock="Top" DataContext="{Binding JoyBindingViewModel}"/>
 
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Click="ButtonSave_Click"
                 Content="Сохранить" IsDefault="True"/>
