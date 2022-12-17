@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows;
+using JoyMapper.Interfaces;
+using JoyMapper.Models;
+using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.Windows;
 using WPR;
 
@@ -8,7 +11,7 @@ namespace JoyMapper.Views.Windows
     /// <summary>
     /// Логика взаимодействия для EditPatternWindow.xaml
     /// </summary>
-    public partial class EditPatternWindow : Window
+    public partial class EditPatternWindow : IEditModelWindow<JoyPattern>
     {
         public EditPatternViewModel ViewModel { get; }
 
@@ -62,6 +65,22 @@ namespace JoyMapper.Views.Windows
 
             vm.PatternName = patternName;
             DialogResult = true;
+        }
+
+        public JoyPattern GetModel()
+        {
+            var pattern = new JoyPattern
+            {
+                Name = ViewModel.PatternName,
+                Binding = ViewModel.JoyBinding,
+                PatternAction = ViewModel.PatternActionView.ViewModel.SelectedPatternAction.ToModel()
+            };
+            return pattern;
+        }
+
+        public void SetModel(JoyPattern model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

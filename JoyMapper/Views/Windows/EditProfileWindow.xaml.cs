@@ -30,7 +30,7 @@ namespace JoyMapper.Views.Windows
             {
                 PatternName = p.Name,
                 PatternId = p.Id,
-                Description = p.ToString()
+                Description = p.Binding.ToString(),
             });
             ViewModel.SelectedPatterns = new(mapped);
         }
