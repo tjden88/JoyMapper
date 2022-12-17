@@ -21,12 +21,12 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
     {
         var joyGroups = bindings
             .GroupBy(b => b.JoyName)
-            .Select(g => new JoyBindingsGroup(g.Key, g.Select(gg=> new JoyBindingState {Binding = gg}).ToList() ))
+            .Select(g => new JoyBindingsGroup(g.Key, g.ToList() ))
             .Where(g=>!string.IsNullOrEmpty(g.JoyName))
             .ToList();
         _BindingsGroups = joyGroups;
 
-        SyncState();
+        UpdateStatus();
     }
 
     public void UpdateStatus()
@@ -34,13 +34,8 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
         foreach (var joyBindingsGroup in _BindingsGroups)
         {
             var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
-            if (state != null)
-            {
-                joyBindingsGroup.BindingStates.ForEach(gr =>
-                {
-                     gr.Binding.UpdateIsActive(state);
-                });
-            }
+            if (state != null) 
+                joyBindingsGroup.Bindings.ForEach(binding => binding.UpdateIsActive(state));
         }
     }
 
@@ -52,14 +47,12 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
             var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
             if (state != null)
             {
-                joyBindingsGroup.BindingStates.ForEach(gr =>
+                joyBindingsGroup.Bindings.ForEach(binding =>
                 {
-                    var newState = gr.Binding.UpdateIsActive(state);
-                    if (gr.LastState != newState)
-                    {
-                        gr.LastState = newState;
-                        changes.Add(gr.Binding);
-                    }
+                    var lastState = binding.IsActive;
+                    var newState = binding.UpdateIsActive(state);
+                    if (lastState != newState) 
+                        changes.Add(binding);
                 });
             }
         }
@@ -71,29 +64,6 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
         
     }
 
-
-    private void SyncState()
-    {
-        foreach (var joyBindingsGroup in _BindingsGroups)
-        {
-            var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
-            if (state != null)
-            {
-                joyBindingsGroup.BindingStates.ForEach(gr =>
-                {
-                    gr.LastState = gr.Binding.UpdateIsActive(state);
-                });
-            }
-        }
-    }
-
-
-    private record JoyBindingsGroup(string JoyName, List<JoyBindingState> BindingStates);
-
-    private class JoyBindingState
-    {
-        public bool LastState { get; set; }
-
-        public JoyBindingBase Binding { get; init; }
-    }
+    
+    private record JoyBindingsGroup(string JoyName, List<JoyBindingBase> Bindings);
 }

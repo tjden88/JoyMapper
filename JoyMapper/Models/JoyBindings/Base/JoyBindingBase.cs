@@ -108,14 +108,19 @@ namespace JoyMapper.Models.JoyBindings.Base
         {
             switch (pressed)
             {
-                case true when !_IsNowPressed:
-                    _IsNowPressed = true;
-                    break;
-                case false when _IsNowPressed:
+                case false:
                     _IsNowPressed = false;
+                    break;
+
+                case true when !_IsNowPressed && !IsActive:
+                   _IsNowPressed = true;
                     return true;
+                
+                case true when !_IsNowPressed && IsActive:
+                    _IsNowPressed = true;
+                    return false;
             }
-            return false;
+            return IsActive;
         }
 
         #endregion

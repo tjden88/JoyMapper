@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
@@ -7,7 +9,7 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows
 {
-    public class EditPatternViewModel : WindowViewModel
+    public class EditPatternViewModel : WindowViewModel, IDisposable
     {
         private readonly AppWindowsService _AppWindowsService;
         private readonly IJoyBindingsWatcher _BindingsWatcher;
@@ -143,14 +145,25 @@ namespace JoyMapper.ViewModels.Windows
             Task.Run(CheckStatus);
         }
 
+        private bool _StatusChecked;
+
         private async Task CheckStatus()
         {
-            while (true)
+            if (_StatusChecked)
+            {
+                _StatusChecked = false;
+                await Task.Delay(300);
+            }
+            _StatusChecked = true;
+            Debug.WriteLine("Начато отслеживания кнопки");
+            while (_StatusChecked)
             {
                 _BindingsWatcher.UpdateStatus();
                 await Task.Delay(100);
             }
-
+            Debug.WriteLine("Выход из отслеживания кнопки");
         }
+
+        public void Dispose() => _StatusChecked = false;
     }
 }
