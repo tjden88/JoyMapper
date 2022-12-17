@@ -21,6 +21,8 @@
 
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Click="ButtonSave_Click"
                 Content="Сохранить" IsDefault="True"/>
+        <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
+                   VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
     </DockPanel>
 
 </Window>

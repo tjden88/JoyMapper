@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
@@ -23,20 +22,16 @@ namespace JoyMapper.Views.Windows
 
         private void EditPatternWindow_OnLoaded(object Sender, RoutedEventArgs E)
         {
-            if(ViewModel.JoyBinding == null)
-                ViewModel.AttachJoyButtonCommand.Execute();
+            if(ViewModel.JoyBindingViewModel.JoyBinding == null)
+                ViewModel.JoyBindingViewModel.AttachJoyButtonCommand.Execute();
         }
 
-        private void EditPatternWindow_OnClosed(object Sender, EventArgs E)
-        {
-            ViewModel.Dispose();
-        }
 
         private async void ButtonSave_OnClick(object Sender, RoutedEventArgs E)
         {
             var vm = ViewModel;
 
-            if (vm.JoyBinding == null)
+            if (vm.JoyBindingViewModel.JoyBinding == null)
             {
                 await WPRMessageBox.InformationAsync(this, "Не определена кнопка или ось контроллера для назначения паттерна");
                 return;
@@ -72,7 +67,7 @@ namespace JoyMapper.Views.Windows
             {
                 Id = ViewModel.Id,
                 Name = ViewModel.PatternName,
-                Binding = ViewModel.JoyBinding,
+                Binding = ViewModel.JoyBindingViewModel.GetModel(),
                 GroupName = string.IsNullOrWhiteSpace(ViewModel.GroupName) ? null : ViewModel.GroupName.Trim(),
                 PatternAction = ViewModel.PatternActionViewModel.GetModel()
             };
@@ -84,7 +79,7 @@ namespace JoyMapper.Views.Windows
             ViewModel.Id = model.Id;
             ViewModel.GroupName = model.GroupName;
             ViewModel.PatternName = model.Name;
-            ViewModel.JoyBinding = model.Binding;
+            ViewModel.JoyBindingViewModel.SetModel(model.Binding);
             ViewModel.PatternActionViewModel.SetModel(model.PatternAction);
 
             Title = $"Редактирование паттерна {model.Name}";
