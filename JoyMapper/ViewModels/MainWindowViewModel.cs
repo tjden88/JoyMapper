@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
-using JoyMapper.Views;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;

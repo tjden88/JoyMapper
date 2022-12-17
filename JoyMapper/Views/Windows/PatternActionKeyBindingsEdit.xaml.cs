@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using JoyMapper.Models;
-using JoyMapper.ViewModels.PatternActions.Base;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
