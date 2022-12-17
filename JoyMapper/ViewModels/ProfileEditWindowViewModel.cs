@@ -13,7 +13,6 @@ namespace JoyMapper.ViewModels
 {
     internal class ProfileEditWindowViewModel : WindowViewModel
     {
-        private readonly PatternService _PatternService = new();
 
         public ProfileEditWindowViewModel()
         {
@@ -89,7 +88,7 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Загрузить данные профиля</summary>
         private void OnLoadDataCommandExecuted()
         {
-            var allPatterns = App.DataManager.KeyPatterns;
+            var allPatterns = App.DataManager.JoyPatterns;
 
             var profile = Id > 0
                 ? App.DataManager.Profiles.First(pr => pr.Id == Id)
@@ -97,10 +96,10 @@ namespace JoyMapper.ViewModels
 
             var mapped = allPatterns.Select(p => new SelectedPatternViewModel
             {
-                IsSelected = profile.KeyPatternsIds.Contains(p.Id),
+                IsSelected = profile.PatternsIds.Contains(p.Id),
                 PatternName = p.Name,
                 PatternId = p.Id,
-                Description = p.JoyName + " - " + p.JoyAction.Description
+                Description = p.ToString()
             });
 
             SelectedPatterns = new(mapped);
@@ -160,16 +159,17 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Добавить паттерн</summary>
         private void OnAddPatternCommandExecuted()
         {
-            var added = _PatternService.AddPattern();
-            if (added == null) return;
+            return;
+            //var added = _PatternService.AddPattern();
+            //if (added == null) return;
 
-            SelectedPatterns.Add(new SelectedPatternViewModel
-            {
-                PatternName = added.Name,
-                IsSelected = true,
-                PatternId = added.Id,
-                Description = added.JoyName + " - " + added.JoyAction.Description
-            });
+            //SelectedPatterns.Add(new SelectedPatternViewModel
+            //{
+            //    PatternName = added.Name,
+            //    IsSelected = true,
+            //    PatternId = added.Id,
+            //    Description = added.JoyName + " - " + added.JoyAction.Description
+            //});
         }
 
         #endregion

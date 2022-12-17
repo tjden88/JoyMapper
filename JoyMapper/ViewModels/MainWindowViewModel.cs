@@ -16,8 +16,6 @@ namespace JoyMapper.ViewModels
     {
         private readonly JoyPatternManager _JoyPatternManager;
 
-        private readonly PatternService _PatternService = new();
-
         public MainWindowViewModel(JoyPatternManager JoyPatternManager)
         {
             _JoyPatternManager = JoyPatternManager;
@@ -61,13 +59,13 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region KeyPatterns : ObservableCollection<KeyPattern> - Список паттернов
+        #region KeyPatterns : ObservableCollection<JoyPattern> - Список паттернов
 
         /// <summary>Список паттернов</summary>
-        private ObservableCollection<KeyPattern> _KeyPatterns;
+        private ObservableCollection<JoyPattern> _KeyPatterns;
 
         /// <summary>Список паттернов</summary>
-        public ObservableCollection<KeyPattern> KeyPatterns
+        public ObservableCollection<JoyPattern> KeyPatterns
         {
             get => _KeyPatterns;
             set => Set(ref _KeyPatterns, value);
@@ -76,13 +74,13 @@ namespace JoyMapper.ViewModels
         #endregion
 
 
-        #region SelectedPattern : KeyPattern - Выбранный паттерн
+        #region SelectedPattern : JoyPattern - Выбранный паттерн
 
         /// <summary>Выбранный паттерн</summary>
-        private KeyPattern _SelectedPattern;
+        private JoyPattern _SelectedPattern;
 
         /// <summary>Выбранный паттерн</summary>
-        public KeyPattern SelectedPattern
+        public JoyPattern SelectedPattern
         {
             get => _SelectedPattern;
             set => Set(ref _SelectedPattern, value);
@@ -144,7 +142,7 @@ namespace JoyMapper.ViewModels
         private void OnLoadProfilesCommandExecuted()
         {
             Profiles = new(App.DataManager.Profiles);
-            KeyPatterns = new(App.DataManager.KeyPatterns);
+            KeyPatterns = new(App.DataManager.JoyPatterns);
             Modificators = new(App.DataManager.Modificators);
 
         }
@@ -178,7 +176,7 @@ namespace JoyMapper.ViewModels
             var profile = new Profile
             {
                 Name = vm.Name,
-                KeyPatternsIds = vm.SelectedPatterns
+                PatternsIds = vm.SelectedPatterns
                     .Where(p => p.IsSelected)
                     .Select(p => p.PatternId)
                     .ToList()
@@ -243,7 +241,7 @@ namespace JoyMapper.ViewModels
             var profile = new Profile
             {
                 Name = vm.Name,
-                KeyPatternsIds = vm.SelectedPatterns
+                PatternsIds = vm.SelectedPatterns
                     .Where(p => p.IsSelected)
                     .Select(p => p.PatternId)
                     .ToList(),
@@ -324,11 +322,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Редактировать паттерн</summary>
         private void OnEditPatternCommandExecuted()
         {
-            var edited = _PatternService.EditPattern(SelectedPattern);
-            if (edited == null) return;
+            //var edited = _PatternService.EditPattern(SelectedPattern);
+            //if (edited == null) return;
 
-            LoadDataCommand.Execute();
-            SelectedPattern = edited;
+            //LoadDataCommand.Execute();
+            //SelectedPattern = edited;
 
         }
 
@@ -481,7 +479,7 @@ namespace JoyMapper.ViewModels
             var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить модификатор {SelectedModificator.Name}?");
             if (result)
             {
-                App.DataManager.RemoveModificator(SelectedModificator.Id);
+                //App.DataManager.RemoveModificator(SelectedModificator.Id);
                 Modificators.Remove(SelectedModificator);
                 SelectedModificator = null;
             }

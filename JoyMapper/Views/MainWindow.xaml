@@ -117,7 +117,7 @@
 
                         <ListBox Margin="5" ItemsSource="{Binding KeyPatterns}" SelectedItem="{Binding SelectedPattern}">
                             <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:KeyPattern}">
+                                <DataTemplate DataType="{x:Type models:JoyPattern}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
                                         <WrapPanel>

@@ -20,7 +20,7 @@ namespace JoyMapper.Services
 
             public List<Profile> Profiles { get; set; } = new();
 
-            public List<KeyPattern> KeyPatterns { get; set; } = new();
+            public List<JoyPattern> JoyPatterns { get; set; } = new();
             public List<Modificator> Modificators { get; set; } = new();
 
         }
@@ -31,7 +31,7 @@ namespace JoyMapper.Services
         private Data ProfilesData => _ProfilesData ??= LoadData();
 
         public IEnumerable<Profile> Profiles => ProfilesData.Profiles.OrderBy(p => p.Id);
-        public IEnumerable<KeyPattern> KeyPatterns => ProfilesData.KeyPatterns.OrderBy(p => p.Id);
+        public IEnumerable<JoyPattern> JoyPatterns => ProfilesData.JoyPatterns.OrderBy(p => p.Id);
         public IEnumerable<Modificator> Modificators => ProfilesData.Modificators.OrderBy(m => m.Id);
 
         public AppSettings AppSettings => ProfilesData.AppSettings;
@@ -93,15 +93,15 @@ namespace JoyMapper.Services
 
 
         /// <summary> Добавить паттерн </summary>
-        public void AddKeyPattern(KeyPattern keyPattern)
+        public void AddKeyPattern(JoyPattern JoyPattern)
         {
-            var nextId = KeyPatterns
+            var nextId = JoyPatterns
                 .Select(p => p.Id)
                 .DefaultIfEmpty()
                 .Max() + 1;
 
-            keyPattern.Id = nextId;
-            ProfilesData.KeyPatterns.Add(keyPattern);
+            JoyPattern.Id = nextId;
+            ProfilesData.JoyPatterns.Add(JoyPattern);
             SaveData();
         }
 
@@ -111,9 +111,9 @@ namespace JoyMapper.Services
         /// </summary>
         /// <param name="id">ID копируемого паттерна</param>
         /// <returns>Скопированный паттерн</returns>
-        public KeyPattern CopyKeyPattern(int id)
+        public JoyPattern CopyKeyPattern(int id)
         {
-            var oldPattern = KeyPatterns.First(p => p.Id == id);
+            var oldPattern = JoyPatterns.First(p => p.Id == id);
 
             var newPattern = _DataSerializer.CopyObject(oldPattern);
             AddKeyPattern(newPattern);
@@ -122,13 +122,13 @@ namespace JoyMapper.Services
 
 
         /// <summary> Обновить паттерн (заменить по Id) </summary>
-        public void UpdateKeyPattern(KeyPattern pattern)
+        public void UpdateKeyPattern(JoyPattern pattern)
         {
-            var editPattern = ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == pattern.Id);
+            var editPattern = ProfilesData.JoyPatterns.FirstOrDefault(p => p.Id == pattern.Id);
             if (editPattern == null) return;
-            var index = ProfilesData.KeyPatterns.IndexOf(editPattern);
-            ProfilesData.KeyPatterns.Remove(editPattern);
-            ProfilesData.KeyPatterns.Insert(index, pattern);
+            var index = ProfilesData.JoyPatterns.IndexOf(editPattern);
+            ProfilesData.JoyPatterns.Remove(editPattern);
+            ProfilesData.JoyPatterns.Insert(index, pattern);
             SaveData();
         }
 
@@ -136,11 +136,11 @@ namespace JoyMapper.Services
         /// <summary> Удалить паттерн </summary>
         public void RemoveKeyPattern(int patternId)
         {
-            ProfilesData.KeyPatterns.Remove(ProfilesData.KeyPatterns.FirstOrDefault(p => p.Id == patternId));
+            ProfilesData.JoyPatterns.Remove(ProfilesData.JoyPatterns.FirstOrDefault(p => p.Id == patternId));
 
             foreach (var profile in Profiles)
             {
-                profile.KeyPatternsIds.Remove(patternId);
+                profile.PatternsIds.Remove(patternId);
             }
 
             SaveData();
@@ -160,20 +160,20 @@ namespace JoyMapper.Services
 
         }
 
-        public void RemoveModificator(int modId)
-        {
-            ProfilesData.Modificators.Remove(ProfilesData.Modificators.FirstOrDefault(p => p.Id == modId));
+        //public void RemoveModificator(int modId)
+        //{
+        //    ProfilesData.Modificators.Remove(ProfilesData.Modificators.FirstOrDefault(p => p.Id == modId));
 
-            foreach (var pattern in KeyPatterns)
-            {
-                if (pattern.Modificator?.Id == modId)
-                {
-                    pattern.Modificator = null;
-                }
-            }
+        //    foreach (var pattern in JoyPatterns)
+        //    {
+        //        if (pattern.Modificator?.Id == modId)
+        //        {
+        //            pattern.Modificator = null;
+        //        }
+        //    }
 
-            SaveData();
-        }
+        //    SaveData();
+        //}
 
         public void UpdateModificator(Modificator modificator)
         {

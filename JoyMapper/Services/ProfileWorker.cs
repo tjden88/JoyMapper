@@ -31,8 +31,8 @@ namespace JoyMapper.Services
 
             _PollingDelay = App.DataManager.AppSettings.JoystickPollingDelay;
 
-            var keyPatterns = App.DataManager.KeyPatterns
-                .Where(p => profile.KeyPatternsIds.Contains(p.Id))
+            var keyPatterns = App.DataManager.JoyPatterns
+                .Where(p => profile.PatternsIds.Contains(p.Id))
                 .ToArray();
 
             if (keyPatterns.Length == 0)
@@ -44,7 +44,7 @@ namespace JoyMapper.Services
 
 
             var usedJoyNames = keyPatterns
-                .Select(p => p.JoyName)
+                .Select(p => p.Binding.JoyName)
                 .Distinct()
                 .ToArray();
 
@@ -60,13 +60,13 @@ namespace JoyMapper.Services
                 return;
             }
 
-            _JoystickPollers = usedDevices
-                .Select(joy => new JoystickPoller(joy.InstanceName,
-                    keyPatterns
-                        .Where(p => p.JoyName == joy.InstanceName)
-                        .Select(p => p.JoyAction)
-                ))
-                .ToList();
+            //_JoystickPollers = usedDevices
+            //    .Select(joy => new JoystickPoller(joy.InstanceName,
+            //        keyPatterns
+            //            .Where(p => p.Binding.JoyName == joy.InstanceName)
+            //            .Select(p => p.Binding.JoyAction)
+            //    ))
+            //    .ToList();
 
             
             //foreach (var poller in _JoystickPollers)
