@@ -10,10 +10,11 @@ namespace JoyMapper.Views
     public partial class MainWindow : Window
     {
 
-        internal MainWindowViewModel ViewModel { get; set; } = new();
+        public MainWindowViewModel ViewModel { get; set; }
 
-        public MainWindow()
+        public MainWindow(MainWindowViewModel viewModel)
         {
+            ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
         }

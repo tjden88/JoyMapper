@@ -10,7 +10,7 @@ using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
 {
-    internal partial class MainWindowViewModel
+    public partial class MainWindowViewModel
     {
         public string AppVersion => App.AppVersion;
 

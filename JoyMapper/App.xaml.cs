@@ -3,11 +3,14 @@ using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.ViewModels;
 using JoyMapper.ViewModels.UserControls;
 using JoyMapper.ViewModels.Windows;
+using JoyMapper.Views;
 using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using EditPatternWindow = JoyMapper.Views.Windows.EditPatternWindow;
 
 namespace JoyMapper
 {
@@ -29,6 +32,13 @@ namespace JoyMapper
         /// <summary> Сервис проверки обновлений </summary>
         internal static UpdateChecker UpdateChecker { get; } = new();
 
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            var wnd = Services.GetRequiredService<MainWindow>();
+            wnd.Show();
+        }
+
 
         private static IServiceProvider _Services;
 
@@ -40,6 +50,9 @@ namespace JoyMapper
 
             serviceCollection
                 .AddSingleton<AppWindowsService>()
+                .AddSingleton<JoyPatternManager>()
+                .AddSingleton<MainWindow>()
+                .AddSingleton<MainWindowViewModel>()
                 .AddTransient<AddJoyBinding>()
                 .AddTransient<PatternActionView>()
                 .AddTransient<EditPatternWindow>()

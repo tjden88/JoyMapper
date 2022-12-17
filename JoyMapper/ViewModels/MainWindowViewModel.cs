@@ -12,13 +12,15 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels
 {
-    internal partial class MainWindowViewModel : WindowViewModel
+    public partial class MainWindowViewModel : WindowViewModel
     {
+        private readonly JoyPatternManager _JoyPatternManager;
 
         private readonly PatternService _PatternService = new();
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(JoyPatternManager JoyPatternManager)
         {
+            _JoyPatternManager = JoyPatternManager;
             AppLog.Report += msg => LogMessages.Add(msg);
             Title = "JoyMapper " + App.AppVersion;
             CurrentColorTheme = ColorThemes
@@ -297,10 +299,11 @@ namespace JoyMapper.ViewModels
         /// <summary>Логика выполнения - Создать паттерн</summary>
         private void OnCreatePatternCommandExecuted()
         {
-            var added = _PatternService.AddPattern();
-            if (added == null) return;
-            KeyPatterns.Add(added);
-            SelectedPattern = added;
+            var pattern = _JoyPatternManager.AddPattern();
+            //var added = _PatternService.AddPattern();
+            //if (added == null) return;
+            //KeyPatterns.Add(added);
+            //SelectedPattern = added;
         }
 
         #endregion

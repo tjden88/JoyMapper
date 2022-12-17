@@ -9,6 +9,7 @@
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
         Topmost="False"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="600" Width="800">
@@ -20,9 +21,6 @@
             </b:EventTrigger.Actions>
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <d:Window.DataContext>
-        <viewModels:MainWindowViewModel/>
-    </d:Window.DataContext>
     <Grid>
         <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
             <TabItem>

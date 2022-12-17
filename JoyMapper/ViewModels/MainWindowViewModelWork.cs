@@ -5,7 +5,7 @@ using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels
 {
-    internal partial class MainWindowViewModel
+    public partial class MainWindowViewModel
     {
 
         private readonly ProfileWorker _ProfileWorker = new();
