@@ -83,7 +83,7 @@
                             <Ellipse.Style>
                                 <Style TargetType="Ellipse">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ActionIsActive}" Value="True">
+                                        <DataTrigger Binding="{Binding JoyBinding.IsActive}" Value="True">
                                             <Setter Property="Fill" Value="Green"></Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -93,7 +93,7 @@
                                 </Style>
                             </Ellipse.Style>
                         </Ellipse>
-                        <TextBlock Text="{Binding ActionIsActiveText}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding JoyBinding.IsActive}" VerticalAlignment="Center"/>
                     </DockPanel>
 
                 </StackPanel>
@@ -112,9 +112,9 @@
                        VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
             <StackPanel >
                 <TextBlock DockPanel.Dock="Top"  Text="Тип активации действия" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                <RadioButton Margin="5" Content="Нажатие" IsChecked="{Binding IsExtendedButtonMode, Converter={StaticResource BoolNotConverter}}" FontWeight="Bold"/>
-                <RadioButton Margin="5" Content="Отпускание" IsChecked="{Binding IsExtendedButtonMode}" FontWeight="Bold"/>
-                <RadioButton Margin="5" Content="Переключатель" IsChecked="{Binding IsExtendedButtonMode}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Стандартное" IsChecked="{Binding IsNormal}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Обратное" IsChecked="{Binding IsReverse}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Переключатель" IsChecked="{Binding IsSwitch}" FontWeight="Bold"/>
             </StackPanel>
             <WrapPanel Margin="5,8,5,5">
                 <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>

@@ -1,20 +1,21 @@
-﻿using JoyMapper.Helpers;
+﻿using System.Threading.Tasks;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
-using JoyMapper.ViewModels.JoyActions;
+using JoyMapper.Services.Interfaces;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
-using static JoyMapper.ViewModels.EditPatternWindowViewModel;
 
 namespace JoyMapper.ViewModels.Windows
 {
     public class EditPatternViewModel : WindowViewModel
     {
         private readonly AppWindowsService _AppWindowsService;
+        private readonly IJoyBindingsWatcher _BindingsWatcher;
 
-        public EditPatternViewModel(AppWindowsService AppWindowsService)
+        public EditPatternViewModel(AppWindowsService AppWindowsService, IJoyBindingsWatcher BindingsWatcher)
         {
             _AppWindowsService = AppWindowsService;
+            _BindingsWatcher = BindingsWatcher;
         }
 
         #region Prop
@@ -45,6 +46,11 @@ namespace JoyMapper.ViewModels.Windows
             get => _JoyBinding;
             set => IfSet(ref _JoyBinding, value)
                 .CallPropertyChanged(nameof(JoyBindingText))
+                .CallPropertyChanged(nameof(IsNormal))
+                .CallPropertyChanged(nameof(IsReverse))
+                .CallPropertyChanged(nameof(IsSwitch))
+
+                .Then(WatchAction)
             ;
         }
 
@@ -58,24 +64,36 @@ namespace JoyMapper.ViewModels.Windows
         #endregion
 
 
-        #region ActionIsActive : bool - Назначенное действие джойстика сейчас активно
 
-        /// <summary>Назначенное действие джойстика сейчас активно</summary>
-        private bool _ActionIsActive;
 
-        /// <summary>Назначенное действие джойстика сейчас активно</summary>
-        public bool ActionIsActive
+        #region ActionType - тип действия
+
+        public bool IsNormal
         {
-            get => _ActionIsActive;
-            set => IfSet(ref _ActionIsActive, value)
-                .CallPropertyChanged(nameof(ActionIsActiveText));
+            get => JoyBinding?.ActivationType == JoyBindingBase.ActivationTypes.Normal;
+            set
+            {
+                if (value && JoyBinding != null) JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Normal;
+            }
         }
 
-        /// <summary> Текст активности назначенного действия </summary>
-        public string ActionIsActiveText => ActionIsActive
-            ? "Активно"
-            : "Неактивно";
+        public bool IsReverse
+        {
+            get => JoyBinding?.ActivationType == JoyBindingBase.ActivationTypes.Reverse;
+            set
+            {
+                if (value && JoyBinding != null) JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Reverse;
+            }
+        }
 
+        public bool IsSwitch
+        {
+            get => JoyBinding?.ActivationType == JoyBindingBase.ActivationTypes.Switch;
+            set
+            {
+                if (value && JoyBinding != null) JoyBinding.ActivationType = JoyBindingBase.ActivationTypes.Switch;
+            }
+        }
 
         #endregion
 
@@ -111,5 +129,28 @@ namespace JoyMapper.ViewModels.Windows
 
         #endregion
 
+
+
+        private void WatchAction()
+        {
+            if (JoyBinding is null)
+                return;
+
+            _BindingsWatcher.StopWatching();
+
+            _BindingsWatcher.StartWatching(new[] { JoyBinding });
+
+            Task.Run(CheckStatus);
+        }
+
+        private async Task CheckStatus()
+        {
+            while (true)
+            {
+                _BindingsWatcher.UpdateStatus();
+                await Task.Delay(100);
+            }
+
+        }
     }
 }

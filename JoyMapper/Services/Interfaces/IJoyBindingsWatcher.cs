@@ -12,6 +12,10 @@ public interface IJoyBindingsWatcher
     void StartWatching(IEnumerable<JoyBindingBase> bindings);
 
 
+    /// <summary> Обновить состояние назначенных привязок </summary>
+    void UpdateStatus();
+
+
     /// <summary> Получить изменения привязок с предыдущего опроса </summary>
     ICollection<JoyBindingBase> GetChanges();
 

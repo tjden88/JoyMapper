@@ -29,6 +29,21 @@ public class JoyBindingsWatcher : IJoyBindingsWatcher
         SyncState();
     }
 
+    public void UpdateStatus()
+    {
+        foreach (var joyBindingsGroup in _BindingsGroups)
+        {
+            var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
+            if (state != null)
+            {
+                joyBindingsGroup.BindingStates.ForEach(gr =>
+                {
+                     gr.Binding.UpdateIsActive(state);
+                });
+            }
+        }
+    }
+
     public ICollection<JoyBindingBase> GetChanges()
     {
         var changes = new List<JoyBindingBase>();
