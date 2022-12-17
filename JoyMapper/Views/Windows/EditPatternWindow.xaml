@@ -1,0 +1,132 @@
+﻿<Window x:Class="JoyMapper.Views.Windows.EditPatternWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:models="clr-namespace:JoyMapper.Models"
+        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
+        xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
+        Style="{StaticResource ChromeWindow}"
+        WindowStartupLocation="CenterOwner"
+        Focusable="True"
+        mc:Ignorable="d"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
+        Title="{Binding Title}" Height="700" Width="850">
+
+    <DockPanel Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox helpers:TextHelper.Hint="Имя паттерна" VerticalAlignment="Center" Name="NameText" Text="{Binding PatternName, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+            <DockPanel Grid.Column="1" LastChildFill="False">
+                <ComboBox Width="280" ItemsSource="{Binding Modificators}" 
+                          Margin="5,2,0,-2"
+                          VerticalAlignment="Center"
+                          SelectedItem="{Binding SelectedModificator}"
+                          helpers:TextHelper.Hint="Группа" DisplayMemberPath="Name"/>
+                <Button Style="{StaticResource WPRToolButton}" Margin="10,0"
+                        VerticalAlignment="Center"
+                        Command="{Binding ClearModificatorCommand}"
+                        Visibility="{Binding ClearModificatorCommand.Visibility}"
+                        ToolTip="Без модификатора">
+                    <Button.Content>
+                        <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}" />
+                    </Button.Content>
+                </Button>
+            </DockPanel>
+        </Grid>
+
+        <!--Статус и настройки-->
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel>
+                <!--Модификатор-->
+                <DockPanel DockPanel.Dock="Bottom" Margin="10" LastChildFill="False">
+                    <ComboBox Width="280" ItemsSource="{Binding Modificators}" 
+                              SelectedItem="{Binding SelectedModificator}"
+                              helpers:TextHelper.Hint="Модификатор" DisplayMemberPath="Name"/>
+                    <Button Style="{StaticResource WPRToolButton}" Margin="10,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding ClearModificatorCommand}"
+                            Visibility="{Binding ClearModificatorCommand.Visibility}"
+                            ToolTip="Без модификатора">
+                        <Button.Content>
+                            <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}" />
+                        </Button.Content>
+                    </Button>
+                </DockPanel>
+
+                <Button Command="{Binding AttachJoyButtonCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource WPRFlatButton}" BorderThickness="1">
+                    <Button.Content>
+                        <StackPanel Orientation="Vertical">
+                            <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
+                            <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку / ось"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+
+                <!--Инфо о назначенном действии-->
+                <StackPanel  Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Назначенная кнопка / ось" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                    <TextBlock Text="{Binding JoyBindingText}"  Margin="0,5,0,0"/>
+                    <DockPanel>
+                        <TextBlock Text="Текущий статус:" Margin="0,5" FontWeight="Bold"/>
+                        <Ellipse Width="16" Height="16" Margin="5">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActionIsActive}" Value="True">
+                                            <Setter Property="Fill" Value="Green"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                    <Style.Setters>
+                                        <Setter Property="Fill" Value="{DynamicResource AttentionColorBrush}"/>
+                                    </Style.Setters>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Text="{Binding ActionIsActiveText}" VerticalAlignment="Center"/>
+                    </DockPanel>
+
+                </StackPanel>
+            </DockPanel>
+
+            <ScrollViewer Grid.Column="1" Width="250" Height="120" VerticalScrollBarVisibility="Auto">
+                <TextBlock VerticalAlignment="Bottom" Text="{Binding WatcherLogText}"/>
+            </ScrollViewer>
+        </Grid>
+
+        <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Top" Margin="5"/>
+
+        <!--Тип биндинга -->
+        <DockPanel DockPanel.Dock="Top" Visibility="{Binding IsButton, Converter={StaticResource Bool2VisibilityConverter}}">
+            <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
+            <StackPanel >
+                <TextBlock DockPanel.Dock="Top"  Text="Тип активации действия" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                <RadioButton Margin="5" Content="Нажатие" IsChecked="{Binding IsExtendedButtonMode, Converter={StaticResource BoolNotConverter}}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Отпускание" IsChecked="{Binding IsExtendedButtonMode}" FontWeight="Bold"/>
+                <RadioButton Margin="5" Content="Переключатель" IsChecked="{Binding IsExtendedButtonMode}" FontWeight="Bold"/>
+            </StackPanel>
+            <WrapPanel Margin="5,8,5,5">
+                <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}" Text="{Binding ButtonModeInfo}"/>
+            </WrapPanel>
+        </DockPanel>
+
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
+                Content="Сохранить" IsDefault="True"
+                Command="{Binding SaveCommand}" />
+        <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
+
+        <ContentControl Content="{Binding JoyAction}"></ContentControl>
+    </DockPanel>
+</Window>

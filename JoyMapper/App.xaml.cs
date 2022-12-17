@@ -36,9 +36,13 @@ namespace JoyMapper
         {
             var serviceCollection = new ServiceCollection();
 
-            serviceCollection.AddTransient<AddJoyBinding>()
+            serviceCollection
+                .AddSingleton<AppWindowsService>()
+                .AddTransient<AddJoyBinding>()
+                .AddTransient<EditPatternWindow>()
             .AddTransient<AddJoyBindingViewModel>()
-            .AddTransient<IJoystickStateManager, JoystickStateManager>()
+            .AddTransient<EditPatternViewModel>()
+                .AddTransient<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()
 
             ;

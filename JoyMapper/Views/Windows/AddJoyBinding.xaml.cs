@@ -15,7 +15,7 @@ namespace JoyMapper.Views.Windows
             InitializeComponent();
         }
 
-        public AddJoyBindingViewModel ViewModel { get; set; }
+        public AddJoyBindingViewModel ViewModel { get; }
 
 
         private void AddJoyBinding_OnLoaded(object Sender, RoutedEventArgs E)
