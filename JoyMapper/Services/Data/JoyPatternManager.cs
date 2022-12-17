@@ -9,12 +9,10 @@ namespace JoyMapper.Services.Data;
 public class JoyPatternManager
 {
     private readonly AppWindowsService _AppWindowsService;
-    private readonly DataManager _DataManager;
 
-    public JoyPatternManager(AppWindowsService AppWindowsService, DataManager DataManager)
+    public JoyPatternManager(AppWindowsService AppWindowsService)
     {
         _AppWindowsService = AppWindowsService;
-        _DataManager = DataManager;
     }
 
     public JoyPattern AddPattern()
@@ -25,7 +23,7 @@ public class JoyPatternManager
         if (patternWindow.ShowDialog() != true) return null;
 
         var pattern = BuildPattern(patternWindow.ViewModel);
-        _DataManager.AddJoyPattern(pattern);
+        //_DataManager.AddJoyPattern(pattern);
         return pattern;
     }
 
@@ -42,7 +40,7 @@ public class JoyPatternManager
         if (patternWindow.ShowDialog() != true) return null;
 
         var pattern = BuildPattern(viewModel);
-        _DataManager.UpdateJoyPattern(pattern);
+        //_DataManager.UpdateJoyPattern(pattern);
         return pattern;
     }
 

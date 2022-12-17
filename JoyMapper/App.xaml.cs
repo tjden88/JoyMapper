@@ -51,8 +51,10 @@ namespace JoyMapper
 
             serviceCollection
                 .AddSingleton<DataManager>()
-                .AddSingleton<AppWindowsService>()
+                .AddSingleton<ProfilesManager>()
                 .AddSingleton<JoyPatternManager>()
+                .AddSingleton<AppWindowsService>()
+                .AddSingleton<DataSerializer>()
                 .AddSingleton<MainWindow>()
                 .AddSingleton<MainWindowViewModel>()
                 .AddTransient<AddJoyBinding>()

@@ -16,14 +16,12 @@ namespace JoyMapper.ViewModels
 {
     public partial class MainWindowViewModel : WindowViewModel
     {
-        private readonly JoyPatternManager _JoyPatternManager;
         private readonly AppWindowsService _AppWindowsService;
         private readonly DataManager _DataManager;
 
-        public MainWindowViewModel(AppWindowsService AppWindowsService, JoyPatternManager JoyPatternManager, DataManager DataManager)
+        public MainWindowViewModel(AppWindowsService AppWindowsService, DataManager DataManager)
         {
             _AppWindowsService = AppWindowsService;
-            _JoyPatternManager = JoyPatternManager;
             _DataManager = DataManager;
             AppLog.Report += msg => LogMessages.Add(msg);
             Title = "JoyMapper " + App.AppVersion;
