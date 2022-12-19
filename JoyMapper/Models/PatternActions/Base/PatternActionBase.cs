@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using JoyMapper.ViewModels.PatternActions.Base;
 
 namespace JoyMapper.Models.PatternActions.Base;
@@ -48,5 +49,6 @@ public abstract class PatternActionBase
     /// <summary>
     /// Вызывает действие, сообщающее, какое действие было совершено
     /// </summary>
+    [NotMapped]
     public Action<string> ReportMessage { get; set; }
 }
