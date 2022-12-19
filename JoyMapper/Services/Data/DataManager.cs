@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
-using WPR;
 
 namespace JoyMapper.Services.Data;
 
@@ -255,7 +254,7 @@ public class DataManager
     /// <summary>
     /// Данные для сериализации
     /// </summary>
-    private class Data
+    public class Data
     {
         public AppSettings AppSettings { get; set; } = new();
 
