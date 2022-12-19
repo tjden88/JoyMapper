@@ -37,8 +37,8 @@ public class SimpleKeySenderPatternActionViewModel : PatternActionViewModelBase
     public override PatternActionBase ToModel() =>
         new SimpleKeySenderPatternAction
         {
-            PressKeyBindings = PressKeyBindings.KeyBindings,
-            ReleaseKeyBindings = ReleaseKeyBindings.KeyBindings
+            PressKeyBindings = PressKeyBindings.KeyBindings.ToList(),
+            ReleaseKeyBindings = ReleaseKeyBindings.KeyBindings.ToList()
         };
 
     public override bool IsValid(out string ErrorMessage)

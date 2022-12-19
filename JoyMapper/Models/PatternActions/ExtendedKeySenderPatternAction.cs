@@ -21,11 +21,11 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
         new ExtendedKeySenderPatternActionViewModel(this);
 
 
-    public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
 
-    public ICollection<KeyboardKeyBinding> DoublePressKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> DoublePressKeyBindings { get; set; }
 
-    public ICollection<KeyboardKeyBinding> LongPressKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> LongPressKeyBindings { get; set; }
 
 
     #region KeyWatching

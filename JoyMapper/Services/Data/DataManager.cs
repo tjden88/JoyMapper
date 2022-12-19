@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using JoyMapper.Models;
+using WPR;
 
 namespace JoyMapper.Services.Data;
 
@@ -207,11 +209,23 @@ public class DataManager
 
     private Data LoadData()
     {
+        if(!File.Exists(_SettingsFileName))
+            return new Data();
+
         var appSettVersion = _DataSerializer.LoadFromFile<AppSettings>(_SettingsFileName)?.AppVersion;
-        if (!Equals(App.AppVersion, appSettVersion) && File.Exists(_SettingsFileName)) // Бекап настроек
+        if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
             File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion}-backup.json"), true);
 
-        return _DataSerializer.LoadFromFile<Data>(_SettingsFileName) ?? new Data();
+        var loadFromFile = _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
+
+        if (loadFromFile is not null)
+            return loadFromFile;
+
+        var failFileName = $"ConfigLoadFail-{DateTime.Now:dd-MM-yyyy:hh-mm-ss}.json";
+        File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, failFileName), true);
+        MessageBox.Show($"Бекап сохранён в файл {failFileName}", "Ошибка загрузки настроек");
+
+        return new Data();
     }
 
     private void SaveProfile(Profile profile)

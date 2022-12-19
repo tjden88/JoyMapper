@@ -35,8 +35,8 @@ public class SimpleKeySenderPatternAction : PatternActionBase
     }
 
 
-    public ICollection<KeyboardKeyBinding> PressKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> PressKeyBindings { get; set; }
 
-    public ICollection<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
+    public List<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
 
 }
