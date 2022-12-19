@@ -30,13 +30,17 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     #region KeyWatching
 
-    public override void Initialize(IServiceProvider Services, bool LogReport)
+    protected override void Initialize(IServiceProvider Services)
     {
         var appsett = Services.GetRequiredService<DataManager>();
         _DoublePressDelay = appsett.AppSettings.DoublePressDelay;
         _LongPressDelay = appsett.AppSettings.LongPressDelay;
         _IsDoublePressActionsExist = DoublePressKeyBindings?.Any() ?? false;
-        _OptimizeDoubleClick = !LogReport;
+    }
+
+    protected override void DoWorkMode(bool newBindingState)
+    {
+        throw new NotImplementedException();
     }
 
     private bool _IsDoublePressActionsExist; // Существуют ли действия двойного нажатия
@@ -45,7 +49,6 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     private static int _LongPressDelay;
 
-    private bool _OptimizeDoubleClick; // В боевом применении да, для логгирования нажатий - нет
 
     private Stopwatch _DelayMeter; // Таймер задержки между нажатиями
 
@@ -54,11 +57,11 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     private bool _NowPressed;
 
-    public override async void BindingStateChanged(bool newState)
+    protected override async void DoReportMode(bool newBindingState)
     {
-        _NowPressed = newState;
+        _NowPressed = newBindingState;
 
-        if(newState && _DelayMeter is null)
+        if(newBindingState && _DelayMeter is null)
             _DelayMeter = Stopwatch.StartNew();
 
         while (_DelayMeter is not null )
@@ -66,7 +69,7 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
             // Кнопка не нажата и прошло время двойного клика или
             // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
-            if (_FirstPressHandled && !newState && (!_IsDoublePressActionsExist && _OptimizeDoubleClick || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
+            if (_FirstPressHandled && !newBindingState && (!_IsDoublePressActionsExist && !LogReportMode || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
             {
                 ReportMessage?.Invoke("Одиночное нажатие");
 
@@ -91,7 +94,7 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
             }
 
             // Кнопка нажата больше времени долгого нажатия
-            if (_FirstPressHandled && newState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
+            if (_FirstPressHandled && newBindingState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
             {
                 ReportMessage?.Invoke("Долгое нажатие");
                 _FirstPressHandled = false;

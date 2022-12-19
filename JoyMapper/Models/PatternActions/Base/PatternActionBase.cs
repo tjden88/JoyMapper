@@ -7,22 +7,43 @@ namespace JoyMapper.Models.PatternActions.Base;
 /// <summary>
 /// Базовый класс для возможных действий паттернов
 /// </summary>
-public abstract class PatternActionBase 
+public abstract class PatternActionBase
 {
+    protected bool LogReportMode;
     public abstract PatternActionViewModelBase ToViewModel();
 
 
-    /// <summary>
-    /// Проинициализировать необходимые данные для запуска отслеживания состояний.
-    /// LogReports - true, когда необходимо только вызвать отчёт об изменении действия
-    /// </summary>
-    public abstract void Initialize(IServiceProvider Services, bool LogReports);
+    /// <summary> Инициализировать зависимости для начала работы </summary>
+    protected abstract void Initialize(IServiceProvider Services);
+
+    /// <summary> Отработка в режиме отправки статусов </summary>
+    protected abstract void DoReportMode(bool newBindingState);
+
+    /// <summary> Отработка в "боевом" режиме </summary>
+    protected abstract void DoWorkMode(bool newBindingState);
 
     /// <summary>
-    /// Сообщает, что привязка кнопки изменила своё состояние
+    /// Проинициализировать необходимые данные для запуска отслеживания состояний.
+    /// LogReportsMode - true, когда необходимо только вызвать отчёт об изменении действия
+    /// </summary>
+    public void Initialize(IServiceProvider Services, bool LogReportsMode)
+    {
+        LogReportMode = LogReportsMode;
+        Initialize(Services);
+    }
+
+    /// <summary>
+    /// Сообщает, что привязка кнопки изменила своё состояние.
+    /// Отрабатывает это событие
     /// </summary>
     /// <param name="newState">Новое состояние кнопки или оси</param>
-    public abstract void BindingStateChanged(bool newState);
+    public void BindingStateChanged(bool newState)
+    {
+        if(LogReportMode)
+            DoReportMode(newState);
+        else
+            DoWorkMode(newState);
+    }
 
     /// <summary>
     /// Вызывает действие, сообщающее, какое действие было совершено
