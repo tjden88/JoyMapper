@@ -136,7 +136,7 @@ public class JoyBindingListener : IJoyBindingListener
             if (lastState != newState)
                 changes.Add(joyBinding.BindingBase);
         }
-        Debug.WriteLine($"Поиск изменений в привязках занял: {timer.ElapsedMilliseconds} мс");
+        //Debug.WriteLine($"Поиск изменений в привязках занял: {timer.ElapsedMilliseconds} мс");
         return changes;
     }
 

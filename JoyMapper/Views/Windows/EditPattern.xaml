@@ -39,22 +39,22 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+
             <!--Биндинг кнопки-->
             <userControls:JoyBindingView DockPanel.Dock="Top" DataContext="{Binding JoyBindingViewModel}"/>
-
 
         </Grid>
 
         <!--Модификатор-->
-        <DockPanel DockPanel.Dock="Top" Margin="5,20,0,10" LastChildFill="False">
-            <ComboBox Width="280" ItemsSource="{Binding Modificators}" 
+        <DockPanel DockPanel.Dock="Top" Margin="5,25,0,10" LastChildFill="False">
+            <ComboBox Width="320" ItemsSource="{Binding Modificators}" 
                       SelectedItem="{Binding SelectedModificator}"
                       helpers:TextHelper.Hint="Модификатор">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
                             <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Binding}"/>
+                            <TextBlock Text="{Binding Binding}" Margin="0,5,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
@@ -92,6 +92,7 @@
             <Separator Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
                        Background="{DynamicResource DividerColorBrush}"
                        HorizontalAlignment="Left"/>
+
             <!--Лог действий-->
             <Expander DockPanel.Dock="Right" IsExpanded="False" Margin="5,0,0,0" Grid.Column="1" ExpandDirection="Right" Header="Тест паттерна">
                 <DockPanel>

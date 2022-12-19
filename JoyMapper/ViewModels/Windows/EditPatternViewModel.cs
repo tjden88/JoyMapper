@@ -221,7 +221,7 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
             var state = _JoystickStateManager.GetJoyState(SelectedModificator.Binding.JoyName);
             if (state == null)
                 AppendLogText("Не удалось определить состояние выбранного модификатора!\n" +
-                              $"Убедитесь, что джойстик {SelectedModificator.Binding.JoyName} подключен");
+                              $"Убедитесь, что джойстик {SelectedModificator.Binding.JoyName} подключен\n");
             else if (!SelectedModificator.Binding.UpdateIsActive(state))
                 return;
         }
