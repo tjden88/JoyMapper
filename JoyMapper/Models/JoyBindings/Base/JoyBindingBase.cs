@@ -42,6 +42,7 @@ public abstract class JoyBindingBase : ViewModel
     private bool _IsActive;
 
     /// <summary>Активно ли действие с учётом типа активации</summary>
+    [JsonIgnore]
     public bool IsActive
     {
         get => _IsActive;
@@ -52,6 +53,7 @@ public abstract class JoyBindingBase : ViewModel
     #endregion
 
 
+    [JsonIgnore]
     public string IsActiveText => IsActive ? "Активно" : "Неактивно";
 
 

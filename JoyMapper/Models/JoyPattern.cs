@@ -1,5 +1,6 @@
 ﻿using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.PatternActions.Base;
+using Newtonsoft.Json;
 
 namespace JoyMapper.Models;
 
@@ -20,5 +21,6 @@ public class JoyPattern
 
     public override string ToString() => $"{Binding.JoyName} - {Binding.Description}";
 
+    [JsonIgnore]
     public bool HasModificator => ModificatorId != null ;
 }
