@@ -19,36 +19,52 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         return connectedDevices.Select(cd => cd.InstanceName);
     }
 
-    private readonly List<Joystick> _Joysticks = new();
+    private readonly List<ConnentedJoystick> _Joysticks = new();
 
     public JoyState GetJoyState(string joystickName)
     {
+        var joy = _Joysticks.Find(j => j.Joystick?.Information.InstanceName == joystickName);
         try
         {
-            Joystick joystick;
-            if (_Joysticks.Find(j => j.Information.InstanceName == joystickName) is { } joy)
+
+            if (joy is null || joy.IsFault) // Была ошибка или джойстик не найден
             {
-                joystick = joy;
-            }
-            else
-            {
-                var deviceInstance = new DirectInput()
+                var newJoy = new DirectInput()
                     .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
                     .FirstOrDefault(d => d.InstanceName == joystickName);
 
-                if (deviceInstance == null)
+                if (newJoy == null)
                     return null;
-                joystick = new Joystick(new DirectInput(), deviceInstance.InstanceGuid);
-                _Joysticks.Add(joystick);
-                joystick.Acquire();
+
+                // Джойстик найден или заново подключен
+                var newJoystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
+
+                if (joy is null) // Добавить
+                {
+                    joy = new() { Joystick = newJoystick };
+                    _Joysticks.Add(joy);
+                }
+                else // Заменить
+                {
+                    joy.Joystick?.Dispose();
+                    joy.Joystick = newJoystick;
+                }
+                joy.Joystick.Acquire();
             }
 
-            var joyState = joystick.GetCurrentState();
 
+            if (joy.IsFault) AppLog.LogMessage($"Устройство восстановлено - {joystickName}");
+            joy.IsFault = false;
+
+
+            // Джойстик есть в списке
+            var joyState = joy.Joystick.GetCurrentState();
             return joyState.ToModel();
         }
         catch (Exception e)
         {
+            if (joy != null)
+                joy.IsFault = true;
             Debug.WriteLine(e);
             AppLog.LogMessage($"Ошибка опроса устройства - {joystickName}", LogMessage.MessageType.Error);
             return null;
@@ -58,8 +74,15 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
     public void Dispose()
     {
         foreach (var joystick in _Joysticks)
-            joystick.Dispose();
+            joystick.Joystick.Dispose();
 
         _Joysticks.Clear();
+    }
+
+    private class ConnentedJoystick
+    {
+        public bool IsFault { get; set; }
+
+        public Joystick Joystick { get; set; }
     }
 }
