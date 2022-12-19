@@ -1,115 +1,71 @@
 ﻿using JoyMapper.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
 
-namespace JoyMapper.Services.Watchers
+namespace JoyMapper.Services.Watchers;
+
+public class JoyPatternWatcher : IJoyPatternWatcher
 {
-    public class JoyPatternWatcher : IJoyPatternWatcher
+    private readonly IJoyListener _JoyListener;
+    private readonly IServiceProvider _ServiceProvider;
+
+    public JoyPatternWatcher(IJoyListener JoyListener, DataManager DataManager, IServiceProvider ServiceProvider)
     {
-        private readonly IJoystickStateManager _JoystickStateManager;
-        private readonly IServiceProvider _ServiceProvider;
+        _JoyListener = JoyListener;
+        _ServiceProvider = ServiceProvider;
+    }
 
-        private readonly int _PollingDelay; 
+    public void StartWatching(ICollection<JoyPattern> Patterns)
+    {
+        StopWatching();
 
-        public JoyPatternWatcher(IJoystickStateManager JoystickStateManager, DataManager DataManager, IServiceProvider ServiceProvider)
+        foreach (var joyPattern in Patterns)
         {
-            _JoystickStateManager = JoystickStateManager;
-            _ServiceProvider = ServiceProvider;
-            _PollingDelay = DataManager.AppSettings.JoystickPollingDelay;
+            joyPattern.PatternAction.Initialize(_ServiceProvider);
+            joyPattern.PatternAction.ReportMessage += ReportPatternAction;
         }
 
+        var bindings = Patterns.Select(p => new JoyBindingWithAction(p.Binding, p.PatternAction));
 
-        private List<PatternsByJoyName> _PatternsByJoyName;
+        _JoyListener.ChangesHandled += Listener_OnChangesHandled;
+        _JoyListener.StartListen(bindings);
+    }
 
-
-        public void StartWatching(ICollection<JoyPattern> Patterns)
+    private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> bindings)
+    {
+        foreach (var joyBindingBase in bindings)
         {
-            if (_PatternsByJoyName?.Count > 0)
-            {
-                StopWatching();
-            }
+            var bb = (JoyBindingWithAction) joyBindingBase;
+            bb.ActionBase.BindingStateChanged(bb.IsActive);
+        }
+    }
 
-            foreach (var joyPattern in Patterns)
-            {
-                joyPattern.PatternAction.Initialize(_ServiceProvider);
-                joyPattern.PatternAction.ReportMessage += ReportPatternAction;
-            }
+    public void StopWatching()
+    {
+        _JoyListener.ChangesHandled -= Listener_OnChangesHandled;
+        _JoyListener.StopListen();
+    }
 
+    public Action<string> ReportPatternAction { get; set; }
 
-            _PatternsByJoyName = Patterns.GroupBy(p => p.Binding.JoyName)
-                .Where(g => g.Key != null)
-                .Select(gr => new PatternsByJoyName
-                {
-                    JoyName = gr.Key,
-                    JoyPatterns = gr.ToList()
-                })
-                .ToList();
-            _IsRunning = true;
-            Task.Run(Polling);
+    private class JoyBindingWithAction : JoyBindingBase
+    {
+        private readonly JoyBindingBase _BindingBase;
+        public PatternActionBase ActionBase { get; }
+
+        public JoyBindingWithAction(JoyBindingBase BindingBase, PatternActionBase ActionBase)
+        {
+            _BindingBase = BindingBase;
+            this.ActionBase = ActionBase;
         }
 
-        private void OnActionReportMessage(string message)
-        {
-            Debug.WriteLine(message);
-        }
+        protected override bool IsPressed(JoyState joyState) => _BindingBase.UpdateIsActive(joyState);
 
-        public void StopWatching()
-        {
-            _IsRunning = false;
-            _PatternsByJoyName?.Clear();
-            //foreach (var d in ReportPatternAction?.GetInvocationList()) 
-            //    ReportPatternAction -= (Action<string>) d;
-
-            Debug.WriteLine("JoyPatternWatcher остановлен");
-        }
-
-        public Action<string> ReportPatternAction { get; set; }
-
-
-        private bool _IsRunning;
-
-        private async Task Polling()
-        {
-            while (_IsRunning)
-            {
-                try
-                {
-                    foreach (var patternsByJoyName in _PatternsByJoyName)
-                    {
-                        var state = _JoystickStateManager.GetJoyState(patternsByJoyName.JoyName);
-                        if (state != null)
-                        {
-                            patternsByJoyName.JoyPatterns.ForEach(pattern =>
-                            {
-                                var lastState = pattern.Binding.IsActive;
-                                var newState = pattern.Binding.UpdateIsActive(state);
-                                if (lastState != newState)
-                                    pattern.PatternAction.BindingStateChanged(newState);
-                            });
-                        }
-                    }
-
-                    await Task.Delay(_PollingDelay);
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e);
-                    throw;
-                }
-            }
-        }
-
-
-        private class PatternsByJoyName
-        {
-            public string JoyName { get; set; }
-
-            public List<JoyPattern> JoyPatterns { get; set; }
-        }
+        public override string Description => _BindingBase.Description;
     }
 }

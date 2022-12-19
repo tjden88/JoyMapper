@@ -29,8 +29,6 @@ namespace JoyMapper.ViewModels.Windows
 
             Modificators = DataManager.Modificators;
 
-            PatternActionViewModel.PropertyChanged += UpdatePatternWatcher;
-            JoyBindingViewModel.PropertyChanged += UpdatePatternWatcher;
             _JoyPatternWatcher.ReportPatternAction += S => Debug.WriteLine(S);
 
             Title = "Добавить паттерн";

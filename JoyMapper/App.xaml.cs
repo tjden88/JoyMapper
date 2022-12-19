@@ -24,9 +24,6 @@ namespace JoyMapper
         /// <summary> Версия приложения </summary>
         internal const string AppVersion = "1.3";
 
-        /// <summary> Менеджер данных профилей текущей сессии </summary>
-        [Obsolete]
-        internal static DataManager DataManager => Services.GetRequiredService<DataManager>();
 
         /// <summary> Активное окно </summary>
         internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
@@ -73,7 +70,7 @@ namespace JoyMapper
                 .AddTransient<JoyBindingView>()
                 .AddTransient<JoyBindingViewModel>()
                 .AddSingleton<IJoystickStateManager, JoystickStateManager>()
-                .AddSingleton<IJoyListener, JoyListener>()
+                .AddTransient<IJoyListener, JoyListener>()
                 .AddTransient<IJoyPatternWatcher, JoyPatternWatcher>()
 
             ;
