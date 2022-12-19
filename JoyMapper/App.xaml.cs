@@ -72,8 +72,8 @@ namespace JoyMapper
                 .AddTransient<UpdateWindow.UpdateWindowViewModel>()
                 .AddTransient<JoyBindingView>()
                 .AddTransient<JoyBindingViewModel>()
-                .AddTransient<IJoystickStateManager, JoystickStateManager>()
-                .AddTransient<IJoyBindingsWatcher, JoyBindingsWatcher>()
+                .AddSingleton<IJoystickStateManager, JoystickStateManager>()
+                .AddSingleton<IJoyListener, JoyListener>()
                 .AddTransient<IJoyPatternWatcher, JoyPatternWatcher>()
 
             ;

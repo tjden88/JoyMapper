@@ -31,7 +31,7 @@ namespace JoyMapper.ViewModels.Windows
 
             PatternActionViewModel.PropertyChanged += UpdatePatternWatcher;
             JoyBindingViewModel.PropertyChanged += UpdatePatternWatcher;
-            _JoyPatternWatcher.ReportPatternAction += S => WatcherLogText = $"{WatcherLogText}\n{S}";
+            _JoyPatternWatcher.ReportPatternAction += S => Debug.WriteLine(S);
 
             Title = "Добавить паттерн";
         }

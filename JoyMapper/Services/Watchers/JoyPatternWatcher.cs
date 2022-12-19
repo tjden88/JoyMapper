@@ -77,22 +77,30 @@ namespace JoyMapper.Services.Watchers
         {
             while (_IsRunning)
             {
-                foreach (var patternsByJoyName in _PatternsByJoyName)
+                try
                 {
-                    var state = _JoystickStateManager.GetJoyState(patternsByJoyName.JoyName);
-                    if (state != null)
+                    foreach (var patternsByJoyName in _PatternsByJoyName)
                     {
-                        patternsByJoyName.JoyPatterns.ForEach(pattern =>
+                        var state = _JoystickStateManager.GetJoyState(patternsByJoyName.JoyName);
+                        if (state != null)
                         {
-                            var lastState = pattern.Binding.IsActive;
-                            var newState = pattern.Binding.UpdateIsActive(state);
-                            if (lastState != newState)
-                               pattern.PatternAction.BindingStateChanged(newState);
-                        });
+                            patternsByJoyName.JoyPatterns.ForEach(pattern =>
+                            {
+                                var lastState = pattern.Binding.IsActive;
+                                var newState = pattern.Binding.UpdateIsActive(state);
+                                if (lastState != newState)
+                                    pattern.PatternAction.BindingStateChanged(newState);
+                            });
+                        }
                     }
-                }
 
-                await Task.Delay(_PollingDelay);
+                    await Task.Delay(_PollingDelay);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                    throw;
+                }
             }
         }
 
