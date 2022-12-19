@@ -32,18 +32,28 @@
             </DockPanel>
         </Grid>
 
-        <!--Биндинг кнопки-->
+
         <Grid DockPanel.Dock="Top">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <!--Биндинг кнопки-->
             <userControls:JoyBindingView DockPanel.Dock="Top" DataContext="{Binding JoyBindingViewModel}"/>
-            <Expander IsExpanded="False" Margin="5,0,0,0" Grid.Column="1" ExpandDirection="Right" Header="Лог действий">
-                <ScrollViewer  Width="250" VerticalScrollBarVisibility="Auto">
-                    <TextBlock Text="{Binding WatcherLogText}"/>
-                </ScrollViewer>
+
+            <!--Лог действий-->
+            <Expander IsExpanded="False" Margin="5,0,0,0" Grid.Column="1" ExpandDirection="Right" Header="Тест паттерна" Height="250">
+                <DockPanel>
+                    <Button Style="{StaticResource WPRFlatButton}" BorderThickness="1" Margin="0,5,0,0" DockPanel.Dock="Bottom">
+                        <Button.Content>
+                            <controls:WPRIconText Text="Очистить" IconSource="TrashEmpty"></controls:WPRIconText>
+                        </Button.Content>
+                    </Button>
+                    <ScrollViewer  Width="250" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+                        <TextBlock Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding WatcherLogText, TargetNullValue='Протестируйте работу паттерна...'}"/>
+                    </ScrollViewer>
+                </DockPanel>
             </Expander>
         </Grid>
 

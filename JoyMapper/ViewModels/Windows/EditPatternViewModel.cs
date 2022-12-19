@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using JoyMapper.Models;
+using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
-using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.UserControls;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -14,11 +14,11 @@ namespace JoyMapper.ViewModels.Windows
 {
     public class EditPatternViewModel : WindowViewModel, IDisposable
     {
-        private readonly IJoyPatternWatcher _JoyPatternWatcher;
+        private readonly IServiceProvider _Services;
 
-        public EditPatternViewModel(PatternActionViewModel PatternActionViewModel, DataManager DataManager, JoyBindingViewModel JoyBindingViewModel, IJoyPatternWatcher JoyPatternWatcher)
+        public EditPatternViewModel(IServiceProvider Services, PatternActionViewModel PatternActionViewModel, DataManager DataManager, JoyBindingViewModel JoyBindingViewModel)
         {
-            _JoyPatternWatcher = JoyPatternWatcher;
+            _Services = Services;
             this.PatternActionViewModel = PatternActionViewModel;
             this.JoyBindingViewModel = JoyBindingViewModel;
 
@@ -29,11 +29,11 @@ namespace JoyMapper.ViewModels.Windows
 
             Modificators = DataManager.Modificators;
 
-            _JoyPatternWatcher.ReportPatternAction += S => Debug.WriteLine(S);
+            JoyBindingViewModel.BindingStateChanged += BindingStateChanged;
+            PatternActionViewModel.PropertyChanged += PatternActionViewModelOnPropertyChanged;
 
             Title = "Добавить паттерн";
         }
-
 
 
         #region Prop
@@ -171,33 +171,44 @@ namespace JoyMapper.ViewModels.Windows
 
         #region ActionWatch
 
-        private bool _Watching;
-        private void UpdatePatternWatcher(object Sender, PropertyChangedEventArgs E)
+
+        private PatternActionBase _PatternActionBase;
+
+        private void SetPatternAction(PatternActionBase pattern)
         {
-            if(E.PropertyName != nameof(JoyBindingViewModel.JoyBinding) && E.PropertyName != nameof(PatternActionViewModel.SelectedPatternAction))
-                return;
+            if (_PatternActionBase != null)
+                _PatternActionBase.ReportMessage -= Action_OnReportMessage;
 
-            var start = PatternActionViewModel.SelectedPatternAction != null && JoyBindingViewModel.JoyBinding != null & !_Watching;
-
-            if (!start)
+            if (pattern == null)
             {
+                _PatternActionBase = null;
                 return;
             }
 
-            _Watching = true;
-            _JoyPatternWatcher.StartWatching(new List<JoyPattern>(new[]
-            {
-                new JoyPattern
-                {
-                    Name = PatternName,
-                    PatternAction = PatternActionViewModel.GetModel(),
-                    Binding = JoyBindingViewModel.GetModel(),
-                    GroupName = GroupName,
-                    ModificatorId = SelectedModificator?.Id,
-                }
-            }));
-            Debug.WriteLine("Смотрим");
+            pattern.Initialize(_Services);
+            _PatternActionBase = pattern;
+            pattern.ReportMessage += Action_OnReportMessage;
+        }
 
+
+        private void Action_OnReportMessage(string message)
+        {
+            const string mark = ">>> ";
+            WatcherLogText = string.Concat(mark, message, Environment.NewLine, _WatcherLogText.Replace(mark, string.Empty));
+        }
+
+
+        private void BindingStateChanged(bool state)
+        {
+            if (_PatternActionBase == null) return;
+            _PatternActionBase.BindingStateChanged(state);
+        }
+
+
+        private void PatternActionViewModelOnPropertyChanged(object Sender, PropertyChangedEventArgs E)
+        {
+            if (E.PropertyName == nameof(PatternActionViewModel.SelectedPatternAction)) 
+                SetPatternAction(PatternActionViewModel.SelectedPatternAction.ToModel());
         }
 
         #endregion
@@ -205,7 +216,11 @@ namespace JoyMapper.ViewModels.Windows
 
         public void Dispose()
         {
-            _JoyPatternWatcher.StopWatching();
+            if (_PatternActionBase != null)
+            {
+                _PatternActionBase.ReportMessage -= Action_OnReportMessage;
+                _PatternActionBase = null;
+            }
         }
     }
 }

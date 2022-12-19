@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using JoyMapper.Interfaces;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
@@ -15,6 +17,9 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     private readonly IJoyListener _JoyListener;
     private readonly AppWindowsService _AppWindowsService;
 
+    /// <summary> Сообщает об изменении состояния привязки </summary>
+    public Action<bool> BindingStateChanged { get; set; }
+
     public JoyBindingViewModel(): base(true)
     {
         JoyBinding = new AxisJoyBinding
@@ -29,6 +34,7 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     {
         _JoyListener = JoyListener;
         _AppWindowsService = AppWindowsService;
+        _JoyListener.ChangesHandled += Listener_OnChangesHandled;
     }
 
 
@@ -126,6 +132,7 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
 
     #endregion
 
+
     #region WatchStatus
 
 
@@ -136,13 +143,15 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
             _JoyListener.StopListen();
             return;
         }
-
         _JoyListener.StartListen(new[] { JoyBinding });
         Debug.WriteLine($"Начато отслеживания кнопки {JoyBinding.Description}");
     }
 
 
-
+    private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> bindings)
+    {
+        BindingStateChanged?.Invoke(bindings.First().IsActive);
+    }
 
     #endregion
 
@@ -178,6 +187,7 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     public void Dispose()
     {
         _JoyListener.StopListen();
+        _JoyListener.ChangesHandled -= Listener_OnChangesHandled;
         Debug.WriteLine($"Отслеживание кнопки {JoyBinding.Description} остановлено");
     }
 
