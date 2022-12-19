@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
+using JoyMapper.Services.Interfaces;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -15,11 +16,13 @@ public partial class MainWindowViewModel : WindowViewModel
 {
     private readonly DataManager _DataManager;
     private readonly UpdateChecker _UpdateChecker;
+    private readonly IProfileListener _ProfileListener;
 
-    public MainWindowViewModel(DataManager DataManager, UpdateChecker UpdateChecker)
+    public MainWindowViewModel(DataManager DataManager, UpdateChecker UpdateChecker , IProfileListener ProfileListener)
     {
         _DataManager = DataManager;
         _UpdateChecker = UpdateChecker;
+        _ProfileListener = ProfileListener;
         AppLog.Report += msg => LogMessages.Add(msg);
         Title = "JoyMapper " + App.AppVersion;
         CurrentColorTheme = ColorThemes

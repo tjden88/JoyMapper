@@ -63,7 +63,7 @@ public partial class MainWindowViewModel
         LogMessages.Clear();
         var profile = (Profile)p;
         ActiveProfile = profile; 
-        //_ProfileWorker.Start(profile);
+        _ProfileListener.StartListenProfile(profile);
     }
 
     #endregion
@@ -85,7 +85,7 @@ public partial class MainWindowViewModel
     private void OnStopProfileCommandExecuted()
     {
         ActiveProfile = null;
-        //_ProfileWorker.Stop();
+        _ProfileListener.StopListenProfile();
     }
 
     #endregion

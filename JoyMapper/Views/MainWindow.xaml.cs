@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JoyMapper.Views;
 
@@ -17,12 +15,5 @@ public partial class MainWindow : Window
         ViewModel = viewModel;
         InitializeComponent();
         DataContext = ViewModel;
-    }
-
-    private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
-    {
-        var watcher = App.Services.GetRequiredService<IJoyPatternListener>();
-
-        watcher.StartWatching(ViewModel.JoyPatterns);
     }
 }
