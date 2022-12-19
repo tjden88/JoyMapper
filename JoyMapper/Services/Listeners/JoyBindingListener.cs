@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.Listeners;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 
@@ -33,10 +34,18 @@ public class JoyBindingListener : IJoyBindingListener
 
     public void StartListen(IEnumerable<JoyBindingBase> bindings)
     {
+        StartListen(bindings.Select(b=>new ModificatedJoyBinding
+        {
+            BindingBase = b
+        }));
+    }
+
+    public void StartListen(IEnumerable<ModificatedJoyBinding> bindings)
+    {
         StopListen();
 
         var joyGroups = bindings
-            .GroupBy(b => b.JoyName)
+            .GroupBy(b => b.BindingBase.JoyName)
             .Select(g => new JoyBindingsGroup(g.Key, g.ToList()))
             .Where(g => !string.IsNullOrEmpty(g.JoyName))
             .ToList();
@@ -72,7 +81,7 @@ public class JoyBindingListener : IJoyBindingListener
         {
             var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
             if (state != null)
-                joyBindingsGroup.Bindings.ForEach(binding => binding.UpdateIsActive(state));
+                joyBindingsGroup.Bindings.ForEach(binding => binding.BindingBase.UpdateIsActive(state));
         }
     }
 
@@ -88,10 +97,10 @@ public class JoyBindingListener : IJoyBindingListener
             {
                 joyBindingsGroup.Bindings.ForEach(binding =>
                 {
-                    var lastState = binding.IsActive;
-                    var newState = binding.UpdateIsActive(state);
+                    var lastState = binding.BindingBase.IsActive;
+                    var newState = binding.BindingBase.UpdateIsActive(state);
                     if (lastState != newState)
-                        changes.Add(binding);
+                        changes.Add(binding.BindingBase);
                 });
             }
             else
@@ -118,6 +127,6 @@ public class JoyBindingListener : IJoyBindingListener
 
 
     /// <summary> Группа событий по имени джойстика </summary>
-    private record JoyBindingsGroup(string JoyName, List<JoyBindingBase> Bindings);
+    private record JoyBindingsGroup(string JoyName, List<ModificatedJoyBinding> Bindings);
 
 }
