@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models.JoyBindings;
@@ -15,14 +14,13 @@ namespace JoyMapper.ViewModels.Windows
     public class AddJoyBindingViewModel : WindowViewModel
     {
         private readonly IJoystickStateManager _JoystickStateManager;
-        private readonly IJoyBindingsWatcher _JoyBindingsWatcher;
+        private readonly IJoyListener _JoyListener;
 
-        private bool _IsWatching;
 
-        public AddJoyBindingViewModel(IJoystickStateManager JoystickStateManager, IJoyBindingsWatcher JoyBindingsWatcher)
+        public AddJoyBindingViewModel(IJoystickStateManager JoystickStateManager, IJoyListener JoyListener)
         {
             _JoystickStateManager = JoystickStateManager;
-            _JoyBindingsWatcher = JoyBindingsWatcher;
+            _JoyListener = JoyListener;
             Title = "Назначить кнопку/ось";
         }
 
@@ -64,30 +62,28 @@ namespace JoyMapper.ViewModels.Windows
             foreach (var connectedJoy in connectedJoys) 
                 allBindings.AddRange(AllJoyBindings(connectedJoy));
 
-            _IsWatching = true;
-            _JoyBindingsWatcher.StartWatching(allBindings);
-            Task.Run(WatchChanges);
+            _JoyListener.ChangesHandled += Listener_OnChangesHandled;
+            _JoyListener.StartListen(allBindings);
+            Debug.WriteLine("Начато отслеживание всех кнопок всех джойстиков");
+        }
 
+        private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> changes)
+        {
+            if (changes.FirstOrDefault() is not {IsActive: true} change) return;
+
+            Debug.WriteLine(change.Description);
+            JoyBinding = change;
+            Application.Current.Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
         }
 
         /// <summary> Остановить отслеживание </summary>
-        public void StopWatching() => _IsWatching = false;
-
-        // Цикл проверки нажатых осей и кнопок
-        private async Task WatchChanges()
+        public void StopWatching()
         {
-            while (_IsWatching)
-            {
-                var changes = _JoyBindingsWatcher.GetChanges();
-                if (changes.FirstOrDefault() is { IsActive: true } change)
-                {
-                    Debug.WriteLine(change.Description);
-                    JoyBinding = change;
-                    Application.Current.Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
-                }
-                await Task.Delay(100);
-            }
+            _JoyListener.StopListen();
+            _JoyListener.ChangesHandled -= Listener_OnChangesHandled;
+            Debug.WriteLine("Завершено отслеживание всех кнопок всех джойстиков");
         }
+
 
         #region AllBindings
 
