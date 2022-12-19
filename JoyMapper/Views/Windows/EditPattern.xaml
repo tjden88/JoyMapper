@@ -49,7 +49,16 @@
         <DockPanel DockPanel.Dock="Top" Margin="5,20,0,10" LastChildFill="False">
             <ComboBox Width="280" ItemsSource="{Binding Modificators}" 
                       SelectedItem="{Binding SelectedModificator}"
-                      helpers:TextHelper.Hint="Модификатор" DisplayMemberPath="Name"/>
+                      helpers:TextHelper.Hint="Модификатор">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Button Style="{StaticResource WPRToolButton}" Margin="10,0"
                     VerticalAlignment="Center"
                     Command="{Binding ClearModificatorCommand}"
