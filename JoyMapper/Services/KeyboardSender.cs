@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JoyMapper.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,13 +11,33 @@ namespace JoyMapper.Services
     /// <summary>
     /// Имитация нажатия клавиш клавиатуры
     /// </summary>
-    internal class KeyboardSender
+    public class KeyboardSender
     {
         /// <summary> Эмулировать нажатие клавиши </summary>
         public void PressKey(Key key) => KeyboardHook.Press(key);
 
         /// <summary> Эмулировать отпускание клавиши </summary>
         public void ReleaseKey(Key key) => KeyboardHook.Release(key);
+
+
+        /// <summary> Отправить клавиатурные команды в очередь команд </summary>
+        public void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
+        {
+            foreach (var binding in keyboardKeyBindings)
+            {
+                switch (binding.Action)
+                {
+                    case KeyboardKeyBinding.KeyboardAction.KeyPress:
+                        PressKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.KeyUp:
+                        ReleaseKey(binding.KeyCode);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
 
         // Source: https://gist.github.com/DrustZ/640912b9d5cb745a3a56971c9bd58ac7

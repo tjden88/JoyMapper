@@ -72,7 +72,7 @@ namespace JoyMapper
                 .AddSingleton<IJoystickStateManager, JoystickStateManager>()
                 .AddTransient<IJoyListener, JoyListener>()
                 .AddTransient<IJoyPatternWatcher, JoyPatternWatcher>()
-
+                .AddSingleton<KeyboardSender>()
             ;
 
             return serviceCollection.BuildServiceProvider();

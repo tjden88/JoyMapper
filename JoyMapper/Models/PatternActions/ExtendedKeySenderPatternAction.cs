@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JoyMapper.Models.PatternActions.Base;
+using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
@@ -20,7 +21,6 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
         new ExtendedKeySenderPatternActionViewModel(this);
 
 
-
     public ICollection<KeyboardKeyBinding> SinglePressKeyBindings { get; set; }
 
     public ICollection<KeyboardKeyBinding> DoublePressKeyBindings { get; set; }
@@ -30,18 +30,18 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     #region KeyWatching
 
+    private static KeyboardSender _KeyboardSender;
+
     protected override void Initialize(IServiceProvider Services)
     {
         var appsett = Services.GetRequiredService<DataManager>();
         _DoublePressDelay = appsett.AppSettings.DoublePressDelay;
         _LongPressDelay = appsett.AppSettings.LongPressDelay;
         _IsDoublePressActionsExist = DoublePressKeyBindings?.Any() ?? false;
+        if(!LogReportMode)
+            _KeyboardSender = Services.GetRequiredService<KeyboardSender>();
     }
 
-    protected override void DoWorkMode(bool newBindingState)
-    {
-        throw new NotImplementedException();
-    }
 
     private bool _IsDoublePressActionsExist; // Существуют ли действия двойного нажатия
 
@@ -49,15 +49,18 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     private static int _LongPressDelay;
 
-
     private Stopwatch _DelayMeter; // Таймер задержки между нажатиями
 
     private bool _FirstPressHandled; // Первое нажатие поймано
 
-
     private bool _NowPressed;
 
-    protected override async void DoReportMode(bool newBindingState)
+
+    protected override void DoReportMode(bool newBindingState) => DoWork(newBindingState, true);
+
+    protected override void DoWorkMode(bool newBindingState) => DoWork(newBindingState, false);
+
+    protected async void DoWork(bool newBindingState, bool ReportMode)
     {
         _NowPressed = newBindingState;
 
@@ -69,9 +72,12 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
             // Кнопка не нажата и прошло время двойного клика или
             // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
-            if (_FirstPressHandled && !newBindingState && (!_IsDoublePressActionsExist && !LogReportMode || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
+            if (_FirstPressHandled && !newBindingState && (!_IsDoublePressActionsExist && !ReportMode || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
             {
-                ReportMessage?.Invoke("Одиночное нажатие");
+                if (ReportMode)
+                    ReportMessage?.Invoke("Одиночное нажатие");
+                else
+                    _KeyboardSender.SendKeyboardCommands(SinglePressKeyBindings);
 
                 _FirstPressHandled = false;
                 _DelayMeter = null;
@@ -87,7 +93,11 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
                 }
                 else // Второе нажатие
                 {
-                    ReportMessage?.Invoke("Двойное нажатие");
+                    if (ReportMode)
+                        ReportMessage?.Invoke("Двойное нажатие");
+                    else
+                        _KeyboardSender.SendKeyboardCommands(DoublePressKeyBindings);
+
                     _FirstPressHandled = false;
                     _DelayMeter = null;
                 }
@@ -96,7 +106,11 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
             // Кнопка нажата больше времени долгого нажатия
             if (_FirstPressHandled && newBindingState && _DelayMeter?.ElapsedMilliseconds > _LongPressDelay)
             {
-                ReportMessage?.Invoke("Долгое нажатие");
+                if (ReportMode)
+                    ReportMessage?.Invoke("Долгое нажатие");
+                else
+                    _KeyboardSender.SendKeyboardCommands(LongPressKeyBindings);
+
                 _FirstPressHandled = false;
                 _DelayMeter = null;
             }
