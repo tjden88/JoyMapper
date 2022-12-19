@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.Listeners;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
@@ -29,7 +30,7 @@ public class JoyPatternListener : IJoyPatternListener
             joyPattern.PatternAction.Initialize(_ServiceProvider, false);
         }
 
-        var bindings = Patterns.Select(p => new JoyBindingWithAction(p.Binding, p.PatternAction));
+        var bindings = Patterns.Select(p => new ModificatedJoyBinding(new JoyBindingWithAction(p.Binding, p.PatternAction), p.ModificatorId));
 
         _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
         _JoyBindingListener.StartListen(bindings);

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.Listeners;
 using JoyMapper.Services.Data;
@@ -18,7 +19,7 @@ public class JoyBindingListener : IJoyBindingListener
     private readonly int _PollingDelay;
 
     private List<ModificatedJoyBinding> _Bindings = new(); // Отслеживаемые привязки
-    private List<JoyBindingBase> _Modificators = new(); // Используемые модификаторы
+    private List<Modificator> _Modificators = new(); // Используемые модификаторы
     private List<string> _UsedJoysticks = new(); // Используемые джойстики для модификаторов и привязок
 
     public Action<IEnumerable<JoyBindingBase>> ChangesHandled { get; set; }
@@ -36,35 +37,27 @@ public class JoyBindingListener : IJoyBindingListener
 
     public void StartListen(IEnumerable<JoyBindingBase> bindings)
     {
-        StartListen(bindings.Select(b=>new ModificatedJoyBinding
-        {
-            BindingBase = b
-        }));
+        StartListen(bindings
+            .Select(b => new ModificatedJoyBinding(b)));
     }
 
     public void StartListen(IEnumerable<ModificatedJoyBinding> bindings)
     {
         StopListen();
 
-        //var joyGroups = bindings
-        //    .GroupBy(b => b.BindingBase.JoyName)
-        //    .Select(g => new JoyBindingsGroup(g.Key, g.ToList()))
-        //    .Where(g => !string.IsNullOrEmpty(g.JoyName))
-        //    .ToList();
-        //_BindingsGroups = joyGroups;
 
         _Bindings = bindings.ToList();
 
         var usedModificators = _Bindings
-            .Select(b=>b.ModificatorId)
-            .Where(id=>id != null)
+            .Select(b => b.ModificatorId)
+            .Where(id => id != null)
             .SelectMany(id => _DataManager.Modificators
-                .Where(m=>m.Id==id).Select(m=>m.Binding))
+                .Where(m => m.Id == id))
             .ToList();
         _Modificators = usedModificators;
 
         var joys = usedModificators
-            .Select(m => m.JoyName)
+            .Select(m => m.Binding.JoyName)
             .Union(_Bindings
                 .Select(b => b.BindingBase.JoyName))
             .Distinct()
@@ -105,7 +98,7 @@ public class JoyBindingListener : IJoyBindingListener
                          .GetJoyState(joy))
                      .Where(state => state != null))
         {
-            _Modificators.ForEach(m=>m.UpdateIsActive(state));
+            _Modificators.ForEach(m => m.Binding.UpdateIsActive(state));
             _Bindings.ForEach(binding => binding.BindingBase.UpdateIsActive(state));
         }
     }
@@ -119,14 +112,14 @@ public class JoyBindingListener : IJoyBindingListener
 
         // Опрос джойстиков
         var joyStates = _UsedJoysticks
-            .Select(joy => new {name = joy, state= _JoystickStateManager.GetJoyState(joy)})
+            .Select(joy => new { name = joy, state = _JoystickStateManager.GetJoyState(joy) })
             .Where(js => js.state != null)
             .ToList();
 
         // Опрос модификаторов
-        _Modificators.ForEach(m=> 
-            m.UpdateIsActive(joyStates
-                .Find(js => js.name == m.JoyName)?.state));
+        _Modificators.ForEach(m =>
+            m.Binding.UpdateIsActive(joyStates
+                .Find(js => js.name == m.Binding.JoyName)?.state));
 
         // Опрос привязок
         foreach (var joyBinding in _Bindings)
@@ -136,6 +129,9 @@ public class JoyBindingListener : IJoyBindingListener
 
             var lastState = joyBinding.BindingBase.IsActive;
             var newState = joyBinding.BindingBase.UpdateIsActive(joyState);
+
+            if (joyBinding.ModificatorId is { } modId && !_Modificators.First(m => m.Id == modId).Binding.IsActive)
+                continue;
 
             if (lastState != newState)
                 changes.Add(joyBinding.BindingBase);
