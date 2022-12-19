@@ -179,7 +179,7 @@ namespace JoyMapper.ViewModels.Windows
             ??= new Command(OnClearLogCommandExecuted, CanClearLogCommandExecute, "Очистить лог действий");
 
         /// <summary>Проверка возможности выполнения - Очистить лог действий</summary>
-        private bool CanClearLogCommandExecute() => WatcherLogText != null;
+        private bool CanClearLogCommandExecute() => true;
 
         /// <summary>Логика выполнения - Очистить лог действий</summary>
         private void OnClearLogCommandExecuted() => WatcherLogText = null;
