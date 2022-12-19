@@ -216,11 +216,13 @@ public class DataManager
         if (!File.Exists(_SettingsFileName))
             return new Data();
 
-        var appSettVersion = _DataSerializer.LoadFromFile<AppSettings>(_SettingsFileName)?.AppVersion;
+        var appSettings = _DataSerializer.LoadFromFile<SimpleAppData>(_SettingsFileName)?.AppSettings;
+        var appSettVersion = appSettings?.AppVersion;
+
         if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
             File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion ?? "undefined"}-backup.json"), true);
 
-        var version = new Version(appSettVersion ?? "1.2");
+        var version = new Version(appSettVersion ?? "1.3");
 
         var compareTo = version.CompareTo(new Version("1.4"));
         if (compareTo < 0)
@@ -229,11 +231,11 @@ public class DataManager
             var mappedData = SettingsMapper.GetNewVersionData(_SettingsFileName);
             if (mappedData is not null)
                 return mappedData;
-
-            var loadFromFile = _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
-            if (loadFromFile is not null)
-                return loadFromFile;
         }
+
+        var loadFromFile = _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
+        if (loadFromFile is not null)
+            return loadFromFile;
 
         var failFileName = $"ConfigLoadFail-{DateTime.Now:dd-MM-yyyy:hh-mm-ss}.json";
         File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, failFileName), true);
@@ -278,5 +280,10 @@ public class DataManager
         public List<JoyPattern> JoyPatterns { get; set; } = new();
 
         public List<Modificator> Modificators { get; set; } = new();
+    }
+
+    private class SimpleAppData
+    {
+        public AppSettings AppSettings { get; set; } = new();
     }
 }
