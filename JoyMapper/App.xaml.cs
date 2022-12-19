@@ -22,7 +22,7 @@ public partial class App
 {
 
     /// <summary> Версия приложения </summary>
-    internal const string AppVersion = "1.3";
+    internal const string AppVersion = "1.4";
 
 
     /// <summary> Активное окно </summary>

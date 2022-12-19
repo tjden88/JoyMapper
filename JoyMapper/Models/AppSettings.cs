@@ -5,7 +5,7 @@
 /// </summary>
 public class AppSettings
 {
-    public string AppVersion { get; set; } = App.AppVersion;
+    public string AppVersion { get; set; }
 
 
     /// <summary> Интервал опроса джойстиков </summary>

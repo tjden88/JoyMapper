@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
+using JoyMapper.Models.Legacy.v1_3;
 
 namespace JoyMapper.Services.Data;
 
@@ -191,7 +192,7 @@ public class DataManager
     {
         var editModificator = ProfilesData.Modificators.First(m => m.Id == Id);
         var modified = _ModificatorManager.UpdateModificator(editModificator);
-        if (modified is null) 
+        if (modified is null)
             return null;
         var index = ProfilesData.Modificators.IndexOf(editModificator);
         ProfilesData.Modificators.Remove(editModificator);
@@ -202,23 +203,37 @@ public class DataManager
 
 
     /// <summary> Сохранить профили и настройки </summary>
-    public void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+    public void SaveData()
+    {
+        ProfilesData.AppSettings.AppVersion = App.AppVersion;
+        _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+    }
 
     #endregion
 
     private Data LoadData()
     {
-        if(!File.Exists(_SettingsFileName))
+        if (!File.Exists(_SettingsFileName))
             return new Data();
 
         var appSettVersion = _DataSerializer.LoadFromFile<AppSettings>(_SettingsFileName)?.AppVersion;
         if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
-            File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion}-backup.json"), true);
+            File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion ?? "undefined"}-backup.json"), true);
 
-        var loadFromFile = _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
+        var version = new Version(appSettVersion ?? "1.2");
 
-        if (loadFromFile is not null)
-            return loadFromFile;
+        var compareTo = version.CompareTo(new Version("1.4"));
+        if (compareTo < 0)
+        {
+            // Попытка обновить настройки
+            var mappedData = SettingsMapper.GetNewVersionData(_SettingsFileName);
+            if (mappedData is not null)
+                return mappedData;
+
+            var loadFromFile = _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
+            if (loadFromFile is not null)
+                return loadFromFile;
+        }
 
         var failFileName = $"ConfigLoadFail-{DateTime.Now:dd-MM-yyyy:hh-mm-ss}.json";
         File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, failFileName), true);
