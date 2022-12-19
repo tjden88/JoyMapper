@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
@@ -21,9 +20,17 @@ public class ProfileListener: IProfileListener
     {
         var patterns = _DataManager.JoyPatterns
             .Where(p => Profile.PatternsIds
-                .Contains(p.Id));
+                .Contains(p.Id))
+            .ToList();
 
-        _JoyPatternListener.StartWatching(patterns.ToList());
+        if (patterns.Count == 0)
+        {
+            AppLog.LogMessage("В выбранном профиле не назначено ни одного паттерна! Необходимо отредактировать профиль или запустить другой"
+                , LogMessage.MessageType.Error);
+            return;
+        }
+
+        _JoyPatternListener.StartWatching(patterns);
     }
 
     public void StopListenProfile() => _JoyPatternListener.StopWatching();

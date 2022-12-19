@@ -5,7 +5,6 @@ using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.Listeners;
 using JoyMapper.Models.PatternActions.Base;
-using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 
 namespace JoyMapper.Services.Listeners;
@@ -15,7 +14,7 @@ public class JoyPatternListener : IJoyPatternListener
     private readonly IJoyBindingListener _JoyBindingListener;
     private readonly IServiceProvider _ServiceProvider;
 
-    public JoyPatternListener(IJoyBindingListener JoyBindingListener, DataManager DataManager, IServiceProvider ServiceProvider)
+    public JoyPatternListener(IJoyBindingListener JoyBindingListener, IServiceProvider ServiceProvider)
     {
         _JoyBindingListener = JoyBindingListener;
         _ServiceProvider = ServiceProvider;

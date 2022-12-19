@@ -24,7 +24,7 @@
         <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
             <TabItem>
                 <TabItem.Header>
-                    <controls:WPRIconText Text="Профили" IconSource="CameraControl" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                    <controls:WPRIconText Text="Профили" IconSource="Gauge" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
                 <!--Профили-->

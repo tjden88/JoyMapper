@@ -23,7 +23,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
     public JoyState GetJoyState(string joystickName)
     {
-        var joy = _Joysticks.Find(j => j.Joystick?.Information.InstanceName == joystickName);
+        var joy = _Joysticks.Find(j => j.JoyName == joystickName);
         try
         {
 
@@ -34,14 +34,22 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                     .FirstOrDefault(d => d.InstanceName == joystickName);
 
                 if (newJoy == null)
+                {
+                    if (joy is null)
+                    {
+                        _Joysticks.Add(new ConnentedJoystick(joystickName) {IsFault = true});
+                        AppLog.LogMessage($"Устройство {joystickName} не найдено!", LogMessage.MessageType.Error);
+                    }
+
                     return null;
+                }
 
                 // Джойстик найден или заново подключен
                 var newJoystick = new Joystick(new DirectInput(), newJoy.InstanceGuid);
 
                 if (joy is null) // Добавить
                 {
-                    joy = new() { Joystick = newJoystick };
+                    joy = new(joystickName) { Joystick = newJoystick };
                     _Joysticks.Add(joy);
                 }
                 else // Заменить
@@ -81,7 +89,14 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
     private class ConnentedJoystick
     {
+        public ConnentedJoystick(string Name)
+        {
+            JoyName = Name;
+        }
+
         public bool IsFault { get; set; }
+
+        public string JoyName { get; }
 
         public Joystick Joystick { get; set; }
     }

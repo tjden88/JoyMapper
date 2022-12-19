@@ -45,7 +45,6 @@ public class JoyBindingListener : IJoyBindingListener
     {
         StopListen();
 
-
         _Bindings = bindings.ToList();
 
         var usedModificators = _Bindings
@@ -62,6 +61,23 @@ public class JoyBindingListener : IJoyBindingListener
                 .Select(b => b.BindingBase.JoyName))
             .Distinct()
             .ToList();
+
+        var avaliableJoys = _JoystickStateManager
+            .GetConnectedJoysticks()
+            .Count(d => joys.Contains(d));
+
+        if (avaliableJoys == 0)
+        {
+            AppLog.LogMessage("Джойстики, используемые в этом профиле, не найдены. Подключите их и перезапустите профиль"
+                , LogMessage.MessageType.Error);
+            return;
+        }
+
+        if (joys.Count > avaliableJoys)
+        {
+            AppLog.LogMessage($"Найдено {avaliableJoys} джойстиков из задействованных в профиле: {joys.Count}.\n" +
+                              $"Подключите нужные устройства для правильной работы профиля", LogMessage.MessageType.Warning);
+        }
 
         _UsedJoysticks = joys;
 
@@ -82,10 +98,7 @@ public class JoyBindingListener : IJoyBindingListener
         if (_CancellationTokenSource == null) return;
 
         _CancellationTokenSource.Cancel();
-        _Bindings.Clear();
-        _Modificators.Clear();
-        _UsedJoysticks.Clear();
-        _CancellationTokenSource = null;
+
         Debug.WriteLine("Прослушивание привязок остановлено");
     }
 
@@ -107,6 +120,9 @@ public class JoyBindingListener : IJoyBindingListener
     /// <summary> Получить изменения в статусах привязок кнопок </summary>
     private ICollection<JoyBindingBase> GetChanges()
     {
+        if(_CancellationTokenSource == null || _CancellationTokenSource.IsCancellationRequested)
+            return new List<JoyBindingBase>();
+
         var changes = new List<JoyBindingBase>();
 
         // Опрос джойстиков
@@ -153,6 +169,10 @@ public class JoyBindingListener : IJoyBindingListener
 
             await Task.Delay(_PollingDelay, cancel);
         }
+        _Bindings.Clear();
+        _Modificators.Clear();
+        _UsedJoysticks.Clear();
+        _CancellationTokenSource = null;
     }
 
 
