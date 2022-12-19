@@ -21,7 +21,7 @@ namespace JoyMapper.Views
 
         private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
         {
-            var watcher = App.Services.GetRequiredService<IJoyPatternWatcher>();
+            var watcher = App.Services.GetRequiredService<IJoyPatternListener>();
 
             watcher.StartWatching(ViewModel.JoyPatterns);
         }

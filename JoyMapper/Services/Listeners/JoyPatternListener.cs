@@ -1,22 +1,22 @@
-﻿using JoyMapper.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
+using JoyMapper.Services.Interfaces;
 
-namespace JoyMapper.Services.Watchers;
+namespace JoyMapper.Services.Listeners;
 
-public class JoyPatternWatcher : IJoyPatternWatcher
+public class JoyPatternListener : IJoyPatternListener
 {
-    private readonly IJoyListener _JoyListener;
+    private readonly IJoyBindingListener _JoyBindingListener;
     private readonly IServiceProvider _ServiceProvider;
 
-    public JoyPatternWatcher(IJoyListener JoyListener, DataManager DataManager, IServiceProvider ServiceProvider)
+    public JoyPatternListener(IJoyBindingListener JoyBindingListener, DataManager DataManager, IServiceProvider ServiceProvider)
     {
-        _JoyListener = JoyListener;
+        _JoyBindingListener = JoyBindingListener;
         _ServiceProvider = ServiceProvider;
     }
 
@@ -31,8 +31,8 @@ public class JoyPatternWatcher : IJoyPatternWatcher
 
         var bindings = Patterns.Select(p => new JoyBindingWithAction(p.Binding, p.PatternAction));
 
-        _JoyListener.ChangesHandled += Listener_OnChangesHandled;
-        _JoyListener.StartListen(bindings);
+        _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
+        _JoyBindingListener.StartListen(bindings);
     }
 
     private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> bindings)
@@ -46,8 +46,8 @@ public class JoyPatternWatcher : IJoyPatternWatcher
 
     public void StopWatching()
     {
-        _JoyListener.ChangesHandled -= Listener_OnChangesHandled;
-        _JoyListener.StopListen();
+        _JoyBindingListener.ChangesHandled -= Listener_OnChangesHandled;
+        _JoyBindingListener.StopListen();
     }
 
 

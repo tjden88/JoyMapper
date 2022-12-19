@@ -4,7 +4,7 @@ using System.Windows;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
-using JoyMapper.Services.Watchers;
+using JoyMapper.Services.Listeners;
 using JoyMapper.ViewModels;
 using JoyMapper.ViewModels.UserControls;
 using JoyMapper.ViewModels.Windows;
@@ -70,8 +70,8 @@ namespace JoyMapper
                 .AddTransient<JoyBindingView>()
                 .AddTransient<JoyBindingViewModel>()
                 .AddSingleton<IJoystickStateManager, JoystickStateManager>()
-                .AddTransient<IJoyListener, JoyListener>()
-                .AddTransient<IJoyPatternWatcher, JoyPatternWatcher>()
+                .AddTransient<IJoyBindingListener, JoyBindingListener>()
+                .AddTransient<IJoyPatternListener, JoyPatternListener>()
                 .AddSingleton<KeyboardSender>()
             ;
 

@@ -14,7 +14,7 @@ namespace JoyMapper.ViewModels.UserControls;
 
 public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBindingBase>
 {
-    private readonly IJoyListener _JoyListener;
+    private readonly IJoyBindingListener _JoyBindingListener;
     private readonly AppWindowsService _AppWindowsService;
 
     /// <summary> Сообщает об изменении состояния привязки </summary>
@@ -30,11 +30,11 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
         };
     }
 
-    public JoyBindingViewModel(IJoyListener JoyListener, AppWindowsService AppWindowsService)
+    public JoyBindingViewModel(IJoyBindingListener JoyBindingListener, AppWindowsService AppWindowsService)
     {
-        _JoyListener = JoyListener;
+        _JoyBindingListener = JoyBindingListener;
         _AppWindowsService = AppWindowsService;
-        _JoyListener.ChangesHandled += Listener_OnChangesHandled;
+        _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
     }
 
 
@@ -140,10 +140,10 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     {
         if (JoyBinding is null)
         {
-            _JoyListener.StopListen();
+            _JoyBindingListener.StopListen();
             return;
         }
-        _JoyListener.StartListen(new[] { JoyBinding });
+        _JoyBindingListener.StartListen(new[] { JoyBinding });
         Debug.WriteLine($"Начато отслеживания кнопки {JoyBinding.Description}");
     }
 
@@ -186,8 +186,8 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
 
     public void Dispose()
     {
-        _JoyListener.StopListen();
-        _JoyListener.ChangesHandled -= Listener_OnChangesHandled;
+        _JoyBindingListener.StopListen();
+        _JoyBindingListener.ChangesHandled -= Listener_OnChangesHandled;
         Debug.WriteLine($"Отслеживание кнопки {JoyBinding.Description} остановлено");
     }
 

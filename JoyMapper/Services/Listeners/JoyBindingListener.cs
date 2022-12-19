@@ -9,9 +9,9 @@ using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 
-namespace JoyMapper.Services.Watchers;
+namespace JoyMapper.Services.Listeners;
 
-public class JoyListener : IJoyListener
+public class JoyBindingListener : IJoyBindingListener
 {
     private readonly IJoystickStateManager _JoystickStateManager;
     private readonly int _PollingDelay;
@@ -24,7 +24,7 @@ public class JoyListener : IJoyListener
     private CancellationTokenSource _CancellationTokenSource;
 
 
-    public JoyListener(IJoystickStateManager JoystickStateManager, DataManager DataManager)
+    public JoyBindingListener(IJoystickStateManager JoystickStateManager, DataManager DataManager)
     {
         _JoystickStateManager = JoystickStateManager;
         _PollingDelay = DataManager.AppSettings.JoystickPollingDelay;

@@ -7,7 +7,7 @@ namespace JoyMapper.Services.Interfaces;
 /// <summary>
 /// Прослушивание состояний джойстика
 /// </summary>
-public interface IJoyListener
+public interface IJoyBindingListener
 {
     /// <summary> Вызывается, когда получены изменения </summary>
     public Action<IEnumerable<JoyBindingBase>> ChangesHandled { get; set; }

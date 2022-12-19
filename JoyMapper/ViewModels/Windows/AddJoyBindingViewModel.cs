@@ -14,13 +14,13 @@ namespace JoyMapper.ViewModels.Windows
     public class AddJoyBindingViewModel : WindowViewModel
     {
         private readonly IJoystickStateManager _JoystickStateManager;
-        private readonly IJoyListener _JoyListener;
+        private readonly IJoyBindingListener _JoyBindingListener;
 
 
-        public AddJoyBindingViewModel(IJoystickStateManager JoystickStateManager, IJoyListener JoyListener)
+        public AddJoyBindingViewModel(IJoystickStateManager JoystickStateManager, IJoyBindingListener JoyBindingListener)
         {
             _JoystickStateManager = JoystickStateManager;
-            _JoyListener = JoyListener;
+            _JoyBindingListener = JoyBindingListener;
             Title = "Назначить кнопку/ось";
         }
 
@@ -62,8 +62,8 @@ namespace JoyMapper.ViewModels.Windows
             foreach (var connectedJoy in connectedJoys) 
                 allBindings.AddRange(AllJoyBindings(connectedJoy));
 
-            _JoyListener.ChangesHandled += Listener_OnChangesHandled;
-            _JoyListener.StartListen(allBindings);
+            _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
+            _JoyBindingListener.StartListen(allBindings);
             Debug.WriteLine("Начато отслеживание всех кнопок всех джойстиков");
         }
 
@@ -79,8 +79,8 @@ namespace JoyMapper.ViewModels.Windows
         /// <summary> Остановить отслеживание </summary>
         public void StopWatching()
         {
-            _JoyListener.StopListen();
-            _JoyListener.ChangesHandled -= Listener_OnChangesHandled;
+            _JoyBindingListener.StopListen();
+            _JoyBindingListener.ChangesHandled -= Listener_OnChangesHandled;
             Debug.WriteLine("Завершено отслеживание всех кнопок всех джойстиков");
         }
 
