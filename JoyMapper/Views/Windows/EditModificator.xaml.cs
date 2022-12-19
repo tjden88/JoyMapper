@@ -4,57 +4,56 @@ using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
 using WPR;
 
-namespace JoyMapper.Views.Windows
+namespace JoyMapper.Views.Windows;
+
+/// <summary>
+/// Логика взаимодействия для EditModificator.xaml
+/// </summary>
+public partial class EditModificator : Window, IEditModel<Modificator>
 {
-    /// <summary>
-    /// Логика взаимодействия для EditModificator.xaml
-    /// </summary>
-    public partial class EditModificator : Window, IEditModel<Modificator>
+    public EditModificatorViewModel ViewModel { get; }
+
+    public EditModificator(EditModificatorViewModel viewModel)
     {
-        public EditModificatorViewModel ViewModel { get; }
+        ViewModel = viewModel;
+        DataContext = viewModel;
+        InitializeComponent();
+    }
 
-        public EditModificator(EditModificatorViewModel viewModel)
+    public Modificator GetModel() =>
+        new()
         {
-            ViewModel = viewModel;
-            DataContext = viewModel;
-            InitializeComponent();
+            Id = ViewModel.Id,
+            Name = ViewModel.Name,
+            Binding = ViewModel.JoyBindingViewModel.GetModel()
+        };
+
+    public void SetModel(Modificator model)
+    {
+        ViewModel.Id = model.Id;
+        ViewModel.Name = model.Name;
+        ViewModel.JoyBindingViewModel.SetModel(model.Binding);
+        ViewModel.Title = $"Редактирование модификатора {model.Name}";
+    }
+
+    private async void ButtonSave_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.JoyBindingViewModel.JoyBinding == null)
+        {
+            await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка модификатора");
+            return;
         }
 
-        public Modificator GetModel() =>
-            new()
-            {
-                Id = ViewModel.Id,
-                Name = ViewModel.Name,
-                Binding = ViewModel.JoyBindingViewModel.GetModel()
-            };
 
-        public void SetModel(Modificator model)
+        var name = ViewModel.Name?.Trim();
+
+        if (string.IsNullOrEmpty(name))
         {
-            ViewModel.Id = model.Id;
-            ViewModel.Name = model.Name;
-            ViewModel.JoyBindingViewModel.SetModel(model.Binding);
-            ViewModel.Title = $"Редактирование модификатора {model.Name}";
+            await WPRMessageBox.InformationAsync(App.ActiveWindow, "Введите имя модификатора");
+            return;
         }
 
-        private async void ButtonSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (ViewModel.JoyBindingViewModel.JoyBinding == null)
-            {
-                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка модификатора");
-                return;
-            }
-
-
-            var name = ViewModel.Name?.Trim();
-
-            if (string.IsNullOrEmpty(name))
-            {
-                await WPRMessageBox.InformationAsync(App.ActiveWindow, "Введите имя модификатора");
-                return;
-            }
-
-            ViewModel.Name = name;
-            DialogResult = true;
-        }
+        ViewModel.Name = name;
+        DialogResult = true;
     }
 }

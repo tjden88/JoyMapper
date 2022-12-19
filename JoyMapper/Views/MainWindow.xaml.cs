@@ -3,27 +3,26 @@ using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JoyMapper.Views
+namespace JoyMapper.Views;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindowViewModel ViewModel { get; set; }
+
+    public MainWindow(MainWindowViewModel viewModel)
     {
-        public MainWindowViewModel ViewModel { get; set; }
+        ViewModel = viewModel;
+        InitializeComponent();
+        DataContext = ViewModel;
+    }
 
-        public MainWindow(MainWindowViewModel viewModel)
-        {
-            ViewModel = viewModel;
-            InitializeComponent();
-            DataContext = ViewModel;
-        }
+    private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
+    {
+        var watcher = App.Services.GetRequiredService<IJoyPatternListener>();
 
-        private void ButtonBase_OnClick(object Sender, RoutedEventArgs E)
-        {
-            var watcher = App.Services.GetRequiredService<IJoyPatternListener>();
-
-            watcher.StartWatching(ViewModel.JoyPatterns);
-        }
+        watcher.StartWatching(ViewModel.JoyPatterns);
     }
 }

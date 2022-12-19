@@ -1,13 +1,12 @@
 ﻿using JoyMapper.Models.JoyBindings.Base;
 
-namespace JoyMapper.Models
+namespace JoyMapper.Models;
+
+public class Modificator
 {
-    public class Modificator
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public JoyBindingBase Binding { get; set; }
-    }
+    public JoyBindingBase Binding { get; set; }
 }
