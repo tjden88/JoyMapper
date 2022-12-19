@@ -6,6 +6,7 @@ using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.Views.UserControls;
 using WPR;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -333,6 +334,47 @@ public partial class MainWindowViewModel : WindowViewModel
         JoyPatterns.Add(newPattern);
         SelectedPattern = newPattern;
         WPRMessageBox.Bubble(App.ActiveWindow, "Паттерн скопирован");
+    }
+
+    #endregion
+
+
+    #region AsyncCommand SetProfilesToPatternCommand - Назначить профили выбранному паттерну
+
+    /// <summary>Назначить профили выбранному паттерну</summary>
+    private AsyncCommand _SetProfilesToPatternCommand;
+
+    /// <summary>Назначить профили выбранному паттерну</summary>
+    public AsyncCommand SetProfilesToPatternCommand => _SetProfilesToPatternCommand
+        ??= new AsyncCommand(OnSetProfilesToPatternCommandExecutedAsync, CanSetProfilesToPatternCommandExecute, "Назначить профили выбранному паттерну");
+
+    /// <summary>Проверка возможности выполнения - Назначить профили выбранному паттерну</summary>
+    private bool CanSetProfilesToPatternCommandExecute() => SelectedPattern != null;
+
+    /// <summary>Логика выполнения - Назначить профили выбранному паттерну</summary>
+    private async Task OnSetProfilesToPatternCommandExecutedAsync(CancellationToken cancel)
+    {
+        var dialog = new AddPatternToProfiles(_DataManager);
+        dialog.SetModel(SelectedPattern);
+
+        var result = await WPRMessageBox.ShowCustomDialogAsync(App.ActiveWindow, dialog);
+
+        if(!result) return;
+
+        var patternId = SelectedPattern.Id;
+
+        var profilesIds = dialog.SelectedProfiles
+            .Where(sp => sp.IsSelected)
+            .Select(sp => sp.Profile.Id)
+            .ToArray();
+
+        foreach (var profile in Profiles)
+            if (!profilesIds.Contains(profile.Id))
+                profile.PatternsIds.Remove(patternId);
+            else if (!profile.PatternsIds.Contains(patternId))
+                profile.PatternsIds.Add(patternId);
+
+        _DataManager.SaveData();
     }
 
     #endregion

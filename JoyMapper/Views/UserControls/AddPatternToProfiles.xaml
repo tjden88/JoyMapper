@@ -20,11 +20,11 @@
                     <ItemsControl ItemsSource="{Binding SelectedProfiles}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding IsSelected}" Margin="5">
-                                    <StackPanel>
+                                <CheckBox IsChecked="{Binding IsSelected}" Margin="10">
+                                    <WrapPanel>
                                         <TextBlock Text="{Binding Profile.Name}" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding Profile.Description}" Margin="0,5,0,0"/>
-                                    </StackPanel>
+                                        <TextBlock Text="{Binding Profile.Description}" Margin="5,0,0,0"/>
+                                    </WrapPanel>
                                 </CheckBox>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

@@ -113,8 +113,8 @@
                                     <controls:WPRIcon Source="EditOutline"/>
                                 </Button.Content>
                             </Button>
-                            <Button Command="{Binding EditPatternCommand}"
-                                    ToolTip="{Binding EditPatternCommand}">
+                            <Button Command="{Binding SetProfilesToPatternCommand}"
+                                    ToolTip="{Binding SetProfilesToPatternCommand}">
                                 <Button.Content>
                                     <controls:WPRIcon Source="GaugeFull"/>
                                 </Button.Content>
