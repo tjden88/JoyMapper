@@ -30,12 +30,13 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     #region KeyWatching
 
-    public override void Initialize(IServiceProvider Services)
+    public override void Initialize(IServiceProvider Services, bool LogReport)
     {
         var appsett = Services.GetRequiredService<DataManager>();
         _DoublePressDelay = appsett.AppSettings.DoublePressDelay;
         _LongPressDelay = appsett.AppSettings.LongPressDelay;
         _IsDoublePressActionsExist = DoublePressKeyBindings?.Any() ?? false;
+        _OptimizeDoubleClick = !LogReport;
     }
 
     private bool _IsDoublePressActionsExist; // Существуют ли действия двойного нажатия
@@ -43,6 +44,8 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
     private static int _DoublePressDelay;
 
     private static int _LongPressDelay;
+
+    private bool _OptimizeDoubleClick; // В боевом применении да, для логгирования нажатий - нет
 
     private Stopwatch _DelayMeter; // Таймер задержки между нажатиями
 
@@ -63,7 +66,7 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
             // Кнопка не нажата и прошло время двойного клика или
             // Кнопка отпущена после первого нажатия и на двойное нажатие действий не назначено
-            if (_FirstPressHandled && !newState && (!_IsDoublePressActionsExist || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
+            if (_FirstPressHandled && !newState && (!_IsDoublePressActionsExist && _OptimizeDoubleClick || _DelayMeter?.ElapsedMilliseconds > _DoublePressDelay))
             {
                 ReportMessage?.Invoke("Одиночное нажатие");
 

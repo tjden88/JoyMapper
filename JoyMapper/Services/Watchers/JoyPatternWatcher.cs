@@ -26,7 +26,7 @@ public class JoyPatternWatcher : IJoyPatternWatcher
 
         foreach (var joyPattern in Patterns)
         {
-            joyPattern.PatternAction.Initialize(_ServiceProvider);
+            joyPattern.PatternAction.Initialize(_ServiceProvider, false);
             joyPattern.PatternAction.ReportMessage += ReportPatternAction;
         }
 

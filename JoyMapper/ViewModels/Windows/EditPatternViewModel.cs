@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Models.PatternActions.Base;
@@ -31,6 +30,7 @@ namespace JoyMapper.ViewModels.Windows
 
             JoyBindingViewModel.BindingStateChanged += BindingStateChanged;
             PatternActionViewModel.PropertyChanged += PatternActionViewModelOnPropertyChanged;
+            SetPatternAction(PatternActionViewModel.SelectedPatternAction.ToModel());
 
             Title = "Добавить паттерн";
         }
@@ -136,7 +136,7 @@ namespace JoyMapper.ViewModels.Windows
         #region WatcherLogText : string - Текст отслеживания событий
 
         /// <summary>Текст отслеживания событий</summary>
-        private string _WatcherLogText = "Протестируйте назначенные действия паттерна...";
+        private string _WatcherLogText;
 
         /// <summary>Текст отслеживания событий</summary>
         public string WatcherLogText
@@ -169,6 +169,24 @@ namespace JoyMapper.ViewModels.Windows
         #endregion
 
 
+        #region Command ClearLogCommand - Очистить лог действий
+
+        /// <summary>Очистить лог действий</summary>
+        private Command _ClearLogCommand;
+
+        /// <summary>Очистить лог действий</summary>
+        public Command ClearLogCommand => _ClearLogCommand
+            ??= new Command(OnClearLogCommandExecuted, CanClearLogCommandExecute, "Очистить лог действий");
+
+        /// <summary>Проверка возможности выполнения - Очистить лог действий</summary>
+        private bool CanClearLogCommandExecute() => WatcherLogText != null;
+
+        /// <summary>Логика выполнения - Очистить лог действий</summary>
+        private void OnClearLogCommandExecuted() => WatcherLogText = null;
+
+        #endregion
+
+
         #region ActionWatch
 
 
@@ -185,7 +203,7 @@ namespace JoyMapper.ViewModels.Windows
                 return;
             }
 
-            pattern.Initialize(_Services);
+            pattern.Initialize(_Services, true);
             _PatternActionBase = pattern;
             pattern.ReportMessage += Action_OnReportMessage;
         }
@@ -194,15 +212,12 @@ namespace JoyMapper.ViewModels.Windows
         private void Action_OnReportMessage(string message)
         {
             const string mark = ">>> ";
-            WatcherLogText = string.Concat(mark, message, Environment.NewLine, _WatcherLogText.Replace(mark, string.Empty));
+            WatcherLogText = string.Concat(mark, message, Environment.NewLine, _WatcherLogText?.Replace(mark, string.Empty));
         }
 
 
-        private void BindingStateChanged(bool state)
-        {
-            if (_PatternActionBase == null) return;
-            _PatternActionBase.BindingStateChanged(state);
-        }
+        private void BindingStateChanged(bool state) => 
+            _PatternActionBase?.BindingStateChanged(state);
 
 
         private void PatternActionViewModelOnPropertyChanged(object Sender, PropertyChangedEventArgs E)

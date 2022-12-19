@@ -14,9 +14,8 @@ public class SimpleKeySenderPatternAction : PatternActionBase
     public override PatternActionViewModelBase ToViewModel() => 
         new SimpleKeySenderPatternActionViewModel(this);
 
-    public override void Initialize(IServiceProvider Services)
+    public override void Initialize(IServiceProvider Services, bool LogMessages)
     {
-        
     }
 
     public override void BindingStateChanged(bool newState)
@@ -27,7 +26,5 @@ public class SimpleKeySenderPatternAction : PatternActionBase
     public ICollection<KeyboardKeyBinding> PressKeyBindings { get; set; }
 
     public ICollection<KeyboardKeyBinding> ReleaseKeyBindings { get; set; }
-
-    
 
 }
