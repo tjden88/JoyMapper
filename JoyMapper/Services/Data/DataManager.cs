@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
-using WPR;
+using JoyMapper.Models.Legacy.v1_3;
 
 namespace JoyMapper.Services.Data;
 
@@ -192,7 +192,7 @@ public class DataManager
     {
         var editModificator = ProfilesData.Modificators.First(m => m.Id == Id);
         var modified = _ModificatorManager.UpdateModificator(editModificator);
-        if (modified is null) 
+        if (modified is null)
             return null;
         var index = ProfilesData.Modificators.IndexOf(editModificator);
         ProfilesData.Modificators.Remove(editModificator);
@@ -203,21 +203,37 @@ public class DataManager
 
 
     /// <summary> Сохранить профили и настройки </summary>
-    public void SaveData() => _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+    public void SaveData()
+    {
+        ProfilesData.AppSettings.AppVersion = App.AppVersion;
+        _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+    }
 
     #endregion
 
     private Data LoadData()
     {
-        if(!File.Exists(_SettingsFileName))
+        if (!File.Exists(_SettingsFileName))
             return new Data();
 
-        var appSettVersion = _DataSerializer.LoadFromFile<AppSettings>(_SettingsFileName)?.AppVersion;
+        var appSettings = _DataSerializer.LoadFromFile<SimpleAppData>(_SettingsFileName)?.AppSettings;
+        var appSettVersion = appSettings?.AppVersion;
+
         if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
-            File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion}-backup.json"), true);
+            File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion ?? "undefined"}-backup.json"), true);
+
+        var version = new Version(appSettVersion ?? "1.3");
+
+        var compareTo = version.CompareTo(new Version("1.4"));
+        if (compareTo < 0)
+        {
+            // Попытка обновить настройки
+            var mappedData = SettingsMapper.GetNewVersionData(_SettingsFileName);
+            if (mappedData is not null)
+                return mappedData;
+        }
 
         var loadFromFile = _DataSerializer.LoadFromFile<Data>(_SettingsFileName);
-
         if (loadFromFile is not null)
             return loadFromFile;
 
@@ -255,7 +271,7 @@ public class DataManager
     /// <summary>
     /// Данные для сериализации
     /// </summary>
-    private class Data
+    public class Data
     {
         public AppSettings AppSettings { get; set; } = new();
 
@@ -264,5 +280,10 @@ public class DataManager
         public List<JoyPattern> JoyPatterns { get; set; } = new();
 
         public List<Modificator> Modificators { get; set; } = new();
+    }
+
+    private class SimpleAppData
+    {
+        public AppSettings AppSettings { get; set; } = new();
     }
 }

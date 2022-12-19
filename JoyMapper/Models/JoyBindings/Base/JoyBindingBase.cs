@@ -46,7 +46,7 @@ public abstract class JoyBindingBase : ViewModel
     public bool IsActive
     {
         get => _IsActive;
-        set => IfSet(ref _IsActive, value)
+        private set => IfSet(ref _IsActive, value)
             .CallPropertyChanged(nameof(IsActiveText));
     }
 

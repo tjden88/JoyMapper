@@ -88,7 +88,7 @@ public class AxisJoyBinding : JoyBindingBase
     public int CurrentValue
     {
         get => _CurrentValue;
-        set => Set(ref _CurrentValue, value);
+        private set => Set(ref _CurrentValue, value);
     }
 
     #endregion

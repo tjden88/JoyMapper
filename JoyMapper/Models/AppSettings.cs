@@ -5,11 +5,11 @@
 /// </summary>
 public class AppSettings
 {
-    public string AppVersion { get; set; } = App.AppVersion;
+    public string AppVersion { get; set; }
 
 
     /// <summary> Интервал опроса джойстиков </summary>
-    public int JoystickPollingDelay => 50;
+    public int JoystickPollingDelay { get; set; } = 50;
 
     /// <summary> Задержка двойного нажатия кнопки </summary>
     public int DoublePressDelay { get; set; } = 400;
