@@ -27,7 +27,6 @@ public class JoyPatternWatcher : IJoyPatternWatcher
         foreach (var joyPattern in Patterns)
         {
             joyPattern.PatternAction.Initialize(_ServiceProvider, false);
-            joyPattern.PatternAction.ReportMessage += ReportPatternAction;
         }
 
         var bindings = Patterns.Select(p => new JoyBindingWithAction(p.Binding, p.PatternAction));
@@ -51,7 +50,6 @@ public class JoyPatternWatcher : IJoyPatternWatcher
         _JoyListener.StopListen();
     }
 
-    public Action<string> ReportPatternAction { get; set; }
 
     private class JoyBindingWithAction : JoyBindingBase
     {
@@ -62,6 +60,7 @@ public class JoyPatternWatcher : IJoyPatternWatcher
         {
             _BindingBase = BindingBase;
             this.ActionBase = ActionBase;
+            JoyName = BindingBase.JoyName;
         }
 
         protected override bool IsPressed(JoyState joyState) => _BindingBase.UpdateIsActive(joyState);
