@@ -245,7 +245,10 @@ public partial class MainWindowViewModel : WindowViewModel
     /// <summary>Логика выполнения - Удалить профиль</summary>
     private async Task OnDeleteProfileCommandExecutedAsync(CancellationToken cancel)
     {
-        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить профиль {SelectedProfile.Name}?");
+        var patternsCount = SelectedProfile.PatternsIds.Count;
+        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, patternsCount > 0
+            ? $"Ему назначено паттернов: {patternsCount}" 
+            : null, $"Удалить профиль {SelectedProfile.Name}?");
         if (result)
         {
             _DataManager.RemoveProfile(SelectedProfile.Id);
@@ -350,7 +353,10 @@ public partial class MainWindowViewModel : WindowViewModel
     /// <summary>Логика выполнения - Удалить паттерн</summary>
     private async Task OnDeletePatternCommandExecutedAsync(CancellationToken cancel)
     {
-        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить паттерн {SelectedPattern.Name}?");
+        var profilesCount = Profiles.Count(p => p.PatternsIds.Contains(SelectedPattern.Id));
+        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, profilesCount > 0 
+            ? $"Он отмечен в нескольких профилях (всего: {profilesCount})" 
+            : null, $"Удалить паттерн {SelectedPattern.Name}?");
         if (result)
         {
             _DataManager.RemoveJoyPattern(SelectedPattern.Id);
@@ -435,11 +441,18 @@ public partial class MainWindowViewModel : WindowViewModel
     /// <summary>Логика выполнения - Удалить модификатор</summary>
     private async Task OnDeleteModificatorCommandExecutedAsync(CancellationToken cancel)
     {
-        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, $"Удалить модификатор {SelectedModificator.Name}?");
+        var modCount = JoyPatterns.Count(p => p.ModificatorId == SelectedModificator.Id);
+        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, modCount > 0 
+            ? $"Он назначен нескольким паттернам (всего: {modCount}).\n" +
+              "После удаления эти паттерны будут выполняться без модификаторов\n" +
+              "Это может привести к неожиданному поведению во время игры." 
+            : null, $"Удалить модификатор {SelectedModificator.Name}?");
         if (result)
         {
             _DataManager.RemoveModificator(SelectedModificator.Id);
             Modificators.Remove(SelectedModificator);
+            if(modCount > 0)
+                JoyPatterns = new(_DataManager.JoyPatterns);
             SelectedModificator = null;
         }
     }

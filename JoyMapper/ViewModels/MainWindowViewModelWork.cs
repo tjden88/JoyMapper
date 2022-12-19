@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using JoyMapper.Models;
 using WPR.MVVM.Commands;
 
@@ -55,7 +56,7 @@ public partial class MainWindowViewModel
         ??= new Command(OnStartProfileCommandExecuted, CanStartProfileCommandExecute, "Запустить профиль");
 
     /// <summary>Проверка возможности выполнения - Запустить профиль</summary>
-    private bool CanStartProfileCommandExecute(object p) => p is Profile;
+    private bool CanStartProfileCommandExecute(object p) => p is Profile pr && pr.PatternsIds.Any();
 
     /// <summary>Логика выполнения - Запустить профиль</summary>
     private void OnStartProfileCommandExecuted(object p)
