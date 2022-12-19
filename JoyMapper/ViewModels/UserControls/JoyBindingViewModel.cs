@@ -188,7 +188,7 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     {
         _JoyBindingListener.StopListen();
         _JoyBindingListener.ChangesHandled -= Listener_OnChangesHandled;
-        Debug.WriteLine($"Отслеживание кнопки {JoyBinding.Description} остановлено");
+        Debug.WriteLine($"Отслеживание кнопки {JoyBinding?.Description} остановлено");
     }
 
     public JoyBindingBase GetModel() => JoyBinding;

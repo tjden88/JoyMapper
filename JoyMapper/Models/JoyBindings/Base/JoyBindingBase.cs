@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Newtonsoft.Json;
 using WPR.MVVM.ViewModels;
 
@@ -75,6 +76,12 @@ public abstract class JoyBindingBase : ViewModel
     /// <param name="joyState">Статус джойстика</param>
     public bool UpdateIsActive(JoyState joyState)
     {
+        if (joyState == null)
+        {
+            Debug.WriteLine("Нет статуса джойстика!");
+            return IsActive;
+        }
+
         var pressed = IsPressed(joyState);
 
         var result = ActivationType switch

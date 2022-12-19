@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.Listeners;
 using JoyMapper.Services.Data;
@@ -15,10 +14,12 @@ namespace JoyMapper.Services.Listeners;
 public class JoyBindingListener : IJoyBindingListener
 {
     private readonly IJoystickStateManager _JoystickStateManager;
+    private readonly DataManager _DataManager;
     private readonly int _PollingDelay;
 
-    private List<JoyBindingsGroup> _BindingsGroups = new(); // Привязки кнопок по имени джойстика
-
+    private List<ModificatedJoyBinding> _Bindings = new(); // Отслеживаемые привязки
+    private List<JoyBindingBase> _Modificators = new(); // Используемые модификаторы
+    private List<string> _UsedJoysticks = new(); // Используемые джойстики для модификаторов и привязок
 
     public Action<IEnumerable<JoyBindingBase>> ChangesHandled { get; set; }
 
@@ -28,6 +29,7 @@ public class JoyBindingListener : IJoyBindingListener
     public JoyBindingListener(IJoystickStateManager JoystickStateManager, DataManager DataManager)
     {
         _JoystickStateManager = JoystickStateManager;
+        _DataManager = DataManager;
         _PollingDelay = DataManager.AppSettings.JoystickPollingDelay;
     }
 
@@ -44,12 +46,31 @@ public class JoyBindingListener : IJoyBindingListener
     {
         StopListen();
 
-        var joyGroups = bindings
-            .GroupBy(b => b.BindingBase.JoyName)
-            .Select(g => new JoyBindingsGroup(g.Key, g.ToList()))
-            .Where(g => !string.IsNullOrEmpty(g.JoyName))
+        //var joyGroups = bindings
+        //    .GroupBy(b => b.BindingBase.JoyName)
+        //    .Select(g => new JoyBindingsGroup(g.Key, g.ToList()))
+        //    .Where(g => !string.IsNullOrEmpty(g.JoyName))
+        //    .ToList();
+        //_BindingsGroups = joyGroups;
+
+        _Bindings = bindings.ToList();
+
+        var usedModificators = _Bindings
+            .Select(b=>b.ModificatorId)
+            .Where(id=>id != null)
+            .SelectMany(id => _DataManager.Modificators
+                .Where(m=>m.Id==id).Select(m=>m.Binding))
             .ToList();
-        _BindingsGroups = joyGroups;
+        _Modificators = usedModificators;
+
+        var joys = usedModificators
+            .Select(m => m.JoyName)
+            .Union(_Bindings
+                .Select(b => b.BindingBase.JoyName))
+            .Distinct()
+            .ToList();
+
+        _UsedJoysticks = joys;
 
         UpdateStatus();
 
@@ -59,7 +80,7 @@ public class JoyBindingListener : IJoyBindingListener
 
         _CancellationTokenSource = cancel;
 
-        Debug.WriteLine($"Начато прослушивание {joyGroups.Sum(b => b.Bindings.Count)} привязок");
+        Debug.WriteLine($"Начато прослушивание {_Bindings.Count} привязок");
 
     }
 
@@ -68,7 +89,9 @@ public class JoyBindingListener : IJoyBindingListener
         if (_CancellationTokenSource == null) return;
 
         _CancellationTokenSource.Cancel();
-        _BindingsGroups.Clear();
+        _Bindings.Clear();
+        _Modificators.Clear();
+        _UsedJoysticks.Clear();
         _CancellationTokenSource = null;
         Debug.WriteLine("Прослушивание привязок остановлено");
     }
@@ -77,11 +100,13 @@ public class JoyBindingListener : IJoyBindingListener
     /// <summary> Синхронизировать состояния кнопок </summary>
     private void UpdateStatus()
     {
-        foreach (var joyBindingsGroup in _BindingsGroups)
+        foreach (var state in _UsedJoysticks
+                     .Select(joy => _JoystickStateManager
+                         .GetJoyState(joy))
+                     .Where(state => state != null))
         {
-            var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
-            if (state != null)
-                joyBindingsGroup.Bindings.ForEach(binding => binding.BindingBase.UpdateIsActive(state));
+            _Modificators.ForEach(m=>m.UpdateIsActive(state));
+            _Bindings.ForEach(binding => binding.BindingBase.UpdateIsActive(state));
         }
     }
 
@@ -89,25 +114,33 @@ public class JoyBindingListener : IJoyBindingListener
     /// <summary> Получить изменения в статусах привязок кнопок </summary>
     private ICollection<JoyBindingBase> GetChanges()
     {
+        var timer = Stopwatch.StartNew();
         var changes = new List<JoyBindingBase>();
-        foreach (var joyBindingsGroup in _BindingsGroups)
+
+        // Опрос джойстиков
+        var joyStates = _UsedJoysticks
+            .Select(joy => new {name = joy, state= _JoystickStateManager.GetJoyState(joy)})
+            .Where(js => js.state != null)
+            .ToList();
+
+        // Опрос модификаторов
+        _Modificators.ForEach(m=> 
+            m.UpdateIsActive(joyStates
+                .Find(js => js.name == m.JoyName)?.state));
+
+        // Опрос привязок
+        foreach (var joyBinding in _Bindings)
         {
-            var state = _JoystickStateManager.GetJoyState(joyBindingsGroup.JoyName);
-            if (state != null)
-            {
-                joyBindingsGroup.Bindings.ForEach(binding =>
-                {
-                    var lastState = binding.BindingBase.IsActive;
-                    var newState = binding.BindingBase.UpdateIsActive(state);
-                    if (lastState != newState)
-                        changes.Add(binding.BindingBase);
-                });
-            }
-            else
-            {
-                AppLog.LogMessage($"Ошибка опроса джойстика {joyBindingsGroup.JoyName}", LogMessage.MessageType.Error);
-            }
+            var joyState = joyStates.Find(js => js.name == joyBinding.BindingBase.JoyName)?.state;
+            if (joyState == null) continue;
+
+            var lastState = joyBinding.BindingBase.IsActive;
+            var newState = joyBinding.BindingBase.UpdateIsActive(joyState);
+
+            if (lastState != newState)
+                changes.Add(joyBinding.BindingBase);
         }
+        Debug.WriteLine($"Поиск изменений в привязках занял: {timer.ElapsedMilliseconds} мс");
         return changes;
     }
 
@@ -125,8 +158,5 @@ public class JoyBindingListener : IJoyBindingListener
         }
     }
 
-
-    /// <summary> Группа событий по имени джойстика </summary>
-    private record JoyBindingsGroup(string JoyName, List<ModificatedJoyBinding> Bindings);
 
 }
