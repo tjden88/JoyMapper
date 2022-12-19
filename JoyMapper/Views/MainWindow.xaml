@@ -323,7 +323,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
-                    <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Запущен профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
+                    <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Текущий профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
                     <Button Padding="40, 10"
                             HorizontalAlignment="Center"
                             Command="{Binding StopProfileCommand}"

@@ -107,7 +107,6 @@ public class JoyBindingListener : IJoyBindingListener
     /// <summary> Получить изменения в статусах привязок кнопок </summary>
     private ICollection<JoyBindingBase> GetChanges()
     {
-        var timer = Stopwatch.StartNew();
         var changes = new List<JoyBindingBase>();
 
         // Опрос джойстиков
@@ -118,8 +117,11 @@ public class JoyBindingListener : IJoyBindingListener
 
         // Опрос модификаторов
         _Modificators.ForEach(m =>
-            m.Binding.UpdateIsActive(joyStates
-                .Find(js => js.name == m.Binding.JoyName)?.state));
+        {
+            var joyState = joyStates.Find(js => js.name == m.Binding.JoyName)?.state;
+            if (joyState != null)
+                m.Binding.UpdateIsActive(joyState);
+        });
 
         // Опрос привязок
         foreach (var joyBinding in _Bindings)
@@ -136,7 +138,6 @@ public class JoyBindingListener : IJoyBindingListener
             if (lastState != newState)
                 changes.Add(joyBinding.BindingBase);
         }
-        //Debug.WriteLine($"Поиск изменений в привязках занял: {timer.ElapsedMilliseconds} мс");
         return changes;
     }
 
