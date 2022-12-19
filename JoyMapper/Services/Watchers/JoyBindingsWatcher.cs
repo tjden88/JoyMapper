@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services.Interfaces;
 
 namespace JoyMapper.Services.Watchers;
 
+[Obsolete]
 public class JoyBindingsWatcher : IJoyBindingsWatcher
 {
     private readonly IJoystickStateManager _JoystickStateManager;

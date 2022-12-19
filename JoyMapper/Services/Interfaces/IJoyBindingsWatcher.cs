@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JoyMapper.Models.JoyBindings.Base;
 
 namespace JoyMapper.Services.Interfaces;
@@ -6,6 +7,7 @@ namespace JoyMapper.Services.Interfaces;
 /// <summary>
 /// Отслеживание изменений назначенных действий джойстика
 /// </summary>
+[Obsolete]
 public interface IJoyBindingsWatcher
 {
     /// <summary> Начать отслеживание выбранных привязок </summary>

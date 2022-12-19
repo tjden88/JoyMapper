@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using JoyMapper.Interfaces;
@@ -13,7 +14,7 @@ namespace JoyMapper.ViewModels.UserControls;
 
 public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBindingBase>
 {
-    private readonly IJoyBindingsWatcher _BindingsWatcher;
+    private readonly IJoyListener _JoyListener;
     private readonly AppWindowsService _AppWindowsService;
 
     public JoyBindingViewModel(): base(true)
@@ -26,11 +27,12 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
         };
     }
 
-    public JoyBindingViewModel(IJoyBindingsWatcher BindingsWatcher, AppWindowsService AppWindowsService)
+    public JoyBindingViewModel(IJoyListener JoyListener, AppWindowsService AppWindowsService)
     {
-        _BindingsWatcher = BindingsWatcher;
+        _JoyListener = JoyListener;
         _AppWindowsService = AppWindowsService;
     }
+
 
     #region JoyBinding : JoyBindingBase - Действие кнопки или оси
 
@@ -128,36 +130,21 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
 
     #region WatchStatus
 
+
     private void WatchAction()
     {
         if (JoyBinding is null)
+        {
+            _JoyListener.StopListen();
             return;
+        }
 
-        _BindingsWatcher.StopWatching();
-
-        _BindingsWatcher.StartWatching(new[] { JoyBinding });
-
-        Task.Run(CheckStatus);
+        _JoyListener.StartListen(new[] { JoyBinding });
+        Debug.WriteLine($"Начато отслеживания кнопки {JoyBinding.Description}");
     }
 
-    private bool _StatusChecked;
 
-    private async Task CheckStatus()
-    {
-        if (_StatusChecked)
-        {
-            _StatusChecked = false;
-            await Task.Delay(300);
-        }
-        _StatusChecked = true;
-        Debug.WriteLine("Начато отслеживания кнопки");
-        while (_StatusChecked)
-        {
-            _BindingsWatcher.UpdateStatus();
-            await Task.Delay(50);
-        }
-        Debug.WriteLine("Выход из отслеживания кнопки");
-    }
+
 
     #endregion
 
@@ -190,7 +177,11 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
 
     #endregion
 
-    public void Dispose() => _StatusChecked = false;
+    public void Dispose()
+    {
+        _JoyListener.StopListen();
+        Debug.WriteLine($"Отслеживание кнопки {JoyBinding.Description} остановлено");
+    }
 
     public JoyBindingBase GetModel() => JoyBinding;
 

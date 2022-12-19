@@ -64,6 +64,7 @@ public class JoyListener : IJoyListener
         Debug.WriteLine("Прослушивание привязок остановлено");
     }
 
+
     /// <summary> Синхронизировать состояния кнопок </summary>
     private void UpdateStatus()
     {
