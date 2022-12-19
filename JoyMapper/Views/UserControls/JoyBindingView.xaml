@@ -102,7 +102,10 @@
 
 
         <!--Тип биндинга -->
-        <DockPanel DockPanel.Dock="Top">
+        <DockPanel DockPanel.Dock="Top" IsEnabled="{Binding JoyBinding, Converter={StaticResource ValueIsNotNullConverter}}"
+                   Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource Bool2VisibilityConverter}}">
+            <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
             <StackPanel>
                 <TextBlock DockPanel.Dock="Top"  Text="Тип активации действия" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
                 <RadioButton Margin="5" Content="Стандартное" IsChecked="{Binding IsNormal}" FontWeight="Bold"/>

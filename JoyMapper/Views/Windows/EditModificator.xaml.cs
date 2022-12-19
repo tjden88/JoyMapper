@@ -40,7 +40,7 @@ public partial class EditModificator : Window, IEditModel<Modificator>
     {
         if (ViewModel.JoyBindingViewModel.JoyBinding == null)
         {
-            await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка модификатора");
+            await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось модификатора");
             return;
         }
 
@@ -55,5 +55,11 @@ public partial class EditModificator : Window, IEditModel<Modificator>
 
         ViewModel.Name = name;
         DialogResult = true;
+    }
+
+    private void EditModificator_OnLoaded(object Sender, RoutedEventArgs E)
+    {
+        if(ViewModel.JoyBindingViewModel.JoyBinding is null)
+            ViewModel.JoyBindingViewModel.AttachJoyButtonCommand.Execute();
     }
 }

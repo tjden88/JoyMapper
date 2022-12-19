@@ -6,6 +6,7 @@
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:userControls="clr-namespace:JoyMapper.Views.UserControls"
+        Loaded="EditModificator_OnLoaded"
         Style="{StaticResource ChromeWindow}"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
@@ -21,8 +22,7 @@
 
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Click="ButtonSave_Click"
                 Content="Сохранить" IsDefault="True"/>
-        <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
-                   VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
+        
     </DockPanel>
 
 </Window>
