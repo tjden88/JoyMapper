@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Models.Legacy.v1_3;
+using JoyMapper.Models.PatternActions;
 
 namespace JoyMapper.Services.Data;
 
@@ -92,7 +93,20 @@ public class DataManager
     /// <summary> Удалить профиль </summary>
     public void RemoveProfile(int profileId)
     {
-        ProfilesData.Profiles.Remove(ProfilesData.Profiles.FirstOrDefault(p => p.Id == profileId));
+
+        var profilePatterns = JoyPatterns
+            .Where(p => p.PatternAction is ProfileSelectPatternAction);
+
+        foreach (var profilePattern in profilePatterns)
+        {
+            var action = (ProfileSelectPatternAction)profilePattern.PatternAction;
+            if (action.PressProfileId == profileId) action.PressProfileId = 0;
+            if (action.ReleaseProfileId == profileId) action.ReleaseProfileId = 0;
+        }
+
+        var profile = ProfilesData.Profiles.FirstOrDefault(p => p.Id == profileId);
+
+        ProfilesData.Profiles.Remove(profile);
         SaveData();
     }
 
