@@ -23,7 +23,7 @@ public class SeqKeySenderPatternAction : PatternActionBase
     protected override void DoReportMode(bool newBindingState)
     {
         if(newBindingState)
-            ReportMessage?.Invoke("Активация действия");
+            ReportMessage?.Invoke("Отправка команд");
     }
 
 
