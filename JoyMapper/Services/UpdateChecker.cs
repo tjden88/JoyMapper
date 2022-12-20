@@ -1,5 +1,6 @@
 ﻿using JoyMapper.Views;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -68,8 +69,9 @@ public class UpdateChecker
     {
         if (_LastVersion != null) return _LastVersion;
 
-        using (var client = new HttpClient())
+        try
         {
+            using var client = new HttpClient();
             var response = await client.GetAsync(LatestVersionTxtUrl);
 
             if (response.IsSuccessStatusCode)
@@ -88,6 +90,11 @@ public class UpdateChecker
 
             }
         }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+            return null;
+        }
 
         return _LastVersion;
     }
@@ -99,7 +106,7 @@ public class UpdateChecker
         var vm = wnd.ViewModel;
         vm.DownloadLink = _LastVersion.UpdateUrl;
         vm.ReleaseNotes = _LastVersion.ReleaseNotes;
-            
+
         wnd.ShowDialog();
     }
 

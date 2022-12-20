@@ -74,7 +74,7 @@
                 </Border.Style>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="28" Margin="5" TextWrapping="Wrap" Text="Запись..."/>
-                    <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="18" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре или действия мыши"/>
+                    <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="18" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре или примените действия мыши на этом окне"/>
                 </StackPanel>
             </Border>
         </Grid>
