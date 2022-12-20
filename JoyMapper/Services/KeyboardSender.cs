@@ -14,10 +14,18 @@ namespace JoyMapper.Services;
 public class KeyboardSender
 {
     /// <summary> Эмулировать нажатие клавиши </summary>
-    public void PressKey(Key key) => KeyboardHook.Press(key);
+    public void PressKey(Key key)
+    {
+        KeyboardHook.Press(key);
+        AppLog.LogKeyCommands($"Нажатие кнопки: {key}");
+    }
 
     /// <summary> Эмулировать отпускание клавиши </summary>
-    public void ReleaseKey(Key key) => KeyboardHook.Release(key);
+    public void ReleaseKey(Key key)
+    {
+        KeyboardHook.Release(key);
+        AppLog.LogKeyCommands($"Отпускание кнопки: {key}");
+    }
 
 
     /// <summary> Отправить клавиатурные команды в очередь команд </summary>

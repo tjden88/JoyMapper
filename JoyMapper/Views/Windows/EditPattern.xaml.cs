@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
@@ -29,6 +30,10 @@ public partial class EditPattern : IEditModel<JoyPattern>
             ViewModel.JoyBindingViewModel.AttachJoyButtonCommand.Execute();
     }
 
+    private void ScrollViewer_OnScrollChanged(object Sender, ScrollChangedEventArgs E)
+    {
+        if (E.ExtentHeightChange > 0) ScrollViewer.ScrollToEnd();
+    }
 
     private async void ButtonSave_OnClick(object Sender, RoutedEventArgs E)
     {

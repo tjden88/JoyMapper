@@ -231,7 +231,7 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
     private void AppendLogText(string message)
     {
         const string mark = ">>> ";
-        WatcherLogText = string.Concat(mark, message, Environment.NewLine, _WatcherLogText?.Replace(mark, string.Empty));
+        WatcherLogText = string.Concat(_WatcherLogText?.Replace(mark, string.Empty), Environment.NewLine, mark, message);
     }
 
     private void BindingStateChanged(bool state) => 

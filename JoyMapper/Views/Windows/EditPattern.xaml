@@ -103,7 +103,7 @@
                             <controls:WPRIconText Text="Очистить" IconSource="TrashEmpty"></controls:WPRIconText>
                         </Button.Content>
                     </Button>
-                    <ScrollViewer  Width="280" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+                    <ScrollViewer ScrollChanged="ScrollViewer_OnScrollChanged" Name="ScrollViewer" Width="280">
                         <TextBlock Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding WatcherLogText, TargetNullValue='Протестируйте работу паттерна...'}"/>
                     </ScrollViewer>
                 </DockPanel>

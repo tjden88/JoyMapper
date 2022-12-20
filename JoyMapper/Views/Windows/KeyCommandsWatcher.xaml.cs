@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using JoyMapper.Services;
 using WPR.MVVM.ViewModels;
 
@@ -66,4 +67,8 @@ public partial class KeyCommandsWatcher : Window
         }
     }
 
+    private void ScrollViewer_OnScrollChanged(object Sender, ScrollChangedEventArgs E)
+    {
+        if(E.ExtentHeightChange > 0) ScrollViewer.ScrollToEnd();
+    }
 }
