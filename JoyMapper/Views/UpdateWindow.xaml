@@ -3,16 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JoyMapper.Views"
-        xmlns:viewModels="clr-namespace:JoyMapper.ViewModels"
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Style="{StaticResource ChromeWindow}"
         Title="Доступно обновление" SizeToContent="Height" Width="400">
-    <d:Window.DataContext>
-        <viewModels:UpdateWindowViewModel/>
-    </d:Window.DataContext>
     <StackPanel>
         <TextBlock Text="{Binding ReleaseNotes}" MinHeight="50" Margin="10"/>
         <Button Content="Загрузить" HorizontalAlignment="Center" Command="{Binding GoToDownloadLinkCommand}"/>

@@ -1,28 +1,84 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
+using JoyMapper.Services.Data;
+using JoyMapper.Services.Interfaces;
+using JoyMapper.Services.Listeners;
+using JoyMapper.ViewModels;
+using JoyMapper.ViewModels.UserControls;
+using JoyMapper.ViewModels.Windows;
+using JoyMapper.Views;
+using JoyMapper.Views.UserControls;
+using JoyMapper.Views.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using static JoyMapper.Views.Windows.KeyCommandsWatcher;
 
-namespace JoyMapper
+namespace JoyMapper;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+
+    /// <summary> Версия приложения </summary>
+    internal const string AppVersion = "1.4";
+
+
+    /// <summary> Активное окно </summary>
+    internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
+
+
+    protected override void OnStartup(StartupEventArgs e)
     {
-
-        /// <summary> Версия приложения </summary>
-        internal const string AppVersion = "1.3";
-
-        /// <summary> Менеджер данных профилей текущей сессии </summary>
-        internal static DataManager DataManager { get; } = new();
-
-        /// <summary> Активное окно </summary>
-        internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
-
-        /// <summary> Сервис проверки обновлений </summary>
-        internal static UpdateChecker UpdateChecker { get; } = new();
-
-
+        base.OnStartup(e);
+        var wnd = Services.GetRequiredService<MainWindow>();
+        wnd.Show();
     }
 
+
+    private static IServiceProvider _Services;
+
+    public static IServiceProvider Services => _Services ??= ConfigureServices();
+
+    private static IServiceProvider ConfigureServices()
+    {
+        var serviceCollection = new ServiceCollection();
+
+        serviceCollection
+            .AddSingleton<UpdateChecker>()
+            .AddSingleton<DataManager>()
+            .AddSingleton<ProfilesManager>()
+            .AddSingleton<JoyPatternManager>()
+            .AddSingleton<ModificatorManager>()
+            .AddSingleton<AppWindowsService>()
+            .AddSingleton<DataSerializer>()
+            .AddSingleton<MainWindow>()
+            .AddSingleton<MainWindowViewModel>()
+            .AddTransient<AddJoyBinding>()
+            .AddTransient<PatternActionView>()
+            .AddTransient<EditPattern>()
+            .AddTransient<EditModificator>()
+            .AddTransient<EditModificatorViewModel>()
+            .AddTransient<AddJoyBindingViewModel>()
+            .AddTransient<EditPatternViewModel>()
+            .AddTransient<PatternActionViewModel>()
+            .AddTransient<EditProfile>()
+            .AddTransient<EditProfileWindowViewModel>()
+            .AddTransient<UpdateWindow>()
+            .AddTransient<UpdateWindow.UpdateWindowViewModel>()
+            .AddTransient<JoyBindingView>()
+            .AddTransient<JoyBindingViewModel>()
+            .AddTransient<KeyCommandsWatcherViewModel>()
+            .AddTransient<KeyCommandsWatcher>()
+            .AddSingleton<IJoystickStateManager, JoystickStateManager>()
+            .AddTransient<IJoyBindingListener, JoyBindingListener>()
+            .AddTransient<IJoyPatternListener, JoyPatternListener>()
+            .AddTransient<IProfileListener, ProfileListener>()
+            .AddSingleton<KeyboardSender>()
+            ;
+
+        return serviceCollection.BuildServiceProvider();
+    }
 }

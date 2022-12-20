@@ -9,10 +9,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\JoyActions\**" />
+    <Compile Remove="Services\ActionWatchers\**" />
     <Compile Remove="Styles\**" />
+    <Compile Remove="ViewModels\JoyActions\**" />
+    <EmbeddedResource Remove="Models\JoyActions\**" />
+    <EmbeddedResource Remove="Services\ActionWatchers\**" />
     <EmbeddedResource Remove="Styles\**" />
+    <EmbeddedResource Remove="ViewModels\JoyActions\**" />
+    <None Remove="Models\JoyActions\**" />
+    <None Remove="Services\ActionWatchers\**" />
     <None Remove="Styles\**" />
+    <None Remove="ViewModels\JoyActions\**" />
+    <Page Remove="Models\JoyActions\**" />
+    <Page Remove="Services\ActionWatchers\**" />
     <Page Remove="Styles\**" />
+    <Page Remove="ViewModels\JoyActions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\JoyButton.cs" />
+    <Compile Remove="Services\JoystickPoller.cs" />
+    <Compile Remove="Services\ProfileWorker.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
   </ItemGroup>
 

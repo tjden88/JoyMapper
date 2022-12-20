@@ -1,0 +1,63 @@
+﻿<Window x:Class="JoyMapper.Views.Windows.EditProfile"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        WindowStartupLocation="CenterOwner"
+        xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
+        xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        mc:Ignorable="d"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
+        Style="{StaticResource ChromeWindow}"
+        Title="{Binding Title}" Height="550" Width="500">
+
+    <DockPanel Margin="10,15,10,10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
+        <TextBox helpers:TextHelper.Hint="Имя профиля" Name="NameText" DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox helpers:TextHelper.Hint="Описание" helpers:TextHelper.Description="Необязательно" Margin="0,10,0,0" Name="DescriptionText" DockPanel.Dock="Top" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid DockPanel.Dock="Top" Margin="0,15,0,5">
+            <TextBlock  FontSize="16" Text="Выберите используемые паттерны:"/>
+            <controls:WPRIcon Source="InfoCircleOutline" HorizontalAlignment="Right" 
+                              Background="{StaticResource TransparentBrush}"
+                              Foreground="{DynamicResource AccentColorBrush}">
+                <controls:WPRIcon.ToolTip>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Отмеченные паттерны (комбинации клавиатурных команд, привязанных к определённой кнопке джойстика)"/>
+                        <TextBlock Text="будут отслеживаться при запуске этого профиля."/>
+                        <Separator/>
+                        <TextBlock Text="Одни и те же паттерны могут использоваться в разных профилях"/>
+                        <TextBlock Text="Если выбраны несколько паттернов, привязанных к одной и той же кнопке одного джойстика,"/>
+                        <TextBlock Text="отслеживаться будут все вместе! Используйте эту возможность с осторожностью."/>
+
+                    </StackPanel>
+                </controls:WPRIcon.ToolTip>
+            </controls:WPRIcon>
+        </Grid>
+        <Grid Margin="0,10,0,0" DockPanel.Dock="Bottom" >
+            <Button HorizontalAlignment="Left" Command="{Binding AddPatternCommand}"
+                    Style="{StaticResource WPRFlatButton}">
+                <Button.Content>
+                    <controls:WPRIconText Text="Добавить паттерн" IconSource="GamepadVariantOutline"/>
+                </Button.Content>
+            </Button>
+            <Button Content="Сохранить" IsDefault="True" Click="ButtonSave_OnClick"
+                    HorizontalAlignment="Right" />
+        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding SelectedPatterns}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsSelected}">
+                            <CheckBox.Content>
+                                <DockPanel Margin="0,5">
+                                    <TextBlock Text="{Binding PatternName}" VerticalAlignment="Center" Margin="6,0" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Description, StringFormat=({0})}" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                                </DockPanel>
+                            </CheckBox.Content>
+                        </CheckBox>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="JoyMapper.Views.UserControls.AddPatternToProfiles"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JoyMapper.Views.UserControls"
+             xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+             mc:Ignorable="d" 
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             Height="450" Width="400">
+    <Grid>
+        <controls:WPRTitledCard IconSource="GaugeFull" Header="Выбрать профили">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom">
+                    <Button DockPanel.Dock="Bottom" Style="{StaticResource WPRFlatButton}" Content="Отмена" Click="ButtonCancel_OnClick"/>
+                    <Button DockPanel.Dock="Bottom" Content="Сохранить" Click="ButtonOk_OnClick"></Button>
+                </StackPanel>
+                <Separator DockPanel.Dock="Bottom" Background="{DynamicResource DividerColorBrush}"/>
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding SelectedProfiles}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected}" Margin="10">
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Profile.Name}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Profile.Description}" Margin="5,0,0,0"/>
+                                    </WrapPanel>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </controls:WPRTitledCard>
+    </Grid>
+</UserControl>

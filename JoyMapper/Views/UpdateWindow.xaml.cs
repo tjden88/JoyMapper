@@ -1,27 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WPR.MVVM.Commands;
+using WPR.MVVM.ViewModels;
 
-namespace JoyMapper.Views
+namespace JoyMapper.Views;
+
+/// <summary>
+/// Логика взаимодействия для UpdateWindow.xaml
+/// </summary>
+public partial class UpdateWindow : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для UpdateWindow.xaml
-    /// </summary>
-    public partial class UpdateWindow : Window
+    public UpdateWindowViewModel ViewModel { get; }
+
+    public UpdateWindow(UpdateWindowViewModel viewModel)
     {
-        public UpdateWindow()
+        ViewModel = viewModel;
+        DataContext = ViewModel;
+        InitializeComponent();
+    }
+
+
+    public class UpdateWindowViewModel : ViewModel
+    {
+        #region LastUpdateReleaseNotes : string - Заметки о новой версии
+
+        /// <summary>Заметки о новой версии</summary>
+        private string _ReleaseNotes;
+
+        /// <summary>Заметки о новой версии</summary>
+        public string ReleaseNotes
         {
-            InitializeComponent();
+            get => _ReleaseNotes;
+            set => Set(ref _ReleaseNotes, value);
         }
+
+        #endregion
+
+        #region DownloadLink : string - Ссылка на скачивание
+
+        /// <summary>Ссылка на скачивание</summary>
+        private string _DownloadLink;
+
+        /// <summary>Ссылка на скачивание</summary>
+        public string DownloadLink
+        {
+            get => _DownloadLink;
+            set => Set(ref _DownloadLink, value);
+        }
+
+        #endregion
+
+        #region Command GoToDownloadLinkCommand - Перейти на страницу загрузки обновления
+
+        /// <summary>Перейти на страницу загрузки обновления</summary>
+        private Command _GoToDownloadLinkCommand;
+
+        /// <summary>Перейти на страницу загрузки обновления</summary>
+        public Command GoToDownloadLinkCommand => _GoToDownloadLinkCommand
+            ??= new Command(OnGoToDownloadLinkCommandExecuted, CanGoToDownloadLinkCommandExecute, "Перейти на страницу загрузки обновления");
+
+        /// <summary>Проверка возможности выполнения - Перейти на страницу загрузки обновления</summary>
+        private bool CanGoToDownloadLinkCommandExecute() => !string.IsNullOrEmpty(DownloadLink);
+
+        /// <summary>Логика выполнения - Перейти на страницу загрузки обновления</summary>
+        private void OnGoToDownloadLinkCommandExecuted()
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = DownloadLink,
+                UseShellExecute = true
+            });
+            Application.Current.Shutdown();
+        }
+
+        #endregion
     }
 }

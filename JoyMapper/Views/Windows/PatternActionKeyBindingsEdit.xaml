@@ -1,0 +1,83 @@
+﻿<Window x:Class="JoyMapper.Views.Windows.PatternActionKeyBindingsEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:models="clr-namespace:JoyMapper.Models"
+        PreviewKeyDown="AddPattern_OnPreviewKeyDown"
+        PreviewKeyUp="AddPattern_OnPreviewKeyUp"
+        WindowStartupLocation="CenterOwner"
+        Style="{StaticResource ChromeWindow}"
+        DataContext="{Binding ViewModel,  RelativeSource={RelativeSource Self}}"
+        mc:Ignorable="d"
+        Title="{Binding Name}"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Width = "320" Height="400">
+    <DockPanel Margin="10">
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Click="ButtonOk_OnClick"  Content="Завершить"/>
+        <ToolBar DockPanel.Dock="Top" Margin="0,5">
+            <Button DockPanel.Dock="Top"
+                            ToolTip="{Binding StartStopRecordCommand}"
+                            Command="{Binding StartStopRecordCommand}">
+                <Button.Content>
+                    <controls:WPRIconText Text="{Binding RecordButtonText}" IconSource="Keyboard"/>
+                </Button.Content>
+            </Button>
+            <Button DockPanel.Dock="Top"
+                            Command="{Binding ClearBindingsCommand}" 
+                            ToolTip="{Binding ClearBindingsCommand}">
+                <Button.Content>
+                    <controls:WPRIconText IconSource="Clear" Text="Очистить" Foreground="{DynamicResource AttentionColorBrush}" />
+                </Button.Content>
+            </Button>
+        </ToolBar>
+        <Grid>
+            <ListBox ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
+                        <Grid Background="{StaticResource TransparentBrush}" Name="Grid">
+
+                            <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5"/>
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                        Style="{StaticResource WPRToolButton}" Margin="0,0,10,0"
+                                        Visibility="{Binding ElementName=Grid, Path=IsMouseOver, Converter={StaticResource Bool2VisibilityConverter}}"
+                                        Foreground="Red"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.RemoveKeyBindingCommand}"
+                                        ToolTip="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.RemoveKeyBindingCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" BorderThickness="0">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="TrashOutline"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border PreviewMouseDown="UIElement_OnPreviewMouseDown"
+                    PreviewMouseUp="UIElement_OnPreviewMouseUp"
+                    MouseWheel="UIElement_OnMouseWheel"
+                    CornerRadius="5" Focusable="True" Opacity="0.6" Background="{DynamicResource AccentColorBrush}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Setters>
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </Style.Setters>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRecorded}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="28" Margin="5" TextWrapping="Wrap" Text="Запись..."/>
+                    <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="18" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре или примените действия мыши на этом окне"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+
+</Window>
