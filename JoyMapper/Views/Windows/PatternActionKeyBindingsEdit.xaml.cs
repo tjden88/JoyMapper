@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using JoyMapper.Models;
 using System.Linq;
 using System.Windows;
@@ -60,6 +59,37 @@ public partial class PatternActionKeyBindingsEdit : Window
         e.Handled = true;
     }
 
+    private void UIElement_OnPreviewMouseDown(object Sender, MouseButtonEventArgs E)
+    {
+        if (!ViewModel.IsRecorded) return;
+        ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+        {
+            Action = KeyboardKeyBinding.KeyboardAction.MousePress,
+            MouseButton = E.ChangedButton
+        });
+    }
+
+    private void UIElement_OnPreviewMouseUp(object Sender, MouseButtonEventArgs E)
+    {
+        if (!ViewModel.IsRecorded) return;
+        ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+        {
+            Action = KeyboardKeyBinding.KeyboardAction.MouseUp,
+            MouseButton = E.ChangedButton
+        });
+    }
+
+    private void UIElement_OnMouseWheel(object Sender, MouseWheelEventArgs E)
+    {
+        if (!ViewModel.IsRecorded) return;
+
+        var up = E.Delta > 0;
+
+        ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+        {
+            Action = up ? KeyboardKeyBinding.KeyboardAction.MouseScrollUp : KeyboardKeyBinding.KeyboardAction.MouseScrollDown,
+        });
+    }
 
     public class PatternActionKeyBindingsEditViewModel : ViewModel
     {
@@ -173,17 +203,4 @@ public partial class PatternActionKeyBindingsEdit : Window
         #endregion
     }
 
-    private void UIElement_OnPreviewMouseDown(object Sender, MouseButtonEventArgs E)
-    {
-        Debug.WriteLine(E.ChangedButton);
-    }
-    private void UIElement_OnPreviewMouseUp(object Sender, MouseButtonEventArgs E)
-    {
-        Debug.WriteLine(E.ChangedButton);
-    }
-
-    private void UIElement_OnMouseWheel(object Sender, MouseWheelEventArgs E)
-    {
-        Debug.WriteLine(E.Delta);
-    }
 }

@@ -47,7 +47,7 @@ public class KeyboardSender
     /// <summary> Эмулировать прокрутку мыши </summary>
     public void MouseScroll(bool Up)
     {
-        Mouse.Scroll(Up ? 3: -3);
+        Mouse.Scroll(Up ? 1: -1);
         var up = Up ? "Вверх" : "Вниз";
         AppLog.LogKeyCommands($"Скролл мыши: {up}");
     }
@@ -64,6 +64,18 @@ public class KeyboardSender
                     break;
                 case KeyboardKeyBinding.KeyboardAction.KeyUp:
                     ReleaseKey(binding.KeyCode);
+                    break;
+                case KeyboardKeyBinding.KeyboardAction.MousePress:
+                    MousePress(binding.MouseButton);
+                    break;
+                case KeyboardKeyBinding.KeyboardAction.MouseUp:
+                    MouseRelease(binding.MouseButton);
+                    break;
+                case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
+                    MouseScroll(true);
+                    break;
+                case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
+                    MouseScroll(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
