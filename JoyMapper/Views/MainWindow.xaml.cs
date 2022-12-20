@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Input;
 using JoyMapper.ViewModels;
 
 namespace JoyMapper.Views;
@@ -21,5 +23,11 @@ public partial class MainWindow : Window
     {
         ViewModel.LoadDataCommand.Execute();
         ViewModel.CheckUpdatesCommand.Execute();
+    }
+
+    private void PatternsList_OnMouseDoubleClick(object Sender, MouseButtonEventArgs E)
+    {
+        if (E.ClickCount == 2)
+            Debug.WriteLine("dc");
     }
 }

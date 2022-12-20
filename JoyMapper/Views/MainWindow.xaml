@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:models="clr-namespace:JoyMapper.Models"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         Loaded="MainWindow_OnLoaded"
         Topmost="False"
@@ -55,7 +55,10 @@
                         <ListBox Margin="5" ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:Profile}">
-                                    <DockPanel LastChildFill="False" Margin="10,5" >
+                                    <DockPanel LastChildFill="False" Margin="10,5" Background="{StaticResource TransparentBrush}">
+                                        <DockPanel.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.EditProfileCommand, ElementName=Window}"/>
+                                        </DockPanel.InputBindings>
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock Text="{Binding Name}"  FontWeight="Bold" FontSize="18"/>
                                             <TextBlock Text="{Binding Description}" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
@@ -81,8 +84,12 @@
                     <DockPanel>
                         <DockPanel.Resources>
                             <CollectionViewSource x:Key="PatternsItems" Source="{Binding Path=JoyPatterns}">
+                                <CollectionViewSource.SortDescriptions>
+                                    <componentModel:SortDescription Direction="Ascending" PropertyName="GroupName" />
+                                    <componentModel:SortDescription Direction="Ascending" PropertyName="Name" />
+                                </CollectionViewSource.SortDescriptions>
                                 <CollectionViewSource.GroupDescriptions>
-                                    <PropertyGroupDescription PropertyName="GroupName" />
+                                    <PropertyGroupDescription PropertyName="GroupName"/>
                                 </CollectionViewSource.GroupDescriptions>
                             </CollectionViewSource>
                         </DockPanel.Resources>
@@ -112,19 +119,28 @@
                                     <controls:WPRIcon Source="GaugeFull"/>
                                 </Button.Content>
                             </Button>
+                            <Separator/>
                             <Button Command="{Binding DeletePatternCommand}"
                                     ToolTip="{Binding DeletePatternCommand}">
                                 <Button.Content>
                                     <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
                                 </Button.Content>
                             </Button>
+                            <Separator/>
+                            <controls:WPRIcon Source="Sort"/>
+                            <ComboBox Width="120" ToolTip="Сортировка списка">
+                                <ComboBoxItem Content="По имени" />
+                                <ComboBoxItem Content="По джойстику" />
+                                <ComboBoxItem Content="По новизне" />
+                            </ComboBox>
+                            <ToggleButton Style="{StaticResource WPRSwitchToggleButton}" Content="Группы" ToolTip="Показывать группы паттернов"/>
                         </ToolBar>
 
                         <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}" />
 
-                        <ListBox Margin="5" ItemsSource="{Binding Source={StaticResource PatternsItems} }" SelectedItem="{Binding SelectedPattern}">
-
+                        <ListBox Margin="5" ItemsSource="{Binding Source={StaticResource PatternsItems}}" SelectedItem="{Binding SelectedPattern}"
+                                 HorizontalContentAlignment="Stretch">
                             <ListBox.GroupStyle>
                                 <GroupStyle>
                                     <GroupStyle.Panel>
@@ -140,7 +156,10 @@
                                                         <Expander
                                                             IsExpanded="True">
                                                             <Expander.Header>
-                                                                <TextBlock FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}" />
+                                                                <TextBlock Margin="0,2,0,5">
+                                                                    <TextBlock  VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}"/>
+                                                                    <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" VerticalAlignment="Center" Text="{Binding ItemCount, StringFormat=(всего {0})}"/>
+                                                                </TextBlock>
                                                             </Expander.Header>
                                                             <ItemsPresenter/>
                                                         </Expander>
@@ -153,9 +172,12 @@
                             </ListBox.GroupStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:JoyPattern}">
-                                    <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Vertical" Background="{StaticResource TransparentBrush}">
+                                        <StackPanel.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.EditPatternCommand, ElementName=Window}"/>
+                                        </StackPanel.InputBindings>
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
-                                        <DockPanel>
+                                        <DockPanel LastChildFill="False">
                                             <TextBlock Margin="5" Text="{Binding Binding}"/>
                                             <controls:WPRIcon Foreground="{DynamicResource AccentColorBrush}" Source="AxisArrow" Margin="5"
                                                               Visibility="{Binding HasModificator, Converter={StaticResource Bool2VisibilityConverter}}"/>
@@ -167,7 +189,6 @@
                     </DockPanel>
                 </controls:WPRCard>
             </TabItem>
-
 
             <TabItem>
                 <TabItem.Header>
@@ -212,10 +233,13 @@
                         <TextBlock Text="Список модификаторов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}" />
 
-                        <ListBox Margin="5" ItemsSource="{Binding Modificators}" SelectedItem="{Binding SelectedModificator}">
+                        <ListBox Margin="5" ItemsSource="{Binding Modificators}" SelectedItem="{Binding SelectedModificator}" HorizontalContentAlignment="Stretch">
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:Modificator}">
-                                    <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Vertical" Background="{StaticResource TransparentBrush}">
+                                        <StackPanel.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.EditModificatorCommand, ElementName=Window}"/>
+                                        </StackPanel.InputBindings>
                                         <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
                                         <WrapPanel>
                                             <TextBlock Margin="5" Text="{Binding Binding}"/>
