@@ -41,6 +41,8 @@ public class SeqKeySenderViewModel : PatternActionViewModelBase
     #endregion
 
 
+    #region Commands
+
     #region Command AddSequenceCommand - Добавить последовательность клавиш
 
     /// <summary>Добавить последовательность клавиш</summary>
@@ -64,7 +66,43 @@ public class SeqKeySenderViewModel : PatternActionViewModelBase
         if (wnd.ShowDialog() != true || !wnd.ViewModel.KeyBindings.Any())
             return;
 
-        SeqKeysList.Add(new PatternActionKeysBindingViewModel(CollectionName) {KeyBindings = wnd.ViewModel.KeyBindings });
+        SeqKeysList.Add(new PatternActionKeysBindingViewModel(CollectionName) { KeyBindings = wnd.ViewModel.KeyBindings });
+    }
+
+    #endregion
+
+
+    #region Command EditSequenceCommand - Изменить команды
+
+    /// <summary>Изменить команды</summary>
+    private Command _EditSequenceCommand;
+
+    /// <summary>Изменить команды</summary>
+    public Command EditSequenceCommand => _EditSequenceCommand
+        ??= new Command(OnEditSequenceCommandExecuted, CanEditSequenceCommandExecute, "Изменить команды");
+
+    /// <summary>Проверка возможности выполнения - Изменить команды</summary>
+    private bool CanEditSequenceCommandExecute(object p) => p is PatternActionKeysBindingViewModel;
+
+    /// <summary>Логика выполнения - Изменить команды</summary>
+    private void OnEditSequenceCommandExecuted(object p)
+    {
+        var bindings = (PatternActionKeysBindingViewModel)p;
+        var wnd = new PatternActionKeyBindingsEdit(bindings.KeyBindings, CollectionName)
+        {
+            Owner = App.ActiveWindow
+        };
+
+        if (wnd.ShowDialog() != true)
+            return;
+
+        if (!wnd.ViewModel.KeyBindings.Any())
+        {
+            SeqKeysList.Remove(bindings);
+            return;
+        }
+
+        bindings.KeyBindings = new(wnd.ViewModel.KeyBindings);
     }
 
     #endregion
@@ -83,7 +121,10 @@ public class SeqKeySenderViewModel : PatternActionViewModelBase
     private bool CanRemoveSequenceCommandExecute(object p) => p is PatternActionKeysBindingViewModel;
 
     /// <summary>Логика выполнения - Удалить последовательность</summary>
-    private void OnRemoveSequenceCommandExecuted(object p) => SeqKeysList.Remove((PatternActionKeysBindingViewModel) p);
+    private void OnRemoveSequenceCommandExecuted(object p) => SeqKeysList.Remove((PatternActionKeysBindingViewModel)p);
+
+    #endregion
+
 
     #endregion
 

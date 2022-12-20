@@ -40,7 +40,6 @@ public class PatternActionViewModel : ViewModel, IEditModel<PatternActionBase>
     #endregion
 
 
-
     #region SelectedPatternAction : PatternActionViewModelBase - Выбранный паттерн
 
     /// <summary>Выбранный паттерн</summary>

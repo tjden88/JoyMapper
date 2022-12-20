@@ -178,7 +178,8 @@
                                             </ScrollViewer>
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,0">
                                                 <Button Style="{StaticResource WPRToolButton}"
-                                                        Command="{Binding EditCommand}"
+                                                        Command="{Binding DataContext.EditSequenceCommand, RelativeSource={RelativeSource AncestorType=DockPanel}}"
+                                                        CommandParameter="{Binding}"
                                                         ToolTip="{Binding EditCommand}"
                                                         Foreground="{DynamicResource PrimaryColorBrush}">
                                                     <Button.Content>
@@ -186,7 +187,9 @@
                                                     </Button.Content>
                                                 </Button>
                                                 <Button Style="{StaticResource WPRToolButton}"
-                                                        Command="{Binding EditCommand}"
+                                                        Command="{Binding DataContext.RemoveSequenceCommand, RelativeSource={RelativeSource AncestorType=DockPanel}}"
+                                                        ToolTip="{Binding DataContext.RemoveSequenceCommand, RelativeSource={RelativeSource AncestorType=DockPanel}}"
+                                                        CommandParameter="{Binding}"
                                                         Foreground="{DynamicResource AttentionColorBrush}">
                                                     <Button.Content>
                                                         <controls:WPRIcon Source="DeleteOffOutline"></controls:WPRIcon>
