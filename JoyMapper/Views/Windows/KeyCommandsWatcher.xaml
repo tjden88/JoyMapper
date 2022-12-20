@@ -1,0 +1,19 @@
+﻿<Window x:Class="JoyMapper.Views.Windows.KeyCommandsWatcher"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JoyMapper.Views.Windows"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
+        Name="Window"
+        Style="{StaticResource ChromeWindow}"
+        Title="{Binding Title}" Height="500" Width="400">
+    <DockPanel>
+        <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Content="Очистить" Click="ButtonClear_Click"/>
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding KeysLogs}"/>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

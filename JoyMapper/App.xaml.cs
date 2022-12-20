@@ -12,6 +12,7 @@ using JoyMapper.Views;
 using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using static JoyMapper.Views.Windows.KeyCommandsWatcher;
 
 namespace JoyMapper;
 
@@ -69,6 +70,8 @@ public partial class App
             .AddTransient<UpdateWindow.UpdateWindowViewModel>()
             .AddTransient<JoyBindingView>()
             .AddTransient<JoyBindingViewModel>()
+            .AddTransient<KeyCommandsWatcherViewModel>()
+            .AddTransient<KeyCommandsWatcher>()
             .AddSingleton<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingListener, JoyBindingListener>()
             .AddTransient<IJoyPatternListener, JoyPatternListener>()
