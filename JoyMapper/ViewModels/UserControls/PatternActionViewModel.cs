@@ -17,6 +17,8 @@ public class PatternActionViewModel : ViewModel, IEditModel<PatternActionBase>
         {
             new SimpleKeySenderPatternActionViewModel(),
             new ExtendedKeySenderPatternActionViewModel(),
+            new ProfileSelectPatternActionViewModel(),
+
         };
 
         SelectedPatternAction = AllPatternActions.First();

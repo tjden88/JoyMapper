@@ -28,7 +28,6 @@ public class ProfileSelectPatternAction : PatternActionBase
     public int ReleaseProfileId { get; set; }
 
 
-
     public override PatternActionViewModelBase ToViewModel()
     {
         var data = App.Services.GetRequiredService<DataManager>();
