@@ -29,7 +29,7 @@ public class ProfileListener: IProfileListener
                 , LogMessage.MessageType.Error);
             return;
         }
-
+        AppLog.LogMessage("Профиль запущен");
         _JoyPatternListener.StartWatching(patterns);
     }
 
