@@ -77,7 +77,7 @@ public class RepeatKeySenderPatternAction : PatternActionBase
             if (RepeatCount > 0)
             {
                 _RepeatIndex++;
-                if (_RepeatIndex == RepeatCount)
+                if (_RepeatIndex > RepeatCount)
                 {
                     _RepeatIndex = 0;
                     break;

@@ -17,6 +17,7 @@ public class PatternActionViewModel : ViewModel, IEditModel<PatternActionBase>
         {
             new SimpleKeySenderPatternActionViewModel(),
             new ExtendedKeySenderPatternActionViewModel(),
+            new RepeatKeySenderPatternActionViewModel(),
             new SeqKeySenderViewModel(),
             new ProfileSelectPatternActionViewModel(),
 

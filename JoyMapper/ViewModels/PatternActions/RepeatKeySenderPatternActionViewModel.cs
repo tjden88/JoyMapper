@@ -13,24 +13,30 @@ public class RepeatKeySenderPatternActionViewModel : PatternActionViewModelBase
 
     public RepeatKeySenderPatternActionViewModel(RepeatKeySenderPatternAction model = null)
     {
-        if(model is null)
+        KeyBindings = new("Команды при активации");
+
+        if (model is null)
             return;
 
         Delay = model.Delay;
-        RepeatCount = model.RepeatCount;
-        KeyBindings = new("Команды при активации")
+        if (model.RepeatCount == 0)
+            RepeatWhileActive = true;
+        else
         {
-            KeyBindings = new(model.KeyBindings)
-        };
+            RepeatWhileActive = false;
+            RepeatCount = model.RepeatCount;
+        }
+
+        KeyBindings.KeyBindings = new(model.KeyBindings);
     }
 
 
-    #region RepeatCount : int - Количество повторений (0 - пока активно действие)
+    #region RepeatCount : int - Количество повторений
 
-    /// <summary>Количество повторений (0 - пока активно действие)</summary>
-    private int _RepeatCount;
+    /// <summary>Количество повторений</summary>
+    private int _RepeatCount = 4;
 
-    /// <summary>Количество повторений (0 - пока активно действие)</summary>
+    /// <summary>Количество повторений</summary>
     public int RepeatCount
     {
         get => _RepeatCount;
@@ -40,6 +46,21 @@ public class RepeatKeySenderPatternActionViewModel : PatternActionViewModelBase
     #endregion
 
 
+    #region RepeatWhileActive : bool - Повторять пока активно дейстивие
+
+    /// <summary>Повторять пока активно дейстивие</summary>
+    private bool _RepeatWhileActive = true;
+
+    /// <summary>Повторять пока активно дейстивие</summary>
+    public bool RepeatWhileActive
+    {
+        get => _RepeatWhileActive;
+        set => Set(ref _RepeatWhileActive, value);
+    }
+
+    #endregion
+
+    
     #region Delay : int - Задержка между повторами
 
     /// <summary>Задержка между повторами</summary>
@@ -66,7 +87,7 @@ public class RepeatKeySenderPatternActionViewModel : PatternActionViewModelBase
         return new RepeatKeySenderPatternAction
         {
             Delay = Delay,
-            RepeatCount = RepeatCount,
+            RepeatCount = RepeatWhileActive ? 0 : RepeatCount,
             KeyBindings = KeyBindings.KeyBindings.ToList(),
         };
     }
