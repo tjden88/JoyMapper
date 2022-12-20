@@ -172,6 +172,7 @@ public class JoyBindingListener : IJoyBindingListener
         _Bindings.Clear();
         _Modificators.Clear();
         _UsedJoysticks.Clear();
+        _CancellationTokenSource.Dispose();
         _CancellationTokenSource = null;
     }
 
