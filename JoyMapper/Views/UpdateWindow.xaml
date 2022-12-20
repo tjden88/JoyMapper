@@ -8,9 +8,11 @@
         WindowStartupLocation="CenterOwner"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Style="{StaticResource ChromeWindow}"
-        Title="Доступно обновление" SizeToContent="Height" Width="400">
-    <StackPanel>
-        <TextBlock Text="{Binding ReleaseNotes}" MinHeight="50" Margin="10"/>
-        <Button Content="Загрузить" HorizontalAlignment="Center" Command="{Binding GoToDownloadLinkCommand}"/>
-    </StackPanel>
+        Title="Доступно обновление" SizeToContent="Height" Width="600">
+    <DockPanel>
+        <Button Content="Загрузить" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Command="{Binding GoToDownloadLinkCommand}"/>
+        <ScrollViewer MaxHeight="400">
+            <TextBlock Foreground="{DynamicResource PrimaryTextColorBrush}" Text="{Binding ReleaseNotes}" MinHeight="50" Margin="10"/>
+        </ScrollViewer>
+    </DockPanel>
 </Window>
