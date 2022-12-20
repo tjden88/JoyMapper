@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using JoyMapper.Models.PatternActions.Base;
-using JoyMapper.Services.Data;
 using JoyMapper.ViewModels;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
@@ -28,48 +27,12 @@ public class ProfileSelectPatternAction : PatternActionBase
     public int ReleaseProfileId { get; set; }
 
 
-    public override PatternActionViewModelBase ToViewModel()
-    {
-        var data = App.Services.GetRequiredService<DataManager>();
-        return new ProfileSelectPatternActionViewModel
-        {
-            PressProfile = PressProfileId == PrevProfileId
-                ? ProfileSelectPatternActionViewModel.PreviousProfile
-                : data.Profiles.FirstOrDefault(p => p.Id == PressProfileId),
-
-            ReleaseProfile = ReleaseProfileId == PrevProfileId
-                ? ProfileSelectPatternActionViewModel.PreviousProfile
-                : data.Profiles.FirstOrDefault(p => p.Id == ReleaseProfileId),
-
-            AllProfiles = data.Profiles,
-        };
-    }
+    public override PatternActionViewModelBase ToViewModel() => new ProfileSelectPatternActionViewModel(this);
 
 
     protected override void DoReportMode(bool newBindingState)
     {
-        if (newBindingState)
-            switch (PressProfileId)
-            {
-                case PrevProfileId:
-                    ReportMessage?.Invoke("Переключение на предыдущий профиль");
-                    break;
-                case > 0:
-                    ReportMessage?.Invoke("Переключение на выбранный профиль");
-                    break;
-            }
-        else
-        {
-            switch (ReleaseProfileId)
-            {
-                case PrevProfileId:
-                    ReportMessage?.Invoke("Переключение на предыдущий профиль");
-                    break;
-                case > 0:
-                    ReportMessage?.Invoke("Переключение на выбранный профиль");
-                    break;
-            }
-        }
+        ReportMessage?.Invoke(newBindingState ? "Переключение при активации" : "Переключение при декативации");
     }
 
     #region Work
@@ -82,7 +45,7 @@ public class ProfileSelectPatternAction : PatternActionBase
 
     protected override void Initialize(IServiceProvider Services)
     {
-        _PreviousProfile = null;
+        //_PreviousProfile = null;
         var vm = Services.GetRequiredService<MainWindowViewModel>();
         _MainWindowViewModel = vm;
         if (PressProfileId > 0)
@@ -100,7 +63,7 @@ public class ProfileSelectPatternAction : PatternActionBase
         {
             if(PressProfileId == PrevProfileId && _PreviousProfile != null)
                 _MainWindowViewModel.StartProfileCommand.Execute(_PreviousProfile);
-            else if (_PressProfile != null)
+            else if (_PressProfile != null && _MainWindowViewModel.ActiveProfile != _PressProfile)
             {
                 _PreviousProfile = _MainWindowViewModel.ActiveProfile;
                 _MainWindowViewModel.StartProfileCommand.Execute(_PressProfile);
@@ -110,7 +73,7 @@ public class ProfileSelectPatternAction : PatternActionBase
         {
             if (ReleaseProfileId == PrevProfileId && _PreviousProfile != null)
                 _MainWindowViewModel.StartProfileCommand.Execute(_PreviousProfile);
-            else if (_ReleaseProfile != null)
+            else if (_ReleaseProfile != null && _MainWindowViewModel.ActiveProfile != _ReleaseProfile)
             {
                 _PreviousProfile = _MainWindowViewModel.ActiveProfile;
                 _MainWindowViewModel.StartProfileCommand.Execute(_ReleaseProfile);

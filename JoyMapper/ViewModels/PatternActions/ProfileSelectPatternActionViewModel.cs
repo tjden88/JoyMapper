@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
+using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.PatternActions.Base;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JoyMapper.ViewModels.PatternActions;
 
@@ -14,11 +17,31 @@ public class ProfileSelectPatternActionViewModel : PatternActionViewModelBase
     public override string Name => "Переключить профиль";
     public override string Description => "Переключение на другой профиль при активации или деактивации действия";
 
-    public static Profile PreviousProfile = new()
+    private static readonly Profile _PreviousProfile = new()
     {
         Id = -1,
         Name = "Предыдущий профиль",
     };
+
+
+    public ProfileSelectPatternActionViewModel(ProfileSelectPatternAction model = null)
+    {
+        var data = App.Services.GetRequiredService<DataManager>();
+        AllProfiles = data.Profiles;
+        IsBeta = true;
+
+        if (model == null)
+            return;
+
+        PressProfile = model.PressProfileId == -1
+            ? _PreviousProfile
+            : data.Profiles.FirstOrDefault(p => p.Id == model.PressProfileId);
+
+        ReleaseProfile = model.ReleaseProfileId == -1
+            ? _PreviousProfile
+            : data.Profiles.FirstOrDefault(p => p.Id == model.ReleaseProfileId);
+
+    }
 
 
     #region PressProfile : Profile - Профиль на нажатие
@@ -30,7 +53,38 @@ public class ProfileSelectPatternActionViewModel : PatternActionViewModelBase
     public Profile PressProfile
     {
         get => _PressProfile;
-        set => Set(ref _PressProfile, value);
+        set => IfSet(ref _PressProfile, value)
+            .CallPropertyChanged(nameof(PressProfileIsCustom))
+        ;
+    }
+
+    public bool PressProfileIsNull
+    {
+        get => PressProfile == null;
+        set
+        {
+            if (value) PressProfile = null;
+        }
+    }
+
+    public bool PressProfileIsPrevious
+    {
+        get => PressProfile == _PreviousProfile;
+        set
+        {
+            if (value) PressProfile = _PreviousProfile;
+        }
+    }
+
+    public bool PressProfileIsCustom
+    {
+        get => AllProfiles.Any() && PressProfile is { Id: > 0 };
+
+        set
+        {
+            if (value)
+                PressProfile = AllProfiles.FirstOrDefault();
+        }
     }
 
     #endregion
@@ -45,9 +99,38 @@ public class ProfileSelectPatternActionViewModel : PatternActionViewModelBase
     public Profile ReleaseProfile
     {
         get => _ReleaseProfile;
-        set => Set(ref _ReleaseProfile, value);
+        set => IfSet(ref _ReleaseProfile, value)
+            .CallPropertyChanged(nameof(ReleaseProfileIsCustom));
     }
 
+    public bool ReleaseProfileIsNull
+    {
+        get => ReleaseProfile == null;
+        set
+        {
+            if (value) ReleaseProfile = null;
+        }
+    }
+
+    public bool ReleaseProfileIsPrevious
+    {
+        get => ReleaseProfile == _PreviousProfile;
+        set
+        {
+            if (value) ReleaseProfile = _PreviousProfile;
+        }
+    }
+
+    public bool ReleaseProfileIsCustom
+    {
+        get => AllProfiles.Any() && ReleaseProfile is { Id: > 0 };
+
+        set
+        {
+            if (value)
+                ReleaseProfile = AllProfiles.FirstOrDefault();
+        }
+    }
     #endregion
 
 

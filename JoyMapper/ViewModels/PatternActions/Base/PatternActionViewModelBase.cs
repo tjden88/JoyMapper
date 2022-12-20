@@ -8,6 +8,9 @@ namespace JoyMapper.ViewModels.PatternActions.Base;
 /// </summary>
 public abstract class PatternActionViewModelBase : ViewModel
 {
+    /// <summary> Бета-версия действия </summary>
+    public bool IsBeta { get; protected set; }
+
     public abstract string Name { get; }
 
     public abstract string Description { get; }

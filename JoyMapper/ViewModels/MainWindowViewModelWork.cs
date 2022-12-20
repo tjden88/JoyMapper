@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Threading;
 using JoyMapper.Models;
 using WPR.MVVM.Commands;
 
@@ -61,7 +63,7 @@ public partial class MainWindowViewModel
     /// <summary>Логика выполнения - Запустить профиль</summary>
     private void OnStartProfileCommandExecuted(object p)
     {
-        LogMessages.Clear();
+        Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, () => LogMessages.Clear());
         var profile = (Profile)p;
         ActiveProfile = profile; 
         _ProfileListener.StartListenProfile(profile);

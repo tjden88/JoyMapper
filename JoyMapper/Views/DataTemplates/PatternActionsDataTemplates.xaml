@@ -94,10 +94,21 @@
                 <DockPanel Margin="5">
                     <TextBlock Text="При активации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
                     <StackPanel Margin="5">
-                        <RadioButton Margin="5"  Content="Не изменять профиль"/>
-                        <RadioButton Margin="5" Content="Предыдущий профиль"/>
-                        <RadioButton Margin="5" Content="Выбранный профиль:"/>
-                        <ComboBox ItemsSource="{Binding AllProfiles}" SelectedItem="{Binding PressProfile}"></ComboBox>
+                        <RadioButton IsChecked="{Binding PressProfileIsNull}" Margin="5"  Content="Не изменять профиль"/>
+                        <RadioButton IsChecked="{Binding PressProfileIsPrevious}" Margin="5" Content="Предыдущий профиль"/>
+                        <RadioButton IsChecked="{Binding PressProfileIsCustom}" Margin="5" Content="Выбранный профиль:"/>
+                        <ComboBox ItemsSource="{Binding AllProfiles}" Margin="5" 
+                                  IsEnabled="{Binding PressProfileIsCustom}"
+                                  SelectedItem="{Binding PressProfile}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Description, TargetNullValue=Нет описания}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
                 </DockPanel>
 
@@ -108,18 +119,31 @@
                 <DockPanel Grid.Column="2" Margin="5">
                     <TextBlock Text="При деактивации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
                     <StackPanel Margin="5">
-                        <RadioButton Margin="5" Content="Не изменять профиль"/>
-                        <RadioButton Margin="5" Content="Предыдущий профиль"/>
-                        <RadioButton Margin="5" Content="Выбранный профиль:"/>
-                        <ComboBox ItemsSource="{Binding AllProfiles}" SelectedItem="{Binding ReleaseProfile}"></ComboBox>
+                        <RadioButton IsChecked="{Binding ReleaseProfileIsNull}" Margin="5"  Content="Не изменять профиль"/>
+                        <RadioButton IsChecked="{Binding ReleaseProfileIsPrevious}" Margin="5" Content="Предыдущий профиль"/>
+                        <RadioButton IsChecked="{Binding ReleaseProfileIsCustom}" Margin="5" Content="Выбранный профиль:"/>
+                        <ComboBox ItemsSource="{Binding AllProfiles}" Margin="5" 
+                                  IsEnabled="{Binding ReleaseProfileIsCustom}"
+                                  SelectedItem="{Binding ReleaseProfile}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Description, TargetNullValue=Нет описания}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                     </StackPanel>
                 </DockPanel>
             </Grid>
-            <WrapPanel Margin="10">
+            <WrapPanel Margin="10,0">
                 <controls:WPRIcon Source="InfoCircle" Foreground="{DynamicResource AccentColorBrush}"/>
-                <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" DockPanel.Dock="Top" Margin="10" Text="Выбор предыдущего профиля сработает только в том случае, если после запуска профиль уже был переключен с помощью этого или другого паттерна"></TextBlock>
+                <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" DockPanel.Dock="Top" Margin="10" 
+                           Text="Выбор предыдущего профиля сработает только в том случае, если после запуска профиль уже был переключен с помощью этого или другого паттерна"/>
             </WrapPanel>
+            
         </DockPanel>
     </DataTemplate>
 
