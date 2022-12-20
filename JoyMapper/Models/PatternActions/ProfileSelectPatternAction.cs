@@ -45,6 +45,7 @@ public class ProfileSelectPatternAction : PatternActionBase
 
     protected override void Initialize(IServiceProvider Services)
     {
+        if (LogReportMode) return;
         //_PreviousProfile = null;
         var vm = Services.GetRequiredService<MainWindowViewModel>();
         _MainWindowViewModel = vm;

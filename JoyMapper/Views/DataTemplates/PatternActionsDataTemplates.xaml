@@ -242,7 +242,6 @@
                 <TextBlock Text="Опции" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
                 <controls:NumericTextBox AllowTextExpressions="False" Value="{Binding Delay}"
                                          MinValue="100"
-                                         Width="210"
                                          HorizontalAlignment="Left"
                                          Margin="0,10"
                                          MaxValue="10000"

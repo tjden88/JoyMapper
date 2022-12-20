@@ -34,6 +34,7 @@ public class SeqKeySenderPatternAction : PatternActionBase
 
     protected override void Initialize(IServiceProvider Services)
     {
+        if(LogReportMode) return;
         _KeyboardSender = Services.GetRequiredService<KeyboardSender>();
         _CurrentIndex = 0;
     }

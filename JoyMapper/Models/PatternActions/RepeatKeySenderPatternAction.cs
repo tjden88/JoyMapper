@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services;
+using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,11 +46,20 @@ public class RepeatKeySenderPatternAction : PatternActionBase
 
     private int _RepeatIndex;
 
+    private JoyBindingBase _ModificatorBinding;
+
     private CancellationTokenSource _CancellationTokenSource;
 
     protected override void Initialize(IServiceProvider Services)
     {
+        if (LogReportMode) return;
+
         _KeyboardSender = Services.GetRequiredService<KeyboardSender>();
+        var dataManager = Services.GetRequiredService<DataManager>();
+        var parentPattern = dataManager.JoyPatterns.FirstOrDefault(p=> p.PatternAction == this);
+
+        if (parentPattern?.ModificatorId is { } mId)
+            _ModificatorBinding = dataManager.Modificators.FirstOrDefault(m => m.Id == mId)?.Binding;
 
     }
 
@@ -83,6 +95,9 @@ public class RepeatKeySenderPatternAction : PatternActionBase
                     break;
                 }
             }
+
+            if(RepeatCount == 0 && _ModificatorBinding?.IsActive == false)
+                break;
 
             _KeyboardSender.SendKeyboardCommands(KeyBindings);
             await Task.Delay(Delay, cancel);
