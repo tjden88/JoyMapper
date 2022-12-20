@@ -3,6 +3,7 @@
                     xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
                     xmlns:models="clr-namespace:JoyMapper.Models"
                     xmlns:base="clr-namespace:JoyMapper.ViewModels.PatternActions.Base"
+                    xmlns:dd="urn:gong-wpf-dragdrop"
                     xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions">
 
     <DataTemplate DataType="{x:Type base:PatternActionKeysBindingViewModel}">
@@ -157,7 +158,10 @@
             <Grid>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <WrapPanel>
-                        <ItemsControl HorizontalAlignment="Left" ItemsSource="{Binding SeqKeysList}" HorizontalContentAlignment="Stretch">
+                        <ItemsControl dd:DragDrop.IsDragSource="True"
+                                      dd:DragDrop.IsDropTarget="True"
+                                      HorizontalAlignment="Left" ItemsSource="{Binding SeqKeysList}"
+                                      HorizontalContentAlignment="Stretch">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel/>
@@ -168,7 +172,7 @@
                                     <controls:WPRCard VerticalAlignment="Top">
                                         <Grid>
                                             <ScrollViewer MinWidth="130">
-                                                <ItemsControl  Margin="10,28,10,10" ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
+                                                <ItemsControl Margin="10,28,10,10" ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
                                                             <TextBlock Foreground="{DynamicResource PrimaryTextColorBrush}" Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
