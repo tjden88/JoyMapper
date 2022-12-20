@@ -320,6 +320,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
                     <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Текущий профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
@@ -347,6 +348,9 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+                <Button Grid.Row="2" HorizontalAlignment="Center" Content="Лог команд клавиатуры"
+                        Command="{Binding ShowKeyboardLogCommand}"
+                        Style="{StaticResource WPRFlatButton}"/>
             </Grid>
         </Border>
     </Grid>

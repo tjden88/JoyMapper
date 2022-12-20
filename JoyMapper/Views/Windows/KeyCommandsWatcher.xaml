@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoyMapper.Views.Windows"
         mc:Ignorable="d"
+        Closed="KeyCommandsWatcher_OnClosed"
         WindowStartupLocation="CenterScreen"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="500" Width="400">
-    <DockPanel>
-        <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Content="Очистить" Click="ButtonClear_Click"/>
-        <ScrollViewer>
+    <DockPanel >
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="10" Content="Очистить" Click="ButtonClear_Click"/>
+        <ScrollViewer Margin="10">
             <ItemsControl ItemsSource="{Binding KeysLogs}"/>
         </ScrollViewer>
     </DockPanel>

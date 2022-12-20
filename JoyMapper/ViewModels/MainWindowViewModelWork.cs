@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using JoyMapper.Models;
+using JoyMapper.Views.Windows;
 using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels;
@@ -89,6 +90,28 @@ public partial class MainWindowViewModel
     {
         ActiveProfile = null;
         _ProfileListener.StopListenProfile();
+    }
+
+    #endregion
+
+
+    #region Command ShowKeyboardLogCommand - Показать лог клавиатуры
+
+    /// <summary>Показать лог клавиатуры</summary>
+    private Command _ShowKeyboardLogCommand;
+
+    /// <summary>Показать лог клавиатуры</summary>
+    public Command ShowKeyboardLogCommand => _ShowKeyboardLogCommand
+        ??= new Command(OnShowKeyboardLogCommandExecuted, CanShowKeyboardLogCommandExecute, "Показать лог клавиатуры");
+
+    /// <summary>Проверка возможности выполнения - Показать лог клавиатуры</summary>
+    private bool CanShowKeyboardLogCommandExecute() => true;
+
+    /// <summary>Логика выполнения - Показать лог клавиатуры</summary>
+    private void OnShowKeyboardLogCommandExecuted()
+    {
+        var wnd = _AppWindowsService.GetWindow<KeyCommandsWatcher>();
+        wnd.Show();
     }
 
     #endregion

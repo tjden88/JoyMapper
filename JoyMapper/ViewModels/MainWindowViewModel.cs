@@ -18,12 +18,14 @@ public partial class MainWindowViewModel : WindowViewModel
     private readonly DataManager _DataManager;
     private readonly UpdateChecker _UpdateChecker;
     private readonly IProfileListener _ProfileListener;
+    private readonly AppWindowsService _AppWindowsService;
 
-    public MainWindowViewModel(DataManager DataManager, UpdateChecker UpdateChecker , IProfileListener ProfileListener)
+    public MainWindowViewModel(DataManager DataManager, UpdateChecker UpdateChecker , IProfileListener ProfileListener, AppWindowsService AppWindowsService)
     {
         _DataManager = DataManager;
         _UpdateChecker = UpdateChecker;
         _ProfileListener = ProfileListener;
+        _AppWindowsService = AppWindowsService;
         AppLog.Report += msg => LogMessages.Add(msg);
         Title = "JoyMapper " + App.AppVersion;
         CurrentColorTheme = ColorThemes
