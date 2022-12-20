@@ -7,19 +7,12 @@
         xmlns:models="clr-namespace:JoyMapper.Models"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         mc:Ignorable="d"
+        Loaded="MainWindow_OnLoaded"
         Topmost="False"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="600" Width="800">
-    <b:Interaction.Triggers>
-        <b:EventTrigger EventName="Loaded">
-            <b:EventTrigger.Actions>
-                <b:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
-                <b:InvokeCommandAction Command="{Binding CheckUpdatesCommand}"/>
-            </b:EventTrigger.Actions>
-        </b:EventTrigger>
-    </b:Interaction.Triggers>
     <Grid>
         <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
             <TabItem>

@@ -16,4 +16,10 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = ViewModel;
     }
+
+    private void MainWindow_OnLoaded(object Sender, RoutedEventArgs E)
+    {
+        ViewModel.LoadDataCommand.Execute();
+        ViewModel.CheckUpdatesCommand.Execute();
+    }
 }
