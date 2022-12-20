@@ -1,5 +1,5 @@
 1.4
-www.ya.ru
+https://github.com/tjden88/JoyMapper/releases/download/Release1.4/JoyMapper1.4.zip
 Что нового
 	- Добавлены модификаторы действий:
 		Теперь для любого действия можно добавить действие-модификатор.
