@@ -1,4 +1,4 @@
-1.4.0
+1.4
 https://github.com/tjden88/JoyMapper/releases/download/Release1.4/JoyMapper1.4.zip
 Что нового
 	- Добавлены модификаторы действий:
