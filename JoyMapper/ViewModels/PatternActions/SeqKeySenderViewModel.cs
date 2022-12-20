@@ -1,8 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using JoyMapper.Models;
 using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.PatternActions.Base;
+using JoyMapper.Views.Windows;
+using WPR.MVVM.Commands;
 
 namespace JoyMapper.ViewModels.PatternActions;
 
@@ -11,15 +14,15 @@ namespace JoyMapper.ViewModels.PatternActions;
 /// </summary>
 public class SeqKeySenderViewModel : PatternActionViewModelBase
 {
+    private const string CollectionName = "Последовательность команд";
 
-    public SeqKeySenderViewModel(SeqKeySenderPatternAction model)
+    public SeqKeySenderViewModel(SeqKeySenderPatternAction model = null)
     {
         if(model is null)
             return;
 
         SeqKeysList = new(model.SeqKeysList
-            .Select(key => 
-                new PatternActionKeysBindingViewModel("Последовательность команд")));
+            .Select(key => new PatternActionKeysBindingViewModel(CollectionName) {KeyBindings = new(key)}));
     }
 
 
@@ -34,6 +37,53 @@ public class SeqKeySenderViewModel : PatternActionViewModelBase
         get => _SeqKeysList;
         set => Set(ref _SeqKeysList, value);
     }
+
+    #endregion
+
+
+    #region Command AddSequenceCommand - Добавить последовательность клавиш
+
+    /// <summary>Добавить последовательность клавиш</summary>
+    private Command _AddSequenceCommand;
+
+    /// <summary>Добавить последовательность клавиш</summary>
+    public Command AddSequenceCommand => _AddSequenceCommand
+        ??= new Command(OnAddSequenceCommandExecuted, CanAddSequenceCommandExecute, "Добавить последовательность клавиш");
+
+    /// <summary>Проверка возможности выполнения - Добавить последовательность клавиш</summary>
+    private bool CanAddSequenceCommandExecute() => true;
+
+    /// <summary>Логика выполнения - Добавить последовательность клавиш</summary>
+    private void OnAddSequenceCommandExecuted()
+    {
+        var wnd = new PatternActionKeyBindingsEdit(Enumerable.Empty<KeyboardKeyBinding>(), CollectionName)
+        {
+            Owner = App.ActiveWindow
+        };
+
+        if (wnd.ShowDialog() != true || !wnd.ViewModel.KeyBindings.Any())
+            return;
+
+        SeqKeysList.Add(new PatternActionKeysBindingViewModel(CollectionName) {KeyBindings = wnd.ViewModel.KeyBindings });
+    }
+
+    #endregion
+
+
+    #region Command RemoveSequenceCommand - Удалить последовательность
+
+    /// <summary>Удалить последовательность</summary>
+    private Command _RemoveSequenceCommand;
+
+    /// <summary>Удалить последовательность</summary>
+    public Command RemoveSequenceCommand => _RemoveSequenceCommand
+        ??= new Command(OnRemoveSequenceCommandExecuted, CanRemoveSequenceCommandExecute, "Удалить последовательность");
+
+    /// <summary>Проверка возможности выполнения - Удалить последовательность</summary>
+    private bool CanRemoveSequenceCommandExecute(object p) => p is PatternActionKeysBindingViewModel;
+
+    /// <summary>Логика выполнения - Удалить последовательность</summary>
+    private void OnRemoveSequenceCommandExecuted(object p) => SeqKeysList.Remove((PatternActionKeysBindingViewModel) p);
 
     #endregion
 
