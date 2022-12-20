@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services;
+using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,10 +26,7 @@ public class RepeatKeySenderPatternAction : PatternActionBase
     public int RepeatCount { get; set; }
 
 
-    public override PatternActionViewModelBase ToViewModel()
-    {
-        throw new NotImplementedException();
-    }
+    public override PatternActionViewModelBase ToViewModel() => new RepeatKeySenderPatternActionViewModel(this);
 
 
     protected override void DoReportMode(bool newBindingState)
