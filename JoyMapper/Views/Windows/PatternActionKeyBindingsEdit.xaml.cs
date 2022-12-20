@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using JoyMapper.Models;
 using System.Linq;
 using System.Windows;
@@ -172,4 +173,17 @@ public partial class PatternActionKeyBindingsEdit : Window
         #endregion
     }
 
+    private void UIElement_OnPreviewMouseDown(object Sender, MouseButtonEventArgs E)
+    {
+        Debug.WriteLine(E.ChangedButton);
+    }
+    private void UIElement_OnPreviewMouseUp(object Sender, MouseButtonEventArgs E)
+    {
+        Debug.WriteLine(E.ChangedButton);
+    }
+
+    private void UIElement_OnMouseWheel(object Sender, MouseWheelEventArgs E)
+    {
+        Debug.WriteLine(E.Delta);
+    }
 }

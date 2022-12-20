@@ -56,7 +56,10 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Border CornerRadius="5" Focusable="True" Opacity="0.6" Background="{DynamicResource AccentColorBrush}">
+            <Border PreviewMouseDown="UIElement_OnPreviewMouseDown"
+                    PreviewMouseUp="UIElement_OnPreviewMouseUp"
+                    MouseWheel="UIElement_OnMouseWheel"
+                    CornerRadius="5" Focusable="True" Opacity="0.6" Background="{DynamicResource AccentColorBrush}">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Setters>
@@ -71,7 +74,7 @@
                 </Border.Style>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="28" Margin="5" TextWrapping="Wrap" Text="Запись..."/>
-                    <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="20" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре"/>
+                    <TextBlock Foreground="{DynamicResource TextColorBrush}" TextAlignment="Center" FontSize="18" TextWrapping="Wrap" Text="Нажмите комбинацию клавиш на клавиатуре или действия мыши"/>
                 </StackPanel>
             </Border>
         </Grid>

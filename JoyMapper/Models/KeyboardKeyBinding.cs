@@ -8,9 +8,15 @@ public class KeyboardKeyBinding
     {
         KeyPress,
         KeyUp,
+        MousePress,
+        MouseUp,
+        MouseScrollUp,
+        MouseScrollDown
     }
 
     public Key KeyCode { get; set; }
+
+    public MouseButton MouseButton { get; set; }
 
     public KeyboardAction Action { get; set; }
 
@@ -18,8 +24,12 @@ public class KeyboardKeyBinding
     {
         return Action switch
         {
-            KeyboardAction.KeyPress => "Нажать - " + KeyCode,
-            KeyboardAction.KeyUp => "Отпустить - " + KeyCode,
+            KeyboardAction.KeyPress => $"Нажать - {KeyCode}",
+            KeyboardAction.KeyUp => $"Отпустить - {KeyCode}",
+            KeyboardAction.MousePress => $"Нажать мышь - {MouseButton}",
+            KeyboardAction.MouseUp => $"Отпустить мышь - {MouseButton}",
+            KeyboardAction.MouseScrollUp => "Скролл мыши вверх",
+            KeyboardAction.MouseScrollDown => "Скролл мыши вниз",
             _ => null,
         };
     }
