@@ -14,14 +14,25 @@
         Name="Window"
         Style="{StaticResource ChromeWindow}"
         Title="{Binding Title}" Height="600" Width="800">
+    <Window.Resources>
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="MainWindow.Resources.xaml"/>
+                <ResourceDictionary Source="MainWindow.Styles.xaml"/>
+                <ResourceDictionary Source="MainWindow.SettingsView.xaml"/>
+                <ResourceDictionary Source="MainWindow.ActiveProfileView.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
+
+            <!--Профили-->
             <TabItem>
                 <TabItem.Header>
                     <controls:WPRIconText Text="Профили" IconSource="Gauge" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
-                <!--Профили-->
                 <controls:WPRCard>
                     <DockPanel>
                         <ToolBar DockPanel.Dock="Top" Margin="5">
@@ -53,48 +64,24 @@
 
                         <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}" />
-                        <ListBox Margin="5" ItemsSource="{Binding Profiles}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProfile}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:Profile}">
-                                    <DockPanel LastChildFill="False" Margin="10,5" Background="{StaticResource TransparentBrush}">
-                                        <DockPanel.InputBindings>
-                                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.EditProfileCommand, ElementName=Window}"/>
-                                        </DockPanel.InputBindings>
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Name}"  FontWeight="Bold" FontSize="18"/>
-                                            <TextBlock Text="{Binding Description}" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-                                        </StackPanel>
-                                        <Button DockPanel.Dock="Right" Padding="30,10" Content="Запуск" FontSize="20"
-                                                    Command="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext.StartProfileCommand}"
-                                                    CommandParameter="{Binding}"/>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+
+                        <ListBox Margin="5"
+                                 ItemsSource="{Binding Profiles}" 
+                                 HorizontalContentAlignment="Stretch" 
+                                 SelectedItem="{Binding SelectedProfile}"/>
                     </DockPanel>
                 </controls:WPRCard>
+
             </TabItem>
 
+            <!--Паттерны-->
             <TabItem>
                 <TabItem.Header>
                     <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
-                <!--Паттерны-->
                 <controls:WPRCard>
                     <DockPanel>
-                        <DockPanel.Resources>
-                            <CollectionViewSource x:Key="PatternsItems" Source="{Binding Path=JoyPatterns}">
-                                <CollectionViewSource.SortDescriptions>
-                                    <componentModel:SortDescription Direction="Ascending" PropertyName="GroupName" />
-                                    <componentModel:SortDescription Direction="Ascending" PropertyName="Name" />
-                                </CollectionViewSource.SortDescriptions>
-                                <CollectionViewSource.GroupDescriptions>
-                                    <PropertyGroupDescription PropertyName="GroupName"/>
-                                </CollectionViewSource.GroupDescriptions>
-                            </CollectionViewSource>
-                        </DockPanel.Resources>
-
                         <ToolBar DockPanel.Dock="Top" Margin="5">
                             <Button Command="{Binding CreatePatternCommand}"
                                     ToolTip="{Binding CreatePatternCommand}">
@@ -143,60 +130,21 @@
                         <ListBox Name="PatternsList" Margin="5" ItemsSource="{Binding JoyPatterns}" SelectedItem="{Binding SelectedPattern}"
                                  HorizontalContentAlignment="Stretch">
                             <ListBox.GroupStyle>
-                                <GroupStyle>
-                                    <GroupStyle.Panel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel Orientation="Vertical" />
-                                        </ItemsPanelTemplate>
-                                    </GroupStyle.Panel>
-                                    <GroupStyle.ContainerStyle>
-                                        <Style TargetType="{x:Type GroupItem}">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate>
-                                                        <Expander
-                                                            IsExpanded="True">
-                                                            <Expander.Header>
-                                                                <TextBlock Margin="0,2,0,5">
-                                                                    <TextBlock  VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}"/>
-                                                                    <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" VerticalAlignment="Center" Text="{Binding ItemCount, StringFormat=(всего {0})}"/>
-                                                                </TextBlock>
-                                                            </Expander.Header>
-                                                            <ItemsPresenter/>
-                                                        </Expander>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </GroupStyle.ContainerStyle>
-                                </GroupStyle>
+                                <StaticResource ResourceKey="PatternsListGroupStyle"/>
                             </ListBox.GroupStyle>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:JoyPattern}">
-                                    <StackPanel Orientation="Vertical" Background="{StaticResource TransparentBrush}">
-                                        <StackPanel.InputBindings>
-                                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.EditPatternCommand, ElementName=Window}"/>
-                                        </StackPanel.InputBindings>
-                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
-                                        <DockPanel LastChildFill="False">
-                                            <TextBlock Margin="5" Text="{Binding Binding}"/>
-                                            <controls:WPRIcon Foreground="{DynamicResource AccentColorBrush}" Source="AxisArrow" Margin="5"
-                                                              Visibility="{Binding HasModificator, Converter={StaticResource Bool2VisibilityConverter}}"/>
-                                        </DockPanel>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
+                            
                         </ListBox>
                     </DockPanel>
                 </controls:WPRCard>
+
             </TabItem>
 
+            <!--Модификаторы-->
             <TabItem>
                 <TabItem.Header>
                     <controls:WPRIconText Text="Модификаторы" IconSource="AxisArrow" Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
-                <!--Модификаторы-->
                 <controls:WPRCard>
                     <DockPanel>
                         <ToolBar DockPanel.Dock="Top" Margin="5">
@@ -234,21 +182,10 @@
                         <TextBlock Text="Список модификаторов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}" />
 
-                        <ListBox Margin="5" ItemsSource="{Binding Modificators}" SelectedItem="{Binding SelectedModificator}" HorizontalContentAlignment="Stretch">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:Modificator}">
-                                    <StackPanel Orientation="Vertical" Background="{StaticResource TransparentBrush}">
-                                        <StackPanel.InputBindings>
-                                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.EditModificatorCommand, ElementName=Window}"/>
-                                        </StackPanel.InputBindings>
-                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
-                                        <WrapPanel>
-                                            <TextBlock Margin="5" Text="{Binding Binding}"/>
-                                        </WrapPanel>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <ListBox Margin="5" 
+                                 ItemsSource="{Binding Modificators}"
+                                 SelectedItem="{Binding SelectedModificator}"
+                                 HorizontalContentAlignment="Stretch"/>
                     </DockPanel>
                 </controls:WPRCard>
 
@@ -260,164 +197,13 @@
                 </TabItem.Header>
 
                 <!--Настройки-->
-                <controls:WPRCard>
-                    <StackPanel Orientation="Vertical" Margin="10">
-                        <TextBlock Text="Настройки программы" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+                <ContentControl Content="{StaticResource SettingsView}"/>
 
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Максимальная задержка двойного нажатия кнопки (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1000" Margin="10,0" Value="{Binding DoublePressDelay}"/>
-                        </DockPanel>
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Задержка долгого нажатия кнопки (мс)" VerticalAlignment="Center"/>
-                            <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1500" Margin="10,0" Value="{Binding LongPressDelay}"/>
-                        </DockPanel>
-
-                        <Separator Background="{DynamicResource DividerColorBrush}"/>
-
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Внешний вид (цветовая схема)" VerticalAlignment="Center"/>
-                            <ComboBox Width="120" Margin="10,20" 
-                                      ItemsSource="{Binding ColorThemes}" 
-                                      SelectedItem="{Binding CurrentColorTheme}"
-                                      HorizontalContentAlignment="Stretch"
-                                      VerticalContentAlignment="Center"
-                                      IsSynchronizedWithCurrentItem="True">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type models:ColorTheme}">
-                                        <Border CornerRadius="8" BorderThickness="0" Height="40" Margin="0,0,0,8">
-                                            <Border.Background>
-                                                <SolidColorBrush Color="{Binding PrimaryColor}"/>
-                                            </Border.Background>
-                                            <controls:WPRIcon Source="StarBorder" IconSize="26">
-                                                <controls:WPRIcon.Foreground>
-                                                    <SolidColorBrush Color="{Binding AccentColor}"/>
-                                                </controls:WPRIcon.Foreground>
-                                            </controls:WPRIcon>
-                                        </Border>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </DockPanel>
-
-                        <Separator Background="{DynamicResource DividerColorBrush}"/>
-
-                        <TextBlock Text="О программе" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
-
-                        <WrapPanel>
-                            <TextBlock Text="{Binding AppVersion, StringFormat='Версия: {0}'}" Foreground="{DynamicResource PrimaryColorBrush}" Margin="0,10"/>
-                            <Button Style="{StaticResource AccentWPRButton}" Content="Доступно обновление" Command="{Binding ShowUpdateWindowCommand}"
-                                    Visibility="{Binding ShowUpdateWindowCommand.Visibility}" Margin="10,5" />
-                        </WrapPanel>
-
-                        <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
-                                Command="{Binding GoToHomepageCommand}">
-                            <Button.Content>
-                                <controls:WPRIconText Text="Страница проекта" IconSource="Github" />
-                            </Button.Content>
-                        </Button>
-                        <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
-                                Command="{Binding ReportProblemCommand}">
-                            <Button.Content>
-                                <controls:WPRIconText Text="Сообщить о проблеме" IconSource="ReportProblem" />
-                            </Button.Content>
-                        </Button>
-                        <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
-                                Command="{Binding MakeDonateCommand}">
-                            <Button.Content>
-                                <controls:WPRIconText Text="Поддержать разработчика" IconSource="Donate" />
-                            </Button.Content>
-                        </Button>
-
-                    </StackPanel>
-                </controls:WPRCard>
             </TabItem>
 
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
-        <Border Background="{DynamicResource LightPrimaryColorBrush}"
-                d:IsHidden="true"
-                RenderTransformOrigin="0.5,0.5"
-                IsEnabled="{Binding IsProfileStarted}">
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Setter Property="RenderTransform">
-                        <Setter.Value>
-                            <ScaleTransform ScaleX="1" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsEnabled" Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard >
-                                        <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" From="100" Duration="0:0:0.4" To="0"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                         Duration="0:0:0.4"
-                                                         EasingFunction="{StaticResource CircleEaseOut}"
-                                                         To="1"/>
-                                        <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:8" From="DarkPrimaryColorBrush"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
-                                        <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" Duration="0"></extensions:WPRCornerRadiusAnimation>
-
-                                        <DoubleAnimation Duration="0:0:0.4"
-                                                         EasingFunction="{StaticResource CircleEaseIn}"
-                                                         To="0"/>
-                                        <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:0.3" To="DarkPrimaryColorBrush"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
-                    <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Текущий профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
-                    <Button Padding="40, 10"
-                            HorizontalAlignment="Center"
-                            Command="{Binding StopProfileCommand}"
-                            ToolTip="{Binding StopProfileCommand}">
-                        <Button.Content>
-                            <TextBlock Text="Остановить" FontSize="20"/>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-                <ScrollViewer Margin="10" Grid.Row="1" Foreground="{DynamicResource DarkPrimaryColorBrush}">
-                    <ItemsControl ItemsSource="{Binding LogMessages}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:LogMessage}">
-
-                                <TextBlock Margin="5" TextAlignment="Center" Text="{Binding}" FontSize="16">
-                                    <TextBlock.Foreground>
-                                        <SolidColorBrush Color="{Binding Color}"/>
-                                    </TextBlock.Foreground>
-                                </TextBlock>
-
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <Button Grid.Row="2" HorizontalAlignment="Center" Content="Лог команд клавиатуры"
-                        Command="{Binding ShowKeyboardLogCommand}"
-                        Style="{StaticResource WPRFlatButton}"/>
-            </Grid>
-        </Border>
-        <Canvas>
-            <Ellipse Canvas.Left="100" Width="20" Height="20" Fill="Aqua"></Ellipse>
-        </Canvas>
+        <ContentControl Content="{StaticResource ActiveProfileView}" d:IsHidden="true"/>
     </Grid>
 </Window>

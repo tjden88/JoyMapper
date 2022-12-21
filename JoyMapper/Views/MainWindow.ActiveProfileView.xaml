@@ -1,0 +1,91 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+                    xmlns:models="clr-namespace:JoyMapper.Models"
+                    xmlns:views="clr-namespace:JoyMapper.Views"
+                    xmlns:extensions="clr-namespace:WPR.Extensions;assembly=WPR">
+
+    <!--Индикатор запущенного профиля-->
+    <Border x:Key="ActiveProfileView" Background="{DynamicResource LightPrimaryColorBrush}"
+            RenderTransformOrigin="0.5,0.5"
+                IsEnabled="{Binding IsProfileStarted}">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard >
+                                    <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" From="100" Duration="0:0:0.4" To="0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                         Duration="0:0:0.4"
+                                                         EasingFunction="{StaticResource CircleEaseOut}"
+                                                         To="1"/>
+                                    <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:0.8" From="DarkPrimaryColorBrush"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
+                                    <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" Duration="0"></extensions:WPRCornerRadiusAnimation>
+
+                                    <DoubleAnimation Duration="0:0:0.4"
+                                                         EasingFunction="{StaticResource CircleEaseIn}"
+                                                         To="0"/>
+                                    <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:0.3" To="DarkPrimaryColorBrush"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
+                <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Текущий профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
+                <Button Padding="40, 10"
+                            HorizontalAlignment="Center"
+                            Command="{Binding StopProfileCommand}"
+                            ToolTip="{Binding StopProfileCommand}">
+                    <Button.Content>
+                        <TextBlock Text="Остановить" FontSize="20"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <ScrollViewer Margin="10" Grid.Row="1" Foreground="{DynamicResource DarkPrimaryColorBrush}">
+                <ItemsControl ItemsSource="{Binding LogMessages}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:LogMessage}">
+
+                            <TextBlock Margin="5" TextAlignment="Center" Text="{Binding}" FontSize="16">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{Binding Color}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Button Grid.Row="2" HorizontalAlignment="Center" Content="Лог команд клавиатуры"
+                        Command="{Binding ShowKeyboardLogCommand}"
+                        Style="{StaticResource WPRFlatButton}"/>
+        </Grid>
+    </Border>
+    <!--<Canvas>
+            <Ellipse Canvas.Left="100" Width="20" Height="20" Fill="Aqua"></Ellipse>
+        </Canvas>-->
+
+
+</ResourceDictionary>
