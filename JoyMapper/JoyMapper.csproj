@@ -54,4 +54,11 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Views\MainWindow.Resources.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>
