@@ -128,18 +128,18 @@
                             </Button>
                             <Separator/>
                             <controls:WPRIcon Source="Sort"/>
-                            <ComboBox Width="120" ToolTip="Сортировка списка">
-                                <ComboBoxItem Content="По имени" />
-                                <ComboBoxItem Content="По джойстику" />
-                                <ComboBoxItem Content="По новизне" />
+                            <ComboBox Width="120" ToolTip="Сортировка списка" Name="PatternsListSortByCombo" SelectionChanged="UpdatePatternsView">
+                                <ComboBoxItem Content="По имени" Tag="Name" IsSelected="True"/>
+                                <ComboBoxItem Content="По джойстику" Tag="BindingInfo"/>
+                                <ComboBoxItem Content="По новизне"/>
                             </ComboBox>
-                            <ToggleButton Style="{StaticResource WPRSwitchToggleButton}" Content="Группы" ToolTip="Показывать группы паттернов"/>
+                            <ToggleButton IsChecked="True" Name="PatternsGroupsToggle" Style="{StaticResource WPRSwitchToggleButton}" Content="Группы" ToolTip="Показывать группы паттернов" Checked="UpdatePatternsView" Unchecked="UpdatePatternsView"/>
                         </ToolBar>
 
                         <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
                                    Foreground="{DynamicResource SecondaryTextColorBrush}" />
 
-                        <ListBox Margin="5" ItemsSource="{Binding Source={StaticResource PatternsItems}}" SelectedItem="{Binding SelectedPattern}"
+                        <ListBox Name="PatternsList" Margin="5" ItemsSource="{Binding JoyPatterns}" SelectedItem="{Binding SelectedPattern}"
                                  HorizontalContentAlignment="Stretch">
                             <ListBox.GroupStyle>
                                 <GroupStyle>
