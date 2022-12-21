@@ -58,15 +58,16 @@ public partial class MainWindow : Window
             source.SortDescriptions.Add(new(orderBy, ListSortDirection.Ascending));
     }
 
+
     private void ActiveProfileStateChanged(object Sender, DependencyPropertyChangedEventArgs E)
     {
-        if (ActiveProfileControlClipEllipce == null) return;
+        if (ClipEllipce == null) return;
 
         //ActiveProfileControlClipEllipce.Center = Mouse.GetPosition(RootGrid);
 
         if (ViewModel.IsProfileStarted)
         {
-            ActiveProfileControlClipEllipce.Center = Mouse.GetPosition(RootGrid);
+            ClipEllipce.Center = Mouse.GetPosition(RootGrid);
             AnimateIndicator();
         }
         else
@@ -79,11 +80,11 @@ public partial class MainWindow : Window
     {
         var duration = TimeSpan.FromSeconds(0.4);
         var ease = new CircleEase { EasingMode = EasingMode.EaseOut };
-        var sideY = ActualHeight - ActiveProfileControlClipEllipce.Center.Y > ActiveProfileControlClipEllipce.Center.Y
+        var sideY = ActualHeight - ClipEllipce.Center.Y > ClipEllipce.Center.Y
             ? ActualHeight
             : 0;
 
-        var hypo = (ActiveProfileControlClipEllipce.Center - new Point(0, sideY)).Length;
+        var hypo = (ClipEllipce.Center - new Point(0, sideY)).Length;
 
         var sizeAnimation = new DoubleAnimation(0, hypo, duration) { EasingFunction = ease };
         //var opacityAnimation = new DoubleAnimation(1, 0, duration) { EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2) };
@@ -99,8 +100,15 @@ public partial class MainWindow : Window
 
         Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
         // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+        storyboard.Completed += (_, _) =>
+        {
+            ClipEllipce.BeginAnimation(EllipseGeometry.RadiusXProperty, null);
+            ClipEllipce.RadiusX = 10000;
+        };
 
         storyboard.Begin(ActiveProfileControl);
+
+
     }
 
     private void AnimateIndicatorBack()
@@ -108,7 +116,7 @@ public partial class MainWindow : Window
         var duration = TimeSpan.FromSeconds(0.4);
         var ease = new CircleEase { EasingMode = EasingMode.EaseIn };
 
-        var sizeAnimation = new DoubleAnimation(0, duration) { EasingFunction = ease };
+        var sizeAnimation = new DoubleAnimation(Math.Max(ActualWidth, ActualHeight), 0, duration) { EasingFunction = ease };
         //var opacityAnimation = new DoubleAnimation(1, 0, duration) { EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2) };
         var storyboard = new Storyboard
         {
@@ -122,6 +130,12 @@ public partial class MainWindow : Window
 
         Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
         // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+
+        storyboard.Completed += (_, _) =>
+        {
+            ClipEllipce.BeginAnimation(EllipseGeometry.RadiusXProperty, null);
+            ClipEllipce.RadiusX = 0;
+        };
 
         storyboard.Begin(ActiveProfileControl);
     }

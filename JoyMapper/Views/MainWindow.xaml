@@ -205,7 +205,7 @@
                         IsHitTestVisible="{Binding IsProfileStarted}" 
                         IsHitTestVisibleChanged="ActiveProfileStateChanged">
             <ContentControl.Clip>
-                <EllipseGeometry x:Name="ActiveProfileControlClipEllipce"
+                <EllipseGeometry x:Name="ClipEllipce"
                                  RadiusX="50"
                                  RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}"/>
             </ContentControl.Clip>
