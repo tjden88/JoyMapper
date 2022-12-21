@@ -6,6 +6,7 @@
         xmlns:models="clr-namespace:JoyMapper.Models"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:extensions="clr-namespace:WPR.Extensions;assembly=WPR"
         mc:Ignorable="d"
         Loaded="MainWindow_OnLoaded"
         Topmost="False"
@@ -339,14 +340,52 @@
         <!--Индикатор запущенного профиля-->
         <Border Background="{DynamicResource LightPrimaryColorBrush}"
                 d:IsHidden="true"
-                Visibility="{Binding IsProfileStarted, Converter={StaticResource Bool2VisibilityConverter}}">
+                RenderTransformOrigin="0.5,0.5"
+                IsEnabled="{Binding IsProfileStarted}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard >
+                                        <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" From="100" Duration="0:0:0.4" To="0"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                         Duration="0:0:0.4"
+                                                         EasingFunction="{StaticResource CircleEaseOut}"
+                                                         To="1"/>
+                                        <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:8" From="DarkPrimaryColorBrush"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
+                                        <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" Duration="0"></extensions:WPRCornerRadiusAnimation>
+
+                                        <DoubleAnimation Duration="0:0:0.4"
+                                                         EasingFunction="{StaticResource CircleEaseIn}"
+                                                         To="0"/>
+                                        <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:0.3" To="DarkPrimaryColorBrush"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
+                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
                     <TextBlock Margin="20" FontWeight="Bold" FontSize="22" Text="{Binding ActiveProfile.Name, StringFormat='Текущий профиль: {0}'}" TextWrapping="WrapWithOverflow"/>
                     <Button Padding="40, 10"
                             HorizontalAlignment="Center"
@@ -377,5 +416,8 @@
                         Style="{StaticResource WPRFlatButton}"/>
             </Grid>
         </Border>
+        <Canvas>
+            <Ellipse Canvas.Left="100" Width="20" Height="20" Fill="Aqua"></Ellipse>
+        </Canvas>
     </Grid>
 </Window>
