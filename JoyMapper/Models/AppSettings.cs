@@ -19,4 +19,7 @@ public class AppSettings
 
     /// <summary> Id текущей цветовой схемы </summary>
     public int CurrentColorCheme { get; set; }
+
+    /// <summary> Показыать группы в списке паттернов главного окна </summary>
+    public bool ShowJoyPatternsViewGroups { get; set; } = true;
 }

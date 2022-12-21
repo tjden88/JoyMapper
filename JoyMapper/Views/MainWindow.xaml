@@ -133,7 +133,7 @@
                                 <ComboBoxItem Content="По джойстику" Tag="BindingInfo"/>
                                 <ComboBoxItem Content="По новизне"/>
                             </ComboBox>
-                            <ToggleButton IsChecked="True" Name="PatternsGroupsToggle" Style="{StaticResource WPRSwitchToggleButton}" Content="Группы" ToolTip="Показывать группы паттернов" Checked="UpdatePatternsView" Unchecked="UpdatePatternsView"/>
+                            <ToggleButton IsChecked="{Binding ShowPatternsGroups}" Name="PatternsGroupsToggle" Style="{StaticResource WPRSwitchToggleButton}" Content="Группы" ToolTip="Показывать группы паттернов" Checked="UpdatePatternsView" Unchecked="UpdatePatternsView"/>
                         </ToolBar>
 
                         <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"

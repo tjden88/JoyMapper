@@ -81,6 +81,24 @@ public partial class MainWindowViewModel : WindowViewModel
     #endregion
 
 
+    #region ShowPatternsGroups : bool - Показывать группы паттернов
+
+    /// <summary>Показывать группы паттернов</summary>
+    public bool ShowPatternsGroups
+    {
+        get => _DataManager.AppSettings.ShowJoyPatternsViewGroups;
+        set
+        {
+            if(Equals(value, _DataManager.AppSettings.ShowJoyPatternsViewGroups))
+                return;
+            _DataManager.AppSettings.ShowJoyPatternsViewGroups = value;
+            _DataManager.SaveData();
+        }
+    }
+
+    #endregion
+
+    
     #region SelectedPattern : JoyPattern - Выбранный паттерн
 
     /// <summary>Выбранный паттерн</summary>
