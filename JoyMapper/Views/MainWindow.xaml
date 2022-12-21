@@ -21,7 +21,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
+    <Grid Name="RootGrid">
         <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
 
             <!--Профили-->
@@ -202,5 +202,13 @@
 
         <!--Индикатор запущенного профиля-->
         <ContentControl Content="{StaticResource ActiveProfileView}" d:IsHidden="true"/>
+
+        <Canvas>
+            <Ellipse Name="AnimationEllipse"
+                     IsEnabled="{Binding IsProfileStarted}"
+                     IsEnabledChanged="Ellips_OnIsEnabledChanged" Canvas.Left="100" 
+                     Width="40" Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" 
+                     Fill="Aqua"/>
+        </Canvas>
     </Grid>
 </Window>

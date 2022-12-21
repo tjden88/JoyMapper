@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 
@@ -52,5 +53,12 @@ public partial class MainWindow : Window
         var orderBy = item?.Tag?.ToString();
         if (orderBy != null)
             source.SortDescriptions.Add(new(orderBy, ListSortDirection.Ascending));
+    }
+
+    private void Ellips_OnIsEnabledChanged(object Sender, DependencyPropertyChangedEventArgs E)
+    {
+        var position = Mouse.GetPosition(RootGrid);
+        Canvas.SetLeft(AnimationEllipse, position.X);
+        Canvas.SetTop(AnimationEllipse, position.Y);
     }
 }
