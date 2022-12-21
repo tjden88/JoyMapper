@@ -201,14 +201,16 @@
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
-        <ContentControl Name="ActiveProfileControl" Content="{StaticResource ActiveProfileView}" d:IsHidden="false" 
-                        IsHitTestVisible="{Binding IsProfileStarted}" 
-                        IsHitTestVisibleChanged="ActiveProfileStateChanged">
-            <ContentControl.Clip>
+        <Grid IsHitTestVisible="{Binding IsProfileStarted}" d:IsHidden="true"
+              Name="ActiveProfileControl"
+              IsHitTestVisibleChanged="ActiveProfileStateChanged">
+            <Grid.Clip>
                 <EllipseGeometry x:Name="ClipEllipce"
-                                 RadiusX="50"
                                  RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}"/>
-            </ContentControl.Clip>
-        </ContentControl>
+            </Grid.Clip>
+            <ContentControl Content="{StaticResource ActiveProfileView}"/>
+
+            <Border IsHitTestVisible="False" Name="BgBorder" Background="{DynamicResource DarkPrimaryColorBrush}"/>
+        </Grid>
     </Grid>
 </Window>

@@ -63,11 +63,10 @@ public partial class MainWindow : Window
     {
         if (ClipEllipce == null) return;
 
-        //ActiveProfileControlClipEllipce.Center = Mouse.GetPosition(RootGrid);
+        ClipEllipce.Center = Mouse.GetPosition(RootGrid);
 
         if (ViewModel.IsProfileStarted)
         {
-            ClipEllipce.Center = Mouse.GetPosition(RootGrid);
             AnimateIndicator();
         }
         else
@@ -87,7 +86,7 @@ public partial class MainWindow : Window
         var hypo = (ClipEllipce.Center - new Point(0, sideY)).Length;
 
         var sizeAnimation = new DoubleAnimation(0, hypo, duration) { EasingFunction = ease };
-        //var opacityAnimation = new DoubleAnimation(1, 0, duration) { EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2) };
+        var opacityAnimation = new DoubleAnimation(1, 0, duration);
         var storyboard = new Storyboard
         {
             Children = new()
@@ -99,7 +98,6 @@ public partial class MainWindow : Window
         Storyboard.SetTarget(storyboard, ActiveProfileControl);
 
         Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
-        // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
         storyboard.Completed += (_, _) =>
         {
             ClipEllipce.BeginAnimation(EllipseGeometry.RadiusXProperty, null);
@@ -108,7 +106,7 @@ public partial class MainWindow : Window
 
         storyboard.Begin(ActiveProfileControl);
 
-
+        BgBorder.BeginAnimation(OpacityProperty, opacityAnimation);
     }
 
     private void AnimateIndicatorBack()
@@ -117,7 +115,7 @@ public partial class MainWindow : Window
         var ease = new CircleEase { EasingMode = EasingMode.EaseIn };
 
         var sizeAnimation = new DoubleAnimation(Math.Max(ActualWidth, ActualHeight), 0, duration) { EasingFunction = ease };
-        //var opacityAnimation = new DoubleAnimation(1, 0, duration) { EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2) };
+        var opacityAnimation = new DoubleAnimation(0, 1, duration);
         var storyboard = new Storyboard
         {
             Children = new()
@@ -129,7 +127,6 @@ public partial class MainWindow : Window
         Storyboard.SetTarget(storyboard, ActiveProfileControl);
 
         Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
-        // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
 
         storyboard.Completed += (_, _) =>
         {
@@ -138,6 +135,8 @@ public partial class MainWindow : Window
         };
 
         storyboard.Begin(ActiveProfileControl);
+        BgBorder.BeginAnimation(OpacityProperty, opacityAnimation);
+
     }
 
 }
