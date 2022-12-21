@@ -8,7 +8,7 @@
     <Border x:Key="ActiveProfileView" Background="{DynamicResource LightPrimaryColorBrush}"
             DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=views:MainWindow}}"
             RenderTransformOrigin="0.5,0.5"
-                IsEnabled="{Binding IsProfileStarted}">
+            IsEnabled="{Binding IsProfileStarted}">
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="RenderTransform">
@@ -21,24 +21,26 @@
                         <Trigger.EnterActions>
                             <BeginStoryboard>
                                 <Storyboard >
-                                    <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" From="100" Duration="0:0:0.4" To="0"/>
-                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                    <!--<DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                          Duration="0:0:0.4"
-                                                         EasingFunction="{StaticResource CircleEaseOut}"
-                                                         To="1"/>
-                                    <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:0.8" From="DarkPrimaryColorBrush"/>
+                                                         BeginTime="0:0:0.5"
+                                                         To="1"/>-->
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                     Duration="0"
+                                                     To="1"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.EnterActions>
                         <Trigger.ExitActions>
                             <BeginStoryboard>
                                 <Storyboard TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
-                                    <extensions:WPRCornerRadiusAnimation Storyboard.TargetProperty="CornerRadius" Duration="0" />
-
-                                    <DoubleAnimation Duration="0:0:0.4"
-                                                     EasingFunction="{StaticResource CircleEaseIn}"
+                                    <!--<DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     Duration="0:0:0.4"
+                                                     To="0"/>-->
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                     Duration="0"
+                                                     BeginTime="0:0:0.4"
                                                      To="0"/>
-                                    <extensions:WPRStyleBrushAnimation Storyboard.TargetProperty="Background" Duration="0:0:0.3" To="DarkPrimaryColorBrush"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.ExitActions>
