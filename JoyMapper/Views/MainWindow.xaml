@@ -205,10 +205,16 @@
 
         <Canvas>
             <Ellipse Name="AnimationEllipse"
+                     IsHitTestVisible="False"
                      IsEnabled="{Binding IsProfileStarted}"
                      IsEnabledChanged="Ellips_OnIsEnabledChanged" Canvas.Left="100" 
                      Width="40" Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" 
-                     Fill="Aqua"/>
+                     Fill="{DynamicResource DarkPrimaryColorBrush}"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform ScaleX="0" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
         </Canvas>
     </Grid>
 </Window>

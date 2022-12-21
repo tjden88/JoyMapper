@@ -1,8 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 
@@ -57,8 +60,68 @@ public partial class MainWindow : Window
 
     private void Ellips_OnIsEnabledChanged(object Sender, DependencyPropertyChangedEventArgs E)
     {
+        if(!IsActive) return;
+
         var position = Mouse.GetPosition(RootGrid);
-        Canvas.SetLeft(AnimationEllipse, position.X);
-        Canvas.SetTop(AnimationEllipse, position.Y);
+        var size = Math.Max(ActualHeight, ActualWidth);
+
+        AnimationEllipse.Width = size;
+
+        Canvas.SetLeft(AnimationEllipse, position.X - size / 2);
+        Canvas.SetTop(AnimationEllipse, position.Y - size / 2);
+        if (AnimationEllipse.IsEnabled)
+            AnimateEllipse();
+        else
+            AnimateEllipseBack();
+    }
+    // https://stackoverflow.com/questions/31120492/how-to-create-beginstoryboard-in-code-behind-for-wpf
+
+    private void AnimateEllipse()
+    {
+        var duration = TimeSpan.FromSeconds(0.6);
+        var ease = new CircleEase {EasingMode = EasingMode.EaseOut};
+        var sizeAnimation = new DoubleAnimation(0, 2, duration) {EasingFunction = ease};
+        var opacityAnimation = new DoubleAnimation(1, 0, duration) {EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2)};
+        var storyboard = new Storyboard
+        {
+            Children = new()
+            {
+                sizeAnimation,
+                opacityAnimation,
+            }
+        };
+
+        Storyboard.SetTarget(storyboard, AnimationEllipse);
+
+        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("RenderTransform.ScaleX"));
+        Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+
+
+        storyboard.Begin(AnimationEllipse);
+        
+    }
+    private void AnimateEllipseBack()
+    {
+        var duration = TimeSpan.FromSeconds(0.6);
+        var ease = new CircleEase { EasingMode = EasingMode.EaseOut };
+        var sizeAnimation = new DoubleAnimation(2, 0, duration) { EasingFunction = ease };
+        var opacityAnimation = new DoubleAnimation(0, 1, duration) { EasingFunction = ease };
+        var storyboard = new Storyboard
+        {
+            Children = new()
+            {
+                sizeAnimation,
+                opacityAnimation,
+            }
+        };
+
+        Storyboard.SetTarget(storyboard, AnimationEllipse);
+
+        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("RenderTransform.ScaleX"));
+        Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+
+
+        storyboard.Begin(AnimationEllipse);
+
     }
 }
