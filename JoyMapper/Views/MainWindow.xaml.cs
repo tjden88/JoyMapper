@@ -40,7 +40,7 @@ public partial class MainWindow : Window
             return;
 
         var source = CollectionViewSource.GetDefaultView(patternsListItemsSource);
-        if(source == null)
+        if (source == null)
             return;
 
         source.SortDescriptions.Clear();
@@ -58,32 +58,34 @@ public partial class MainWindow : Window
             source.SortDescriptions.Add(new(orderBy, ListSortDirection.Ascending));
     }
 
-    private void Ellips_OnIsEnabledChanged(object Sender, DependencyPropertyChangedEventArgs E)
+    private void ActiveProfileStateChanged(object Sender, DependencyPropertyChangedEventArgs E)
     {
-        if(!IsActive) return;
+        if (ActiveProfileControlClipEllipce == null) return;
 
-        var position = Mouse.GetPosition(RootGrid);
-        var size = Math.Max(ActualHeight, ActualWidth);
+        //ActiveProfileControlClipEllipce.Center = Mouse.GetPosition(RootGrid);
 
-        AnimationEllipse.Width = size;
+        if (ViewModel.IsProfileStarted)
+        {
+            ActiveProfileControlClipEllipce.Center = Mouse.GetPosition(RootGrid);
+            AnimateIndicator();
+        }
+        else
+            AnimateIndicatorBack();
 
-        IndicatorClip.Center = position;
-
-        Canvas.SetLeft(AnimationEllipse, position.X - size / 2);
-        Canvas.SetTop(AnimationEllipse, position.Y - size / 2);
-        if (AnimationEllipse.IsEnabled)
-            AnimateIndicator(Math.Sqrt(position.X * position.X + ActualHeight * ActualHeight));
-        
     }
     // https://stackoverflow.com/questions/31120492/how-to-create-beginstoryboard-in-code-behind-for-wpf
 
-    private void AnimateIndicator(double sizeTo)
+    private void AnimateIndicator()
     {
-        var duration = TimeSpan.FromSeconds(0.6);
+        var duration = TimeSpan.FromSeconds(0.4);
         var ease = new CircleEase { EasingMode = EasingMode.EaseOut };
-        var sideY = Math.Max(ActualHeight - IndicatorClip.Center.Y, IndicatorClip.Center.Y);
-        var hypo = (IndicatorClip.Center - new Point(0, sideY)).Length;
-        var sizeAnimation = new DoubleAnimation(0, sizeTo, duration) { EasingFunction = ease };
+        var sideY = ActualHeight - ActiveProfileControlClipEllipce.Center.Y > ActiveProfileControlClipEllipce.Center.Y
+            ? ActualHeight
+            : 0;
+
+        var hypo = (ActiveProfileControlClipEllipce.Center - new Point(0, sideY)).Length;
+
+        var sizeAnimation = new DoubleAnimation(0, hypo, duration) { EasingFunction = ease };
         //var opacityAnimation = new DoubleAnimation(1, 0, duration) { EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2) };
         var storyboard = new Storyboard
         {
@@ -93,62 +95,35 @@ public partial class MainWindow : Window
             }
         };
 
-        Storyboard.SetTarget(storyboard, Indicator);
+        Storyboard.SetTarget(storyboard, ActiveProfileControl);
 
         Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
-       // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+        // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
 
-       //IndicatorClip.BeginAnimation(EllipseGeometry.RadiusXProperty, sizeAnimation);
-
-        storyboard.Begin(Indicator);
+        storyboard.Begin(ActiveProfileControl);
     }
 
-    private void AnimateEllipse()
+    private void AnimateIndicatorBack()
     {
-        var duration = TimeSpan.FromSeconds(0.6);
-        var ease = new CircleEase {EasingMode = EasingMode.EaseOut};
-        var sizeAnimation = new DoubleAnimation(0, 2, duration) {EasingFunction = ease};
-        var opacityAnimation = new DoubleAnimation(1, 0, duration) {EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2)};
+        var duration = TimeSpan.FromSeconds(0.4);
+        var ease = new CircleEase { EasingMode = EasingMode.EaseIn };
+
+        var sizeAnimation = new DoubleAnimation(0, duration) { EasingFunction = ease };
+        //var opacityAnimation = new DoubleAnimation(1, 0, duration) { EasingFunction = ease, BeginTime = TimeSpan.FromSeconds(0.2) };
         var storyboard = new Storyboard
         {
             Children = new()
             {
                 sizeAnimation,
-                opacityAnimation,
             }
         };
 
-        Storyboard.SetTarget(storyboard, AnimationEllipse);
+        Storyboard.SetTarget(storyboard, ActiveProfileControl);
 
-        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("RenderTransform.ScaleX"));
-        Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
+        // Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
 
-
-        storyboard.Begin(AnimationEllipse);
-        
+        storyboard.Begin(ActiveProfileControl);
     }
-    private void AnimateEllipseBack()
-    {
-        var duration = TimeSpan.FromSeconds(0.6);
-        var ease = new CircleEase { EasingMode = EasingMode.EaseOut };
-        var sizeAnimation = new DoubleAnimation(2, 0, duration) { EasingFunction = ease };
-        var opacityAnimation = new DoubleAnimation(0, 1, duration) { EasingFunction = ease };
-        var storyboard = new Storyboard
-        {
-            Children = new()
-            {
-                sizeAnimation,
-                opacityAnimation,
-            }
-        };
 
-        Storyboard.SetTarget(storyboard, AnimationEllipse);
-
-        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("RenderTransform.ScaleX"));
-        Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
-
-
-        storyboard.Begin(AnimationEllipse);
-
-    }
 }

@@ -201,25 +201,14 @@
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
-        <ContentControl Name="Indicator" Content="{StaticResource ActiveProfileView}" d:IsHidden="false">
+        <ContentControl Name="ActiveProfileControl" Content="{StaticResource ActiveProfileView}" d:IsHidden="false" 
+                        IsHitTestVisible="{Binding IsProfileStarted}" 
+                        IsHitTestVisibleChanged="ActiveProfileStateChanged">
             <ContentControl.Clip>
-                <EllipseGeometry x:Name="IndicatorClip" RadiusX="50" RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}"/>
+                <EllipseGeometry x:Name="ActiveProfileControlClipEllipce"
+                                 RadiusX="50"
+                                 RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}"/>
             </ContentControl.Clip>
         </ContentControl>
-
-        <Canvas>
-            <Border Name="AnimationEllipse"
-                     IsHitTestVisible="False"
-                     CornerRadius="10000"
-                     IsEnabled="{Binding IsProfileStarted}"
-                     IsEnabledChanged="Ellips_OnIsEnabledChanged" Canvas.Left="100" 
-                     Width="40" Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" 
-                     Background="{DynamicResource DarkPrimaryColorBrush}"
-                     RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform>
-                    <ScaleTransform ScaleX="0" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
-                </Border.RenderTransform>
-            </Border>
-        </Canvas>
     </Grid>
 </Window>

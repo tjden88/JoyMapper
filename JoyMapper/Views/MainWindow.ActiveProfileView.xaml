@@ -6,48 +6,7 @@
 
     <!--Индикатор запущенного профиля-->
     <Border x:Key="ActiveProfileView" Background="{DynamicResource LightPrimaryColorBrush}"
-            DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=views:MainWindow}}"
-            RenderTransformOrigin="0.5,0.5"
-            IsEnabled="{Binding IsProfileStarted}">
-        <Border.Style>
-            <Style TargetType="Border">
-                <Setter Property="RenderTransform">
-                    <Setter.Value>
-                        <ScaleTransform ScaleX="0" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsEnabled" Value="True">
-                        <Trigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard >
-                                    <!--<DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                         Duration="0:0:0.4"
-                                                         BeginTime="0:0:0.5"
-                                                         To="1"/>-->
-                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                     Duration="0"
-                                                     To="1"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </Trigger.EnterActions>
-                        <Trigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
-                                    <!--<DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                     Duration="0:0:0.4"
-                                                     To="0"/>-->
-                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                     Duration="0"
-                                                     BeginTime="0:0:0.4"
-                                                     To="0"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </Trigger.ExitActions>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Border.Style>
+            DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=views:MainWindow}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
