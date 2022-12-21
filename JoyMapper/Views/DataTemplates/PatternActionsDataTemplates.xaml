@@ -4,8 +4,7 @@
                     xmlns:models="clr-namespace:JoyMapper.Models"
                     xmlns:base="clr-namespace:JoyMapper.ViewModels.PatternActions.Base"
                     xmlns:dd="urn:gong-wpf-dragdrop"
-                    xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions"
-                    xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR">
+                    xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions">
 
     <DataTemplate DataType="{x:Type base:PatternActionKeysBindingViewModel}">
         <DockPanel>
@@ -153,9 +152,7 @@
     <DataTemplate DataType="{x:Type patternActions:SeqKeySenderViewModel}">
         <DockPanel>
             <TextBlock Text="Последовательности команд при активации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
-            <ToolBar DockPanel.Dock="Top" Margin="0,5">
-                
-            </ToolBar>
+            <ToolBar DockPanel.Dock="Top" Margin="0,5" />
             <Grid>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <WrapPanel>
@@ -188,7 +185,7 @@
                                                         ToolTip="{Binding EditCommand}"
                                                         Foreground="{DynamicResource PrimaryColorBrush}">
                                                     <Button.Content>
-                                                        <controls:WPRIcon Source="EditOutline"></controls:WPRIcon>
+                                                        <controls:WPRIcon Source="EditOutline" />
                                                     </Button.Content>
                                                 </Button>
                                                 <Button Style="{StaticResource WPRToolButton}"
@@ -197,7 +194,7 @@
                                                         CommandParameter="{Binding}"
                                                         Foreground="{DynamicResource AttentionColorBrush}">
                                                     <Button.Content>
-                                                        <controls:WPRIcon Source="DeleteOffOutline"></controls:WPRIcon>
+                                                        <controls:WPRIcon Source="DeleteOffOutline" />
                                                     </Button.Content>
                                                 </Button>
                                             </StackPanel>

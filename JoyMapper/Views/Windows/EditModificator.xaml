@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
-        xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
         xmlns:userControls="clr-namespace:JoyMapper.Views.UserControls"
         Loaded="EditModificator_OnLoaded"
         Style="{StaticResource ChromeWindow}"
