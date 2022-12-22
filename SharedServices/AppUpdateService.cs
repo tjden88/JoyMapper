@@ -10,8 +10,10 @@ public class AppUpdateService
     //private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/v1.4/JoyMapper/LatestVersion.txt"; // Debug
     private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/master/JoyMapper/LatestVersion.txt";
 
-
     private LastVersion _LastVersion;
+
+    /// <summary> Путь к exe файлу программы </summary>
+    public string ExeFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JoyMapper.exe");
 
     /// <summary>
     /// Получить последнюю версию маппера
@@ -19,7 +21,7 @@ public class AppUpdateService
     /// <returns>null, если программа не найдена</returns>
     public string GetCurrentAppVersion()
     {
-        var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JoyMapper.exe");
+        var file = ExeFilePath;
         if (!File.Exists(file))
             return null;
 
