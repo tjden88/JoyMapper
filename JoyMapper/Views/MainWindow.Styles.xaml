@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <GroupStyle x:Key="PatternsListGroupStyle">
+        <GroupStyle.Panel>
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+        </GroupStyle.Panel>
+        <GroupStyle.ContainerStyle>
+            <Style TargetType="{x:Type GroupItem}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Expander IsExpanded="True">
+                                <Expander.Header>
+                                    <TextBlock Margin="0,2,0,5">
+                                        <TextBlock  VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}"/>
+                                        <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" VerticalAlignment="Center" Text="{Binding ItemCount, StringFormat=(всего {0})}"/>
+                                    </TextBlock>
+                                </Expander.Header>
+                                <ItemsPresenter/>
+                            </Expander>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </GroupStyle.ContainerStyle>
+    </GroupStyle>
+
+
+</ResourceDictionary>

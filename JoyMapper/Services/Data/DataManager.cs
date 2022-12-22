@@ -6,6 +6,7 @@ using System.Windows;
 using JoyMapper.Models;
 using JoyMapper.Models.Legacy.v1_3;
 using JoyMapper.Models.PatternActions;
+using SharedServices;
 
 namespace JoyMapper.Services.Data;
 
@@ -20,7 +21,7 @@ public class DataManager
     private readonly ProfilesManager _ProfilesManager;
     private readonly ModificatorManager _ModificatorManager;
     private readonly DataSerializer _DataSerializer;
-
+    private readonly AppUpdateService _AppUpdateService;
 
 
     private Data _ProfilesData;
@@ -32,12 +33,13 @@ public class DataManager
 
     public AppSettings AppSettings => ProfilesData.AppSettings;
 
-    public DataManager(JoyPatternManager JoyPatternManager, ProfilesManager ProfilesManager, ModificatorManager ModificatorManager, DataSerializer DataSerializer)
+    public DataManager(JoyPatternManager JoyPatternManager, ProfilesManager ProfilesManager, ModificatorManager ModificatorManager, DataSerializer DataSerializer, AppUpdateService AppUpdateService)
     {
         _JoyPatternManager = JoyPatternManager;
         _ProfilesManager = ProfilesManager;
         _ModificatorManager = ModificatorManager;
         _DataSerializer = DataSerializer;
+        _AppUpdateService = AppUpdateService;
     }
 
     #region Public Methods
@@ -219,7 +221,7 @@ public class DataManager
     /// <summary> Сохранить профили и настройки </summary>
     public void SaveData()
     {
-        ProfilesData.AppSettings.AppVersion = App.AppVersion;
+        ProfilesData.AppSettings.AppVersion = _AppUpdateService.GetCurrentAppVersion();
         _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
     }
 
@@ -233,7 +235,7 @@ public class DataManager
         var appSettings = _DataSerializer.LoadFromFile<SimpleAppData>(_SettingsFileName)?.AppSettings;
         var appSettVersion = appSettings?.AppVersion;
 
-        if (!Equals(App.AppVersion, appSettVersion)) // Бекап настроек
+        if (!Equals(_AppUpdateService.GetCurrentAppVersion(), appSettVersion)) // Бекап настроек
             File.Copy(_SettingsFileName, Path.Combine(Environment.CurrentDirectory, $"Config-{appSettVersion ?? "undefined"}-backup.json"), true);
 
         var version = new Version(appSettVersion ?? "1.3");

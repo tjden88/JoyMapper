@@ -1,30 +1,33 @@
-﻿using JoyMapper.Views;
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
-namespace JoyMapper.Services;
+namespace SharedServices;
 
 /// <summary>
 /// Сервис проверки обновлений
 /// </summary>
-public class UpdateChecker
+public class AppUpdateService
 {
-    private readonly AppWindowsService _AppWindowsService;
-
     //private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/v1.4/JoyMapper/LatestVersion.txt"; // Debug
     private const string LatestVersionTxtUrl = @"https://raw.githubusercontent.com/tjden88/JoyMapper/master/JoyMapper/LatestVersion.txt";
 
-
-    private static string CurrentVersion => App.AppVersion;
-
     private LastVersion _LastVersion;
 
-    public UpdateChecker(AppWindowsService AppWindowsService)
+    /// <summary> Путь к exe файлу программы </summary>
+    public string ExeFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JoyMapper.exe");
+
+    /// <summary>
+    /// Получить последнюю версию маппера
+    /// </summary>
+    /// <returns>null, если программа не найдена</returns>
+    public string GetCurrentAppVersion()
     {
-        _AppWindowsService = AppWindowsService;
+        var file = ExeFilePath;
+        if (!File.Exists(file))
+            return null;
+
+        var versionInfo = FileVersionInfo.GetVersionInfo(file);
+
+        return versionInfo.FileVersion;
     }
 
     /// <summary>
@@ -37,11 +40,21 @@ public class UpdateChecker
         if (lv == null) return false;
 
         var version = new Version(lv.Version);
-        var currVersion = new Version(CurrentVersion);
+        var currVersion = new Version(GetCurrentAppVersion() ?? "1.0.0");
 
         var result = version.CompareTo(currVersion);
 
         return result > 0;
+    }
+
+    /// <summary>
+    /// Получить последнюю релизную версию
+    /// </summary>
+    /// <returns></returns>
+    public async Task<string> GetLastLatestVersion()
+    {
+        var lv = await GetLastVersion();
+        return lv?.Version;
     }
 
 
@@ -97,17 +110,6 @@ public class UpdateChecker
         }
 
         return _LastVersion;
-    }
-
-    /// <summary> Показать окно обновления </summary>
-    public void ShowUpdateWindow()
-    {
-        var wnd = _AppWindowsService.GetDialogWindow<UpdateWindow>();
-        var vm = wnd.ViewModel;
-        vm.DownloadLink = _LastVersion.UpdateUrl;
-        vm.ReleaseNotes = _LastVersion.ReleaseNotes;
-
-        wnd.ShowDialog();
     }
 
     private record LastVersion(string Version, string UpdateUrl, string ReleaseNotes);

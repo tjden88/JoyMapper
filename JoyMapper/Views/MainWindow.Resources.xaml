@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+                    xmlns:models="clr-namespace:JoyMapper.Models"
+                    xmlns:views="clr-namespace:JoyMapper.Views">
+
+    <DataTemplate DataType="{x:Type models:Profile}">
+        <DockPanel LastChildFill="False" Margin="10,5" Background="{StaticResource TransparentBrush}">
+            <DockPanel.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" 
+                              Command="{Binding ViewModel.EditProfileCommand, RelativeSource={RelativeSource AncestorType=views:MainWindow}}"/>
+            </DockPanel.InputBindings>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"  FontWeight="Bold" FontSize="18"/>
+                <TextBlock Text="{Binding Description}" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+            </StackPanel>
+            <Button DockPanel.Dock="Right" Padding="30,10" Content="Запуск" FontSize="20"
+                    Command="{Binding RelativeSource={RelativeSource AncestorType=views:MainWindow} , Path=ViewModel.StartProfileCommand}"
+                    CommandParameter="{Binding}"/>
+        </DockPanel>
+    </DataTemplate>
+
+
+    <DataTemplate DataType="{x:Type models:JoyPattern}">
+        <StackPanel Orientation="Vertical" Background="{StaticResource TransparentBrush}">
+            <StackPanel.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" 
+                              Command="{Binding ViewModel.EditPatternCommand, RelativeSource={RelativeSource AncestorType=views:MainWindow}}"/>
+            </StackPanel.InputBindings>
+            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
+            <DockPanel LastChildFill="False">
+                <TextBlock Margin="5" Text="{Binding Binding}"/>
+                <controls:WPRIcon Foreground="{DynamicResource AccentColorBrush}" Source="AxisArrow" Margin="5"
+                                  Visibility="{Binding HasModificator, Converter={StaticResource Bool2VisibilityConverter}}"/>
+            </DockPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type models:Modificator}">
+        <StackPanel Orientation="Vertical" Background="{StaticResource TransparentBrush}">
+            <StackPanel.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" 
+                              Command="{Binding ViewModel.EditModificatorCommand,  RelativeSource={RelativeSource AncestorType=views:MainWindow}}"/>
+            </StackPanel.InputBindings>
+            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
+            <WrapPanel>
+                <TextBlock Margin="5" Text="{Binding Binding}"/>
+            </WrapPanel>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

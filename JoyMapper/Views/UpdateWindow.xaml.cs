@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using WPR.MVVM.Commands;
 using WPR.MVVM.ViewModels;
@@ -65,11 +67,40 @@ public partial class UpdateWindow : Window
         /// <summary>Логика выполнения - Перейти на страницу загрузки обновления</summary>
         private void OnGoToDownloadLinkCommandExecuted()
         {
-            Process.Start(new ProcessStartInfo
+            var downloaderFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JoyMapperUpdater.exe");
+
+            if (!File.Exists(downloaderFile))
             {
-                FileName = DownloadLink,
-                UseShellExecute = true
-            });
+                try
+                {
+                    var res = Properties.Resources.JoyMapperUpdater;
+                    File.WriteAllBytes(downloaderFile, res);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+            }
+
+
+            if (File.Exists(downloaderFile))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = downloaderFile,
+                    UseShellExecute = true,
+                    Arguments = "1000", // Задержка
+                });
+            }
+            else
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = DownloadLink,
+                    UseShellExecute = true,
+                });
+            }
+
             Application.Current.Shutdown();
         }
 

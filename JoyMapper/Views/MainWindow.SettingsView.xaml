@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+                    xmlns:models="clr-namespace:JoyMapper.Models"
+                    xmlns:views="clr-namespace:JoyMapper.Views">
+    
+    <controls:WPRCard x:Key="SettingsView" DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=views:MainWindow}}">
+        <StackPanel Orientation="Vertical" Margin="10">
+            <TextBlock Text="Настройки программы" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+
+            <DockPanel LastChildFill="False">
+                <TextBlock Text="Максимальная задержка двойного нажатия кнопки (мс)" VerticalAlignment="Center"/>
+                <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1000" Margin="10,0" Value="{Binding DoublePressDelay}"/>
+            </DockPanel>
+            <DockPanel LastChildFill="False">
+                <TextBlock Text="Задержка долгого нажатия кнопки (мс)" VerticalAlignment="Center"/>
+                <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1500" Margin="10,0" Value="{Binding LongPressDelay}"/>
+            </DockPanel>
+
+            <Separator Background="{DynamicResource DividerColorBrush}"/>
+
+            <DockPanel LastChildFill="False">
+                <TextBlock Text="Внешний вид (цветовая схема)" VerticalAlignment="Center"/>
+                <ComboBox Width="120" Margin="10,20" 
+                                      ItemsSource="{Binding ColorThemes}" 
+                                      SelectedItem="{Binding CurrentColorTheme}"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalContentAlignment="Center"
+                                      IsSynchronizedWithCurrentItem="True">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:ColorTheme}">
+                            <Border CornerRadius="8" BorderThickness="0" Height="40" Margin="0,0,0,8">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding PrimaryColor}"/>
+                                </Border.Background>
+                                <controls:WPRIcon Source="StarBorder" IconSize="26">
+                                    <controls:WPRIcon.Foreground>
+                                        <SolidColorBrush Color="{Binding AccentColor}"/>
+                                    </controls:WPRIcon.Foreground>
+                                </controls:WPRIcon>
+                            </Border>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </DockPanel>
+
+            <Separator Background="{DynamicResource DividerColorBrush}"/>
+
+            <TextBlock Text="О программе" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
+                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+
+            <WrapPanel>
+                <TextBlock Text="{Binding AppVersion, StringFormat='Версия: {0}'}" Foreground="{DynamicResource PrimaryColorBrush}" Margin="0,10"/>
+                <Button Style="{StaticResource AccentWPRButton}" Content="Доступно обновление" Command="{Binding ShowUpdateWindowCommand}"
+                                    Visibility="{Binding ShowUpdateWindowCommand.Visibility}" Margin="10,5" />
+            </WrapPanel>
+
+            <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
+                                Command="{Binding GoToHomepageCommand}">
+                <Button.Content>
+                    <controls:WPRIconText Text="Страница проекта" IconSource="Github" />
+                </Button.Content>
+            </Button>
+            <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
+                                Command="{Binding ReportProblemCommand}">
+                <Button.Content>
+                    <controls:WPRIconText Text="Сообщить о проблеме" IconSource="ReportProblem" />
+                </Button.Content>
+            </Button>
+            <Button Style="{StaticResource WPRFlatButton}" Margin="-5,10" Padding="5" HorizontalAlignment="Left"
+                                Command="{Binding MakeDonateCommand}">
+                <Button.Content>
+                    <controls:WPRIconText Text="Поддержать разработчика" IconSource="Donate" />
+                </Button.Content>
+            </Button>
+
+        </StackPanel>
+    </controls:WPRCard>
+
+
+</ResourceDictionary>
