@@ -69,6 +69,20 @@ public partial class UpdateWindow : Window
         {
             var downloaderFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JoyMapperUpdater.exe");
 
+            if (!File.Exists(downloaderFile))
+            {
+                try
+                {
+                    var res = Properties.Resources.JoyMapperUpdater;
+                    File.WriteAllBytes(downloaderFile, res);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+            }
+
+
             if (File.Exists(downloaderFile))
             {
                 Process.Start(new ProcessStartInfo
@@ -84,7 +98,6 @@ public partial class UpdateWindow : Window
                 {
                     FileName = DownloadLink,
                     UseShellExecute = true,
-                    Arguments = "1000", // Задержка
                 });
             }
 
