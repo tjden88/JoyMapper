@@ -2,6 +2,10 @@
 using SharedServices;
 Console.WriteLine("Проверка обновлений программы...");
 
+if (args.Length > 0)
+    if (int.TryParse(args[0], out var delay))
+        await Task.Delay(delay);
+
 var updater = new AppUpdateService();
 var downloader = new UpdateDownloader(updater);
 var currentVersion = updater.GetCurrentAppVersion();

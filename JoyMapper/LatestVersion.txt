@@ -1,4 +1,5 @@
 1.4.1
 https://github.com/tjden88/JoyMapper/releases/download/Release1.4/JoyMapper1.4.zip
 Что нового:
+  - Автоматическое обновление при выходе новой версии
   - Некоторые улучшения UI
