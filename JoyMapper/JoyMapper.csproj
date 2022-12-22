@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\WPR\WPR\WPR.csproj" />
+    <ProjectReference Include="..\SharedServices\SharedServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

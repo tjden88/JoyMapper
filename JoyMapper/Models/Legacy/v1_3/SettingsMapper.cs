@@ -112,8 +112,8 @@ public static class SettingsMapper
                     PatternAction = newAction
                 });}
 
-            newData.AppSettings= oldData.AppSettings;
-            newData.AppSettings.AppVersion = App.AppVersion;
+            newData.AppSettings = oldData.AppSettings;
+            newData.AppSettings.AppVersion = "1.4";
 
             return newData;
         }

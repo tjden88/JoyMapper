@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using JoyMapper.Models;
+using JoyMapper.Views;
 using WPR;
 using WPR.MVVM.Commands;
 
@@ -11,8 +12,6 @@ namespace JoyMapper.ViewModels;
 
 public partial class MainWindowViewModel
 {
-    public string AppVersion => App.AppVersion;
-
     private const string DonateLink = "https://www.tinkoff.ru/rm/dultsev.denis1/G2APs2254";
 
     private const string HomeUrl = "https://github.com/tjden88/JoyMapper";
@@ -191,11 +190,11 @@ public partial class MainWindowViewModel
     /// <summary>Логика выполнения - Проверить обновления при запуске</summary>
     private async Task OnCheckUpdatesCommandExecutedAsync(CancellationToken cancel)
     {
-        var updateAvaliable = await _UpdateChecker.CheckUpdate();
+        var updateAvaliable = await _AppUpdateService.CheckUpdate();
         IsNewVersionAvaliable = updateAvaliable;
         if (!updateAvaliable) return;
-        LastUpdateReleaseNotes = await _UpdateChecker.GetLastReleaseNotes();
-        UpdateDownloadUrl = await _UpdateChecker.GetDownloadLink();
+        LastUpdateReleaseNotes = await _AppUpdateService.GetLastReleaseNotes();
+        UpdateDownloadUrl = await _AppUpdateService.GetDownloadLink();
 
         WPRMessageBox.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
 
@@ -229,10 +228,16 @@ public partial class MainWindowViewModel
         });
     }
 
-    private void ShowUpdateWindow(bool Clicked)
+    private async void ShowUpdateWindow(bool Clicked)
     {
         if (!Clicked) return;
-        _UpdateChecker.ShowUpdateWindow();
+
+        var wnd = _AppWindowsService.GetDialogWindow<UpdateWindow>();
+        var vm = wnd.ViewModel;
+        vm.DownloadLink = await _AppUpdateService.GetDownloadLink();
+        vm.ReleaseNotes = await _AppUpdateService.GetLastReleaseNotes();
+
+        wnd.ShowDialog();
 
     }
 

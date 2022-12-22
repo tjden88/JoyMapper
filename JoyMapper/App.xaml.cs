@@ -12,6 +12,7 @@ using JoyMapper.Views;
 using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using SharedServices;
 
 namespace JoyMapper;
 
@@ -20,10 +21,6 @@ namespace JoyMapper;
 /// </summary>
 public partial class App
 {
-
-    /// <summary> Версия приложения </summary>
-    internal const string AppVersion = "1.4.1";
-
 
     /// <summary> Активное окно </summary>
     internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
@@ -46,7 +43,7 @@ public partial class App
         var serviceCollection = new ServiceCollection();
 
         serviceCollection
-            .AddSingleton<UpdateChecker>()
+            .AddSingleton<AppUpdateService>()
             .AddSingleton<DataManager>()
             .AddSingleton<ProfilesManager>()
             .AddSingleton<JoyPatternManager>()
