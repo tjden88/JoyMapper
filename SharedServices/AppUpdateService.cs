@@ -13,6 +13,10 @@ public class AppUpdateService
 
     private LastVersion _LastVersion;
 
+    /// <summary>
+    /// Получить последнюю версию маппера
+    /// </summary>
+    /// <returns>null, если программа не найдена</returns>
     public string GetCurrentAppVersion()
     {
         var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JoyMapper.exe");
@@ -34,11 +38,21 @@ public class AppUpdateService
         if (lv == null) return false;
 
         var version = new Version(lv.Version);
-        var currVersion = new Version(GetCurrentAppVersion() ?? string.Empty);
+        var currVersion = new Version(GetCurrentAppVersion() ?? "1.0.0");
 
         var result = version.CompareTo(currVersion);
 
         return result > 0;
+    }
+
+    /// <summary>
+    /// Получить последнюю релизную версию
+    /// </summary>
+    /// <returns></returns>
+    public async Task<string> GetLastLatestVersion()
+    {
+        var lv = await GetLastVersion();
+        return lv?.Version;
     }
 
 
