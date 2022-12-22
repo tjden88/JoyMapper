@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 
@@ -104,9 +105,11 @@ public partial class MainWindow : Window
             ClipEllipce.RadiusX = 10000;
         };
 
-        storyboard.Begin(ActiveProfileControl);
-
-        BgBorder.BeginAnimation(OpacityProperty, opacityAnimation);
+        Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, () =>
+        {
+            storyboard.Begin(ActiveProfileControl);
+            BgBorder.BeginAnimation(OpacityProperty, opacityAnimation);
+        });
     }
 
     private void AnimateIndicatorBack()
