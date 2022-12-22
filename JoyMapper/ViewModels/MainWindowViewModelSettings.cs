@@ -90,7 +90,7 @@ public partial class MainWindowViewModel
 
     #endregion
 
-        
+    public string AppVersion => _AppUpdateService.GetCurrentAppVersion();
 
     public IEnumerable<ColorTheme> ColorThemes => new List<ColorTheme>()
     {
