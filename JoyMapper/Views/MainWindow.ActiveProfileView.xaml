@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:models="clr-namespace:JoyMapper.Models"
-                    xmlns:extensions="clr-namespace:WPR.Extensions;assembly=WPR"
                     xmlns:views="clr-namespace:JoyMapper.Views">
 
     <!--Индикатор запущенного профиля-->

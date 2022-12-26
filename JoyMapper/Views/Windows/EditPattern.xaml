@@ -65,7 +65,7 @@
                     Visibility="{Binding ClearModificatorCommand.Visibility}"
                     ToolTip="Без модификатора">
                 <Button.Content>
-                    <controls:WPRIcon Source="Clear" Foreground="{DynamicResource AttentionColorBrush}" />
+                    <controls:WPRIcon Source="Clear" Foreground="{DynamicResource DangerColorBrush}" />
                 </Button.Content>
             </Button>
         </DockPanel>
@@ -78,7 +78,7 @@
         <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom" Margin="5"/>
 
         <!--Действия паттерна-->
-        <TextBlock DockPanel.Dock="Top"  Text="Действия паттерна" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+        <TextBlock DockPanel.Dock="Top"  Text="Действия паттерна" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
         <Grid>
 
             <Grid.ColumnDefinitions>

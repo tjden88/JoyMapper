@@ -10,7 +10,7 @@
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
-        Title="{Binding Title}" Height="600" Width="800">
+        Title="{Binding Title}" Height="650" Width="850">
     <Window.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
@@ -54,13 +54,13 @@
                             <Button Command="{Binding DeleteProfileCommand}"
                                     ToolTip="{Binding DeleteProfileCommand}">
                                 <Button.Content>
-                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource DangerColorBrush}"/>
                                 </Button.Content>
                             </Button>
                         </ToolBar>
 
                         <TextBlock Text="Список профилей" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+                                   Foreground="{DynamicResource SecondaryColorBrush}" />
 
                         <ListBox Margin="5"
                                  ItemsSource="{Binding Profiles}" 
@@ -108,12 +108,12 @@
                             <Button Command="{Binding DeletePatternCommand}"
                                     ToolTip="{Binding DeletePatternCommand}">
                                 <Button.Content>
-                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource DangerColorBrush}"/>
                                 </Button.Content>
                             </Button>
                             <Separator/>
                             <controls:WPRIcon Source="Sort"/>
-                            <ComboBox Width="120" ToolTip="Сортировка списка" Name="PatternsListSortByCombo" SelectionChanged="UpdatePatternsView">
+                            <ComboBox Width="140" ToolTip="Сортировка списка" Name="PatternsListSortByCombo" SelectionChanged="UpdatePatternsView">
                                 <ComboBoxItem Content="По имени" Tag="Name" IsSelected="True"/>
                                 <ComboBoxItem Content="По джойстику" Tag="BindingInfo"/>
                                 <ComboBoxItem Content="По новизне"/>
@@ -122,7 +122,7 @@
                         </ToolBar>
 
                         <TextBlock Text="Список паттернов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+                                   Foreground="{DynamicResource SecondaryColorBrush}" />
 
                         <ListBox Name="PatternsList" Margin="5" ItemsSource="{Binding JoyPatterns}" SelectedItem="{Binding SelectedPattern}"
                                  HorizontalContentAlignment="Stretch">
@@ -161,14 +161,14 @@
                             <Button Command="{Binding DeleteModificatorCommand}"
                                     ToolTip="{Binding DeleteModificatorCommand}">
                                 <Button.Content>
-                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource AttentionColorBrush}"/>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource DangerColorBrush}"/>
                                 </Button.Content>
                             </Button>
                         </ToolBar>
 
                         <DockPanel DockPanel.Dock="Top">
                             <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
-                            <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}">
+                            <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryColorBrush}">
                                 <TextBlock.Text>
                                     Модификаторы предназначены для назначения дополнительных условий выполнения паттернов.
                                     Например, можно назначить несколько разных паттернов действий для одной кнопки джойстика внутри профиля (с использованием модификатора или без).
@@ -177,7 +177,7 @@
                         </DockPanel>
 
                         <TextBlock Text="Список модификаторов" DockPanel.Dock="Top" Margin="10,10,5,-5" FontSize="20"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+                                   Foreground="{DynamicResource SecondaryColorBrush}" />
 
                         <ListBox Margin="5" 
                                  ItemsSource="{Binding Modificators}"

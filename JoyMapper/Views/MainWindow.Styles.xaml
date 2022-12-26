@@ -16,7 +16,7 @@
                                 <Expander.Header>
                                     <TextBlock Margin="0,2,0,5">
                                         <TextBlock  VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding Name, TargetNullValue=Нет группы}"/>
-                                        <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" VerticalAlignment="Center" Text="{Binding ItemCount, StringFormat=(всего {0})}"/>
+                                        <TextBlock Foreground="{DynamicResource SecondaryColorBrush}" VerticalAlignment="Center" Text="{Binding ItemCount, StringFormat=(всего {0})}"/>
                                     </TextBlock>
                                 </Expander.Header>
                                 <ItemsPresenter/>

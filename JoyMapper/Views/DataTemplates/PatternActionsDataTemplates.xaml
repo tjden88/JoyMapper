@@ -8,7 +8,7 @@
 
     <DataTemplate DataType="{x:Type base:PatternActionKeysBindingViewModel}">
         <DockPanel>
-            <TextBlock Text="{Binding Name}" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+            <TextBlock Text="{Binding Name}" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
             <ToolBar DockPanel.Dock="Top" Margin="0,5">
                 <Button DockPanel.Dock="Top"
                             ToolTip="{Binding EditCommand}"
@@ -93,7 +93,7 @@
 
                 <!--Нажатие-->
                 <DockPanel Margin="5">
-                    <TextBlock Text="При активации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                    <TextBlock Text="При активации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
                     <StackPanel Margin="5">
                         <RadioButton IsChecked="{Binding PressProfileIsNull}" Margin="5"  Content="Не изменять профиль"/>
                         <RadioButton IsChecked="{Binding PressProfileIsPrevious}" Margin="5" Content="Предыдущий профиль"/>
@@ -118,7 +118,7 @@
 
                 <!--Отпускание-->
                 <DockPanel Grid.Column="2" Margin="5">
-                    <TextBlock Text="При деактивации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                    <TextBlock Text="При деактивации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
                     <StackPanel Margin="5">
                         <RadioButton IsChecked="{Binding ReleaseProfileIsNull}" Margin="5"  Content="Не изменять профиль"/>
                         <RadioButton IsChecked="{Binding ReleaseProfileIsPrevious}" Margin="5" Content="Предыдущий профиль"/>
@@ -141,7 +141,7 @@
             </Grid>
             <WrapPanel Margin="10,0">
                 <controls:WPRIcon Source="InfoCircle" Foreground="{DynamicResource AccentColorBrush}"/>
-                <TextBlock Foreground="{DynamicResource SecondaryTextColorBrush}" DockPanel.Dock="Top" Margin="10" 
+                <TextBlock Foreground="{DynamicResource SecondaryColorBrush}" DockPanel.Dock="Top" Margin="10" 
                            Text="Выбор предыдущего профиля сработает только в том случае, если после запуска профиль уже был переключен с помощью этого или другого паттерна"/>
             </WrapPanel>
             
@@ -151,7 +151,7 @@
 
     <DataTemplate DataType="{x:Type patternActions:SeqKeySenderViewModel}">
         <DockPanel>
-            <TextBlock Text="Последовательности команд при активации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+            <TextBlock Text="Последовательности команд при активации" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
             <ToolBar DockPanel.Dock="Top" Margin="0,5" />
             <Grid>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
@@ -192,7 +192,7 @@
                                                         Command="{Binding DataContext.RemoveSequenceCommand, RelativeSource={RelativeSource AncestorType=DockPanel}}"
                                                         ToolTip="{Binding DataContext.RemoveSequenceCommand, RelativeSource={RelativeSource AncestorType=DockPanel}}"
                                                         CommandParameter="{Binding}"
-                                                        Foreground="{DynamicResource AttentionColorBrush}">
+                                                        Foreground="{DynamicResource DangerColorBrush}">
                                                     <Button.Content>
                                                         <controls:WPRIcon Source="DeleteOffOutline" />
                                                     </Button.Content>
@@ -236,7 +236,7 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Center"/>
 
             <StackPanel Grid.Column="2"  Margin="5">
-                <TextBlock Text="Опции" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                <TextBlock Text="Опции" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
                 <controls:NumericTextBox AllowTextExpressions="False" Value="{Binding Delay}"
                                          MinValue="100"
                                          HorizontalAlignment="Left"

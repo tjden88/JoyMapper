@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
              xmlns:vm="clr-namespace:JoyMapper.ViewModels.UserControls"
-             d:DesignWidth="500"
+             d:DesignWidth="600"
              d:DataContext="{d:DesignInstance Type=vm:JoyBindingViewModel}"
              mc:Ignorable="d" Unloaded="OnUnloaded">
     <!--Статус и настройки-->
@@ -18,7 +18,7 @@
             <Button Command="{Binding AttachJoyButtonCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource WPRFlatButton}" BorderThickness="1">
                 <Button.Content>
                     <StackPanel Orientation="Vertical">
-                        <controls:WPRIcon Source="GoogleController" Foreground="{DynamicResource AccentColorBrush}"/>
+                        <controls:WPRIcon Source="Controller" Foreground="{DynamicResource AccentColorBrush}"/>
                         <TextBlock TextAlignment="Center" Margin="0,5" Text="Определить&#10;кнопку" />
                     </StackPanel>
                 </Button.Content>
@@ -27,7 +27,7 @@
 
                 <!--Инфо о назначенном действии-->
                 <StackPanel  Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Назначенная кнопка / ось" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                    <TextBlock Text="Назначенная кнопка / ось" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
                     <TextBlock Text="{Binding JoyBinding}"  Margin="0,5,0,0"/>
                     <DockPanel>
                         <TextBlock Text="Текущий статус:" Margin="0,5" FontWeight="Bold"/>
@@ -40,7 +40,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                     <Style.Setters>
-                                        <Setter Property="Fill" Value="{DynamicResource AttentionColorBrush}"/>
+                                        <Setter Property="Fill" Value="{DynamicResource DangerColorBrush}"/>
                                     </Style.Setters>
                                 </Style>
                             </Ellipse.Style>
@@ -58,7 +58,7 @@
         <DockPanel DockPanel.Dock="Top" LastChildFill="False" IsEnabled="{Binding AxisJoyBinding, Converter={StaticResource ValueIsNotNullConverter}}"
                    Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource Bool2VisibilityConverter}}"
                    Margin="5">
-            <TextBlock DockPanel.Dock="Top"  Text="Настройки активной зоны оси" Margin="0, 5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+            <TextBlock DockPanel.Dock="Top"  Text="Настройки активной зоны оси" Margin="0, 5" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
             <Separator Background="{DynamicResource DividerColorBrush}" DockPanel.Dock="Bottom"/>
 
             <Grid DockPanel.Dock="Top">
@@ -107,14 +107,14 @@
             <Separator Background="{DynamicResource DividerColorBrush}" HorizontalAlignment="Stretch"
                        VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="5"/>
             <StackPanel>
-                <TextBlock DockPanel.Dock="Top"  Text="Тип активации действия" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                <TextBlock DockPanel.Dock="Top"  Text="Тип активации действия" Margin="5" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
                 <RadioButton Margin="5" Content="Стандартное" IsChecked="{Binding IsNormal}" FontWeight="Bold"/>
                 <RadioButton Margin="5" Content="Обратное" IsChecked="{Binding IsReverse}" FontWeight="Bold"/>
                 <RadioButton Margin="5" Content="Переключатель" IsChecked="{Binding IsSwitch}" FontWeight="Bold"/>
             </StackPanel>
             <DockPanel Margin="5,8,5,5">
                 <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
-                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryTextColorBrush}" Text="{Binding ActionTypeInfo}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryColorBrush}" Text="{Binding ActionTypeInfo}"/>
             </DockPanel>
         </DockPanel>
     </DockPanel>

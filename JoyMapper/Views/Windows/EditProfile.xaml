@@ -42,7 +42,7 @@
             <Button Content="Сохранить" IsDefault="True" Click="ButtonSave_OnClick"
                     HorizontalAlignment="Right" />
         </Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
             <ItemsControl ItemsSource="{Binding SelectedPatterns}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -50,7 +50,7 @@
                             <CheckBox.Content>
                                 <DockPanel Margin="0,5">
                                     <TextBlock Text="{Binding PatternName}" VerticalAlignment="Center" Margin="6,0" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Description, StringFormat=({0})}" Foreground="{DynamicResource SecondaryTextColorBrush}"/>
+                                    <TextBlock Text="{Binding Description, StringFormat=({0})}" Foreground="{DynamicResource SecondaryColorBrush}"/>
                                 </DockPanel>
                             </CheckBox.Content>
                         </CheckBox>

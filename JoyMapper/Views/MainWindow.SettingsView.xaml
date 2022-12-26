@@ -7,7 +7,7 @@
     <controls:WPRCard x:Key="SettingsView" DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=views:MainWindow}}">
         <StackPanel Orientation="Vertical" Margin="10">
             <TextBlock Text="Настройки программы" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+                                   Foreground="{DynamicResource SecondaryColorBrush}" />
 
             <DockPanel LastChildFill="False">
                 <TextBlock Text="Максимальная задержка двойного нажатия кнопки (мс)" VerticalAlignment="Center"/>
@@ -48,7 +48,7 @@
             <Separator Background="{DynamicResource DividerColorBrush}"/>
 
             <TextBlock Text="О программе" DockPanel.Dock="Top" FontSize="20" Margin="0,10"
-                                   Foreground="{DynamicResource SecondaryTextColorBrush}" />
+                                   Foreground="{DynamicResource SecondaryColorBrush}" />
 
             <WrapPanel>
                 <TextBlock Text="{Binding AppVersion, StringFormat='Версия: {0}'}" Foreground="{DynamicResource PrimaryColorBrush}" Margin="0,10"/>
