@@ -11,7 +11,7 @@
         <userControls:PatternActionViewModel/>
     </d:UserControl.DataContext>
     <DockPanel>
-        <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding AllPatternActions}" SelectedItem="{Binding SelectedPatternAction}">
+        <ComboBox MaxDropDownHeight="800"  DockPanel.Dock="Top" ItemsSource="{Binding AllPatternActions}" SelectedItem="{Binding SelectedPatternAction}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
