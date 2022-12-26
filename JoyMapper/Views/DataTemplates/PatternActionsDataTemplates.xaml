@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
                     xmlns:models="clr-namespace:JoyMapper.Models"
                     xmlns:base="clr-namespace:JoyMapper.ViewModels.PatternActions.Base"
                     xmlns:dd="urn:gong-wpf-dragdrop"
-                    xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions">
+                    xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions"
+                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR">
 
     <DataTemplate DataType="{x:Type base:PatternActionKeysBindingViewModel}">
         <DockPanel>

@@ -8,8 +8,8 @@ using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.Views.UserControls;
 using SharedServices;
-using WPR;
-using WPR.MVVM.Commands;
+using WPR.Dialogs;
+using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels;
@@ -218,7 +218,7 @@ public partial class MainWindowViewModel : WindowViewModel
         if(prof == null) return;
         Profiles.Add(prof);
         SelectedProfile = prof;
-        WPRMessageBox.Bubble(App.ActiveWindow, "Профиль скопирован");
+        WPRDialogHelper.Bubble(App.ActiveWindow, "Профиль скопирован");
     }
 
     #endregion
@@ -268,7 +268,7 @@ public partial class MainWindowViewModel : WindowViewModel
     private async Task OnDeleteProfileCommandExecutedAsync(CancellationToken cancel)
     {
         var patternsCount = SelectedProfile.PatternsIds.Count;
-        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, patternsCount > 0
+        var result = await WPRDialogHelper.QuestionAsync(App.ActiveWindow, patternsCount > 0
             ? $"Ему назначено паттернов: {patternsCount}" 
             : null, $"Удалить профиль {SelectedProfile.Name}?");
         if (result)
@@ -354,7 +354,7 @@ public partial class MainWindowViewModel : WindowViewModel
         var newPattern = _DataManager.CopyJoyPattern(SelectedPattern.Id);
         JoyPatterns.Add(newPattern);
         SelectedPattern = newPattern;
-        WPRMessageBox.Bubble(App.ActiveWindow, "Паттерн скопирован");
+        WPRDialogHelper.Bubble(App.ActiveWindow, "Паттерн скопирован");
     }
 
     #endregion
@@ -378,7 +378,7 @@ public partial class MainWindowViewModel : WindowViewModel
         var dialog = new AddPatternToProfiles(_DataManager);
         dialog.SetModel(SelectedPattern);
 
-        var result = await WPRMessageBox.ShowCustomDialogAsync(App.ActiveWindow, dialog);
+        var result = await WPRDialogHelper.ShowCustomDialogAsync(App.ActiveWindow, dialog);
 
         if(!result) return;
 
@@ -417,7 +417,7 @@ public partial class MainWindowViewModel : WindowViewModel
     private async Task OnDeletePatternCommandExecutedAsync(CancellationToken cancel)
     {
         var profilesCount = Profiles.Count(p => p.PatternsIds.Contains(SelectedPattern.Id));
-        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, profilesCount > 0 
+        var result = await WPRDialogHelper.QuestionAsync(App.ActiveWindow, profilesCount > 0 
             ? $"Он отмечен в нескольких профилях (всего: {profilesCount})" 
             : null, $"Удалить паттерн {SelectedPattern.Name}?");
         if (result)
@@ -505,7 +505,7 @@ public partial class MainWindowViewModel : WindowViewModel
     private async Task OnDeleteModificatorCommandExecutedAsync(CancellationToken cancel)
     {
         var modCount = JoyPatterns.Count(p => p.ModificatorId == SelectedModificator.Id);
-        var result = await WPRMessageBox.QuestionAsync(App.ActiveWindow, modCount > 0 
+        var result = await WPRDialogHelper.QuestionAsync(App.ActiveWindow, modCount > 0 
             ? $"Он назначен нескольким паттернам (всего: {modCount}).\n" +
               "После удаления эти паттерны будут выполняться без модификаторов\n" +
               "Это может привести к неожиданному поведению во время игры." 

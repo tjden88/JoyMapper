@@ -5,7 +5,7 @@ using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.Windows;
-using WPR;
+using WPR.Dialogs;
 
 namespace JoyMapper.Views.Windows;
 
@@ -68,13 +68,13 @@ public partial class EditProfile : IEditModel<Profile>
     {
         if (string.IsNullOrWhiteSpace(ViewModel.Name))
         {
-            await WPRMessageBox.InformationAsync(this, "Введите имя профиля");
+            await WPRDialogHelper.InformationAsync(this, "Введите имя профиля");
             return;
         }
 
         if (!ViewModel.SelectedPatterns.Any(p => p.IsSelected))
         {
-            await WPRMessageBox.InformationAsync(this, "Не выбрано ни одного паттерна!");
+            await WPRDialogHelper.InformationAsync(this, "Не выбрано ни одного паттерна!");
             return;
         }
 

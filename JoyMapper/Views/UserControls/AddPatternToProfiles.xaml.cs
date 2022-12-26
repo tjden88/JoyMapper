@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
-using WPR;
+using WPR.Interfaces.Base.UI;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.Views.UserControls;
@@ -30,8 +30,7 @@ public partial class AddPatternToProfiles : UserControl, IWPRDialog, IEditModel<
     }
 
 
-
-    public Action<bool> DialogResult { get; set; }
+    public Action<bool> SetDialogResult { get; set; }
     public object DialogContent => this;
     public bool StaysOpen => true;
     public JoyPattern GetModel()
@@ -46,9 +45,9 @@ public partial class AddPatternToProfiles : UserControl, IWPRDialog, IEditModel<
             selectedProfile.IsSelected = selectedProfile.Profile.PatternsIds.Contains(model.Id);
     }
 
-    private void ButtonOk_OnClick(object Sender, RoutedEventArgs E) => DialogResult?.Invoke(true);
+    private void ButtonOk_OnClick(object Sender, RoutedEventArgs E) => SetDialogResult?.Invoke(true);
 
-    private void ButtonCancel_OnClick(object Sender, RoutedEventArgs E) => DialogResult?.Invoke(false);
+    private void ButtonCancel_OnClick(object Sender, RoutedEventArgs E) => SetDialogResult?.Invoke(false);
 
 
     public class SelectedProfile : ViewModel

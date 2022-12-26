@@ -5,7 +5,7 @@ using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.ViewModels.PatternActions.Base;
 using JoyMapper.Views.Windows;
-using WPR.MVVM.Commands;
+using WPR.MVVM.Commands.Base;
 
 namespace JoyMapper.ViewModels.PatternActions;
 

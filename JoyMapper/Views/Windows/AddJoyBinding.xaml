@@ -7,7 +7,6 @@
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource ChromeWindow}"
         BorderBrush="{DynamicResource BackgroundColorBrush}"
-        helpers:WindowHelper.WindowHeaderForeground="{DynamicResource PrimaryTextColorBrush}"
         mc:Ignorable="d"
         Loaded="AddJoyBinding_OnLoaded"
         Closed="AddJoyBinding_OnClosed"

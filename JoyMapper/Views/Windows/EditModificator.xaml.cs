@@ -2,7 +2,7 @@
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
-using WPR;
+using WPR.Dialogs;
 
 namespace JoyMapper.Views.Windows;
 
@@ -40,7 +40,7 @@ public partial class EditModificator : Window, IEditModel<Modificator>
     {
         if (ViewModel.JoyBindingViewModel.JoyBinding == null)
         {
-            await WPRMessageBox.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось модификатора");
+            await WPRDialogHelper.InformationAsync(App.ActiveWindow, "Не определена кнопка или ось модификатора");
             return;
         }
 
@@ -49,7 +49,7 @@ public partial class EditModificator : Window, IEditModel<Modificator>
 
         if (string.IsNullOrEmpty(name))
         {
-            await WPRMessageBox.InformationAsync(App.ActiveWindow, "Введите имя модификатора");
+            await WPRDialogHelper.InformationAsync(App.ActiveWindow, "Введите имя модификатора");
             return;
         }
 

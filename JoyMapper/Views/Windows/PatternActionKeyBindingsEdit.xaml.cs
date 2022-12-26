@@ -4,7 +4,7 @@ using JoyMapper.Models;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using WPR.MVVM.Commands;
+using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.Views.Windows;

@@ -7,7 +7,7 @@ using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.UserControls;
-using WPR.MVVM.Commands;
+using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows;

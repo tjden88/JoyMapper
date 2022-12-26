@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.ViewModels.Windows;
-using WPR;
+using WPR.Dialogs;
 
 namespace JoyMapper.Views.Windows;
 
@@ -41,19 +41,19 @@ public partial class EditPattern : IEditModel<JoyPattern>
 
         if (vm.JoyBindingViewModel.JoyBinding == null)
         {
-            await WPRMessageBox.InformationAsync(this, "Не определена кнопка или ось контроллера для назначения паттерна");
+            await WPRDialogHelper.InformationAsync(this, "Не определена кнопка или ось контроллера для назначения паттерна");
             return;
         }
 
         if (vm.PatternActionViewModel.SelectedPatternAction == null)
         {
-            await WPRMessageBox.InformationAsync(this, "Не выбрано действие паттерна");
+            await WPRDialogHelper.InformationAsync(this, "Не выбрано действие паттерна");
             return;
         }
 
         if (!vm.PatternActionViewModel.SelectedPatternAction.IsValid(out var errorMessage))
         {
-            await WPRMessageBox.InformationAsync(this, errorMessage);
+            await WPRDialogHelper.InformationAsync(this, errorMessage);
             return;
         }
 
@@ -61,7 +61,7 @@ public partial class EditPattern : IEditModel<JoyPattern>
 
         if (string.IsNullOrEmpty(patternName))
         {
-            await WPRMessageBox.InformationAsync(this, "Введите имя паттерна");
+            await WPRDialogHelper.InformationAsync(this, "Введите имя паттерна");
             return;
         }
 

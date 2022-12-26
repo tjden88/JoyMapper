@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using WPR.MVVM.Commands;
+using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.Views;

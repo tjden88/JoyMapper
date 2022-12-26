@@ -1,5 +1,5 @@
 ﻿using System.Windows.Media;
-using WPR;
+using WPR.ColorTheme;
 
 namespace JoyMapper.Models;
 
@@ -17,7 +17,7 @@ public class ColorTheme
     /// <summary> Установить тему </summary>
     public void SetTheme()
     {
-        Design.SetPrimaryColor(PrimaryColor);
-        Design.SetAccentColor(AccentColor);
+        StyleHelper.SetPrimaryColor(PrimaryColor);
+        StyleHelper.SetAccentColor(AccentColor);
     }
 }

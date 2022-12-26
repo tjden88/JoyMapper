@@ -5,11 +5,11 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyMapper", "JoyMapper\JoyMapper.csproj", "{52833D50-9880-4FEA-A75B-5D651496AE0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPR", "..\WPR\WPR\WPR.csproj", "{5F0A0195-4BB6-430B-8A8D-5BACB1F7E256}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyMapperUpdater", "JoyMapperUpdater\JoyMapperUpdater.csproj", "{33A7338B-23C6-4C50-9BD6-ECE8EC8F21DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyMapperUpdater", "JoyMapperUpdater\JoyMapperUpdater.csproj", "{33A7338B-23C6-4C50-9BD6-ECE8EC8F21DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedServices", "SharedServices\SharedServices.csproj", "{C6BE037C-3B3F-40F2-933B-573BA135D9E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedServices", "SharedServices\SharedServices.csproj", "{C6BE037C-3B3F-40F2-933B-573BA135D9E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPR", "..\WPR\UI\WPR\WPR.csproj", "{16115247-F49A-4945-B2D6-2DCC82372E2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{52833D50-9880-4FEA-A75B-5D651496AE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52833D50-9880-4FEA-A75B-5D651496AE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52833D50-9880-4FEA-A75B-5D651496AE0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F0A0195-4BB6-430B-8A8D-5BACB1F7E256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F0A0195-4BB6-430B-8A8D-5BACB1F7E256}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F0A0195-4BB6-430B-8A8D-5BACB1F7E256}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F0A0195-4BB6-430B-8A8D-5BACB1F7E256}.Release|Any CPU.Build.0 = Release|Any CPU
 		{33A7338B-23C6-4C50-9BD6-ECE8EC8F21DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{33A7338B-23C6-4C50-9BD6-ECE8EC8F21DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33A7338B-23C6-4C50-9BD6-ECE8EC8F21DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{C6BE037C-3B3F-40F2-933B-573BA135D9E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6BE037C-3B3F-40F2-933B-573BA135D9E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6BE037C-3B3F-40F2-933B-573BA135D9E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16115247-F49A-4945-B2D6-2DCC82372E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16115247-F49A-4945-B2D6-2DCC82372E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16115247-F49A-4945-B2D6-2DCC82372E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16115247-F49A-4945-B2D6-2DCC82372E2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

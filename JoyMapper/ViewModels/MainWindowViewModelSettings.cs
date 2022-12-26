@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using JoyMapper.Models;
 using JoyMapper.Views;
-using WPR;
-using WPR.MVVM.Commands;
+using WPR.Dialogs;
+using WPR.MVVM.Commands.Base;
 
 namespace JoyMapper.ViewModels;
 
@@ -196,7 +196,7 @@ public partial class MainWindowViewModel
         LastUpdateReleaseNotes = await _AppUpdateService.GetLastReleaseNotes();
         UpdateDownloadUrl = await _AppUpdateService.GetDownloadLink();
 
-        WPRMessageBox.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
+        WPRDialogHelper.Bubble(App.ActiveWindow, "Новая версия программы доступна!", "Подробнее", ShowUpdateWindow);
 
     }
 

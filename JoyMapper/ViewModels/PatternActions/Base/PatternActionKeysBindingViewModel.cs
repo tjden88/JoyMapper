@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using JoyMapper.Models;
 using JoyMapper.Views.Windows;
-using WPR.MVVM.Commands;
+using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.PatternActions.Base;
