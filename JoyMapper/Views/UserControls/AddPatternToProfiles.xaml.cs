@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
-using WPR.Interfaces.Base.UI;
+using WPR.Domain.Interfaces;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.Views.UserControls;

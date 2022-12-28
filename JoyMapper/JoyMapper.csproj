@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\WPR\UI\WPR\WPR.csproj" />
+    <ProjectReference Include="..\..\WPR\WPF\WPR\WPR.csproj" />
     <ProjectReference Include="..\SharedServices\SharedServices.csproj" />
   </ItemGroup>
 
