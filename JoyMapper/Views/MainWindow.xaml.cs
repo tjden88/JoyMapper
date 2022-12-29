@@ -4,11 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
+using WPR.Animations;
 
 namespace JoyMapper.Views;
 
@@ -74,72 +73,44 @@ public partial class MainWindow : Window
             AnimateIndicatorBack();
 
     }
-    // https://stackoverflow.com/questions/31120492/how-to-create-beginstoryboard-in-code-behind-for-wpf
 
     private void AnimateIndicator()
     {
-        var duration = TimeSpan.FromSeconds(0.4);
-        var ease = new CircleEase { EasingMode = EasingMode.EaseOut };
         var sideY = ActualHeight - ClipEllipce.Center.Y > ClipEllipce.Center.Y
             ? ActualHeight
             : 0;
-
         var hypo = (ClipEllipce.Center - new Point(0, sideY)).Length;
+        const double durationMs = 400d;
 
-        var sizeAnimation = new DoubleAnimation(0, hypo, duration) { EasingFunction = ease };
-        var opacityAnimation = new DoubleAnimation(1, 0, duration);
-        var storyboard = new Storyboard
-        {
-            Children = new()
-            {
-                sizeAnimation,
-            }
-        };
+        new WPRAnimation()
+            .SetTarget(ActiveProfileControl)
+            .AddDoubleAnimation("Clip.RadiusX", 0, hypo, durationMs, EasingFunctions.CircleEaseOut)
+            .ClearOnComplete()
+            .OnComplete(() => ClipEllipce.RadiusX = 10000)
+            .Begin(DispatcherPriority.ApplicationIdle)
+            ;
 
-        Storyboard.SetTarget(storyboard, ActiveProfileControl);
-
-        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
-        storyboard.Completed += (_, _) =>
-        {
-            ClipEllipce.BeginAnimation(EllipseGeometry.RadiusXProperty, null);
-            ClipEllipce.RadiusX = 10000;
-        };
-
-        Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, () =>
-        {
-            storyboard.Begin(ActiveProfileControl);
-            BgBorder.BeginAnimation(OpacityProperty, opacityAnimation);
-        });
+        new WPRAnimation()
+            .SetTarget(BgBorder)
+            .AddDoubleAnimation("Opacity", 1, 0, durationMs)
+            .Begin(DispatcherPriority.ApplicationIdle)
+            ;
     }
 
     private void AnimateIndicatorBack()
     {
-        var duration = TimeSpan.FromSeconds(0.4);
-        var ease = new CircleEase { EasingMode = EasingMode.EaseIn };
+        const double durationMs = 400d;
 
-        var sizeAnimation = new DoubleAnimation(Math.Max(ActualWidth, ActualHeight), 0, duration) { EasingFunction = ease };
-        var opacityAnimation = new DoubleAnimation(0, 1, duration);
-        var storyboard = new Storyboard
-        {
-            Children = new()
-            {
-                sizeAnimation,
-            }
-        };
+        new WPRAnimation()
+            .SetTarget(ActiveProfileControl)
+            .AddDoubleAnimation("Clip.RadiusX", Math.Max(ActualWidth, ActualHeight), 0, durationMs, EasingFunctions.CircleEaseIn)
+            .Begin(DispatcherPriority.ApplicationIdle)
+            ;
 
-        Storyboard.SetTarget(storyboard, ActiveProfileControl);
-
-        Storyboard.SetTargetProperty(sizeAnimation, new PropertyPath("Clip.RadiusX"));
-
-        storyboard.Completed += (_, _) =>
-        {
-            ClipEllipce.BeginAnimation(EllipseGeometry.RadiusXProperty, null);
-            ClipEllipce.RadiusX = 0;
-        };
-
-        storyboard.Begin(ActiveProfileControl);
-        BgBorder.BeginAnimation(OpacityProperty, opacityAnimation);
-
+        new WPRAnimation()
+            .SetTarget(BgBorder)
+            .AddDoubleAnimation("Opacity", 0, 1, durationMs)
+            .Begin(DispatcherPriority.ApplicationIdle)
+            ;
     }
-
 }
