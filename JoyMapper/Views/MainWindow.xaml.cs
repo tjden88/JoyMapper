@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
@@ -82,18 +83,16 @@ public partial class MainWindow : Window
         var hypo = (ClipEllipce.Center - new Point(0, sideY)).Length;
         const double durationMs = 400d;
 
-        new WPRAnimation()
-            .SetTarget(ActiveProfileControl)
+        new Storyboard()
             .AddDoubleAnimation("Clip.RadiusX", 0, hypo, durationMs, EasingFunctions.CircleEaseOut)
             .ClearOnComplete()
             .OnComplete(() => ClipEllipce.RadiusX = 10000)
-            .Begin(DispatcherPriority.ApplicationIdle)
+            .Begin(ActiveProfileControl, DispatcherPriority.ApplicationIdle)
             ;
 
-        new WPRAnimation()
-            .SetTarget(BgBorder)
+        new Storyboard()
             .AddDoubleAnimation("Opacity", 1, 0, durationMs)
-            .Begin(DispatcherPriority.ApplicationIdle)
+            .Begin(BgBorder, DispatcherPriority.ApplicationIdle)
             ;
     }
 
@@ -101,16 +100,14 @@ public partial class MainWindow : Window
     {
         const double durationMs = 400d;
 
-        new WPRAnimation()
-            .SetTarget(ActiveProfileControl)
+        new Storyboard()
             .AddDoubleAnimation("Clip.RadiusX", Math.Max(ActualWidth, ActualHeight), 0, durationMs, EasingFunctions.CircleEaseIn)
-            .Begin(DispatcherPriority.ApplicationIdle)
+            .Begin(ActiveProfileControl, DispatcherPriority.ApplicationIdle)
             ;
 
-        new WPRAnimation()
-            .SetTarget(BgBorder)
+        new Storyboard()
             .AddDoubleAnimation("Opacity", 0, 1, durationMs)
-            .Begin(DispatcherPriority.ApplicationIdle)
+            .Begin(BgBorder, DispatcherPriority.ApplicationIdle)
             ;
     }
 }
