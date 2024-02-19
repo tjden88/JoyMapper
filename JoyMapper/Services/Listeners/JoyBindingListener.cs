@@ -38,7 +38,7 @@ public class JoyBindingListener : IJoyBindingListener
     public void StartListen(IEnumerable<JoyBindingBase> bindings)
     {
         StartListen(bindings
-            .Select(b => new ModificatedJoyBinding(b, null, Array.Empty<int>())));
+            .Select(b => new ModificatedJoyBinding(b, 0, Array.Empty<int>())));
     }
 
     public void StartListen(IEnumerable<ModificatedJoyBinding> bindings)
@@ -155,7 +155,7 @@ public class JoyBindingListener : IJoyBindingListener
                    .Contains(id)))
                 continue;
 
-            if (joyBinding.ModificatorId is { } modId && !_Modificators.First(m => m.Id == modId).Binding.IsActive)
+            if (joyBinding.ModificatorId > 0 && !_Modificators.First(m => m.Id == joyBinding.ModificatorId).Binding.IsActive)
                 continue;
 
             if (lastState != newState)

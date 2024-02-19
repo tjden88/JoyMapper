@@ -198,7 +198,7 @@ public class DataManager
 
         foreach (var pattern in JoyPatterns)
             if (pattern.ModificatorId == modId)
-                pattern.ModificatorId = null;
+                pattern.ModificatorId = 0;
 
         SaveData();
     }

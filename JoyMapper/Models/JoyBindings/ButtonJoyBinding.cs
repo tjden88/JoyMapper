@@ -27,4 +27,11 @@ public class ButtonJoyBinding : JoyBindingBase
     protected override bool IsPressed(JoyState joyState) => joyState.Buttons[ButtonNumber - 1];
 
     public override string Description => $"Кнопка {ButtonNumber}";
+    public override bool Equals(JoyBindingBase other)
+    {
+        if(other is not ButtonJoyBinding bb)
+            return false;
+
+        return bb.JoyName == JoyName && bb.ButtonNumber == ButtonNumber;
+    }
 }

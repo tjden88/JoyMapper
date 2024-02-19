@@ -32,11 +32,12 @@ public class JoyPatternListener : IJoyPatternListener
         var bindings = Patterns
             .Select(p =>
             {
-                var forbidIds = p.ModificatorId is not null
-                    ? Array.Empty<int>()
-                    : Array.Empty<int>();
+                var forbidIds = Patterns
+                    .Where(ptrn => ptrn.Binding.Equals(p.Binding) && !ptrn.ModificatorId.Equals(p.ModificatorId))
+                    .Select(ptrn => ptrn.ModificatorId);
+                    ;
                 return new ModificatedJoyBinding(new JoyBindingWithAction(p.Binding, p.PatternAction),
-                        p.ModificatorId, forbidIds);
+                        p.ModificatorId, forbidIds.ToArray());
             });
 
         _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
@@ -74,5 +75,6 @@ public class JoyPatternListener : IJoyPatternListener
         protected override bool IsPressed(JoyState joyState) => _BindingBase.UpdateIsActive(joyState);
 
         public override string Description => _BindingBase.Description;
+        public override bool Equals(JoyBindingBase other) => _BindingBase.Equals(other);
     }
 }

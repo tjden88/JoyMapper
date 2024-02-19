@@ -8,7 +8,7 @@ namespace JoyMapper.Models.JoyBindings.Base;
 /// <summary>
 /// Выбранная кнопка или ось джойстика
 /// </summary>
-public abstract class JoyBindingBase : ViewModel
+public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
 {
     /// <summary>
     /// Тип активациии действия - нормальный, обратный (активно при отпускании), переключатель
@@ -137,6 +137,8 @@ public abstract class JoyBindingBase : ViewModel
     }
 
     #endregion
+
+    public abstract bool Equals(JoyBindingBase other);
 
     public override string ToString() => $"{JoyName} ({Description})";
 }

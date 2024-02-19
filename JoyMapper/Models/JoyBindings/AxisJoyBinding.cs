@@ -114,4 +114,11 @@ public class AxisJoyBinding : JoyBindingBase
     }
 
     public override string Description => $"Ось {Axis}";
+    public override bool Equals(JoyBindingBase other)
+    {
+        if (other is not AxisJoyBinding ab)
+            return false;
+
+        return ab.JoyName.Equals(JoyName) && ab.Axis == Axis;
+    }
 }

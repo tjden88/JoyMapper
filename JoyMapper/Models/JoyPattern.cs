@@ -17,12 +17,12 @@ public class JoyPattern
 
     public PatternActionBase PatternAction { get; set; }
 
-    public int? ModificatorId { get; set; }
+    public int ModificatorId { get; set; }
 
     public override string ToString() => $"{Binding.JoyName} - {Binding.Description}";
 
     [JsonIgnore]
-    public bool HasModificator => ModificatorId != null ;
+    public bool HasModificator => ModificatorId > 0 ;
 
     [JsonIgnore]
     public string BindingInfo => ToString();

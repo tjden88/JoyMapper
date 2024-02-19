@@ -59,6 +59,13 @@ public class PowJoyBinding : JoyBindingBase
         _ => throw new ArgumentOutOfRangeException(nameof(PowNumber))
     };
 
+    public override bool Equals(JoyBindingBase other)
+    {
+        if (other is not PowJoyBinding pb)
+            return false;
+        return pb.JoyName.Equals(JoyName) && pb.PowNumber == PowNumber && pb.PowValue == PowValue;
+    }
+
 
     private static string GetPowPoint(int rawValue) =>
         rawValue switch

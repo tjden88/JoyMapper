@@ -78,7 +78,7 @@ public partial class EditPattern : IEditModel<JoyPattern>
             Binding = ViewModel.JoyBindingViewModel.GetModel(),
             GroupName = string.IsNullOrWhiteSpace(ViewModel.GroupName) ? null : ViewModel.GroupName.Trim(),
             PatternAction = ViewModel.PatternActionViewModel.GetModel(),
-            ModificatorId = ViewModel.SelectedModificator?.Id,
+            ModificatorId = ViewModel.SelectedModificator?.Id ?? 0,
         };
         return pattern;
     }
@@ -90,9 +90,7 @@ public partial class EditPattern : IEditModel<JoyPattern>
         ViewModel.PatternName = model.Name;
         ViewModel.JoyBindingViewModel.SetModel(model.Binding);
         ViewModel.PatternActionViewModel.SetModel(model.PatternAction);
-        ViewModel.SelectedModificator = model.ModificatorId is null
-            ? null
-            : ViewModel.Modificators
+        ViewModel.SelectedModificator = ViewModel.Modificators
                 .FirstOrDefault(m => m.Id == model.ModificatorId);
 
         Title = $"Редактирование паттерна {model.Name}";
