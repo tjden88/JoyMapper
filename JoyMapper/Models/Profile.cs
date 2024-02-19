@@ -11,4 +11,6 @@ public class Profile
     public string Description { get; set; }
 
     public List<int> PatternsIds { get; set; } = new();
+
+    public List<string> PatternGroups { get; set; } = new();
 }

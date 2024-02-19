@@ -19,12 +19,12 @@ public partial class EditProfile : IEditModel<Profile>
     public EditProfile(EditProfileWindowViewModel viewModel, DataManager DataManager)
     {
         ViewModel = viewModel;
-        LoadData(DataManager.JoyPatterns);
+        LoadData(DataManager.JoyPatterns.ToList());
         InitializeComponent();
         DataContext = ViewModel;
     }
 
-    private void LoadData(IEnumerable<JoyPattern> Patterns)
+    private void LoadData(ICollection<JoyPattern> Patterns)
     {
 
         var mapped = Patterns.Select(p => new EditProfileWindowViewModel.SelectedPatternViewModel
@@ -32,8 +32,20 @@ public partial class EditProfile : IEditModel<Profile>
             PatternName = p.Name,
             PatternId = p.Id,
             Description = p.Binding.ToString(),
+            GroupName = p.GroupName,
         });
         ViewModel.SelectedPatterns = new(mapped);
+
+        var groups = Patterns
+            .Where(p=>!string.IsNullOrEmpty(p.GroupName))
+            .GroupBy(p => p.GroupName);
+
+        ViewModel.SelectedPatternsGroups = new(groups.Select(g =>
+            new EditProfileWindowViewModel.SelectedPatternGroupViewModel()
+            {
+                Name = g.Key,
+                PatternsCount = g.Count(),
+            }));
     }
 
 
@@ -48,6 +60,10 @@ public partial class EditProfile : IEditModel<Profile>
                 .Where(sp=>sp.IsSelected)
                 .Select(sp=>sp.PatternId)
                 .ToList(),
+            PatternGroups = ViewModel.SelectedPatternsGroups
+                .Where(pg=>pg.IsSelected)
+                .Select(pg=>pg.Name)
+                .ToList(),
         };
         return profile;
     }
@@ -60,6 +76,9 @@ public partial class EditProfile : IEditModel<Profile>
 
         foreach (var selectedPattern in ViewModel.SelectedPatterns) 
             selectedPattern.IsSelected = model.PatternsIds.Contains(selectedPattern.PatternId);
+
+        foreach (var selectedGroup in ViewModel.SelectedPatternsGroups)
+            selectedGroup.IsSelected = model.PatternGroups.Contains(selectedGroup.Name);
 
         ViewModel.Title = $"Редактирование профиля {model.Name}";
     }

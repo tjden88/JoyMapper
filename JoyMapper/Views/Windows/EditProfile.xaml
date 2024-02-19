@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Style="{StaticResource ChromeWindow}"
-        Title="{Binding Title}" Height="550" Width="500">
+        Title="{Binding Title}" Height="650" Width="600">
 
     <DockPanel Margin="10,15,10,10" FocusManager.FocusedElement="{Binding ElementName=NameText}">
         <TextBox helpers:TextHelper.Hint="Имя профиля" Name="NameText" DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
@@ -43,21 +43,41 @@
                     HorizontalAlignment="Right" />
         </Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
-            <ItemsControl ItemsSource="{Binding SelectedPatterns}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox IsChecked="{Binding IsSelected}">
-                            <CheckBox.Content>
-                                <DockPanel Margin="0,5">
-                                    <TextBlock Text="{Binding PatternName}" VerticalAlignment="Center" Margin="6,0" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Description, StringFormat=({0})}" Foreground="{DynamicResource SecondaryColorBrush}"/>
-                                </DockPanel>
-                            </CheckBox.Content>
-                        </CheckBox>
+            <StackPanel>
+               <Expander Header="Группы паттернов" Margin="0,5" IsExpanded="True">
+                   <ItemsControl ItemsSource="{Binding SelectedPatternsGroups}">
+                       <ItemsControl.ItemTemplate>
+                           <DataTemplate>
+                               <CheckBox IsChecked="{Binding IsSelected}">
+                                   <CheckBox.Content>
+                                       <DockPanel Margin="0,5">
+                                           <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="6,0" FontWeight="Bold"/>
+                                           <TextBlock Text="{Binding PatternsCount, StringFormat=(Паттернов: {0})}" Foreground="{DynamicResource SecondaryColorBrush}"/>
+                                       </DockPanel>
+                                   </CheckBox.Content>
+                               </CheckBox>
+                           </DataTemplate>
+                       </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+               </Expander>
+                <Expander Header="Остальные паттерны" Margin="0,5" IsExpanded="True">
+                    <ItemsControl ItemsSource="{Binding SelectedPatterns}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected}">
+                                    <CheckBox.Content>
+                                        <DockPanel Margin="0,5">
+                                            <TextBlock Text="{Binding PatternName}" VerticalAlignment="Center" Margin="6,0" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Description, StringFormat=({0})}" Foreground="{DynamicResource SecondaryColorBrush}"/>
+                                        </DockPanel>
+                                    </CheckBox.Content>
+                                </CheckBox>
 
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Expander>
+            </StackPanel>
         </ScrollViewer>
     </DockPanel>
 </Window>

@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using WPR.MVVM.Commands.Base;
@@ -78,7 +81,21 @@ public class EditProfileWindowViewModel : WindowViewModel
 
     #endregion
 
+    #region SelectedPatternsGroups : ObservableCollection<SelectedPatternGroupViewModel> - Выбранные группы паттернов
 
+    /// <summary>Выбранные группы паттернов</summary>
+    private ObservableCollection<SelectedPatternGroupViewModel> _SelectedPatternsGroups;
+
+    /// <summary>Выбранные группы паттернов</summary>
+    public ObservableCollection<SelectedPatternGroupViewModel> SelectedPatternsGroups
+    {
+        get => _SelectedPatternsGroups;
+        set => Set(ref _SelectedPatternsGroups, value);
+    }
+
+    #endregion
+
+    
     #region Command AddPatternCommand - Добавить паттерн
 
     /// <summary>Добавить паттерн</summary>
@@ -171,5 +188,66 @@ public class EditProfileWindowViewModel : WindowViewModel
 
         #endregion
 
+        #region GroupName : string - Группа
+
+        /// <summary>Группа</summary>
+        private string _GroupName;
+
+        /// <summary>Группа</summary>
+        public string GroupName
+        {
+            get => _GroupName;
+            set => Set(ref _GroupName, value);
+        }
+
+        #endregion
+
+    }
+
+    public class SelectedPatternGroupViewModel : ViewModel
+    {
+        #region Name : string - Имя группы
+
+        /// <summary>Имя группы</summary>
+        private string _Name;
+
+        /// <summary>Имя группы</summary>
+        public string Name
+        {
+            get => _Name;
+            set => Set(ref _Name, value);
+        }
+
+        #endregion
+
+        #region IsSelected : bool - Выбрана ли группа
+
+        /// <summary>Выбрана ли группа</summary>
+        private bool _IsSelected;
+
+        /// <summary>Выбрана ли группа</summary>
+        public bool IsSelected
+        {
+            get => _IsSelected;
+            set => Set(ref _IsSelected, value);
+        }
+
+        #endregion
+
+        #region PatternsCount : int - Кол-во паттернов в группе
+
+        /// <summary>Кол-во паттернов в группе</summary>
+        private int _PatternsCount;
+
+        /// <summary>Кол-во паттернов в группе</summary>
+        public int PatternsCount
+        {
+            get => _PatternsCount;
+            set => Set(ref _PatternsCount, value);
+        }
+
+        #endregion
+
+        
     }
 }
