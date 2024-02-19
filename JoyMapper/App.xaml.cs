@@ -31,7 +31,7 @@ public partial class App
     {
         base.OnStartup(e);
         var wnd = Services.GetRequiredService<MainWindow>();
-        StyleHelper.SetDarkColorTheme();
+        //StyleHelper.SetDarkColorTheme();
         //StyleHelper.SetLightColorTheme();
         wnd.Show();
     }

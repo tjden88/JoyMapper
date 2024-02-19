@@ -32,6 +32,7 @@ public partial class MainWindowViewModel : WindowViewModel
         CurrentColorTheme = ColorThemes
                                 .FirstOrDefault(c => c.Id == _DataManager.AppSettings.CurrentColorCheme)
                             ?? ColorThemes.First();
+        IsDarkTheme = _DataManager.AppSettings.IsDarkColorTheme;
     }
 
 

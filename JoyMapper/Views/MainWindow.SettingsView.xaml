@@ -49,6 +49,8 @@
                 </ComboBox>
             </DockPanel>
 
+            <ToggleButton Style="{StaticResource WPRSwitchToggleButton}" Content="Тёмная тема" IsChecked="{Binding IsDarkTheme}"/>
+
             <Separator Background="{DynamicResource DividerColorBrush}"/>
 
             <TextBlock Text="О программе" DockPanel.Dock="Top" FontSize="20" Margin="0,10"

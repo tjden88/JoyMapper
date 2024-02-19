@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using JoyMapper.Models;
 using JoyMapper.Views;
+using WPR.ColorTheme;
 using WPR.Dialogs;
 using WPR.MVVM.Commands.Base;
 
@@ -75,6 +76,26 @@ public partial class MainWindowViewModel
     }
 
     #endregion
+
+    #region IsDarkTheme : bool - Установлена тёмная тема
+
+    /// <summary>Установлена тёмная тема</summary>
+    private bool _IsDarkTheme;
+
+    /// <summary>Установлена тёмная тема</summary>
+    public bool IsDarkTheme
+    {
+        get => _IsDarkTheme;
+        set => IfSet(ref _IsDarkTheme, value).Then(v =>
+        {
+            StyleHelper.IsDarkTheme = v;
+            _DataManager.AppSettings.IsDarkColorTheme = v;
+            _DataManager.SaveData();
+        });
+    }
+
+    #endregion
+
 
     #region IsNewVersionAvaliable : bool - Доступна ли новая версия
 

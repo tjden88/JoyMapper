@@ -22,7 +22,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid Name="RootGrid">
-        <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left">
+        <TabControl TabStripPlacement="Left" Margin="5" HorizontalContentAlignment="Left" BorderBrush="{DynamicResource AccentColorBrush}">
 
             <!--Профили-->
             <TabItem>
@@ -36,7 +36,7 @@
                             <Button Command="{Binding CreateProfileCommand}"
                                     ToolTip="{Binding CreateProfileCommand}">
                                 <Button.Content>
-                                    <controls:WPRIconText Text="Новый профиль" IconSource="Add"  FontWeight="Bold"/>
+                                    <controls:WPRIconText Text="Новый профиль" IconSource="Add"/>
                                 </Button.Content>
                             </Button>
                             <Button Command="{Binding CopyProfileCommand}"
@@ -83,7 +83,7 @@
                             <Button Command="{Binding CreatePatternCommand}"
                                     ToolTip="{Binding CreatePatternCommand}">
                                 <Button.Content>
-                                    <controls:WPRIconText Text="Новый паттерн" IconSource="Add"  FontWeight="Bold"/>
+                                    <controls:WPRIconText Text="Новый паттерн" IconSource="Add"/>
                                 </Button.Content>
                             </Button>
                             <Button Command="{Binding CopyPatternCommand}"
@@ -148,7 +148,7 @@
                             <Button Command="{Binding CreateModificatorCommand}"
                                     ToolTip="{Binding CreateModificatorCommand}">
                                 <Button.Content>
-                                    <controls:WPRIconText Text="Добавить модификатор" IconSource="Add"  FontWeight="Bold"/>
+                                    <controls:WPRIconText Text="Добавить модификатор" IconSource="Add" />
                                 </Button.Content>
                             </Button>
 
