@@ -24,7 +24,7 @@
                     <ItemsControl ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-                                <TextBlock Foreground="{DynamicResource PrimaryTextColorBrush}" Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -174,7 +174,7 @@
                                                 <ItemsControl Margin="10,28,10,10" ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-                                                            <TextBlock Foreground="{DynamicResource PrimaryTextColorBrush}" Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
+                                                            <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>

@@ -13,6 +13,7 @@ using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using SharedServices;
+using WPR.ColorTheme;
 
 namespace JoyMapper;
 
@@ -30,6 +31,8 @@ public partial class App
     {
         base.OnStartup(e);
         var wnd = Services.GetRequiredService<MainWindow>();
+        StyleHelper.SetDarkColorTheme();
+        //StyleHelper.SetLightColorTheme();
         wnd.Show();
     }
 

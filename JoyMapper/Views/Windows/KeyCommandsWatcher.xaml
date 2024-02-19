@@ -13,7 +13,7 @@
     <DockPanel >
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="10" Content="Очистить" Click="ButtonClear_Click"/>
         <ScrollViewer Margin="10" Name="ScrollViewer" ScrollChanged="ScrollViewer_OnScrollChanged">
-            <ItemsControl Foreground="{DynamicResource PrimaryTextColorBrush}" ItemsSource="{Binding KeysLogs}"/>
+            <ItemsControl ItemsSource="{Binding KeysLogs}"/>
         </ScrollViewer>
     </DockPanel>
 </Window>

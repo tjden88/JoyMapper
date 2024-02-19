@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Security;
 using System.Windows.Input;
+#pragma warning disable SYSLIB0003
 
 namespace JoyMapper.Services;
 

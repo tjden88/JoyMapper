@@ -12,7 +12,7 @@
     <DockPanel>
         <Button Content="Загрузить" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Command="{Binding GoToDownloadLinkCommand}"/>
         <ScrollViewer MaxHeight="400">
-            <TextBlock Foreground="{DynamicResource PrimaryTextColorBrush}" Text="{Binding ReleaseNotes}" MinHeight="50" Margin="10"/>
+            <TextBlock Text="{Binding ReleaseNotes}" MinHeight="50" Margin="10"/>
         </ScrollViewer>
     </DockPanel>
 </Window>
