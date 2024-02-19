@@ -87,12 +87,12 @@ public partial class MainWindow : Window
             .AddDoubleAnimation("Clip.RadiusX", 0, hypo, durationMs, EasingFunctions.CircleEaseOut)
             .ClearOnComplete()
             .OnComplete(() => ClipEllipce.RadiusX = 10000)
-            .Begin(ActiveProfileControl, DispatcherPriority.ApplicationIdle)
+            .Begin(ActiveProfileControl)
             ;
 
         new Storyboard()
             .AddDoubleAnimation("Opacity", 1, 0, durationMs)
-            .Begin(BgBorder, DispatcherPriority.ApplicationIdle)
+            .Begin(BgBorder)
             ;
     }
 
@@ -102,12 +102,12 @@ public partial class MainWindow : Window
 
         new Storyboard()
             .AddDoubleAnimation("Clip.RadiusX", Math.Max(ActualWidth, ActualHeight), 0, durationMs, EasingFunctions.CircleEaseIn)
-            .Begin(ActiveProfileControl, DispatcherPriority.ApplicationIdle)
+            .Begin(ActiveProfileControl)
             ;
 
         new Storyboard()
             .AddDoubleAnimation("Opacity", 0, 1, durationMs)
-            .Begin(BgBorder, DispatcherPriority.ApplicationIdle)
+            .Begin(BgBorder)
             ;
     }
 }

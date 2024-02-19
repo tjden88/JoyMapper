@@ -29,10 +29,11 @@ public partial class AddPatternToProfiles : UserControl, IWPRDialog, IEditModel<
         InitializeComponent();
     }
 
-
-    public Action<bool> SetDialogResult { get; set; }
     public object DialogContent => this;
     public bool StaysOpen => true;
+
+    public event Action<bool> Completed;
+
     public JoyPattern GetModel()
     {
         return Pattern;
@@ -45,9 +46,9 @@ public partial class AddPatternToProfiles : UserControl, IWPRDialog, IEditModel<
             selectedProfile.IsSelected = selectedProfile.Profile.PatternsIds.Contains(model.Id);
     }
 
-    private void ButtonOk_OnClick(object Sender, RoutedEventArgs E) => SetDialogResult?.Invoke(true);
+    private void ButtonOk_OnClick(object Sender, RoutedEventArgs E) => Completed?.Invoke(true);
 
-    private void ButtonCancel_OnClick(object Sender, RoutedEventArgs E) => SetDialogResult?.Invoke(false);
+    private void ButtonCancel_OnClick(object Sender, RoutedEventArgs E) => Completed?.Invoke(false);
 
 
     public class SelectedProfile : ViewModel

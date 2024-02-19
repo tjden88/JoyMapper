@@ -11,11 +11,15 @@
 
             <DockPanel LastChildFill="False">
                 <TextBlock Text="Максимальная задержка двойного нажатия кнопки (мс)" VerticalAlignment="Center"/>
-                <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1000" Margin="10,0" Value="{Binding DoublePressDelay}"/>
+                <controls:WPRNumericIntDecorator Width="80" MinValue="200" MaxValue="1000" Margin="10,0" Value="{Binding DoublePressDelay}">
+                    <TextBox/>
+                </controls:WPRNumericIntDecorator>
             </DockPanel>
             <DockPanel LastChildFill="False">
                 <TextBlock Text="Задержка долгого нажатия кнопки (мс)" VerticalAlignment="Center"/>
-                <controls:NumericTextBox Width="80" MinValue="200" MaxValue="1500" Margin="10,0" Value="{Binding LongPressDelay}"/>
+                <controls:WPRNumericIntDecorator Width="80" MinValue="200" MaxValue="1500" Margin="10,0" Value="{Binding LongPressDelay}">
+                    <TextBox/>
+                </controls:WPRNumericIntDecorator>
             </DockPanel>
 
             <Separator Background="{DynamicResource DividerColorBrush}"/>

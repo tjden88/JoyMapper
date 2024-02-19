@@ -4,7 +4,8 @@
                     xmlns:base="clr-namespace:JoyMapper.ViewModels.PatternActions.Base"
                     xmlns:dd="urn:gong-wpf-dragdrop"
                     xmlns:patternActions="clr-namespace:JoyMapper.ViewModels.PatternActions"
-                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR">
+                    xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+                    xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR">
 
     <DataTemplate DataType="{x:Type base:PatternActionKeysBindingViewModel}">
         <DockPanel>
@@ -237,18 +238,19 @@
 
             <StackPanel Grid.Column="2"  Margin="5">
                 <TextBlock Text="Опции" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource SecondaryColorBrush}"/>
-                <controls:NumericTextBox AllowTextExpressions="False" Value="{Binding Delay}"
+                <controls:WPRNumericIntDecorator AllowTextExpressions="False" Value="{Binding Delay}"
                                          MinValue="100"
                                          HorizontalAlignment="Left"
                                          Margin="0,10"
                                          MaxValue="10000"
                                          PlusMinusButtonsShowing="True"
-                                         Increment="100"
-                                         Hint="Задержка между повторами (мс)"/>
+                                         Increment="100">
+                    <TextBox helpers:TextHelper.Hint="Задержка между повторами (мс)"/>
+                </controls:WPRNumericIntDecorator>
                 <TextBlock Text="Повторять:"/>
                 <RadioButton IsChecked="{Binding RepeatWhileActive}" Margin="10,5" Content="Пока активно действие"/>
                 <RadioButton IsChecked="{Binding RepeatWhileActive, Converter={StaticResource BoolNotConverter}}" Margin="10,5" Content="Задать количество повторов:"/>
-                <controls:NumericTextBox AllowTextExpressions="False" Value="{Binding RepeatCount}"
+                <controls:WPRNumericIntDecorator AllowTextExpressions="False" Value="{Binding RepeatCount}"
                                          IsEnabled="{Binding RepeatWhileActive, Converter={StaticResource BoolNotConverter}}"
                                          MinValue="1"
                                          Width="100"
@@ -256,7 +258,9 @@
                                          Margin="10,5"
                                          MaxValue="1000"
                                          PlusMinusButtonsShowing="True"
-                                         Increment="1"/>
+                                         Increment="1">
+                    <TextBox/>
+                </controls:WPRNumericIntDecorator>
             </StackPanel>
 
         </Grid>
