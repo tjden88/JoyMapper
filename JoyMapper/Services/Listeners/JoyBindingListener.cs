@@ -38,7 +38,7 @@ public class JoyBindingListener : IJoyBindingListener
     public void StartListen(IEnumerable<JoyBindingBase> bindings)
     {
         StartListen(bindings
-            .Select(b => new ModificatedJoyBinding(b)));
+            .Select(b => new ModificatedJoyBinding(b, null, Array.Empty<int>())));
     }
 
     public void StartListen(IEnumerable<ModificatedJoyBinding> bindings)
@@ -134,7 +134,7 @@ public class JoyBindingListener : IJoyBindingListener
         // Опрос модификаторов
         _Modificators.ForEach(m =>
         {
-            var joyState = joyStates.Find(js => js.name == m.Binding.JoyName)?.state;
+            var joyState = joyStates.Find(js => js.name.Equals(m.Binding.JoyName))?.state;
             if (joyState != null)
                 m.Binding.UpdateIsActive(joyState);
         });
@@ -142,11 +142,18 @@ public class JoyBindingListener : IJoyBindingListener
         // Опрос привязок
         foreach (var joyBinding in _Bindings)
         {
-            var joyState = joyStates.Find(js => js.name == joyBinding.BindingBase.JoyName)?.state;
-            if (joyState == null) continue;
+            var joyState = joyStates.Find(js => js.name.Equals(joyBinding.BindingBase.JoyName))?.state;
+            if (joyState is null) continue;
 
             var lastState = joyBinding.BindingBase.IsActive;
             var newState = joyBinding.BindingBase.UpdateIsActive(joyState);
+
+            if(joyBinding.ForbiddenExecuteModificatorsIds
+               .Any(id => _Modificators
+                   .Where(m=> m.Binding.IsActive)
+                   .Select(m=> m.Id)
+                   .Contains(id)))
+                continue;
 
             if (joyBinding.ModificatorId is { } modId && !_Modificators.First(m => m.Id == modId).Binding.IsActive)
                 continue;

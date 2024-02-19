@@ -29,7 +29,15 @@ public class JoyPatternListener : IJoyPatternListener
             joyPattern.PatternAction.Initialize(_ServiceProvider, false);
         }
 
-        var bindings = Patterns.Select(p => new ModificatedJoyBinding(new JoyBindingWithAction(p.Binding, p.PatternAction), p.ModificatorId));
+        var bindings = Patterns
+            .Select(p =>
+            {
+                var forbidIds = p.ModificatorId is not null
+                    ? Array.Empty<int>()
+                    : Array.Empty<int>();
+                return new ModificatedJoyBinding(new JoyBindingWithAction(p.Binding, p.PatternAction),
+                        p.ModificatorId, forbidIds);
+            });
 
         _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
         _JoyBindingListener.StartListen(bindings);
