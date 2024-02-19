@@ -29,7 +29,7 @@
             </StackPanel.InputBindings>
             <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
             <DockPanel LastChildFill="False">
-                <TextBlock Margin="5" Text="{Binding Binding}"/>
+                <TextBlock Margin="5" Text="{Binding Binding}" Foreground="{DynamicResource SecondaryColorBrush}"/>
                 <controls:WPRIcon Foreground="{DynamicResource AccentColorBrush}" Source="AxisArrow" Margin="5"
                                   Visibility="{Binding HasModificator, Converter={StaticResource Bool2VisibilityConverter}}"/>
             </DockPanel>
@@ -44,7 +44,7 @@
             </StackPanel.InputBindings>
             <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Margin="5,5,0,0"/>
             <WrapPanel>
-                <TextBlock Margin="5" Text="{Binding Binding}"/>
+                <TextBlock Margin="5" Text="{Binding Binding}" Foreground="{DynamicResource SecondaryColorBrush}"/>
             </WrapPanel>
         </StackPanel>
     </DataTemplate>

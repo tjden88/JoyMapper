@@ -11,7 +11,7 @@
         SizeToContent="Height"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
-        Title="{Binding Title}" Width="500">
+        Title="{Binding Title}" Width="650" MinWidth="500">
 
 
     <DockPanel LastChildFill="False" Margin="10" FocusManager.FocusedElement="{Binding ElementName=NameText}">

@@ -74,7 +74,8 @@
             <!--Паттерны-->
             <TabItem>
                 <TabItem.Header>
-                    <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline" Foreground="{DynamicResource PrimaryColorBrush}"/>
+                    <controls:WPRIconText Text="Паттерны" IconSource="GamepadVariantOutline"
+                                          Foreground="{DynamicResource PrimaryColorBrush}"/>
                 </TabItem.Header>
 
                 <controls:WPRCard>
@@ -168,7 +169,7 @@
 
                         <DockPanel DockPanel.Dock="Top">
                             <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
-                            <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryColorBrush}">
+                            <TextBlock TextWrapping="WrapWithOverflow">
                                 <TextBlock.Text>
                                     Модификаторы предназначены для назначения дополнительных условий выполнения паттернов.
                                     Например, можно назначить несколько разных паттернов действий для одной кнопки джойстика внутри профиля (с использованием модификатора или без).

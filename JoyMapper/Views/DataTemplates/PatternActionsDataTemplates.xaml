@@ -140,11 +140,11 @@
                     </StackPanel>
                 </DockPanel>
             </Grid>
-            <WrapPanel Margin="10,0">
-                <controls:WPRIcon Source="InfoCircle" Foreground="{DynamicResource AccentColorBrush}"/>
-                <TextBlock Foreground="{DynamicResource SecondaryColorBrush}" DockPanel.Dock="Top" Margin="10" 
+            <DockPanel Margin="10,0">
+                <controls:WPRIcon Source="InfoCircle" Foreground="{DynamicResource AccentColorBrush}" VerticalAlignment="Top" Margin="0,0,10,0"/>
+                <TextBlock VerticalAlignment="Top" Foreground="{DynamicResource SecondaryColorBrush}" DockPanel.Dock="Top"  
                            Text="Выбор предыдущего профиля сработает только в том случае, если после запуска профиль уже был переключен с помощью этого или другого паттерна"/>
-            </WrapPanel>
+            </DockPanel>
             
         </DockPanel>
     </DataTemplate>

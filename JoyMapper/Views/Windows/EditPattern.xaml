@@ -54,7 +54,7 @@
                     <DataTemplate>
                         <StackPanel>
                             <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Binding}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding Binding}" Foreground="{DynamicResource SecondaryColorBrush}" Margin="0,5,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
@@ -63,9 +63,9 @@
                     VerticalAlignment="Center"
                     Command="{Binding ClearModificatorCommand}"
                     Visibility="{Binding ClearModificatorCommand.Visibility}"
-                    ToolTip="Без модификатора">
+                    ToolTip="Убрать назначенный модификатор">
                 <Button.Content>
-                    <controls:WPRIcon Source="Clear" Foreground="{DynamicResource DangerColorBrush}" />
+                    <controls:WPRIcon Source="Close" Foreground="{DynamicResource DangerColorBrush}" />
                 </Button.Content>
             </Button>
         </DockPanel>
@@ -100,11 +100,11 @@
                             Command="{Binding ClearLogCommand}"
                             BorderThickness="1" Margin="0,0,0,10" DockPanel.Dock="Top">
                         <Button.Content>
-                            <controls:WPRIconText Text="Очистить" IconSource="TrashEmpty" />
+                            <controls:WPRIconText Text="Очистить" IconSource="TrashEmpty" Foreground="{DynamicResource DangerColorBrush}"/>
                         </Button.Content>
                     </Button>
-                    <ScrollViewer ScrollChanged="ScrollViewer_OnScrollChanged" Name="ScrollViewer" Width="280">
-                        <TextBlock Foreground="{DynamicResource PrimaryColorBrush}" Text="{Binding WatcherLogText, TargetNullValue='Протестируйте работу паттерна...'}"/>
+                    <ScrollViewer ScrollChanged="ScrollViewer_OnScrollChanged" Name="ScrollViewer" Width="300">
+                        <TextBlock Foreground="{DynamicResource PrimaryColorBrush}" FontSize="14" Text="{Binding WatcherLogText, TargetNullValue='Протестируйте работу паттерна...'}"/>
                     </ScrollViewer>
                 </DockPanel>
             </Expander>

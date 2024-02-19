@@ -14,7 +14,7 @@
         Title="{Binding Name}"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Width = "380" Height="400">
+        Width = "450" Height="400">
     <DockPanel Margin="10">
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Click="ButtonOk_OnClick"  Content="Завершить"/>
         <ToolBar DockPanel.Dock="Top" Margin="0,5">
@@ -29,7 +29,7 @@
                             Command="{Binding ClearBindingsCommand}" 
                             ToolTip="{Binding ClearBindingsCommand}">
                 <Button.Content>
-                    <controls:WPRIconText IconSource="Clear" Text="Очистить" Foreground="{DynamicResource DangerColorBrush}" />
+                    <controls:WPRIconText IconSource="Close" Text="Очистить" Foreground="{DynamicResource DangerColorBrush}" />
                 </Button.Content>
             </Button>
         </ToolBar>
