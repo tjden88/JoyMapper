@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
@@ -80,6 +81,7 @@ public partial class EditProfile : IEditModel<Profile>
         foreach (var selectedGroup in ViewModel.SelectedPatternsGroups)
             selectedGroup.IsSelected = model.PatternGroups.Contains(selectedGroup.Name);
 
+        ((CollectionView)OtherPatternsList.ItemsSource).Refresh();
         ViewModel.Title = $"Редактирование профиля {model.Name}";
     }
 
@@ -99,5 +101,30 @@ public partial class EditProfile : IEditModel<Profile>
 
         ViewModel.Name = ViewModel.Name.Trim();
         DialogResult = true;
+    }
+
+    private void ViewSource_OnFilter(object sender, FilterEventArgs e)
+    {
+        if (e.Item is not EditProfileWindowViewModel.SelectedPatternViewModel ptrn)
+        {
+            e.Accepted = false;
+            return;
+        }
+
+        if (string.IsNullOrEmpty(ptrn.GroupName))
+        {
+            e.Accepted = true;
+            return;
+        }
+
+        var selectedGroups = ViewModel.SelectedPatternsGroups
+            .Where(g => g.IsSelected)
+            .Select(g => g.Name);
+        e.Accepted = !selectedGroups.Any(g=>g.Equals(ptrn.GroupName));
+    }
+
+    private void GroupSelect_OnChecked(object sender, RoutedEventArgs e)
+    {
+        ((CollectionView)OtherPatternsList.ItemsSource).Refresh();
     }
 }

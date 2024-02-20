@@ -48,7 +48,7 @@
                    <ItemsControl ItemsSource="{Binding SelectedPatternsGroups}">
                        <ItemsControl.ItemTemplate>
                            <DataTemplate>
-                               <CheckBox IsChecked="{Binding IsSelected}">
+                               <CheckBox IsChecked="{Binding IsSelected}" Checked="GroupSelect_OnChecked" Unchecked="GroupSelect_OnChecked">
                                    <CheckBox.Content>
                                        <DockPanel Margin="0,5">
                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="6,0" FontWeight="Bold"/>
@@ -61,7 +61,11 @@
                     </ItemsControl>
                </Expander>
                 <Expander Header="Остальные паттерны" Margin="0,5" IsExpanded="True">
-                    <ItemsControl ItemsSource="{Binding SelectedPatterns}">
+                    <Expander.Resources>
+                        <CollectionViewSource x:Key="ViewSource" Source="{Binding SelectedPatterns}"
+                                              Filter="ViewSource_OnFilter"/>
+                    </Expander.Resources>
+                    <ItemsControl x:Name="OtherPatternsList" ItemsSource="{Binding Source={StaticResource ViewSource}}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding IsSelected}">
