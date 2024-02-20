@@ -19,8 +19,8 @@ public class ProfileListener: IProfileListener
     public void StartListenProfile(Profile Profile)
     {
         var patterns = _DataManager.JoyPatterns
-            .Where(p => Profile.PatternsIds
-                .Contains(p.Id))
+            .Where(p =>Profile.PatternGroups.Contains(p.GroupName) 
+                       || Profile.PatternsIds.Contains(p.Id))
             .ToList();
 
         if (patterns.Count == 0)
