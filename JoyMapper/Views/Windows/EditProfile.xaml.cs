@@ -94,9 +94,9 @@ public partial class EditProfile : IEditModel<Profile>
             return;
         }
 
-        if (!ViewModel.SelectedPatterns.Any(p => p.IsSelected))
+        if (!ViewModel.SelectedPatterns.Any(p => p.IsSelected) && !ViewModel.SelectedPatternsGroups.Any(pg=>pg.IsSelected))
         {
-            await WPRDialogHelper.InformationAsync(this, "Не выбрано ни одного паттерна!");
+            await WPRDialogHelper.InformationAsync(this, "Не выбрано ни одной группы или паттерна!");
             return;
         }
 
