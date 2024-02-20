@@ -52,18 +52,19 @@ public partial class EditProfile : IEditModel<Profile>
 
     public Profile GetModel()
     {
+        var selectedPatternGroups = ViewModel.SelectedPatternsGroups
+            .Where(pg=>pg.IsSelected)
+            .Select(pg=>pg.Name)
+            .ToList();
         var profile = new Profile
         {
             Id = ViewModel.Id,
             Name = ViewModel.Name,
             Description = ViewModel.Description,
+            PatternGroups = selectedPatternGroups,
             PatternsIds = ViewModel.SelectedPatterns
-                .Where(sp=>sp.IsSelected)
-                .Select(sp=>sp.PatternId)
-                .ToList(),
-            PatternGroups = ViewModel.SelectedPatternsGroups
-                .Where(pg=>pg.IsSelected)
-                .Select(pg=>pg.Name)
+                .Where(sp => sp.IsSelected && !selectedPatternGroups.Contains(sp.GroupName))
+                .Select(sp => sp.PatternId)
                 .ToList(),
         };
         return profile;
