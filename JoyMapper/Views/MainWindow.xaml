@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+        xmlns:userControls="clr-namespace:JoyMapper.Views.UserControls"
         mc:Ignorable="d"
         Loaded="MainWindow_OnLoaded"
         Topmost="False"
@@ -187,6 +188,14 @@
                     </DockPanel>
                 </controls:WPRCard>
 
+            </TabItem>
+
+            <!--Радио-->
+            <TabItem>
+                <TabItem.Header>
+                    <controls:WPRIconText IconSource="Radio" Foreground="{DynamicResource PrimaryColorBrush}" Text="Потоковое радио"/>
+                </TabItem.Header>
+                <userControls:AudioPlayer/>
             </TabItem>
 
             <TabItem>
