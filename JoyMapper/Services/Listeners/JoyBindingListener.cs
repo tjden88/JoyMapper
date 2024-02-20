@@ -49,7 +49,6 @@ public class JoyBindingListener : IJoyBindingListener
 
         var usedModificators = _Bindings
             .Select(b => b.ModificatorId)
-            .Where(id => id != null)
             .SelectMany(id => _DataManager.Modificators
                 .Where(m => m.Id == id))
             .ToList();
