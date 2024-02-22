@@ -1,14 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using JoyMapper.Interfaces;
 using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Services;
 using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.UserControls;
 
-internal class AudioPlayerViewModel : ViewModel
+public class AudioPlayerViewModel : ViewModel
 {
+    private readonly AppWindowsService _AppWindowsService;
+
+    public AudioPlayerViewModel(AppWindowsService appWindowsService)
+    {
+        _AppWindowsService = appWindowsService;
+    }
+
+
     #region Props
 
     #region AudioStreams : ObservableCollection<IAudioStream> - Потоки воспроизведения
@@ -33,6 +43,29 @@ internal class AudioPlayerViewModel : ViewModel
         new("Предыдущая радиостанция", false),
         new("Ось регулировки громкости", true),
     };
+
+    #endregion
+
+
+    #region Command SetBindingCommand : ConfigButtonSetup - Установить привязку кнопки
+
+    /// <summary>Установить привязку кнопки</summary>
+    private Command<ConfigButtonSetup> _SetBindingCommand;
+
+    /// <summary>Установить привязку кнопки</summary>
+    public Command<ConfigButtonSetup> SetBindingCommand => _SetBindingCommand
+        ??= new Command<ConfigButtonSetup>(OnSetBindingCommandExecuted, CanSetBindingCommandExecute, "Установить привязку кнопки");
+
+    /// <summary>Проверка возможности выполнения - Установить привязку кнопки</summary>
+    private bool CanSetBindingCommandExecute(ConfigButtonSetup p) => true;
+
+    /// <summary>Проверка возможности выполнения - Установить привязку кнопки</summary>
+    private void OnSetBindingCommandExecuted(ConfigButtonSetup p)
+    {
+        var bind = _AppWindowsService.GetJoyBinding();
+        if (bind is null) return;
+        p.BindingBase = bind;
+    }
 
     #endregion
 
@@ -63,27 +96,6 @@ internal class AudioPlayerViewModel : ViewModel
         }
 
         #endregion
-
-        #region Command SetBindingCommand - Установить привязку
-
-        /// <summary>Установить привязку</summary>
-        private Command _SetBindingCommand;
-
-        /// <summary>Установить привязку</summary>
-        public Command SetBindingCommand => _SetBindingCommand
-            ??= new Command(OnSetBindingCommandExecuted, CanSetBindingCommandExecute, "Установить привязку");
-
-        /// <summary>Проверка возможности выполнения - Установить привязку</summary>
-        private bool CanSetBindingCommandExecute() => true;
-
-        /// <summary>Логика выполнения - Установить привязку</summary>
-        private void OnSetBindingCommandExecuted()
-        {
-            
-        }
-
-        #endregion
-
         
     }
 

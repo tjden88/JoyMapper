@@ -22,8 +22,12 @@
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="btn"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Name, StringFormat={}{0}:}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Не назначено" FontWeight="Bold"></TextBlock>
-                                <Button Grid.Column="2" Content="{Binding ButtonCaption}"></Button>
+                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding BindingBase, TargetNullValue='Не назначено'}" FontWeight="Bold"></TextBlock>
+                                <Button Grid.Column="2" 
+                                        Style="{StaticResource WPRFlatButton}" BorderThickness="1"
+                                        Content="{Binding ButtonCaption}" 
+                                        Command="{Binding DataContext.SetBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
+                                        CommandParameter="{Binding}"/>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

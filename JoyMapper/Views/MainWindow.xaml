@@ -195,7 +195,7 @@
                 <TabItem.Header>
                     <controls:WPRIconText IconSource="Radio" Foreground="{DynamicResource PrimaryColorBrush}" Text="Потоковое радио"/>
                 </TabItem.Header>
-                <userControls:AudioPlayer/>
+                <userControls:AudioPlayer DataContext="{Binding AudioPlayerViewModel}"/>
             </TabItem>
 
             <TabItem>

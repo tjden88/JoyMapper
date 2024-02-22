@@ -6,7 +6,7 @@ namespace JoyMapper.Interfaces;
 /// <summary>
 /// Поток воспроизведения музыки
 /// </summary>
-internal interface IAudioStream : IDisposable
+public interface IAudioStream : IDisposable
 {
     /// <summary>
     /// Происходит при ошибке воспроизведения

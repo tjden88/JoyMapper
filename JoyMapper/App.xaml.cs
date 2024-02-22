@@ -62,6 +62,7 @@ public partial class App
             .AddTransient<AddJoyBindingViewModel>()
             .AddTransient<EditPatternViewModel>()
             .AddTransient<PatternActionViewModel>()
+            .AddTransient<AudioPlayerViewModel>()
             .AddTransient<EditProfile>()
             .AddTransient<EditProfileWindowViewModel>()
             .AddTransient<UpdateWindow>()

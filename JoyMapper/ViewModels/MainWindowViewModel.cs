@@ -6,6 +6,7 @@ using JoyMapper.Models;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.ViewModels.UserControls;
 using JoyMapper.Views.UserControls;
 using SharedServices;
 using WPR.Dialogs;
@@ -16,13 +17,15 @@ namespace JoyMapper.ViewModels;
 
 public partial class MainWindowViewModel : WindowViewModel
 {
+    public AudioPlayerViewModel AudioPlayerViewModel { get; }
     private readonly DataManager _DataManager;
     private readonly AppUpdateService _AppUpdateService;
     private readonly IProfileListener _ProfileListener;
     private readonly AppWindowsService _AppWindowsService;
 
-    public MainWindowViewModel(DataManager DataManager, AppUpdateService AppUpdateService , IProfileListener ProfileListener, AppWindowsService AppWindowsService)
+    public MainWindowViewModel(DataManager DataManager, AppUpdateService AppUpdateService , IProfileListener ProfileListener, AppWindowsService AppWindowsService, AudioPlayerViewModel audioPlayerViewModel)
     {
+        AudioPlayerViewModel = audioPlayerViewModel;
         _DataManager = DataManager;
         _AppUpdateService = AppUpdateService;
         _ProfileListener = ProfileListener;
