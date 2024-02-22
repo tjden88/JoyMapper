@@ -13,7 +13,6 @@ using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using SharedServices;
-using WPR.ColorTheme;
 
 namespace JoyMapper;
 

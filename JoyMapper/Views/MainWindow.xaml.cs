@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
 using JoyMapper.Models;
 using JoyMapper.ViewModels;
 using WPR.Animations;

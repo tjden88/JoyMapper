@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
@@ -14,7 +13,7 @@ namespace JoyMapper.Views.UserControls;
 /// <summary>
 /// Логика взаимодействия для AddPatternToProfiles.xaml
 /// </summary>
-public partial class AddPatternToProfiles : UserControl, IWPRDialog, IEditModel<JoyPattern>
+public partial class AddPatternToProfiles : IWPRDialog, IEditModel<JoyPattern>
 {
 
     public ObservableCollection<SelectedProfile> SelectedProfiles { get; set; }
