@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using NAudio.Wave;
@@ -24,12 +25,16 @@ namespace JoyMapper.Views.UserControls
             PlayMp3FromUrl("https://stream.deep1.ru/deep1aac");
         }
 
-        public static void PlayMp3FromUrl(string url)
+        public async void PlayMp3FromUrl(string url)
         {
-            using var mf = new MediaFoundationReader(url);
+            await using var mf = new MediaFoundationReader(url);
             using var wo = new WaveOutEvent();
             wo.Init(mf);
             wo.Play();
+            while (wo.PlaybackState == PlaybackState.Playing)
+            {
+                await Task.Delay(1000);
+            }
         }
     }
 }
