@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using WPR.Icons;
 
 namespace JoyMapper.Interfaces;
 
 /// <summary>
 /// Поток воспроизведения музыки
 /// </summary>
-public interface IAudioStream : IDisposable
+public interface IAudioStream : IDisposable, IEquatable<IAudioStream>
 {
     /// <summary>
     /// Происходит при ошибке воспроизведения
@@ -31,4 +32,11 @@ public interface IAudioStream : IDisposable
     /// Установить громкость 0-255
     /// </summary>
     void SetVolume(byte volume);
+
+    /// <summary>
+    /// Адрес источника
+    /// </summary>
+    string Source { get; }
+
+    PackIconKind Icon { get; }
 }

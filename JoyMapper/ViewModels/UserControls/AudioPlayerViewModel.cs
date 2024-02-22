@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Threading;
+using System.Threading.Tasks;
 using JoyMapper.Interfaces;
 using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.Radio;
 using JoyMapper.Services;
 using JoyMapper.ViewModels.Windows;
+using WPR.Dialogs;
+using WPR.Domain.Models.Themes;
 using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
@@ -25,7 +29,7 @@ public class AudioPlayerViewModel : ViewModel
     #region AudioStreams : ObservableCollection<IAudioStream> - Потоки воспроизведения
 
     /// <summary>Потоки воспроизведения</summary>
-    private ObservableCollection<IAudioStream> _AudioStreams;
+    private ObservableCollection<IAudioStream> _AudioStreams = new();
 
     /// <summary>Потоки воспроизведения</summary>
     public ObservableCollection<IAudioStream> AudioStreams
@@ -70,6 +74,43 @@ public class AudioPlayerViewModel : ViewModel
 
     #endregion
 
+
+    #region AsyncCommand AddStreamSourceCommandCommand - Добавить источник аудио
+
+    /// <summary>Добавить источник аудио</summary>
+    private AsyncCommand _AddStreamSourceCommandCommand;
+
+    /// <summary>Добавить источник аудио</summary>
+    public AsyncCommand AddStreamSourceCommand => _AddStreamSourceCommandCommand
+        ??= new AsyncCommand(OnAddStreamSourceCommandCommandExecutedAsync, CanAddStreamSourceCommandCommandExecute, "Добавить источник аудио");
+
+    /// <summary>Проверка возможности выполнения - Добавить источник аудио</summary>
+    private bool CanAddStreamSourceCommandCommandExecute() => true;
+
+    /// <summary>Логика выполнения - Добавить источник аудио</summary>
+    private async Task OnAddStreamSourceCommandCommandExecutedAsync(CancellationToken cancel)
+    {
+        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите источник аудиопотока", "Локальный путь или URL-адрес аудиопотока");
+        if (string.IsNullOrWhiteSpace(streamUrl))
+            return;
+
+        var stream = new AudioStreamFromUrl(streamUrl);
+        if (await stream.IsAvaliable())
+        {
+            var isExist = _AudioStreams.Contains(stream);
+            if (isExist)
+            {
+                WPRDialogHelper.Bubble(App.ActiveWindow, "Источник уже существует", Background: StyleBrushes.DangerColorBrush);
+                return;
+            }
+            AudioStreams.Add(stream);
+        }
+        else
+            await WPRDialogHelper.ErrorAsync(App.ActiveWindow, "Источник недоступен");
+    }
+
+    #endregion
+
     public class ConfigButtonSetup : ViewModel
     {
         public string Name { get; }
@@ -97,7 +138,7 @@ public class AudioPlayerViewModel : ViewModel
         }
 
         #endregion
-        
+
     }
 
 }

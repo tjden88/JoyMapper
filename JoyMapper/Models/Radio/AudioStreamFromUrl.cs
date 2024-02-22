@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JoyMapper.Interfaces;
 using NAudio.Wave;
+using WPR.Icons;
 
 namespace JoyMapper.Models.Radio;
 
@@ -25,9 +26,16 @@ internal class AudioStreamFromUrl : IAudioStream
 
     public async Task<bool> IsAvaliable()
     {
-        using var http = new HttpClient();
-        var response = await http.GetAsync(_Url);
-        return response.IsSuccessStatusCode;
+        try
+        {
+            using var http = new HttpClient();
+            var response = await http.SendAsync(new HttpRequestMessage(HttpMethod.Head, _Url));
+            return response.IsSuccessStatusCode;
+        }
+        catch(Exception )
+        {
+            return false;
+        }
     }
 
     public bool IsPlaying => _Stream is { PlaybackState: PlaybackState.Playing };
@@ -65,6 +73,10 @@ internal class AudioStreamFromUrl : IAudioStream
         _Stream.Volume = (float)(volume / 255.0);
     }
 
+    public string Source => _Url;
+
+    public PackIconKind Icon => PackIconKind.Internet;
+
     public void Dispose()
     {
         if (_Stream is not null)
@@ -76,4 +88,6 @@ internal class AudioStreamFromUrl : IAudioStream
         _Stream?.Dispose();
         _Stream = null;
     }
+
+    public bool Equals(IAudioStream other) => other is AudioStreamFromUrl stream && stream._Url.Equals(_Url);
 }
