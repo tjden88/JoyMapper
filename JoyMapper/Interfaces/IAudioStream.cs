@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace JoyMapper.Services.Interfaces;
+namespace JoyMapper.Interfaces;
 
 /// <summary>
 /// Поток воспроизведения музыки
 /// </summary>
-internal interface IAudioStream
+internal interface IAudioStream : IDisposable
 {
     /// <summary>
     /// Происходит при ошибке воспроизведения
@@ -26,4 +26,9 @@ internal interface IAudioStream
     void Play();
 
     void Stop();
+
+    /// <summary>
+    /// Установить громкость 0-255
+    /// </summary>
+    void SetVolume(byte volume);
 }
