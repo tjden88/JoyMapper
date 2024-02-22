@@ -23,7 +23,4 @@ public class JoyPattern
 
     [JsonIgnore]
     public bool HasModificator => ModificatorId > 0 ;
-
-    [JsonIgnore]
-    public string BindingInfo => ToString();
 }

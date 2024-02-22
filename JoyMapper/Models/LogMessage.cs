@@ -30,7 +30,7 @@ public class LogMessage
     public Color Color => Type switch
     {
         MessageType.Error => Colors.Red,
-        MessageType.Warning => Colors.Yellow,
+        MessageType.Warning => Colors.Orange,
         MessageType.Info => Colors.Green,
         _ => throw new ArgumentOutOfRangeException()
     };
