@@ -8,9 +8,10 @@
         mc:Ignorable="d"
         Loaded="AddJoyBinding_OnLoaded"
         Closed="AddJoyBinding_OnClosed"
+        SizeToContent="Height"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Width = "350" Height="200"
+        Width = "350"
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Title="{Binding Title}">
 

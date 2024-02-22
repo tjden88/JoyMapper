@@ -7,6 +7,7 @@ using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
+using JoyMapper.ViewModels.Windows;
 using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
@@ -173,7 +174,7 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     /// <summary>Логика выполнения - Определить кнопку джойстика</summary>
     private void OnAttachJoyButtonCommandExecuted()
     {
-        var bind = _AppWindowsService.GetJoyBinding();
+        var bind = _AppWindowsService.GetJoyBinding(AddJoyBindingViewModel.BindingFilters.All);
         if (bind is null) return;
         JoyBinding = bind;
     }

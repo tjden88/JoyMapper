@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.ViewModels.Windows;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using WPR.MVVM.ViewModels;
@@ -40,9 +41,10 @@ public class AppWindowsService
 
 
     /// <summary> Показать окно выбора и получить привязку кнопки </summary>
-    public JoyBindingBase GetJoyBinding()
+    public JoyBindingBase GetJoyBinding(AddJoyBindingViewModel.BindingFilters Filter)
     {
         var wnd = GetDialogWindow<AddJoyBinding>();
+        wnd.ViewModel.Filter = Filter;
         return wnd.ShowDialog() == true
             ? wnd.ViewModel.JoyBinding
             : null;

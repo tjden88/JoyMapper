@@ -11,8 +11,15 @@ using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows;
 
-public class AddJoyBindingViewModel : WindowViewModel
+public class AddJoyBindingViewModel : ViewModel
 {
+    public enum BindingFilters
+    {
+        All,
+        Buttons,
+        Axes
+    }
+
     private readonly IJoystickStateManager _JoystickStateManager;
     private readonly IJoyBindingListener _JoyBindingListener;
 
@@ -21,10 +28,44 @@ public class AddJoyBindingViewModel : WindowViewModel
     {
         _JoystickStateManager = JoystickStateManager;
         _JoyBindingListener = JoyBindingListener;
-        Title = "Назначить кнопку/ось";
     }
 
     #region Prop
+
+    /// <summary>Заголовок</summary>
+    public string Title => Filter switch
+    {
+        BindingFilters.All => "Назначить кнопку/ось",
+        BindingFilters.Buttons => "Назначить кнопку",
+        BindingFilters.Axes => "Назначить ось",
+        _ => throw new ArgumentOutOfRangeException(nameof(Filter), Filter, null)
+    };
+
+
+    #region Filter : BindingFilters - Фильтр назначаемых действий
+
+    /// <summary>Фильтр назначаемых действий</summary>
+    private BindingFilters _Filter;
+
+    /// <summary>Фильтр назначаемых действий</summary>
+    public BindingFilters Filter
+    {
+        get => _Filter;
+        set => IfSet(ref _Filter, value)
+            .CallPropertyChanged(nameof(Title))
+            .CallPropertyChanged(nameof(JoyName))
+        ;
+    }
+
+    #endregion
+
+    private string Hint => Filter switch
+    {
+        BindingFilters.Axes => "Сдвиньте ось джойстика",
+        BindingFilters.Buttons => "Нажмите кнопку",
+        BindingFilters.All => "Нажмите кнопку или сдвиньте ось джойстика",
+        _ => throw new ArgumentOutOfRangeException(nameof(Filter), Filter, null)
+    };
 
     #region JoyBinding : JoyBindingBase - Привязка кнопки
 
@@ -43,7 +84,7 @@ public class AddJoyBindingViewModel : WindowViewModel
 
     #endregion
 
-    public string JoyName => JoyBinding?.JoyName ?? "Нажмите кнопку или сдвиньте ось джойстика";
+    public string JoyName => JoyBinding?.JoyName ?? Hint;
 
     public string Description => JoyBinding?.Description;
 
@@ -90,36 +131,41 @@ public class AddJoyBindingViewModel : WindowViewModel
     private List<JoyBindingBase> AllJoyBindings(string JoyName)
     {
         var list = new List<JoyBindingBase>();
-
-        // Кнопки
-        for (var i = 1; i <= 128; i++)
+        if (Filter != BindingFilters.Axes)
         {
-            list.Add(new ButtonJoyBinding
+            // Кнопки
+            for (var i = 1; i <= 128; i++)
             {
-                JoyName = JoyName,
-                ButtonNumber = i
-            });
+                list.Add(new ButtonJoyBinding
+                {
+                    JoyName = JoyName,
+                    ButtonNumber = i
+                });
+            }
+
+            var powValues = new[] { 0, 4500, 9000, 13500, 18000, 22500, 27000, 31500 };
+
+            // POW
+            foreach (var powValue in powValues)
+            {
+                list.Add(new PowJoyBinding
+                {
+                    JoyName = JoyName,
+                    PowNumber = PowJoyBinding.PowNumbers.Pow1,
+                    PowValue = powValue
+                });
+
+                list.Add(new PowJoyBinding
+                {
+                    JoyName = JoyName,
+                    PowNumber = PowJoyBinding.PowNumbers.Pow2,
+                    PowValue = powValue
+                });
+            }
         }
 
-        var powValues = new[] { 0, 4500, 9000, 13500, 18000, 22500, 27000, 31500 };
 
-        // POW
-        foreach (var powValue in powValues)
-        {
-            list.Add(new PowJoyBinding
-            {
-                JoyName = JoyName,
-                PowNumber = PowJoyBinding.PowNumbers.Pow1,
-                PowValue = powValue
-            });
-
-            list.Add(new PowJoyBinding
-            {
-                JoyName = JoyName,
-                PowNumber = PowJoyBinding.PowNumbers.Pow2,
-                PowValue = powValue
-            });
-        }
+        if (Filter == BindingFilters.Buttons) return list;
 
         // Оси
         foreach (AxisJoyBinding.Axises axis in Enum.GetValues(typeof(AxisJoyBinding.Axises)))

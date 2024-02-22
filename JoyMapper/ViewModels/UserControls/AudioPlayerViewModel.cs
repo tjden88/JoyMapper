@@ -4,6 +4,7 @@ using System.Windows.Input;
 using JoyMapper.Interfaces;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
+using JoyMapper.ViewModels.Windows;
 using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
@@ -62,7 +63,7 @@ public class AudioPlayerViewModel : ViewModel
     /// <summary>Проверка возможности выполнения - Установить привязку кнопки</summary>
     private void OnSetBindingCommandExecuted(ConfigButtonSetup p)
     {
-        var bind = _AppWindowsService.GetJoyBinding();
+        var bind = _AppWindowsService.GetJoyBinding(p.IsAxis ? AddJoyBindingViewModel.BindingFilters.Axes : AddJoyBindingViewModel.BindingFilters.Buttons);
         if (bind is null) return;
         p.BindingBase = bind;
     }
@@ -72,15 +73,15 @@ public class AudioPlayerViewModel : ViewModel
     public class ConfigButtonSetup : ViewModel
     {
         public string Name { get; }
-        private readonly bool _IsAxis;
+        public bool IsAxis { get; }
 
         public ConfigButtonSetup(string Name, bool IsAxis)
         {
             this.Name = Name;
-            _IsAxis = IsAxis;
+            this.IsAxis = IsAxis;
         }
 
-        public string ButtonCaption => _IsAxis ? "Назначить ось" : "Назначить кнопку";
+        public string ButtonCaption => IsAxis ? "Назначить ось" : "Назначить кнопку";
 
 
         #region BindingBase : JoyBindingBase - Назанченная кнопка / ось
