@@ -4,10 +4,66 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JoyMapper.Views.UserControls"
+             xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
              DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            <Button Command="{Binding StartPlayCommand}">Play</Button>
-    </Grid>
+             mc:Ignorable="d"  d:DesignWidth="400">
+   <DockPanel>
+        <Border CornerRadius="10"
+               DockPanel.Dock="Top"
+               BorderThickness="1"
+               BorderBrush="{DynamicResource DarkPrimaryColorBrush}"
+               Background="{DynamicResource SecondaryBackgroundColorBrush}">
+            <TextBlock Text="{Binding CurrentRadioDescription, TargetNullValue=Не воспроизводится}"
+                       HorizontalAlignment="Center"
+                       TextWrapping="NoWrap"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="10"
+                       Foreground="{DynamicResource AccentColorBrush}"/>
+        </Border>
+       <Grid>
+           <Grid.ColumnDefinitions>
+               <ColumnDefinition Width="Auto"/>
+               <ColumnDefinition />
+           </Grid.ColumnDefinitions>
+           <UniformGrid Columns="3" Margin="20,10" HorizontalAlignment="Center" DockPanel.Dock="Top">
+               <Button Style="{StaticResource WPRFlatButton}" BorderThickness="1" ToolTip="Предыдущий" Command="{Binding PreviousCommand}">
+                   <Button.Content>
+                       <controls:WPRIcon Source="SkipPrevious" IconSize="20"/>
+                   </Button.Content>
+               </Button>
+               <Button Style="{StaticResource WPRFlatButton}" BorderThickness="1" Padding="0" ToolTip="Начать/Остановить воспроизведение" 
+                       Command="{Binding PlayStopCommand}">
+                   <Button.Content>
+                       <ContentControl>
+                           <ContentControl.Style>
+                               <Style TargetType="ContentControl">
+                                   <Style.Triggers>
+                                       <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                           <Setter Property="Content">
+                                               <Setter.Value>
+                                                   <controls:WPRIcon Source="Pause" IconSize="24"/>
+                                                </Setter.Value>
+                                           </Setter>
+                                       </DataTrigger>
+                                   </Style.Triggers>
+                                   <Setter Property="Content">
+                                       <Setter.Value>
+                                           <controls:WPRIcon Source="Play" IconSize="24"/>
+                                        </Setter.Value>
+                                   </Setter>
+                               </Style>
+                           </ContentControl.Style>
+                       </ContentControl>
+                   </Button.Content>
+               </Button>
+               <Button Style="{StaticResource WPRFlatButton}" Command="{Binding NextCommand}" BorderThickness="1" ToolTip="Следующий">
+                   <Button.Content>
+                       <controls:WPRIcon Source="SkipNext" IconSize="20"/>
+                   </Button.Content>
+               </Button>
+           </UniformGrid>
+
+           <Slider Grid.Column="1" VerticalAlignment="Center" Margin="20,0" Maximum="127" Value="{Binding Volume}"/>
+        </Grid>
+   </DockPanel>
 </UserControl>

@@ -21,7 +21,7 @@ public class AudioPlayerService
     public bool IsPlaying
     {
         get => _IsPlaying;
-        set
+        private set
         {
             if(Equals(value, _IsPlaying))
                 return;
