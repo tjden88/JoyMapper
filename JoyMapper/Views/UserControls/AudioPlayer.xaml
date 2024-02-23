@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:JoyMapper.Views.UserControls"
              xmlns:userControls="clr-namespace:JoyMapper.ViewModels.UserControls"
              xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
+             xmlns:helpers="clr-namespace:WPR.Helpers;assembly=WPR"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance userControls:AudioPlayerViewModel}"
              d:DesignHeight="850" d:DesignWidth="800">
@@ -28,6 +29,31 @@
 
 
             <DockPanel Visibility="{Binding IsEnabled, Converter={StaticResource Bool2VisibilityConverter}}">
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox DockPanel.Dock="Top" 
+                              ItemsSource="{Binding DeviceOutputs}"
+                              SelectedItem="{Binding SelectedDevice}"
+                              DisplayMemberPath="Name"
+                              Style="{StaticResource WPRBorderedComboBox}" 
+                              helpers:TextHelper.Hint="Устройство вывода звука" Margin="0,10"/>
+                    <Button Grid.Column="1" 
+                            Command="{Binding ClearSelectedDeviceCommand}"
+                            Visibility="{Binding ClearSelectedDeviceCommand.Visibility}"
+                            ToolTip="По умолчанию"
+                            Style="{StaticResource WPRToolButton}"
+                            VerticalAlignment="Center"
+                            Margin="10"
+                            Foreground="{DynamicResource DangerColorBrush}">
+                        <Button.Content>
+                            <controls:WPRIcon Source="Close"></controls:WPRIcon>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
                 <GroupBox Header="Конфигурация управления" DockPanel.Dock="Top">
                     <ItemsControl ItemsSource="{Binding ButtonsConfigs}" d:ItemsSource="{d:SampleData}" Grid.IsSharedSizeScope="True">
                         <ItemsControl.ItemTemplate>

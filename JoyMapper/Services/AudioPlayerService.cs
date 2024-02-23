@@ -6,14 +6,21 @@ using System.Threading.Tasks;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
 using JoyMapper.Models.Radio;
+using JoyMapper.Services.Data;
 
 namespace JoyMapper.Services;
 
 public class AudioPlayerService
 {
+    private readonly DataManager _DataManager;
     public event EventHandler<bool> IsPlayingChanged;
 
     public event EventHandler<string> SourceChanged;
+
+    public AudioPlayerService(DataManager dataManager)
+    {
+        _DataManager = dataManager;
+    }
 
 
     private bool _IsPlaying;
@@ -70,8 +77,6 @@ public class AudioPlayerService
 
     #endregion
 
-    
-
 
     private readonly List<IAudioStream> _AudioStreams = new();
 
@@ -103,7 +108,6 @@ public class AudioPlayerService
             stream.PlaybackError += AudioStreamOnPlaybackError;
             _AudioStreams.Add(stream);
         }
-
 
         return _AudioStreams.Count;
     }
@@ -188,7 +192,7 @@ public class AudioPlayerService
     private void Play(IAudioStream audioStream)
     {
         _CurrentStream = audioStream;
-        audioStream.Play();
+        audioStream.Play(_DataManager.RadioSettings.OutputDeviceId);
         audioStream.SetVolume(Volume);
         CurrentSource = audioStream.Source;
         IsPlaying = true;

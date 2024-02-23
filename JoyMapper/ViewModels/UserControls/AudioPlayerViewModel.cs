@@ -9,6 +9,7 @@ using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.Windows;
+using NAudio.Wave;
 using WPR.ColorTheme;
 using WPR.Dialogs;
 using WPR.Domain.Models.Themes;
@@ -83,6 +84,42 @@ public class AudioPlayerViewModel : ViewModel
 
     #endregion
 
+
+    #region DeviceOutputs : ObservableCollection<AudioDeviceOutput> - Устройства воспроизведения
+
+    /// <summary>Устройства воспроизведения</summary>
+    private ObservableCollection<AudioDeviceOutput> _DeviceOutputs;
+
+    /// <summary>Устройства воспроизведения</summary>
+    public ObservableCollection<AudioDeviceOutput> DeviceOutputs
+    {
+        get => _DeviceOutputs;
+        private set => Set(ref _DeviceOutputs, value);
+    }
+
+    #endregion
+
+
+    #region SelectedDevice : AudioDeviceOutput - Выбранное устройство
+
+    /// <summary>Выбранное устройство</summary>
+    private AudioDeviceOutput _SelectedDevice;
+
+    /// <summary>Выбранное устройство</summary>
+    public AudioDeviceOutput SelectedDevice
+    {
+        get => _SelectedDevice;
+        set => IfSet(ref _SelectedDevice, value)
+            .Then(v =>
+            {
+                _DataManager.RadioSettings.OutputDeviceId = v?.Id;
+                _DataManager.SaveData();
+            });
+    }
+
+    #endregion
+
+    
 
     /// <summary> Конфигурации управления радио </summary>
     public IEnumerable<ConfigButtonSetup> ButtonsConfigs { get; private set; }
@@ -221,6 +258,27 @@ public class AudioPlayerViewModel : ViewModel
 
     #endregion
 
+
+    #region Command ClearSelectedDeviceCommand - Сбросить устройство вывода
+
+    /// <summary>Сбросить устройство вывода</summary>
+    private Command _ClearSelectedDeviceCommand;
+
+    /// <summary>Сбросить устройство вывода</summary>
+    public Command ClearSelectedDeviceCommand => _ClearSelectedDeviceCommand
+        ??= new Command(OnClearSelectedDeviceCommandExecuted, CanClearSelectedDeviceCommandExecute, "Сбросить устройство вывода");
+
+    /// <summary>Проверка возможности выполнения - Сбросить устройство вывода</summary>
+    private bool CanClearSelectedDeviceCommandExecute() => SelectedDevice is not null;
+
+    /// <summary>Логика выполнения - Сбросить устройство вывода</summary>
+    private void OnClearSelectedDeviceCommandExecuted()
+    {
+        SelectedDevice = null;
+    }
+
+    #endregion
+
     #endregion
 
 
@@ -237,6 +295,9 @@ public class AudioPlayerViewModel : ViewModel
             new("Ось регулировки громкости", true) {BindingBase = radioSettings.VolumeBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.VolumeBinding = b },
         };
         AudioStreams = new(radioSettings.Sources.Select(s => new AudioSourceViewModel(s)));
+        DeviceOutputs = new(DirectSoundOut.Devices.Select(d => new AudioDeviceOutput(d.Description, d.Guid)));
+        if (radioSettings.OutputDeviceId is { } id) 
+            _SelectedDevice = DeviceOutputs.FirstOrDefault(d => d.Id.Equals(id));
     }
 
     private async Task<AudioSourceViewModel> AddOrEditSource(string defaultSource = null)
@@ -348,6 +409,8 @@ public class AudioPlayerViewModel : ViewModel
     }
 
     public record AudioSourceStatus(PackIconKind Icon, Brush Foreground, string Description);
+
+    public record AudioDeviceOutput(string Name, Guid Id);
 
     #endregion
 }

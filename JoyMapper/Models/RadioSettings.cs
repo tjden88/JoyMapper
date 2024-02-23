@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JoyMapper.Models.JoyBindings.Base;
 
 namespace JoyMapper.Models;
@@ -9,6 +10,8 @@ namespace JoyMapper.Models;
 public class RadioSettings
 {
     public bool IsEnabled { get; set; }
+
+    public Guid? OutputDeviceId { get; set; }
 
     public JoyBindingBase PlayStopBinding { get; set; }
     public JoyBindingBase NextBinding { get; set; }

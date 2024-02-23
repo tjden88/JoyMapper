@@ -41,7 +41,7 @@ internal class AudioStreamFromUrl : IAudioStream
 
     public bool IsPlaying => _Stream is { SoundOut.PlaybackState: PlaybackState.Playing };
 
-    public void Play()
+    public void Play(Guid? OutputDeviceId)
     {
         if (IsPlaying) return;
         Dispose();
@@ -51,8 +51,8 @@ internal class AudioStreamFromUrl : IAudioStream
         {
             using var mf = new MediaFoundationReader(_Url);
             var channel = new WaveChannel32(new MediaFoundationReader(_Url));
-            //var wo = new DirectSoundOut(Guid.Parse("139c7588-8346-4530-b2d4-544429567429"));
-            var wo = new DirectSoundOut();
+
+            var wo = OutputDeviceId is null ? new DirectSoundOut() : new DirectSoundOut((Guid) OutputDeviceId);
             wo.Init(channel);
             
             _Stream = new WaveStream(wo, channel);
@@ -61,7 +61,7 @@ internal class AudioStreamFromUrl : IAudioStream
         }
         catch(Exception e)
         {
-            PlaybackError?.Invoke(this,  $"Невозможно воспроизвести: {_Url}");
+            PlaybackError?.Invoke(this,  $"Ошибка запуска {_Url}.\n{e}");
         }
 
     }

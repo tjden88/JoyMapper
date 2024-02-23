@@ -23,7 +23,7 @@ public interface IAudioStream : IDisposable, IEquatable<IAudioStream>
     /// </summary>
     bool IsPlaying { get; }
 
-    void Play();
+    void Play(Guid? OutputDeviceId);
 
     void Stop();
 
