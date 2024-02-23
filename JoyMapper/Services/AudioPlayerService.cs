@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JoyMapper.Interfaces;
@@ -62,6 +63,7 @@ public class AudioPlayerService
         {
             if (Equals(value, _Volume)) return;
             _Volume = value;
+            Debug.WriteLine(value);
             _CurrentStream?.SetVolume(value);
         }
     }
@@ -186,8 +188,8 @@ public class AudioPlayerService
     private void Play(IAudioStream audioStream)
     {
         _CurrentStream = audioStream;
-        audioStream.SetVolume(Volume);
         audioStream.Play();
+        audioStream.SetVolume(Volume);
         CurrentSource = audioStream.Source;
         IsPlaying = true;
     }

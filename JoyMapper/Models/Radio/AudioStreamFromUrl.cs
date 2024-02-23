@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JoyMapper.Interfaces;
@@ -12,7 +13,7 @@ namespace JoyMapper.Models.Radio;
 internal class AudioStreamFromUrl : IAudioStream
 {
     private readonly string _Url;
-    private WaveOutEvent _Stream;
+    private WaveStream _Stream;
 
     public event EventHandler<string> PlaybackError;
 
@@ -38,7 +39,7 @@ internal class AudioStreamFromUrl : IAudioStream
         }
     }
 
-    public bool IsPlaying => _Stream is { PlaybackState: PlaybackState.Playing };
+    public bool IsPlaying => _Stream is { SoundOut.PlaybackState: PlaybackState.Playing };
 
     public void Play()
     {
@@ -49,14 +50,16 @@ internal class AudioStreamFromUrl : IAudioStream
         try
         {
             using var mf = new MediaFoundationReader(_Url);
-            var wo = new WaveOutEvent();
-            wo.Init(mf);
+            var channel = new WaveChannel32(new MediaFoundationReader(_Url));
+            //var wo = new DirectSoundOut(Guid.Parse("139c7588-8346-4530-b2d4-544429567429"));
+            var wo = new DirectSoundOut();
+            wo.Init(channel);
             
-            _Stream = wo;
-            _Stream.PlaybackStopped += WoOnPlaybackStopped;
-            _Stream.Play();
+            _Stream = new WaveStream(wo, channel);
+            wo.PlaybackStopped += WoOnPlaybackStopped;
+            wo.Play();
         }
-        catch(Exception )
+        catch(Exception e)
         {
             PlaybackError?.Invoke(this,  $"Невозможно воспроизвести: {_Url}");
         }
@@ -70,7 +73,9 @@ internal class AudioStreamFromUrl : IAudioStream
     public void SetVolume(byte volume)
     {
         if(_Stream is null) return;
-        _Stream.Volume = (float)volume / byte.MaxValue;
+        var value = (float)volume / 127;
+        Debug.WriteLine(value);
+        _Stream.Channel.Volume = value;
     }
 
     public string Source => _Url;
@@ -80,8 +85,8 @@ internal class AudioStreamFromUrl : IAudioStream
     {
         if (_Stream is not null)
         {
-            _Stream.PlaybackStopped -= WoOnPlaybackStopped;
-            _Stream.Stop();
+            _Stream.SoundOut.PlaybackStopped -= WoOnPlaybackStopped;
+            _Stream.SoundOut.Stop();
         }
 
         _Stream?.Dispose();
@@ -89,4 +94,14 @@ internal class AudioStreamFromUrl : IAudioStream
     }
 
     public bool Equals(IAudioStream other) => other is AudioStreamFromUrl stream && stream._Url.Equals(_Url);
+
+
+    private record WaveStream(DirectSoundOut SoundOut, WaveChannel32 Channel): IDisposable
+    {
+        public void Dispose()
+        {
+            SoundOut?.Dispose();
+            Channel?.Dispose();
+        }
+    }
 }

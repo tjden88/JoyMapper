@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
@@ -12,6 +13,7 @@ using JoyMapper.Views;
 using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using NAudio.Wave;
 using SharedServices;
 
 namespace JoyMapper;
@@ -31,6 +33,16 @@ public partial class App
         base.OnStartup(e);
         var wnd = Services.GetRequiredService<MainWindow>();
         wnd.Show();
+        for (int n = -1; n < WaveOut.DeviceCount; n++)
+        {
+            var caps = WaveOut.GetCapabilities(n);
+            Debug.WriteLine($"{n}: {caps.ProductName}, {caps.ManufacturerGuid}, {caps.NameGuid}");
+        }
+        foreach (var dev in DirectSoundOut.Devices)
+        {
+            Debug.WriteLine($"{dev.Guid} {dev.ModuleName} {dev.Description}");
+            var outputDevice = new DirectSoundOut(dev.Guid);
+        }
     }
 
 
