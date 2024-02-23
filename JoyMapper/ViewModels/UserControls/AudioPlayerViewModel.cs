@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using JoyMapper.Interfaces;
+using System.Windows.Media;
 using JoyMapper.Models.JoyBindings.Base;
-using JoyMapper.Models.Radio;
 using JoyMapper.Services;
 using JoyMapper.ViewModels.Windows;
+using WPR.ColorTheme;
 using WPR.Dialogs;
 using WPR.Domain.Models.Themes;
+using WPR.Icons;
 using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
@@ -17,22 +19,24 @@ namespace JoyMapper.ViewModels.UserControls;
 public class AudioPlayerViewModel : ViewModel
 {
     private readonly AppWindowsService _AppWindowsService;
+    private readonly AudioPlayerService _AudioPlayerService;
 
-    public AudioPlayerViewModel(AppWindowsService appWindowsService)
+    public AudioPlayerViewModel(AppWindowsService appWindowsService, AudioPlayerService audioPlayerService)
     {
         _AppWindowsService = appWindowsService;
+        _AudioPlayerService = audioPlayerService;
     }
 
 
     #region Props
 
-    #region AudioStreams : ObservableCollection<IAudioStream> - Потоки воспроизведения
+    #region AudioStreams : ObservableCollection<AudioSource> - Потоки воспроизведения
 
     /// <summary>Потоки воспроизведения</summary>
-    private ObservableCollection<IAudioStream> _AudioStreams = new();
+    private ObservableCollection<AudioSource> _AudioStreams = new();
 
     /// <summary>Потоки воспроизведения</summary>
-    public ObservableCollection<IAudioStream> AudioStreams
+    public ObservableCollection<AudioSource> AudioStreams
     {
         get => _AudioStreams;
         set => Set(ref _AudioStreams, value);
@@ -94,22 +98,28 @@ public class AudioPlayerViewModel : ViewModel
         if (string.IsNullOrWhiteSpace(streamUrl))
             return;
 
-        var stream = new AudioStreamFromUrl(streamUrl);
-        if (await stream.IsAvaliable())
+        var source = new AudioSource(streamUrl);
+
+        var isExist = _AudioStreams.Contains(source);
+        if (isExist)
         {
-            var isExist = _AudioStreams.Contains(stream);
-            if (isExist)
-            {
-                WPRDialogHelper.Bubble(App.ActiveWindow, "Источник уже существует", Background: StyleBrushes.DangerColorBrush);
-                return;
-            }
-            AudioStreams.Add(stream);
+            WPRDialogHelper.Bubble(App.ActiveWindow, "Источник уже существует", Background: StyleBrushes.DangerColorBrush);
+            return;
+        }
+
+        if (await _AudioPlayerService.CheckAvaliable(streamUrl))
+        {
+            source.IsAvaliable = true;
+            AudioStreams.Add(source);
         }
         else
             await WPRDialogHelper.ErrorAsync(App.ActiveWindow, "Источник недоступен");
     }
 
     #endregion
+
+
+    #region Classes
 
     public class ConfigButtonSetup : ViewModel
     {
@@ -141,4 +151,56 @@ public class AudioPlayerViewModel : ViewModel
 
     }
 
+    public class AudioSource : ViewModel, IEquatable<AudioSource>
+    {
+
+        public AudioSource(string source) => _Source = source;
+
+
+        #region Source : string - Источник
+
+        /// <summary>Источник</summary>
+        private string _Source;
+
+        /// <summary>Источник</summary>
+        public string Source
+        {
+            get => _Source;
+            set => Set(ref _Source, value);
+        }
+
+        #endregion
+
+        #region IsAvaliable : bool? - Доступность
+
+        /// <summary>Доступность</summary>
+        private bool? _IsAvaliable;
+
+
+        /// <summary>Доступность</summary>
+        public bool? IsAvaliable
+        {
+            get => _IsAvaliable;
+            set => IfSet(ref _IsAvaliable, value)
+                .CallPropertyChanged(nameof(Status));
+        }
+
+        #endregion
+
+        /// <summary> Описание статуса доступности </summary>
+        public AudioSourceStatus Status => IsAvaliable switch
+        {
+            false => new(PackIconKind.Error, StyleHelper.GetBrushFromResource(StyleBrushes.DangerColorBrush),
+                "Источник недоступен"),
+            true => new(PackIconKind.CheckBold, StyleHelper.GetBrushFromResource(StyleBrushes.SuccessColorBrush),
+                "Доступен"),
+            null => new(PackIconKind.CloudQuestionOutline, StyleHelper.GetBrushFromResource(StyleBrushes.SecondaryColorBrush), "Доступность источника не проверена")
+        };
+
+        public bool Equals(AudioSource other) => other != null && _Source.Equals(other.Source);
+    }
+
+    public record AudioSourceStatus(PackIconKind Icon, Brush Foreground, string Description);
+
+    #endregion
 }

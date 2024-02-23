@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using WPR.Icons;
 
 namespace JoyMapper.Interfaces;
 
@@ -37,6 +36,4 @@ public interface IAudioStream : IDisposable, IEquatable<IAudioStream>
     /// Адрес источника
     /// </summary>
     string Source { get; }
-
-    PackIconKind Icon { get; }
 }

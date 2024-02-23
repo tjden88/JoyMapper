@@ -8,7 +8,7 @@ using JoyMapper.Models.Radio;
 
 namespace JoyMapper.Services;
 
-internal class AudioPlayerService
+public class AudioPlayerService
 {
     public event EventHandler<bool> IsPlayingChanged;
 

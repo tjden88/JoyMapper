@@ -75,7 +75,6 @@ internal class AudioStreamFromUrl : IAudioStream
 
     public string Source => _Url;
 
-    public PackIconKind Icon => PackIconKind.Internet;
 
     public void Dispose()
     {

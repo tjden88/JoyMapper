@@ -64,9 +64,10 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <controls:WPRIconText Text="{Binding Source}"
-                                                      IconSource="{Binding Icon}"
+                                                      IconSource="{Binding Status.Icon}"
                                                       Margin="5"
-                                                      IconForeground="{DynamicResource AccentColorBrush}"></controls:WPRIconText>
+                                                      IconForeground="{Binding Status.Foreground}"
+                                                      ToolTip="{Binding Status.Description}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
