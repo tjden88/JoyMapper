@@ -12,13 +12,13 @@
                DockPanel.Dock="Top"
                BorderThickness="1"
                BorderBrush="{DynamicResource DarkPrimaryColorBrush}"
-               Background="{DynamicResource SecondaryBackgroundColorBrush}">
+               Background="{DynamicResource SecondaryColorBrush}">
             <TextBlock Text="{Binding CurrentRadioDescription, TargetNullValue=Не воспроизводится}"
                        HorizontalAlignment="Center"
                        TextWrapping="NoWrap"
                        TextTrimming="CharacterEllipsis"
                        Margin="10"
-                       Foreground="{DynamicResource AccentColorBrush}"/>
+                       Foreground="{DynamicResource BackgroundColorBrush}"/>
         </Border>
        <Grid>
            <Grid.ColumnDefinitions>

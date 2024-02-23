@@ -8,6 +8,8 @@ namespace JoyMapper.Models.JoyBindings;
 /// </summary>
 public class AxisJoyBinding : JoyBindingBase
 {
+    public event EventHandler<int> CurrentValueChanged;
+    
     public enum Axises
     {
         X,
@@ -88,7 +90,7 @@ public class AxisJoyBinding : JoyBindingBase
     public int CurrentValue
     {
         get => _CurrentValue;
-        private set => Set(ref _CurrentValue, value);
+        private set => IfSet(ref _CurrentValue, value).Then(v => CurrentValueChanged?.Invoke(this, v));
     }
 
     #endregion
