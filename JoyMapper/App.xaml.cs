@@ -23,15 +23,13 @@ public partial class App
 {
 
     /// <summary> Активное окно </summary>
-    internal static Window ActiveWindow => Current.Windows.Cast<Window>().First(w => w.IsActive);
+    internal static Window ActiveWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsActive);
 
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         var wnd = Services.GetRequiredService<MainWindow>();
-        //StyleHelper.SetDarkColorTheme();
-        //StyleHelper.SetLightColorTheme();
         wnd.Show();
     }
 

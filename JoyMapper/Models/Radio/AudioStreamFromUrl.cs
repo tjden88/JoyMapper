@@ -29,6 +29,7 @@ internal class AudioStreamFromUrl : IAudioStream
         try
         {
             using var http = new HttpClient();
+            http.Timeout = TimeSpan.FromSeconds(5);
             var response = await http.SendAsync(new HttpRequestMessage(HttpMethod.Head, _Url));
             return response.IsSuccessStatusCode;
         }

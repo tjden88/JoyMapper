@@ -56,6 +56,14 @@
                                 <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource DangerColorBrush}"/>
                             </Button.Content>
                         </Button>
+                        <Separator/>
+
+                        <Button ToolTip="Проверить доступность источников радио"
+                                Command="{Binding RefreshSourcesCommand}">
+                            <Button.Content>
+                                <controls:WPRIconText IconSource="Refresh" IconForeground="{DynamicResource SuccessColorBrush}" Text="{Binding RefreshSourcesCommand.Text}"/>
+                            </Button.Content>
+                        </Button>
                     </ToolBar>
                     <ListBox ItemsSource="{Binding AudioStreams}"
                              Margin="10,0"

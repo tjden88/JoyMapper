@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -56,6 +57,9 @@ public class AudioPlayerViewModel : ViewModel
     #endregion
 
 
+    #region Commands
+
+
     #region Command SetBindingCommand : ConfigButtonSetup - Установить привязку кнопки
 
     /// <summary>Установить привязку кнопки</summary>
@@ -94,7 +98,7 @@ public class AudioPlayerViewModel : ViewModel
     /// <summary>Логика выполнения - Добавить источник аудио</summary>
     private async Task OnAddStreamSourceCommandCommandExecutedAsync(CancellationToken cancel)
     {
-        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите источник аудиопотока", "Локальный путь или URL-адрес аудиопотока");
+        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите адрес источника аудиопотока", "Локальный путь или URL-адрес аудиопотока");
         if (string.IsNullOrWhiteSpace(streamUrl))
             return;
 
@@ -115,6 +119,33 @@ public class AudioPlayerViewModel : ViewModel
         else
             await WPRDialogHelper.ErrorAsync(App.ActiveWindow, "Источник недоступен");
     }
+
+    #endregion
+
+
+    #region AsyncCommand RefreshSourcesCommand - Обновить статус источников аудио
+
+    /// <summary>Обновить статус источников аудио</summary>
+    private AsyncCommand _RefreshSourcesCommand;
+
+    /// <summary>Обновить статус источников аудио</summary>
+    public AsyncCommand RefreshSourcesCommand => _RefreshSourcesCommand
+        ??= new AsyncCommand(OnRefreshSourcesCommandExecutedAsync, CanRefreshSourcesCommandExecute, "Проверить");
+
+    /// <summary>Проверка возможности выполнения - Обновить статус источников аудио</summary>
+    private bool CanRefreshSourcesCommandExecute() => _AudioStreams.Any();
+
+    /// <summary>Логика выполнения - Обновить статус источников аудио</summary>
+    private async Task OnRefreshSourcesCommandExecutedAsync(CancellationToken cancel)
+    {
+        RefreshSourcesCommand.Text = "Проверяется...";
+        foreach (var source in _AudioStreams)
+            source.IsAvaliable = await _AudioPlayerService.CheckAvaliable(source.Source).ConfigureAwait(false);
+
+        RefreshSourcesCommand.Text = $"Проверено в {DateTime.Now.ToShortTimeString()}";
+    }
+
+    #endregion
 
     #endregion
 
