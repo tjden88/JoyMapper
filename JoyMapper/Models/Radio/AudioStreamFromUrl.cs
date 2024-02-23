@@ -70,7 +70,7 @@ internal class AudioStreamFromUrl : IAudioStream
     public void SetVolume(byte volume)
     {
         if(_Stream is null) return;
-        _Stream.Volume = (float)(volume / 255.0);
+        _Stream.Volume = (float)volume / byte.MaxValue;
     }
 
     public string Source => _Url;
