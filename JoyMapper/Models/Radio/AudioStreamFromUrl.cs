@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JoyMapper.Interfaces;
 using NAudio.Wave;
-using WPR.Icons;
 
 namespace JoyMapper.Models.Radio;
 

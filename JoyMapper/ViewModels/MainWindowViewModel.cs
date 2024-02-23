@@ -18,14 +18,16 @@ namespace JoyMapper.ViewModels;
 public partial class MainWindowViewModel : WindowViewModel
 {
     public AudioPlayerViewModel AudioPlayerViewModel { get; }
+    public AudioPlayerControls AudioPlayerControls { get; }
     private readonly DataManager _DataManager;
     private readonly AppUpdateService _AppUpdateService;
     private readonly IProfileListener _ProfileListener;
     private readonly AppWindowsService _AppWindowsService;
 
-    public MainWindowViewModel(DataManager DataManager, AppUpdateService AppUpdateService , IProfileListener ProfileListener, AppWindowsService AppWindowsService, AudioPlayerViewModel audioPlayerViewModel)
+    public MainWindowViewModel(DataManager DataManager, AppUpdateService AppUpdateService , IProfileListener ProfileListener, AppWindowsService AppWindowsService, AudioPlayerViewModel audioPlayerViewModel, AudioPlayerControls audioPlayerControls)
     {
         AudioPlayerViewModel = audioPlayerViewModel;
+        AudioPlayerControls = audioPlayerControls;
         _DataManager = DataManager;
         _AppUpdateService = AppUpdateService;
         _ProfileListener = ProfileListener;

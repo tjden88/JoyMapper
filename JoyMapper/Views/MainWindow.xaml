@@ -208,6 +208,8 @@
 
             </TabItem>
 
+            <TabItem Header="Radio" Content="{Binding AudioPlayerControls}"></TabItem>
+
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
