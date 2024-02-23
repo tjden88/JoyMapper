@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:models="clr-namespace:JoyMapper.Models"
-                    xmlns:views="clr-namespace:JoyMapper.Views">
+                    xmlns:views="clr-namespace:JoyMapper.Views"
+                    xmlns:userControls="clr-namespace:JoyMapper.Views.UserControls">
 
     <!--Индикатор запущенного профиля-->
     <Border x:Key="ActiveProfileView" Background="{DynamicResource LightPrimaryColorBrush}"
@@ -10,6 +11,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" >
@@ -38,7 +40,10 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Button Grid.Row="2" HorizontalAlignment="Center" Content="Лог команд клавиатуры"
+            <Border Grid.Row="2" MaxWidth="400" Margin="10" Visibility="{Binding IsRadioControlsShow, Converter={StaticResource Bool2VisibilityConverter}}">
+                <userControls:AudioPlayerControls DataContext="{Binding AudioPlayerControlsViewModel}"/>
+            </Border>
+            <Button Grid.Row="3" HorizontalAlignment="Center" Content="Лог команд клавиатуры"
                         Command="{Binding ShowKeyboardLogCommand}"
                         Style="{StaticResource WPRFlatButton}"/>
         </Grid>

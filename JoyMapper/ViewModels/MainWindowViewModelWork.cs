@@ -10,6 +10,14 @@ namespace JoyMapper.ViewModels;
 
 public partial class MainWindowViewModel
 {
+    #region IsRadioControlsShow : bool - Показать управление радио
+
+    /// <summary>Показать управление радио</summary>
+    public bool IsRadioControlsShow => _DataManager.RadioSettings.IsEnabled;
+
+    #endregion
+
+    
 
     #region LogMessages : ObservableCollection<LogMessage> - Лог запущенного профиля
 
@@ -66,7 +74,9 @@ public partial class MainWindowViewModel
     {
         Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, () => LogMessages.Clear());
         var profile = (Profile)p;
-        ActiveProfile = profile; 
+        ActiveProfile = profile;
+        OnPropertyChanged(nameof(IsRadioControlsShow));
+        if (IsRadioControlsShow) AudioPlayerControlsViewModel.StartService();
         _ProfileListener.StartListenProfile(profile);
     }
 
@@ -90,6 +100,7 @@ public partial class MainWindowViewModel
     {
         ActiveProfile = null;
         _ProfileListener.StopListenProfile();
+        AudioPlayerControlsViewModel.StopService();
     }
 
     #endregion

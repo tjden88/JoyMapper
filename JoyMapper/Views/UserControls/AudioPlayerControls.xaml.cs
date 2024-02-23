@@ -1,18 +1,11 @@
-﻿using JoyMapper.ViewModels.UserControls;
-
-namespace JoyMapper.Views.UserControls;
+﻿namespace JoyMapper.Views.UserControls;
 
 
 public partial class AudioPlayerControls
 {
-    public AudioPlayerControlsViewModel ViewModel { get; }
 
-    public AudioPlayerControls(AudioPlayerControlsViewModel viewModel)
+    public AudioPlayerControls()
     {
-        ViewModel = viewModel;
         InitializeComponent();
     }
-
-
-   
 }

@@ -217,6 +217,8 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
     /// </summary>
     public void StopService()
     {
+        _AudioPlayerService.Stop();
+
         if (_DataManager.RadioSettings.VolumeBinding is AxisJoyBinding volBinding)
         {
             volBinding.CurrentValueChanged -= VolBindingOnCurrentValueChanged;

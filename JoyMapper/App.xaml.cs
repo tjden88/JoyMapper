@@ -66,7 +66,6 @@ public partial class App
             .AddTransient<UpdateWindow>()
             .AddTransient<UpdateWindow.UpdateWindowViewModel>()
             .AddTransient<JoyBindingView>()
-            .AddTransient<AudioPlayerControls>()
             .AddTransient<AudioPlayerControlsViewModel>()
             .AddTransient<JoyBindingViewModel>()
             .AddTransient<KeyCommandsWatcher.KeyCommandsWatcherViewModel>()

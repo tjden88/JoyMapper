@@ -208,12 +208,6 @@
 
             </TabItem>
 
-            <TabItem Header="Radio">
-                <TabItem.Content>
-                    <ContentControl VerticalAlignment="Center" Content="{Binding AudioPlayerControls}"></ContentControl>
-                </TabItem.Content>
-            </TabItem>
-
         </TabControl>
 
         <!--Индикатор запущенного профиля-->
