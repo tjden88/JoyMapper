@@ -8,79 +8,98 @@
              xmlns:controls="clr-namespace:WPR.Controls;assembly=WPR"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance userControls:AudioPlayerViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="850" d:DesignWidth="800">
     <controls:WPRCard>
         <DockPanel Margin="10">
-            <GroupBox Header="Конфигурация управления" DockPanel.Dock="Top">
-                <ItemsControl ItemsSource="{Binding ButtonsConfigs}" d:ItemsSource="{d:SampleData}" Grid.IsSharedSizeScope="True">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="10,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="capt"/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="btn"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Name, StringFormat={}{0}:}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding BindingBase, TargetNullValue='Не назначено'}" FontWeight="Bold"></TextBlock>
-                                <Button Grid.Column="2" 
-                                    Style="{StaticResource WPRFlatButton}" BorderThickness="1"
-                                    Content="{Binding ButtonCaption}" 
-                                    Command="{Binding DataContext.SetBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
-                                    CommandParameter="{Binding}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </GroupBox>
+            <ToggleButton DockPanel.Dock="Top" 
+                          IsChecked="{Binding IsEnabled}"
+                          Style="{StaticResource WPRSwitchToggleButton}" 
+                          Margin="0,0,0,10" Content="Включить потоковое радио"/>
 
-            <GroupBox Header="Источники радио">
+            <DockPanel DockPanel.Dock="Top" Visibility="{Binding IsEnabled, Converter={StaticResource Bool2VisibilityConverter}, ConverterParameter=!}">
+                <controls:WPRIcon Source="InfoCircleOutline" VerticalAlignment="Top" Margin="10,0,5,0" Foreground="{DynamicResource AccentColorBrush}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Foreground="{DynamicResource SecondaryColorBrush}">
+                    <TextBlock.Text>
+                        Возможность прослушивать интернет-радиостанции во время игры.
+                        Управление воспроизведением и громкостью назначается на контроллеры.
+                    </TextBlock.Text>
+                </TextBlock>
+            </DockPanel>
 
-                <DockPanel>
-                    <ToolBar DockPanel.Dock="Top" Margin="5">
-                        <Button Command="{Binding AddStreamSourceCommand}"
-                   ToolTip="Добавить новый источник потокового радио">
-                            <Button.Content>
-                                <controls:WPRIconText Text="Добавить" IconSource="Add"/>
-                            </Button.Content>
-                        </Button>
-                        <Button Command="{Binding EditProfileCommand}"
-                       ToolTip="{Binding EditProfileCommand}">
-                            <Button.Content>
-                                <controls:WPRIcon Source="EditOutline"/>
-                            </Button.Content>
-                        </Button>
-                        <Button Command="{Binding DeleteProfileCommand}"
-                       ToolTip="{Binding DeleteProfileCommand}">
-                            <Button.Content>
-                                <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource DangerColorBrush}"/>
-                            </Button.Content>
-                        </Button>
-                        <Separator/>
 
-                        <Button ToolTip="Проверить доступность источников радио"
-                                Command="{Binding RefreshSourcesCommand}">
-                            <Button.Content>
-                                <controls:WPRIconText IconSource="Refresh" IconForeground="{DynamicResource SuccessColorBrush}" Text="{Binding RefreshSourcesCommand.Text}"/>
-                            </Button.Content>
-                        </Button>
-                    </ToolBar>
-                    <ListBox ItemsSource="{Binding AudioStreams}"
-                             Margin="10,0"
-                             d:ItemsSource="{d:SampleData}">
-
-                        <ListBox.ItemTemplate>
+            <DockPanel Visibility="{Binding IsEnabled, Converter={StaticResource Bool2VisibilityConverter}}">
+                <GroupBox Header="Конфигурация управления" DockPanel.Dock="Top">
+                    <ItemsControl ItemsSource="{Binding ButtonsConfigs}" d:ItemsSource="{d:SampleData}" Grid.IsSharedSizeScope="True">
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <controls:WPRIconText Text="{Binding Source}"
-                                                      IconSource="{Binding Status.Icon}"
-                                                      Margin="5"
-                                                      IconForeground="{Binding Status.Foreground}"
-                                                      ToolTip="{Binding Status.Description}"/>
+                                <Grid Margin="10,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="capt"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="btn"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name, StringFormat={}{0}:}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding BindingBase, TargetNullValue='Не назначено'}" FontWeight="Bold"></TextBlock>
+                                    <Button Grid.Column="2" 
+                        Style="{StaticResource WPRFlatButton}" BorderThickness="1"
+                        Content="{Binding ButtonCaption}" 
+                        Command="{Binding DataContext.SetBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
+                        CommandParameter="{Binding}"/>
+                                </Grid>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
-            </GroupBox>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </GroupBox>
+
+                <GroupBox Header="Источники радио" Margin="0,10,0,0">
+
+                    <DockPanel>
+                        <ToolBar DockPanel.Dock="Top" Margin="5">
+                            <Button Command="{Binding AddStreamSourceCommand}"
+       ToolTip="Добавить новый источник потокового радио">
+                                <Button.Content>
+                                    <controls:WPRIconText Text="Добавить" IconSource="Add"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding EditSourceCommand}"
+                                    CommandParameter="{Binding}"
+           ToolTip="{Binding EditSourceCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="EditOutline"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding DeleteSourceCommand}"
+           ToolTip="{Binding DeleteSourceCommand}">
+                                <Button.Content>
+                                    <controls:WPRIcon Source="DeleteOutline" Foreground="{DynamicResource DangerColorBrush}"/>
+                                </Button.Content>
+                            </Button>
+                            <Separator/>
+
+                            <Button ToolTip="Проверить доступность источников радио"
+                    Command="{Binding RefreshSourcesCommand}">
+                                <Button.Content>
+                                    <controls:WPRIconText IconSource="Refresh" IconForeground="{DynamicResource SuccessColorBrush}" Text="{Binding RefreshSourcesCommand.Text}"/>
+                                </Button.Content>
+                            </Button>
+                        </ToolBar>
+                        <ListBox ItemsSource="{Binding AudioStreams}"
+                                 SelectedItem="{Binding SelectedSource}"
+                                 Margin="10,0" d:ItemsSource="{d:SampleData}">
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:WPRIconText Text="{Binding Source}"
+                                          IconSource="{Binding Status.Icon}"
+                                          Margin="5"
+                                          IconForeground="{Binding Status.Foreground}"
+                                          ToolTip="{Binding Status.Description}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </GroupBox>
+            </DockPanel>
         </DockPanel>
     </controls:WPRCard>
 </UserControl>

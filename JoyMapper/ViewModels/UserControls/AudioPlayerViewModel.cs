@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
+using JoyMapper.Services.Data;
 using JoyMapper.ViewModels.Windows;
 using WPR.ColorTheme;
 using WPR.Dialogs;
@@ -21,23 +22,26 @@ public class AudioPlayerViewModel : ViewModel
 {
     private readonly AppWindowsService _AppWindowsService;
     private readonly AudioPlayerService _AudioPlayerService;
+    private readonly DataManager _DataManager;
 
-    public AudioPlayerViewModel(AppWindowsService appWindowsService, AudioPlayerService audioPlayerService)
+    public AudioPlayerViewModel(AppWindowsService appWindowsService, AudioPlayerService audioPlayerService, DataManager dataManager)
     {
         _AppWindowsService = appWindowsService;
         _AudioPlayerService = audioPlayerService;
+        _DataManager = dataManager;
+        LoadData();
     }
 
 
     #region Props
 
-    #region AudioStreams : ObservableCollection<AudioSource> - Потоки воспроизведения
+    #region AudioStreams : ObservableCollection<AudioSourceViewModel> - Потоки воспроизведения
 
     /// <summary>Потоки воспроизведения</summary>
-    private ObservableCollection<AudioSource> _AudioStreams = new();
+    private ObservableCollection<AudioSourceViewModel> _AudioStreams = new();
 
     /// <summary>Потоки воспроизведения</summary>
-    public ObservableCollection<AudioSource> AudioStreams
+    public ObservableCollection<AudioSourceViewModel> AudioStreams
     {
         get => _AudioStreams;
         set => Set(ref _AudioStreams, value);
@@ -46,13 +50,42 @@ public class AudioPlayerViewModel : ViewModel
     #endregion
 
 
-    public IEnumerable<ConfigButtonSetup> ButtonsConfigs { get; } = new List<ConfigButtonSetup>
+    #region SelectedSource : AudioSourceViewModel - Выбранный источник
+
+    /// <summary>Выбранный источник</summary>
+    private AudioSourceViewModel _SelectedSource;
+
+    /// <summary>Выбранный источник</summary>
+    public AudioSourceViewModel SelectedSource
     {
-        new("Старт/Стоп воспроизведения", false),
-        new("Следующая радиостанция", false),
-        new("Предыдущая радиостанция", false),
-        new("Ось регулировки громкости", true),
-    };
+        get => _SelectedSource;
+        set => Set(ref _SelectedSource, value);
+    }
+
+    #endregion
+
+
+    #region IsEnabled : bool - Радио включено
+
+    /// <summary>Радио включено</summary>
+    private bool _IsEnabled;
+
+    /// <summary>Радио включено</summary>
+    public bool IsEnabled
+    {
+        get => _IsEnabled;
+        set => IfSet(ref _IsEnabled, value).Then(b =>
+        {
+            _DataManager.RadioSettings.IsEnabled = b;
+            _DataManager.SaveData();
+        });
+    }
+
+    #endregion
+
+
+    /// <summary> Конфигурации управления радио </summary>
+    public IEnumerable<ConfigButtonSetup> ButtonsConfigs { get; private set; }
 
     #endregion
 
@@ -78,6 +111,8 @@ public class AudioPlayerViewModel : ViewModel
         var bind = _AppWindowsService.GetJoyBinding(p.IsAxis ? AddJoyBindingViewModel.BindingFilters.Axes : AddJoyBindingViewModel.BindingFilters.Buttons);
         if (bind is null) return;
         p.BindingBase = bind;
+        p.WriteBindingToRadioSettings?.Invoke(bind);
+        _DataManager.SaveData();
     }
 
     #endregion
@@ -98,26 +133,65 @@ public class AudioPlayerViewModel : ViewModel
     /// <summary>Логика выполнения - Добавить источник аудио</summary>
     private async Task OnAddStreamSourceCommandCommandExecutedAsync(CancellationToken cancel)
     {
-        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите адрес источника аудиопотока", "Локальный путь или URL-адрес аудиопотока");
-        if (string.IsNullOrWhiteSpace(streamUrl))
-            return;
+        var source = await AddOrEditSource();
+        if (source is null) return;
+        AudioStreams.Add(source);
+        _DataManager.RadioSettings.Sources.Add(source.Source);
+        _DataManager.SaveData();
+    }
 
-        var source = new AudioSource(streamUrl);
+    #endregion
 
-        var isExist = _AudioStreams.Contains(source);
-        if (isExist)
-        {
-            WPRDialogHelper.Bubble(App.ActiveWindow, "Источник уже существует", Background: StyleBrushes.DangerColorBrush);
-            return;
-        }
 
-        if (await _AudioPlayerService.CheckAvaliable(streamUrl))
-        {
-            source.IsAvaliable = true;
-            AudioStreams.Add(source);
-        }
-        else
-            await WPRDialogHelper.ErrorAsync(App.ActiveWindow, "Источник недоступен");
+    #region AsyncCommand EditSourceCommand - Редактировать источник
+
+    /// <summary>Редактировать источник</summary>
+    private AsyncCommand _EditSourceCommand;
+
+    /// <summary>Редактировать источник</summary>
+    public AsyncCommand EditSourceCommand => _EditSourceCommand
+        ??= new AsyncCommand(OnEditSourceCommandExecutedAsync, CanEditSourceCommandExecute, "Редактировать источник");
+
+    /// <summary>Проверка возможности выполнения - Редактировать источник</summary>
+    private bool CanEditSourceCommandExecute() => SelectedSource != null;
+
+    /// <summary>Логика выполнения - Редактировать источник</summary>
+    private async Task OnEditSourceCommandExecutedAsync(CancellationToken cancel)
+    {
+        var originSource = SelectedSource;
+        var source = await AddOrEditSource(originSource.Source);
+        if (source is null) return;
+        AudioStreams.Add(source);
+        _DataManager.RadioSettings.Sources.Add(source.Source);
+        _DataManager.SaveData();
+    }
+
+    #endregion
+
+
+    #region AsyncCommand DeleteSourceCommand - Удалить источнник
+
+    /// <summary>Удалить источнник</summary>
+    private AsyncCommand _DeleteSourceCommand;
+
+    /// <summary>Удалить источнник</summary>
+    public AsyncCommand DeleteSourceCommand => _DeleteSourceCommand
+        ??= new AsyncCommand(OnDeleteSourceCommandExecutedAsync, CanDeleteSourceCommandExecute, "Удалить источнник");
+
+    /// <summary>Проверка возможности выполнения - Удалить источнник</summary>
+    private bool CanDeleteSourceCommandExecute() => SelectedSource != null;
+
+    /// <summary>Логика выполнения - Удалить источнник</summary>
+    private async Task OnDeleteSourceCommandExecutedAsync(CancellationToken cancel)
+    {
+        var src = SelectedSource;
+
+        var question = await WPRDialogHelper.QuestionAsync(App.ActiveWindow, $"Удалить источник {src.Source}?");
+        if(!question) return;
+
+        AudioStreams.Remove(src);
+        _DataManager.RadioSettings.Sources.Remove(src.Source);
+        _DataManager.SaveData();
     }
 
     #endregion
@@ -150,12 +224,54 @@ public class AudioPlayerViewModel : ViewModel
     #endregion
 
 
+
+    private void LoadData()
+    {
+        var radioSettings = _DataManager.RadioSettings;
+        _IsEnabled = radioSettings.IsEnabled;
+        ButtonsConfigs = new List<ConfigButtonSetup>
+        {
+            new("Старт/Стоп воспроизведения", false) {BindingBase = radioSettings.PlayStopBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.PlayStopBinding = b },
+            new("Следующая радиостанция", false) {BindingBase = radioSettings.NextBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.NextBinding = b },
+            new("Предыдущая радиостанция", false) { BindingBase = radioSettings.PreviousBinding , WriteBindingToRadioSettings = b => _DataManager.RadioSettings.PreviousBinding = b },
+            new("Ось регулировки громкости", true) {BindingBase = radioSettings.VolumeBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.VolumeBinding = b },
+        };
+        AudioStreams = new(radioSettings.Sources.Select(s => new AudioSourceViewModel(s)));
+    }
+
+    private async Task<AudioSourceViewModel> AddOrEditSource(string defaultSource = null)
+    {
+        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите адрес источника аудиопотока", "Локальный путь или URL-адрес аудиопотока", defaultSource);
+        if (string.IsNullOrWhiteSpace(streamUrl) || Equals(streamUrl, defaultSource))
+            return null;
+
+        var source = new AudioSourceViewModel(streamUrl);
+
+        var isExist = _AudioStreams.Where(s => !Equals(s.Source, defaultSource)).Contains(source);
+        if (isExist)
+        {
+            WPRDialogHelper.Bubble(App.ActiveWindow, "Источник уже существует", Background: StyleBrushes.DangerColorBrush);
+            return null;
+        }
+
+        if (!await _AudioPlayerService.CheckAvaliable(streamUrl))
+        {
+            await WPRDialogHelper.ErrorAsync(App.ActiveWindow, "Источник недоступен");
+            return null;
+        }
+        source.IsAvaliable = true;
+        return source;
+    }
+
+
     #region Classes
 
     public class ConfigButtonSetup : ViewModel
     {
         public string Name { get; }
         public bool IsAxis { get; }
+
+        public Action<JoyBindingBase> WriteBindingToRadioSettings { get; init; }
 
         public ConfigButtonSetup(string Name, bool IsAxis)
         {
@@ -182,10 +298,10 @@ public class AudioPlayerViewModel : ViewModel
 
     }
 
-    public class AudioSource : ViewModel, IEquatable<AudioSource>
+    public class AudioSourceViewModel : ViewModel, IEquatable<AudioSourceViewModel>
     {
 
-        public AudioSource(string source) => _Source = source;
+        public AudioSourceViewModel(string source) => _Source = source;
 
 
         #region Source : string - Источник
@@ -228,7 +344,7 @@ public class AudioPlayerViewModel : ViewModel
             null => new(PackIconKind.CloudQuestionOutline, StyleHelper.GetBrushFromResource(StyleBrushes.SecondaryColorBrush), "Доступность источника не проверена")
         };
 
-        public bool Equals(AudioSource other) => other != null && _Source.Equals(other.Source);
+        public bool Equals(AudioSourceViewModel other) => other != null && _Source.Equals(other.Source);
     }
 
     public record AudioSourceStatus(PackIconKind Icon, Brush Foreground, string Description);

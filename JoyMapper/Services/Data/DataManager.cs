@@ -33,6 +33,8 @@ public class DataManager
 
     public AppSettings AppSettings => ProfilesData.AppSettings;
 
+    public RadioSettings RadioSettings => ProfilesData.RadioSettings;
+
     public DataManager(JoyPatternManager JoyPatternManager, ProfilesManager ProfilesManager, ModificatorManager ModificatorManager, DataSerializer DataSerializer, AppUpdateService AppUpdateService)
     {
         _JoyPatternManager = JoyPatternManager;
@@ -290,6 +292,8 @@ public class DataManager
     public class Data
     {
         public AppSettings AppSettings { get; set; } = new();
+
+        public RadioSettings RadioSettings { get; set; } = new();
 
         public List<Profile> Profiles { get; set; } = new();
 
