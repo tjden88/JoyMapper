@@ -37,6 +37,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                     if (joy is null)
                     {
                         _Joysticks.Add(new ConnentedJoystick(joystickName) { IsFault = true });
+                        Debug.WriteLine($"Джойстиков прослушивается: {_Joysticks.Count}");
                         AppLog.LogMessage($"Устройство {joystickName} не найдено!", LogMessage.MessageType.Error);
                     }
 
@@ -50,6 +51,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 {
                     joy = new(joystickName) { Joystick = newJoystick };
                     _Joysticks.Add(joy);
+                    Debug.WriteLine($"Джойстиков прослушивается: {_Joysticks.Count}");
                 }
                 else // Заменить
                 {
@@ -86,7 +88,10 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
     public void Dispose()
     {
         foreach (var joystick in _Joysticks)
-            joystick.Joystick.Dispose();
+        {
+            joystick.Joystick?.Unacquire();
+            joystick.Joystick?.Dispose();
+        }
 
         _Joysticks.Clear();
     }

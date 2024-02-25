@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.Listeners;
@@ -51,7 +52,7 @@ public class JoyPatternListener : IJoyPatternListener
         {
             var bb = (JoyBindingWithAction)joyBindingBase;
             //bb.ActionBase.BindingStateChanged(bb.IsActive);
-            _ActionWorker.Add(bb.ActionBase);
+            _ActionWorker.Add(bb.ActionBase, bb.IsActive);
         }
     }
 
@@ -84,11 +85,30 @@ public class JoyPatternListener : IJoyPatternListener
 
     private class ActionWorker
     {
-        private readonly ConcurrentQueue<PatternActionBase> _Queue = new();
+        private readonly ConcurrentQueue<(PatternActionBase, bool)> _Queue = new();
 
-        public void Add(PatternActionBase action)
+        private bool _TaskRunning;
+
+        public async void Add(PatternActionBase action, bool newState)
         {
-            _Queue.Enqueue(action);
+            _Queue.Enqueue((action, newState));
+
+            if(!_TaskRunning)
+                await DoActions().ConfigureAwait(false);
+        }
+
+        private Task DoActions()
+        {
+            return Task.Run(() =>
+            {
+                _TaskRunning = true;
+                while (!_Queue.IsEmpty)
+                {
+                    if (_Queue.TryDequeue(out var actionBase))
+                        actionBase.Item1.BindingStateChanged(actionBase.Item2);
+                }
+                _TaskRunning = false;
+            });
         }
     }
 }

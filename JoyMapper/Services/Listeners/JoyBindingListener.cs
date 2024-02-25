@@ -169,15 +169,11 @@ public class JoyBindingListener : IJoyBindingListener
     {
         while (!cancel.IsCancellationRequested)
         {
-            var timer = Stopwatch.StartNew();
             var changes = GetChanges();
-            if (changes.Any())
-            {
+            if (changes.Any()) 
                 ChangesHandled?.Invoke(changes);
-                Debug.WriteLine($"{timer.ElapsedMilliseconds}, {changes.First().IsActive}");
-            }
             
-            await Task.Delay(2, cancel);
+            await Task.Delay(_PollingDelay, cancel);
         }
         _Bindings.Clear();
         _Modificators.Clear();

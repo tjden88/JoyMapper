@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using JoyMapper.Services;
@@ -13,7 +12,6 @@ using JoyMapper.Views;
 using JoyMapper.Views.UserControls;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using NAudio.Wave;
 using SharedServices;
 
 namespace JoyMapper;
