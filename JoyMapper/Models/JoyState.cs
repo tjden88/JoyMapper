@@ -19,14 +19,14 @@ public class JoyState
 
 
     /// <summary> Состояние кнопок джойстика </summary>
-    public bool[] Buttons { get; set; }
+    public bool[] Buttons { get; set; } = new bool[128];
 
     /// <summary> Значение указателя вида 1 </summary>
-    public int Pow1Value { get; set; }
+    public int Pow1Value { get; set; } = -1;
 
     /// <summary> Значение указателя вида 2 </summary>
-    public int Pow2Value { get; set; }
+    public int Pow2Value { get; set; } = -1;
 
     /// <summary> Состояние осей джойстика </summary>
-    public AxisState AxisValues { get; set; }
+    public AxisState AxisValues { get; set; } = new();
 }

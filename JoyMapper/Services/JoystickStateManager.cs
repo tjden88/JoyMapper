@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using JoyMapper.Helpers;
 using JoyMapper.Models;
 using JoyMapper.Services.Interfaces;
 using SharpDX.DirectInput;
@@ -54,20 +53,25 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 }
                 else // Заменить
                 {
+                    joy.Joystick?.Unacquire();
                     joy.Joystick?.Dispose();
                     joy.Joystick = newJoystick;
                 }
-                joy.Joystick.Acquire();
+
+                newJoystick.Properties.BufferSize = 128;
+                newJoystick.Acquire();
             }
 
 
-            if (joy.IsFault) AppLog.LogMessage($"Устройство восстановлено - {joystickName}");
+            if (joy.IsFault) 
+                AppLog.LogMessage($"Устройство восстановлено - {joystickName}");
             joy.IsFault = false;
 
 
             // Джойстик есть в списке
-            var joyState = joy.Joystick.GetCurrentState();
-            return joyState.ToModel();
+
+            return joy.JoyState;
+
         }
         catch (Exception e)
         {
@@ -99,5 +103,27 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         public string JoyName { get; }
 
         public Joystick Joystick { get; set; }
+
+
+        private JoyState _JoyState;
+
+        public JoyState JoyState => _JoyState ??= UpdateState();
+
+        private JoyState UpdateState()
+        {
+            if (Joystick is null)
+                return null;
+
+            Joystick.Poll();
+            var datas = Joystick.GetBufferedData();
+            var newState = _JoyState ?? new JoyState();
+
+            foreach (var state in datas)
+            {
+
+            }
+
+            return newState;
+        }
     }
 }
