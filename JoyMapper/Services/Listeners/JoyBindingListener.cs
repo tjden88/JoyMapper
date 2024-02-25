@@ -84,7 +84,7 @@ public class JoyBindingListener : IJoyBindingListener
 
         var cancel = new CancellationTokenSource();
 
-        Task.Run(() => Polling(cancel.Token), cancel.Token);
+        Task.Run(() => Polling(cancel.Token), cancel.Token).ConfigureAwait(false);
 
         _CancellationTokenSource = cancel;
 
@@ -169,11 +169,15 @@ public class JoyBindingListener : IJoyBindingListener
     {
         while (!cancel.IsCancellationRequested)
         {
+            var timer = Stopwatch.StartNew();
             var changes = GetChanges();
             if (changes.Any())
+            {
                 ChangesHandled?.Invoke(changes);
-
-            await Task.Delay(_PollingDelay, cancel);
+                Debug.WriteLine($"{timer.ElapsedMilliseconds}, {changes.First().IsActive}");
+            }
+            
+            await Task.Delay(2, cancel);
         }
         _Bindings.Clear();
         _Modificators.Clear();

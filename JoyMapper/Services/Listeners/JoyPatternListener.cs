@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using JoyMapper.Models;
@@ -35,7 +36,7 @@ public class JoyPatternListener : IJoyPatternListener
                 var forbidIds = Patterns
                     .Where(ptrn => ptrn.Binding.Equals(p.Binding) && !ptrn.ModificatorId.Equals(p.ModificatorId))
                     .Select(ptrn => ptrn.ModificatorId);
-                    ;
+                ;
                 return new ModificatedJoyBinding(new JoyBindingWithAction(p.Binding, p.PatternAction),
                         p.ModificatorId, forbidIds.ToArray());
             });
@@ -48,10 +49,13 @@ public class JoyPatternListener : IJoyPatternListener
     {
         foreach (var joyBindingBase in bindings)
         {
-            var bb = (JoyBindingWithAction) joyBindingBase;
-            bb.ActionBase.BindingStateChanged(bb.IsActive);
+            var bb = (JoyBindingWithAction)joyBindingBase;
+            //bb.ActionBase.BindingStateChanged(bb.IsActive);
+            _ActionWorker.Add(bb.ActionBase);
         }
     }
+
+    private readonly ActionWorker _ActionWorker = new();
 
     public void StopWatching()
     {
@@ -76,5 +80,15 @@ public class JoyPatternListener : IJoyPatternListener
 
         public override string Description => _BindingBase.Description;
         public override bool Equals(JoyBindingBase other) => _BindingBase.Equals(other);
+    }
+
+    private class ActionWorker
+    {
+        private readonly ConcurrentQueue<PatternActionBase> _Queue = new();
+
+        public void Add(PatternActionBase action)
+        {
+            _Queue.Enqueue(action);
+        }
     }
 }
