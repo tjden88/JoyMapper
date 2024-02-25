@@ -36,7 +36,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 {
                     if (joy is null)
                     {
-                        _Joysticks.Add(new ConnentedJoystick(joystickName) {IsFault = true});
+                        _Joysticks.Add(new ConnentedJoystick(joystickName) { IsFault = true });
                         AppLog.LogMessage($"Устройство {joystickName} не найдено!", LogMessage.MessageType.Error);
                     }
 
@@ -63,7 +63,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
             }
 
 
-            if (joy.IsFault) 
+            if (joy.IsFault)
                 AppLog.LogMessage($"Устройство восстановлено - {joystickName}");
             joy.IsFault = false;
 
@@ -107,7 +107,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
         private JoyState _JoyState;
 
-        public JoyState JoyState => _JoyState ??= UpdateState();
+        public JoyState JoyState => UpdateState();
 
         private JoyState UpdateState()
         {
@@ -116,14 +116,61 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
             Joystick.Poll();
             var datas = Joystick.GetBufferedData();
-            var newState = _JoyState ?? new JoyState();
+            var newState = _JoyState ??= new JoyState();
 
             foreach (var state in datas)
-            {
-
-            }
+                SetJoyStateChange(state, newState);
 
             return newState;
+        }
+
+
+        private void SetJoyStateChange(JoystickUpdate data, JoyState state)
+        {
+            // JoystickOffset.Buttons0 : 48
+            // JoystickOffset.Buttons127 : 175
+            if (data.RawOffset is >= 48 and <= 175)
+            {
+                state.Buttons[data.RawOffset - 48] = data.Value != 0;
+                return;
+            }
+
+            switch (data.Offset)
+            {
+                case JoystickOffset.X:
+                    state.AxisValues.X = data.Value;
+                    break;
+                case JoystickOffset.Y:
+                    state.AxisValues.Y = data.Value;
+                    break;
+                case JoystickOffset.Z:
+                    state.AxisValues.Z = data.Value;
+                    break;
+                case JoystickOffset.RotationX:
+                    state.AxisValues.Rx = data.Value;
+                    break;
+                case JoystickOffset.RotationY:
+                    state.AxisValues.Ry = data.Value;
+                    break;
+                case JoystickOffset.RotationZ:
+                    state.AxisValues.Rz = data.Value;
+                    break;
+                case JoystickOffset.Sliders0:
+                    state.AxisValues.Slider1 = data.Value;
+                    break;
+                case JoystickOffset.Sliders1:
+                    state.AxisValues.Slider2 = data.Value;
+                    break;
+                case JoystickOffset.PointOfViewControllers0:
+                    state.Pow1Value = data.Value;
+                    break;
+                case JoystickOffset.PointOfViewControllers1:
+                    state.Pow2Value = data.Value;
+                    break;
+                default:
+                    Debug.WriteLine(data);
+                    break;
+            }
         }
     }
 }

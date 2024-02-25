@@ -5,7 +5,7 @@
 /// </summary>
 public class JoyState
 {
-    public struct AxisState
+    public record AxisState
     {
         public int X;
         public int Y;
