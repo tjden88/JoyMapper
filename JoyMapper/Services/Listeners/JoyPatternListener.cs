@@ -77,7 +77,7 @@ public class JoyPatternListener : IJoyPatternListener
             JoyName = BindingBase.JoyName;
         }
 
-        protected override bool IsPressed(JoyState joyState) => _BindingBase.UpdateIsActive(joyState);
+        protected override bool IsPressed(JoyStateData joyState) => _BindingBase.UpdateIsActive(joyState);
 
         public override string Description => _BindingBase.Description;
         public override bool Equals(JoyBindingBase other) => _BindingBase.Equals(other);
