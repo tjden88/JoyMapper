@@ -20,6 +20,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
         Switch
     }
 
+    private bool _IsPressed;
 
     #region JoyName : string - Имя привязанного джойстика
 
@@ -66,7 +67,8 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     public ActivationTypes ActivationType
     {
         get => _ActivationType;
-        set => Set(ref _ActivationType, value);
+        set => IfSet(ref _ActivationType, value)
+            .Then(SetIsActive);
     }
 
     #endregion
@@ -83,19 +85,23 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
             return false;
 
         var oldStatus = IsActive;
+        _IsPressed = IsPressed(joyState);
+        SetIsActive();
 
-        var pressed = IsPressed(joyState);
+        return IsActive != oldStatus;
+    }
 
+    private void SetIsActive()
+    {
         var result = ActivationType switch
         {
-            ActivationTypes.Normal => pressed,
-            ActivationTypes.Reverse => !pressed,
-            ActivationTypes.Switch => CheckSwitchStatus(pressed),
+            ActivationTypes.Normal => _IsPressed,
+            ActivationTypes.Reverse => !_IsPressed,
+            ActivationTypes.Switch => CheckSwitchStatus(_IsPressed),
             _ => throw new ArgumentOutOfRangeException(nameof(ActivationType))
         };
 
         IsActive = result;
-        return result != oldStatus;
     }
 
     #region Abstract
