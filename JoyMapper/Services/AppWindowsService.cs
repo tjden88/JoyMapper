@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using JoyMapper.Models.Base;
+using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.ViewModels.Windows;
 using JoyMapper.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;

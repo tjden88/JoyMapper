@@ -1,4 +1,4 @@
-﻿using JoyMapper.Models.Base;
+﻿using JoyMapper.Models.JoyBindings.Base;
 
 namespace JoyMapper.Models;
 

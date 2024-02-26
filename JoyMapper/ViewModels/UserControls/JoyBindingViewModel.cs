@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
-using JoyMapper.Models.Base;
+using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.Windows;

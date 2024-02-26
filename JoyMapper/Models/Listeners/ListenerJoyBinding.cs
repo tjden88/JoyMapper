@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using JoyMapper.Models.Base;
+using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.PatternActions.Base;
 
 namespace JoyMapper.Models.Listeners;

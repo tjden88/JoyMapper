@@ -1,4 +1,4 @@
-﻿using JoyMapper.Models.Base;
+﻿using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.PatternActions.Base;
 using Newtonsoft.Json;
 

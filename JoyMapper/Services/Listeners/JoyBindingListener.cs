@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JoyMapper.Models;
-using JoyMapper.Models.Base;
+using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.Listeners;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;

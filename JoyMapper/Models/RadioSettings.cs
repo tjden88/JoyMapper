@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using JoyMapper.Models.Base;
+using JoyMapper.Models.JoyBindings.Base;
 
 namespace JoyMapper.Models;
 

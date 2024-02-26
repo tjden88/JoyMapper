@@ -1,5 +1,4 @@
-﻿using JoyMapper.Models.Base;
-using JoyMapper.Services.Interfaces;
+﻿using JoyMapper.Services.Interfaces;
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows;

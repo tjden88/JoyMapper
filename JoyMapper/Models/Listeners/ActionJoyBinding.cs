@@ -1,5 +1,4 @@
-﻿using JoyMapper.Models.Base;
-using JoyMapper.Models.PatternActions.Base;
+﻿using JoyMapper.Models.PatternActions.Base;
 
 namespace JoyMapper.Models.Listeners;
 

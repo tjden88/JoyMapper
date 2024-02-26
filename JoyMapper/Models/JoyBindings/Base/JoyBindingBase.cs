@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using WPR.MVVM.ViewModels;
 
-namespace JoyMapper.Models.Base;
+namespace JoyMapper.Models.JoyBindings.Base;
 
 /// <summary>
 /// Выбранная кнопка или ось джойстика
@@ -79,7 +78,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     /// <param name="joyState">Статус джойстика</param>
     public bool UpdateIsActive( [NotNull] JoyStateData joyState)
     {
-        if (!EqualsBindingState(joyState))
+        if (!Equals(joyState.JoyName, JoyName) || !EqualsBindingState(joyState))
             return IsActive;
 
         var pressed = IsPressed(joyState);
