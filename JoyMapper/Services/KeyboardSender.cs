@@ -19,35 +19,35 @@ namespace JoyMapper.Services;
 public class KeyboardSender
 {
     /// <summary> Эмулировать нажатие клавиши </summary>
-    public void PressKey(Key key)
+    private void PressKey(Key key)
     {
         Keyboard.Press(key);
         AppLog.LogKeyCommands($"Нажатие кнопки: {key}");
     }
 
     /// <summary> Эмулировать отпускание клавиши </summary>
-    public void ReleaseKey(Key key)
+    private void ReleaseKey(Key key)
     {
         Keyboard.Release(key);
         AppLog.LogKeyCommands($"Отпускание кнопки: {key}");
     }
 
     /// <summary> Эмулировать нажатие мыши </summary>
-    public void MousePress(MouseButton button)
+    private void MousePress(MouseButton button)
     {
         Mouse.Down(button);
         AppLog.LogKeyCommands($"Нажатие кнопки мыши: {button}");
     }
 
     /// <summary> Эмулировать отпускание мыши </summary>
-    public void MouseRelease(MouseButton button)
+    private void MouseRelease(MouseButton button)
     {
         Mouse.Up(button);
         AppLog.LogKeyCommands($"Отпускание кнопки мыши: {button}");
     }
 
     /// <summary> Эмулировать прокрутку мыши </summary>
-    public void MouseScroll(bool Up)
+    private void MouseScroll(bool Up)
     {
         Mouse.Scroll(Up ? 1: -1);
         var up = Up ? "Вверх" : "Вниз";
@@ -57,6 +57,7 @@ public class KeyboardSender
     /// <summary> Отправить клавиатурные команды в очередь команд </summary>
     public async void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
     {
+        // Todo: сделать через очередь
         await Task.Run(() =>
         {
             foreach (var binding in keyboardKeyBindings)
@@ -204,13 +205,13 @@ public class KeyboardSender
     */
     /// </code>
     /// </example>
-    public static class Mouse
+    private static class Mouse
     {
         /// <summary>
         /// Clicks a mouse button.
         /// </summary>
         /// <param name="mouseButton">The mouse button to click.</param>
-        public static void Click(MouseButton mouseButton)
+        private static void Click(MouseButton mouseButton)
         {
             Down(mouseButton);
             Up(mouseButton);
@@ -420,7 +421,7 @@ public class KeyboardSender
     */
     /// </code>
     /// </example>
-    public static class Keyboard
+    private static class Keyboard
     {
         #region Public Members
 
@@ -460,7 +461,7 @@ public class KeyboardSender
         /// Performs a press-and-release operation for the specified key, which is effectively equivallent to typing.
         /// </summary>
         /// <param name="key">The key to press.</param>
-        public static void Type(Key key)
+        private static void Type(Key key)
         {
             Press(key);
             Release(key);
@@ -527,15 +528,17 @@ public class KeyboardSender
         [PermissionSet(SecurityAction.Assert, Name = "FullTrust")]
         private static void SendKeyboardInput(Key key, bool press)
         {
-            PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
+            var permissions = new PermissionSet(PermissionState.Unrestricted);
             permissions.Demand();
 
-            NativeMethods.INPUT ki = new NativeMethods.INPUT();
-            ki.type = NativeMethods.InputKeyboard;
+            var ki = new NativeMethods.INPUT
+            {
+                type = NativeMethods.InputKeyboard
+            };
             ki.union.keyboardInput.wVk = (short)KeyInterop.VirtualKeyFromKey(key);
             ki.union.keyboardInput.wScan = (short)NativeMethods.MapVirtualKey(ki.union.keyboardInput.wVk, 0);
 
-            int dwFlags = 0;
+            var dwFlags = 0;
 
             if (ki.union.keyboardInput.wScan > 0)
             {
