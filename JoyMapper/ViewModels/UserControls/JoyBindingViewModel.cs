@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using JoyMapper.Interfaces;
-using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;

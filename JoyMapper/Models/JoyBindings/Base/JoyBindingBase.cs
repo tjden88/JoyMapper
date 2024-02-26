@@ -74,12 +74,15 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
 
     /// <summary>
     /// Обновить статус действия с учётом типа активации
+    /// Если статус ИЗМЕНИЛСЯ - возвращает true
     /// </summary>
     /// <param name="joyState">Статус джойстика</param>
-    public bool UpdateIsActive( [NotNull] JoyStateData joyState)
+    public bool SetNewActiveStatus( [NotNull] JoyStateData joyState)
     {
         if (!Equals(joyState.JoyName, JoyName) || !EqualsBindingState(joyState))
-            return IsActive;
+            return false;
+
+        var oldStatus = IsActive;
 
         var pressed = IsPressed(joyState);
 
@@ -92,7 +95,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
         };
 
         IsActive = result;
-        return result;
+        return result != oldStatus;
     }
 
     #region Abstract

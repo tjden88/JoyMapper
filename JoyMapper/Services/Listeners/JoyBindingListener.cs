@@ -63,7 +63,7 @@ public class JoyBindingListener : IJoyBindingListener
             var changes = _JoystickStateManager.GetJoyStateChanges();
             foreach (var change in changes)
             {
-                var changedBindings = _Bindings.Where(b => b.UpdateIsActive(change));
+                var changedBindings = _Bindings.Where(b => b.SetNewActiveStatus(change));
                 foreach (var binding in changedBindings)
                     ChangesHandled?.Invoke(binding);
 
