@@ -47,7 +47,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     public bool IsActive
     {
         get => _IsActive;
-        private set => IfSet(ref _IsActive, value)
+        protected set => IfSet(ref _IsActive, value)
             .CallPropertyChanged(nameof(IsActiveText));
     }
 
@@ -68,7 +68,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     {
         get => _ActivationType;
         set => IfSet(ref _ActivationType, value)
-            .Then(SetIsActive);
+            .Then(() => SetIsActive(_IsPressed));
     }
 
     #endregion
@@ -86,18 +86,18 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
 
         var oldStatus = IsActive;
         _IsPressed = IsPressed(joyState);
-        SetIsActive();
+        SetIsActive(_IsPressed);
 
         return IsActive != oldStatus;
     }
 
-    private void SetIsActive()
+    protected void SetIsActive(bool isPressed)
     {
         var result = ActivationType switch
         {
-            ActivationTypes.Normal => _IsPressed,
-            ActivationTypes.Reverse => !_IsPressed,
-            ActivationTypes.Switch => CheckSwitchStatus(_IsPressed),
+            ActivationTypes.Normal => isPressed,
+            ActivationTypes.Reverse => !isPressed,
+            ActivationTypes.Switch => CheckSwitchStatus(isPressed),
             _ => throw new ArgumentOutOfRangeException(nameof(ActivationType))
         };
 
@@ -125,6 +125,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     #region SwitchCheck
 
     private bool _IsNowPressed; // Для типа активации - переключатель
+
 
     /// <summary> Проверка переключателя </summary>
     private bool CheckSwitchStatus(bool pressed)

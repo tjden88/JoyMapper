@@ -41,6 +41,7 @@ public class AxisJoyBinding : JoyBindingBase
             EndValue = Math.Max(value, EndValue);
 
             OnPropertyChanged(nameof(StartValue));
+            SetIsActive(CurrentValue >= StartValue && CurrentValue <= EndValue);
         }
     }
 
@@ -63,6 +64,7 @@ public class AxisJoyBinding : JoyBindingBase
             StartValue = Math.Min(value, StartValue);
 
             OnPropertyChanged(nameof(EndValue));
+            SetIsActive(CurrentValue >= StartValue && CurrentValue <= EndValue);
         }
     }
 
