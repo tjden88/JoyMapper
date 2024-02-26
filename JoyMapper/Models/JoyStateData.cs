@@ -22,18 +22,19 @@ public record JoyStateData(int Id, int Value)
     public int Value { get; } = Value;
 
 
-    public bool IsButtonPressed
+    public bool? IsButtonPressed
     {
         get
         {
             if (Id > 127)
-                throw new ArgumentOutOfRangeException(nameof(Id), @"Свойство только для данных кнопки");
+                return null;
+
             return Value == 1;
         }
     }
 
 
-    public JoyAxises Axis => Id switch
+    public JoyAxises? Axis => Id switch
     {
         130 => JoyAxises.X,
         131 => JoyAxises.Y,
@@ -43,6 +44,16 @@ public record JoyStateData(int Id, int Value)
         135 => JoyAxises.Rz,
         136 => JoyAxises.Slider1,
         137 => JoyAxises.Slider2,
-        _ => throw new ArgumentOutOfRangeException(nameof(Id), @"Свойство только для данных оси")
+        _ => null
     };
+
+
+    public bool IsPov1Data => Id == 128;
+
+    public bool IsPov2Data => Id == 129;
+
+
+    public bool IsAxisData => Id >= 130;
+
+    public bool IsButtonData => Id <= 127;
 }

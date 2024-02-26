@@ -1,8 +1,11 @@
-﻿namespace JoyMapper.Models;
+﻿using System;
+
+namespace JoyMapper.Models;
 
 /// <summary>
 /// Состояние кнопок и осей джойстика
 /// </summary>
+[Obsolete]
 public class JoyState
 {
     public record AxisState

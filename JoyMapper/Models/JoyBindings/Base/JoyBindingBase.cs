@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using WPR.MVVM.ViewModels;
 
@@ -76,13 +77,10 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     /// Обновить статус действия с учётом типа активации
     /// </summary>
     /// <param name="joyState">Статус джойстика</param>
-    public bool UpdateIsActive(JoyState joyState)
+    public bool UpdateIsActive( [NotNull] JoyStateData joyState)
     {
-        if (joyState == null)
-        {
-            Debug.WriteLine("Нет статуса джойстика!");
+        if (!EqualsBindingState(joyState))
             return IsActive;
-        }
 
         var pressed = IsPressed(joyState);
 
@@ -101,7 +99,11 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     #region Abstract
 
     /// <summary> Нажата ли кнопка или ось в назначенном диапазоне </summary>
-    protected abstract bool IsPressed(JoyState joyState);
+    protected abstract bool IsPressed(JoyStateData joyState);
+
+
+    /// <summary> Проверить, отностится ли статус джойстика к этой привязке</summary>
+    protected abstract bool EqualsBindingState(JoyStateData joyState);
 
 
     /// <summary>

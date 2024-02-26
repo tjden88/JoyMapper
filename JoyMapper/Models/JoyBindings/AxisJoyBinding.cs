@@ -85,23 +85,16 @@ public class AxisJoyBinding : JoyBindingBase
 
     
 
-    protected override bool IsPressed(JoyState joyState)
+    protected override bool IsPressed(JoyStateData joyState)
     {
-        var value = Axis switch
-        {
-            JoyAxises.X => joyState.AxisValues.X,
-            JoyAxises.Y => joyState.AxisValues.Y,
-            JoyAxises.Z => joyState.AxisValues.Z,
-            JoyAxises.Rx => joyState.AxisValues.Rx,
-            JoyAxises.Ry => joyState.AxisValues.Ry,
-            JoyAxises.Rz => joyState.AxisValues.Rz,
-            JoyAxises.Slider1 => joyState.AxisValues.Slider1,
-            JoyAxises.Slider2 => joyState.AxisValues.Slider2,
-            _ => throw new ArgumentOutOfRangeException(nameof(Axis))
-        };
+        var value = joyState.Value;
+
         CurrentValue = value;
         return value >= StartValue && value <= EndValue;
     }
+
+    protected override bool EqualsBindingState(JoyStateData joyState) => 
+        joyState.Axis is { } axis && axis == Axis;
 
     public override string Description => $"Ось {Axis}";
     public override bool Equals(JoyBindingBase other)

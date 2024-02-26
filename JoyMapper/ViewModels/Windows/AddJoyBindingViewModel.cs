@@ -7,7 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models;
-using JoyMapper.Models.Legacy.v1_3.Models;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows;
