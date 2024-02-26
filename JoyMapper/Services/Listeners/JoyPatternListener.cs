@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
-using JoyMapper.Models.PatternActions.Base;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 
@@ -53,13 +50,11 @@ public class JoyPatternListener : IJoyPatternListener
             .Concat(modificators.Select(m => m.Binding))
             .Distinct(new BindingComparer());
 
-        _ActionWorker = new();
         _BindingListener.StartListen(bindings);
     }
 
     public void StopWatching()
     {
-        _ActionWorker?.Dispose();
         _BindingListener.StopListen();
     }
 
@@ -76,13 +71,10 @@ public class JoyPatternListener : IJoyPatternListener
             if (patternModel.Modificator == null && hasActiveModificator)
                 continue;
 
-            if (patternModel.CanStateChange)
-                _ActionWorker.Add(patternModel.Pattern.PatternAction, binding.IsActive);
+            if (patternModel.CanStateChange) patternModel.Pattern.PatternAction.BindingStateChanged(binding.IsActive);
         }
 
     }
-
-    private ActionWorker _ActionWorker;
 
     #region Classes
 
@@ -90,38 +82,6 @@ public class JoyPatternListener : IJoyPatternListener
     {
         public bool CanStateChange => Modificator?.Binding.IsActive ?? true;
         public bool Equals(JoyBindingBase other) => Pattern.Binding.Equals(other);
-    }
-
-
-    private class ActionWorker : IDisposable
-    {
-        private readonly ConcurrentQueue<(PatternActionBase, bool)> _Queue = new();
-
-        private bool _TaskRunning;
-
-        public async void Add(PatternActionBase action, bool newState)
-        {
-            _Queue.Enqueue((action, newState));
-
-            if (!_TaskRunning)
-                await DoActions().ConfigureAwait(false);
-        }
-
-        private Task DoActions()
-        {
-            return Task.Run(() =>
-            {
-                _TaskRunning = true;
-                while (!_Queue.IsEmpty)
-                {
-                    if (_Queue.TryDequeue(out var actionBase))
-                        actionBase.Item1.BindingStateChanged(actionBase.Item2);
-                }
-                _TaskRunning = false;
-            });
-        }
-
-        public void Dispose() => _Queue.Clear();
     }
 
 

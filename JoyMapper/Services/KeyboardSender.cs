@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Security;
+using System.Threading.Tasks;
 using System.Windows.Input;
 #pragma warning disable SYSLIB0003
 
@@ -54,34 +55,37 @@ public class KeyboardSender
     }
 
     /// <summary> Отправить клавиатурные команды в очередь команд </summary>
-    public void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
+    public async void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
     {
-        foreach (var binding in keyboardKeyBindings)
+        await Task.Run(() =>
         {
-            switch (binding.Action)
+            foreach (var binding in keyboardKeyBindings)
             {
-                case KeyboardKeyBinding.KeyboardAction.KeyPress:
-                    PressKey(binding.KeyCode);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.KeyUp:
-                    ReleaseKey(binding.KeyCode);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MousePress:
-                    MousePress(binding.MouseButton);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MouseUp:
-                    MouseRelease(binding.MouseButton);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
-                    MouseScroll(true);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
-                    MouseScroll(false);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (binding.Action)
+                {
+                    case KeyboardKeyBinding.KeyboardAction.KeyPress:
+                        PressKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.KeyUp:
+                        ReleaseKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MousePress:
+                        MousePress(binding.MouseButton);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseUp:
+                        MouseRelease(binding.MouseButton);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
+                        MouseScroll(true);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
+                        MouseScroll(false);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
-        }
+        });
     }
 
 

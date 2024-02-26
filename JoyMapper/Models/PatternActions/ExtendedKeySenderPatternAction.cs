@@ -60,7 +60,7 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
 
     protected override void DoWorkMode(bool newBindingState) => DoWork(newBindingState, false);
 
-    protected async void DoWork(bool newBindingState, bool ReportMode)
+    private async void DoWork(bool newBindingState, bool ReportMode)
     {
         _NowPressed = newBindingState;
 
@@ -114,7 +114,7 @@ public class ExtendedKeySenderPatternAction : PatternActionBase
                 _FirstPressHandled = false;
                 _DelayMeter = null;
             }
-            await Task.Delay(20);
+            await Task.Delay(1);
         }
     }
 

@@ -74,7 +74,7 @@ public class AxisJoyBinding : JoyBindingBase
     #region CurrentValue : int - Текущее значение оси
 
     /// <summary>Текущее значение оси</summary>
-    private int _CurrentValue;
+    private int _CurrentValue = 32768;
 
     /// <summary>Текущее значение оси</summary>
     public int CurrentValue
