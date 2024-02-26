@@ -71,7 +71,7 @@ public partial class App
             .AddTransient<KeyCommandsWatcher.KeyCommandsWatcherViewModel>()
             .AddTransient<KeyCommandsWatcher>()
             .AddSingleton<AudioPlayerService>()
-            .AddSingleton<IJoystickStateManager, JoystickStateManager>()
+            .AddTransient<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingListener, JoyBindingListener>()
             .AddTransient<IJoyPatternListener, JoyPatternListener>()
             .AddTransient<IProfileListener, ProfileListener>()

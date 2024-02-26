@@ -10,7 +10,7 @@ namespace JoyMapper.Services.Interfaces;
 public interface IJoyBindingListener
 {
     /// <summary> Вызывается, когда получены изменения </summary>
-    public Action<IEnumerable<JoyBindingBase>> ChangesHandled { get; set; }
+    public Action<JoyBindingBase> ChangesHandled { get; set; }
 
 
     /// <summary> Начать прослушивание выбранных привязок без учёта модификаторов </summary>
