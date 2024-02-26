@@ -5,82 +5,68 @@ using System.Linq;
 using System.Threading.Tasks;
 using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings.Base;
-using JoyMapper.Models.Listeners;
 using JoyMapper.Models.PatternActions.Base;
+using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
 
 namespace JoyMapper.Services.Listeners;
 
 public class JoyPatternListener : IJoyPatternListener
 {
-    private readonly IJoyBindingListener _JoyBindingListener;
+    private readonly IJoyBindingListener _BindingListener;
     private readonly IServiceProvider _ServiceProvider;
+    private readonly DataManager _DataManager;
 
-    public JoyPatternListener(IJoyBindingListener JoyBindingListener, IServiceProvider ServiceProvider)
+    private List<JoyPattern> _Patterns;
+    private List<Modificator> _Modificators;
+
+    public JoyPatternListener(IJoyBindingListener bindingListener, IServiceProvider ServiceProvider, DataManager dataManager)
     {
-        _JoyBindingListener = JoyBindingListener;
+        _BindingListener = bindingListener;
         _ServiceProvider = ServiceProvider;
+        _DataManager = dataManager;
+        bindingListener.ChangesHandled += BindingChangesHandled;
     }
 
     public void StartWatching(ICollection<JoyPattern> Patterns)
     {
         StopWatching();
 
-        foreach (var joyPattern in Patterns)
-        {
+        foreach (var joyPattern in Patterns) 
             joyPattern.PatternAction.Initialize(_ServiceProvider, false);
-        }
+
+        _Patterns = new(Patterns);
+
+        var usedModificatorsIds = Patterns
+            .Where(p => p.HasModificator)
+            .Select(p => p.ModificatorId)
+            .Distinct();
+
+        var modificators = _DataManager.Modificators.Where(m => usedModificatorsIds.Contains(m.Id));
+        _Modificators = new(modificators);
 
         var bindings = Patterns
-            .Select(p =>
-            {
-                var forbidIds = Patterns
-                    .Where(ptrn => ptrn.Binding.Equals(p.Binding) && !ptrn.ModificatorId.Equals(p.ModificatorId))
-                    .Select(ptrn => ptrn.ModificatorId);
-                ;
-                return new ModificatedJoyBinding(new JoyBindingWithAction(p.Binding, p.PatternAction),
-                        p.ModificatorId, forbidIds.ToArray());
-            });
+            .Select(p => p.Binding)
+            .Concat(_Modificators.Select(m=>m.Binding))
+            .Distinct();
 
-        _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
-        _JoyBindingListener.StartListen(bindings);
+        _BindingListener.StartListen(bindings);
     }
-
-    private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> bindings)
-    {
-        foreach (var joyBindingBase in bindings)
-        {
-            var bb = (JoyBindingWithAction)joyBindingBase;
-            //bb.ActionBase.BindingStateChanged(bb.IsActive);
-            _ActionWorker.Add(bb.ActionBase, bb.IsActive);
-        }
-    }
-
-    private readonly ActionWorker _ActionWorker = new();
 
     public void StopWatching()
     {
-        _JoyBindingListener.ChangesHandled -= Listener_OnChangesHandled;
-        _JoyBindingListener.StopListen();
+        _BindingListener.StopListen();
     }
 
-
-    private class JoyBindingWithAction : JoyBindingBase
+    private void BindingChangesHandled(JoyBindingBase binding)
     {
-        private readonly JoyBindingBase _BindingBase;
-        public PatternActionBase ActionBase { get; }
-
-        public JoyBindingWithAction(JoyBindingBase BindingBase, PatternActionBase ActionBase)
+        var patterns = _Patterns.Where(p => p.Binding.Equals(binding));
+        foreach (var joyPattern in patterns)
         {
-            _BindingBase = BindingBase;
-            this.ActionBase = ActionBase;
-            JoyName = BindingBase.JoyName;
+            // TODO: модификаторы
+            joyPattern.PatternAction.BindingStateChanged(binding.IsActive);
         }
 
-        protected override bool IsPressed(JoyStateData joyState) => _BindingBase.UpdateIsActive(joyState);
-
-        public override string Description => _BindingBase.Description;
-        public override bool Equals(JoyBindingBase other) => _BindingBase.Equals(other);
     }
 
     private class ActionWorker
@@ -93,7 +79,7 @@ public class JoyPatternListener : IJoyPatternListener
         {
             _Queue.Enqueue((action, newState));
 
-            if(!_TaskRunning)
+            if (!_TaskRunning)
                 await DoActions().ConfigureAwait(false);
         }
 
