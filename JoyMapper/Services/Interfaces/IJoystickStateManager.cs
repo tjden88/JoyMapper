@@ -11,7 +11,9 @@ public interface IJoystickStateManager
     /// <summary> Все подключённые устройства </summary>
     IEnumerable<string> GetConnectedJoysticks();
 
+    /// <summary> Подключиться к необходимым джойстикам </summary>
+    void AcquireJoysticks(IEnumerable<string> JoysticksNames);
 
-    /// <summary> Получить актуальное состояние джойстика </summary>
-    JoyState GetJoyState(string joystickName); 
+    /// <summary> Получить изменения состояний подключённых джойстиков </summary>
+    IEnumerable<JoyStateData> GetJoyStateChanges(); 
 }

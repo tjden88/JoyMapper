@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace JoyMapper.Models;
+﻿namespace JoyMapper.Models;
 
 /// <summary>
 /// Изменение в состоянии джойстика
 /// </summary>
-public record JoyStateData(int Id, int Value)
+public record JoyStateData(string JoyName, int Id, int Value)
 {
 
     /// <summary>

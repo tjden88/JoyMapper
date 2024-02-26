@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using JoyMapper.Models.Base;
-using JoyMapper.Models.Listeners;
 
 namespace JoyMapper.Services.Interfaces;
 
@@ -16,9 +15,6 @@ public interface IJoyBindingListener
 
     /// <summary> Начать прослушивание выбранных привязок без учёта модификаторов </summary>
     void StartListen(IEnumerable<JoyBindingBase> bindings);
-
-    /// <summary> Начать прослушивание выбранных привязок с учётом модификаторов</summary>
-    void StartListen(IEnumerable<ModificatedJoyBinding> bindings);
 
 
     /// <summary> Остановить прослушивание </summary>
