@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using WPR.MVVM.ViewModels;
 
-namespace JoyMapper.Models.JoyBindings.Base;
+namespace JoyMapper.Models.Base;
 
 /// <summary>
 /// Выбранная кнопка или ось джойстика

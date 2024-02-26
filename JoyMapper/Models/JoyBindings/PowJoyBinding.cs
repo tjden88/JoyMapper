@@ -1,7 +1,7 @@
 ﻿using System;
-using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.Base;
 
-namespace JoyMapper.Models.JoyBindings;
+namespace JoyMapper.Models;
 
 /// <summary>
 /// Биндинг указателя вида

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using JoyMapper.Models.JoyBindings;
-using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models;
+using JoyMapper.Models.Base;
 using JoyMapper.Models.Legacy.v1_3.Models;
 using JoyMapper.Models.PatternActions;
 using JoyMapper.Models.PatternActions.Base;
@@ -97,7 +97,7 @@ public static class SettingsMapper
                     newBinding = new AxisJoyBinding
                     {
                         JoyName = oldDataKeyPattern.JoyName,
-                        Axis = (AxisJoyBinding.Axises) aa.Axis,
+                        Axis = (JoyAxises) aa.Axis,
                         StartValue = aa.StartValue,
                         EndValue = aa.EndValue,
                     };

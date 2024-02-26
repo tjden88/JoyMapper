@@ -1,7 +1,7 @@
 ﻿using System;
-using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.Base;
 
-namespace JoyMapper.Models.JoyBindings;
+namespace JoyMapper.Models;
 
 /// <summary>
 /// Биндинг оси джойстика
@@ -9,26 +9,14 @@ namespace JoyMapper.Models.JoyBindings;
 public class AxisJoyBinding : JoyBindingBase
 {
     public event EventHandler<int> CurrentValueChanged;
-    
-    public enum Axises
-    {
-        X,
-        Y,
-        Z,
-        Rx,
-        Ry,
-        Rz,
-        Slider1,
-        Slider2,
-    }
 
-    #region Axis : Axises - Выбранная ось
+    #region Axis : JoyAxises - Выбранная ось
 
     /// <summary>Выбранная ось</summary>
-    private Axises _Axis;
+    private JoyAxises _Axis;
 
     /// <summary>Выбранная ось</summary>
-    public Axises Axis
+    public JoyAxises Axis
     {
         get => _Axis;
         set => IfSet(ref _Axis, value).CallPropertyChanged(nameof(Description));
@@ -101,14 +89,14 @@ public class AxisJoyBinding : JoyBindingBase
     {
         var value = Axis switch
         {
-            Axises.X => joyState.AxisValues.X,
-            Axises.Y => joyState.AxisValues.Y,
-            Axises.Z => joyState.AxisValues.Z,
-            Axises.Rx => joyState.AxisValues.Rx,
-            Axises.Ry => joyState.AxisValues.Ry,
-            Axises.Rz => joyState.AxisValues.Rz,
-            Axises.Slider1 => joyState.AxisValues.Slider1,
-            Axises.Slider2 => joyState.AxisValues.Slider2,
+            JoyAxises.X => joyState.AxisValues.X,
+            JoyAxises.Y => joyState.AxisValues.Y,
+            JoyAxises.Z => joyState.AxisValues.Z,
+            JoyAxises.Rx => joyState.AxisValues.Rx,
+            JoyAxises.Ry => joyState.AxisValues.Ry,
+            JoyAxises.Rz => joyState.AxisValues.Rz,
+            JoyAxises.Slider1 => joyState.AxisValues.Slider1,
+            JoyAxises.Slider2 => joyState.AxisValues.Slider2,
             _ => throw new ArgumentOutOfRangeException(nameof(Axis))
         };
         CurrentValue = value;

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JoyMapper.Models;
-using JoyMapper.Models.JoyBindings;
-using JoyMapper.Models.JoyBindings.Base;
+using JoyMapper.Models.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;

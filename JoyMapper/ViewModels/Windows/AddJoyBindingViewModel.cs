@@ -1,4 +1,4 @@
-﻿using JoyMapper.Models.JoyBindings.Base;
+﻿using JoyMapper.Models.Base;
 using JoyMapper.Services.Interfaces;
 using System.Collections.Generic;
 using System;
@@ -6,7 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using JoyMapper.Models.JoyBindings;
+using JoyMapper.Models;
+using JoyMapper.Models.Legacy.v1_3.Models;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows;
@@ -168,7 +169,7 @@ public class AddJoyBindingViewModel : ViewModel
         if (Filter == BindingFilters.Buttons) return list;
 
         // Оси
-        foreach (AxisJoyBinding.Axises axis in Enum.GetValues(typeof(AxisJoyBinding.Axises)))
+        foreach (JoyAxises axis in Enum.GetValues(typeof(JoyAxises)))
         {
             list.Add(new AxisJoyBinding
             {
