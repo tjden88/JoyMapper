@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Models.Legacy.v1_3.Models;
 using JoyMapper.Models.PatternActions;

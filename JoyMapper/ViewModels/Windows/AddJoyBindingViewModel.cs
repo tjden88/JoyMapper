@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using WPR.MVVM.ViewModels;
 
@@ -108,9 +109,9 @@ public class AddJoyBindingViewModel : ViewModel
         Debug.WriteLine("Начато отслеживание всех кнопок всех джойстиков");
     }
 
-    private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> changes)
+    private void Listener_OnChangesHandled(JoyBindingBase changes)
     {
-        if (changes.FirstOrDefault() is not {IsActive: true} change) return;
+        if (changes is not {IsActive: true} change) return;
 
         Debug.WriteLine(change.Description);
         JoyBinding = change;

@@ -103,7 +103,6 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
             {
                 if (_Joystick is { } oldJoy)
                 {
-                    oldJoy.Unacquire();
                     oldJoy.Dispose();
                 }
 
@@ -111,7 +110,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 {
                     newJoy.Properties.BufferSize = 128;
                     newJoy.Acquire();
-                    Joystick.Poll();
+                    newJoy.Poll();
                 }
 
                 _Joystick = value;

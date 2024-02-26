@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Data;
@@ -40,9 +41,9 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         get => _AudioPlayerService.IsPlaying;
         private set
         {
-            if(Equals(_AudioPlayerService.IsPlaying, value))
+            if (Equals(_AudioPlayerService.IsPlaying, value))
                 return;
-            if(value)
+            if (value)
                 _AudioPlayerService.Play();
             else
                 _AudioPlayerService.Stop();
@@ -76,7 +77,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         get => _AudioPlayerService.Volume;
         set
         {
-            if(Equals(_AudioPlayerService.Volume, value))
+            if (Equals(_AudioPlayerService.Volume, value))
                 return;
 
             _AudioPlayerService.Volume = value;
@@ -87,22 +88,20 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
     #endregion
 
 
-    private void ChangesHandled(IEnumerable<JoyBindingBase> obj)
+    private void ChangesHandled(JoyBindingBase joyBindingBase)
     {
         var radioSettings = _DataManager.RadioSettings;
-        foreach (var joyBindingBase in obj)
-        {
-            if(!joyBindingBase.IsActive) continue;
 
-            if ( Equals(joyBindingBase, radioSettings.PlayStopBinding))
-                IsPlaying = !IsPlaying;
+        if (!joyBindingBase.IsActive) return;
 
-            if (Equals(joyBindingBase, radioSettings.NextBinding))
-                _AudioPlayerService.Next();
+        if (Equals(joyBindingBase, radioSettings.PlayStopBinding))
+            IsPlaying = !IsPlaying;
 
-            if (Equals(joyBindingBase, radioSettings.PreviousBinding))
-                _AudioPlayerService.Previous();
-        }
+        if (Equals(joyBindingBase, radioSettings.NextBinding))
+            _AudioPlayerService.Next();
+
+        if (Equals(joyBindingBase, radioSettings.PreviousBinding))
+            _AudioPlayerService.Previous();
 
     }
 
@@ -206,7 +205,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
 
     private void VolBindingOnCurrentValueChanged(object sender, int e)
     {
-        var newVolume = (byte)(e/ 65535.0 * 127);
+        var newVolume = (byte)(e / 65535.0 * 127);
         Volume = newVolume;
     }
 

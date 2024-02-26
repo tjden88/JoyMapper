@@ -216,15 +216,15 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
 
     private void Action_OnReportMessage(string message)
     {
-        if (SelectedModificator != null)
-        {
-            var state = _JoystickStateManager.GetJoyState(SelectedModificator.Binding.JoyName);
-            if (state == null)
-                AppendLogText("Не удалось определить состояние выбранного модификатора!\n" +
-                              $"Убедитесь, что джойстик {SelectedModificator.Binding.JoyName} подключен\n");
-            else if (!SelectedModificator.Binding.UpdateIsActive(state))
-                return;
-        }
+        //if (SelectedModificator != null)
+        //{
+        //    var state = _JoystickStateManager.GetJoyState(SelectedModificator.Binding.JoyName);
+        //    if (state == null)
+        //        AppendLogText("Не удалось определить состояние выбранного модификатора!\n" +
+        //                      $"Убедитесь, что джойстик {SelectedModificator.Binding.JoyName} подключен\n");
+        //    else if (!SelectedModificator.Binding.UpdateIsActive(state))
+        //        return;
+        //}
         AppendLogText(message);
     }
 

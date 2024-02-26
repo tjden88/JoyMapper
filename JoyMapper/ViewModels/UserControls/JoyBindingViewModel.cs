@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using JoyMapper.Interfaces;
 using JoyMapper.Models;
+using JoyMapper.Models.JoyBindings;
 using JoyMapper.Models.JoyBindings.Base;
 using JoyMapper.Services;
 using JoyMapper.Services.Interfaces;
@@ -149,9 +150,9 @@ public class JoyBindingViewModel : ViewModel, IDisposable, IEditModel<JoyBinding
     }
 
 
-    private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> bindings)
+    private void Listener_OnChangesHandled(JoyBindingBase bindings)
     {
-        BindingStateChanged?.Invoke(bindings.First().IsActive);
+        BindingStateChanged?.Invoke(bindings.IsActive);
     }
 
     #endregion
