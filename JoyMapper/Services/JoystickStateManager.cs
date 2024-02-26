@@ -157,31 +157,31 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
             // JoystickOffset.Buttons127 : 175
             if (data.RawOffset is >= 48 and <= 175)
             {
-                return new JoyStateData(JoyName, data.RawOffset - 48, data.Value);
+                return new JoyStateData(JoyName, data.RawOffset - 47, data.Value);
             }
 
             switch (data.Offset)
             {
                 case JoystickOffset.PointOfViewControllers0:
-                    return new JoyStateData(JoyName, 128, data.Value);
+                    return new JoyStateData(JoyName, 200, data.Value);
                 case JoystickOffset.PointOfViewControllers1:
-                    return new JoyStateData(JoyName, 129, data.Value);
+                    return new JoyStateData(JoyName, 201, data.Value);
                 case JoystickOffset.X:
-                    return new JoyStateData(JoyName, 130, data.Value);
+                    return new JoyStateData(JoyName, 300, data.Value);
                 case JoystickOffset.Y:
-                    return new JoyStateData(JoyName, 131, data.Value);
+                    return new JoyStateData(JoyName, 301, data.Value);
                 case JoystickOffset.Z:
-                    return new JoyStateData(JoyName, 132, data.Value);
+                    return new JoyStateData(JoyName, 302, data.Value);
                 case JoystickOffset.RotationX:
-                    return new JoyStateData(JoyName, 133, data.Value);
+                    return new JoyStateData(JoyName, 303, data.Value);
                 case JoystickOffset.RotationY:
-                    return new JoyStateData(JoyName, 134, data.Value);
+                    return new JoyStateData(JoyName, 304, data.Value);
                 case JoystickOffset.RotationZ:
-                    return new JoyStateData(JoyName, 135, data.Value);
+                    return new JoyStateData(JoyName, 305, data.Value);
                 case JoystickOffset.Sliders0:
-                    return new JoyStateData(JoyName, 136, data.Value);
+                    return new JoyStateData(JoyName, 306, data.Value);
                 case JoystickOffset.Sliders1:
-                    return new JoyStateData(JoyName, 137, data.Value);
+                    return new JoyStateData(JoyName, 307, data.Value);
 
                 default:
                     Debug.WriteLine(data);

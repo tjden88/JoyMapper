@@ -7,15 +7,15 @@ public record JoyStateData(string JoyName, int Id, int Value)
 {
 
     /// <summary>
-    /// Buttons: 0-127
-    /// Pov1: 128
-    /// Pov2: 129
-    /// Axes: 130-137
+    /// Buttons: 1-128
+    /// Pov1: 200
+    /// Pov2: 201
+    /// Axes: 300-307
     /// </summary>
     public int Id { get; } = Id;
 
     /// <summary>
-    /// Buttons: 0 - unpressed, 1 - pressed
+    /// Buttons: 0 - unpressed, other - pressed
     /// </summary>
     public int Value { get; } = Value;
 
@@ -24,34 +24,34 @@ public record JoyStateData(string JoyName, int Id, int Value)
     {
         get
         {
-            if (Id > 127)
+            if (Id > 128)
                 return null;
 
-            return Value == 1;
+            return Value > 0;
         }
     }
 
 
     public JoyAxises? Axis => Id switch
     {
-        130 => JoyAxises.X,
-        131 => JoyAxises.Y,
-        132 => JoyAxises.Z,
-        133 => JoyAxises.Rx,
-        134 => JoyAxises.Ry,
-        135 => JoyAxises.Rz,
-        136 => JoyAxises.Slider1,
-        137 => JoyAxises.Slider2,
+        300 => JoyAxises.X,
+        301 => JoyAxises.Y,
+        302 => JoyAxises.Z,
+        303 => JoyAxises.Rx,
+        304 => JoyAxises.Ry,
+        305 => JoyAxises.Rz,
+        306 => JoyAxises.Slider1,
+        307 => JoyAxises.Slider2,
         _ => null
     };
 
 
-    public bool IsPov1Data => Id == 128;
+    public bool IsPov1Data => Id == 200;
 
-    public bool IsPov2Data => Id == 129;
+    public bool IsPov2Data => Id == 201;
 
 
-    public bool IsAxisData => Id >= 130;
+    public bool IsAxisData => Id >= 300;
 
-    public bool IsButtonData => Id <= 127;
+    public bool IsButtonData => Id <= 128;
 }
