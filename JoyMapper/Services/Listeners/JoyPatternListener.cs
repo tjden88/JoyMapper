@@ -17,8 +17,7 @@ public class JoyPatternListener : IJoyPatternListener
     private readonly IServiceProvider _ServiceProvider;
     private readonly DataManager _DataManager;
 
-    private List<JoyPattern> _Patterns;
-    private List<Modificator> _Modificators;
+    private List<PatternModel> _Patterns;
 
     public JoyPatternListener(IJoyBindingListener bindingListener, IServiceProvider ServiceProvider, DataManager dataManager)
     {
@@ -31,42 +30,59 @@ public class JoyPatternListener : IJoyPatternListener
     public void StartWatching(ICollection<JoyPattern> Patterns)
     {
         StopWatching();
-
-        foreach (var joyPattern in Patterns) 
-            joyPattern.PatternAction.Initialize(_ServiceProvider, false);
-
-        _Patterns = new(Patterns);
-
         var usedModificatorsIds = Patterns
             .Where(p => p.HasModificator)
             .Select(p => p.ModificatorId)
             .Distinct();
 
-        var modificators = _DataManager.Modificators.Where(m => usedModificatorsIds.Contains(m.Id));
-        _Modificators = new(modificators);
+        var modificators = _DataManager.Modificators
+            .Where(m => usedModificatorsIds.Contains(m.Id))
+            .ToList();
+
+
+        _Patterns = new(Patterns
+            .Select(p => new PatternModel(p, modificators
+                .FirstOrDefault(m => m.Id == p.ModificatorId))));
+
+        foreach (var joyPattern in Patterns)
+            joyPattern.PatternAction.Initialize(_ServiceProvider, false);
+
 
         var bindings = Patterns
             .Select(p => p.Binding)
-            .Concat(_Modificators.Select(m=>m.Binding))
-            .Distinct();
+            .Concat(modificators.Select(m => m.Binding))
+            .Distinct(new BindingComparer());
 
         _BindingListener.StartListen(bindings);
     }
 
-    public void StopWatching()
-    {
-        _BindingListener.StopListen();
-    }
+    public void StopWatching() => _BindingListener.StopListen();
 
     private void BindingChangesHandled(JoyBindingBase binding)
     {
-        var patterns = _Patterns.Where(p => p.Binding.Equals(binding));
-        foreach (var joyPattern in patterns)
+        var patterns = _Patterns
+            .Where(p => p.Equals(binding))
+            .ToArray();
+
+        var hasActiveModificator = patterns.Any(p => p.Modificator is {Binding.IsActive: true});
+
+        foreach (var patternModel in patterns)
         {
-            // TODO: модификаторы
-            joyPattern.PatternAction.BindingStateChanged(binding.IsActive);
+            if(patternModel.Modificator == null && hasActiveModificator)
+                continue;
+
+            if (patternModel.CanStateChange)
+                patternModel.Pattern.PatternAction.BindingStateChanged(binding.IsActive);
         }
 
+    }
+
+    #region Classes
+
+    private sealed record PatternModel(JoyPattern Pattern, Modificator Modificator) : IEquatable<JoyBindingBase>
+    {
+        public bool CanStateChange => Modificator?.Binding.IsActive ?? true;
+        public bool Equals(JoyBindingBase other) => Pattern.Binding.Equals(other);
     }
 
     private class ActionWorker
@@ -97,4 +113,15 @@ public class JoyPatternListener : IJoyPatternListener
             });
         }
     }
+
+    private class BindingComparer : IEqualityComparer<JoyBindingBase>
+    {
+        public bool Equals(JoyBindingBase x, JoyBindingBase y) => x?.Equals(y) ?? false;
+
+        public int GetHashCode(JoyBindingBase obj) => obj.Description.GetHashCode();
+    } 
+
+    #endregion
 }
+
+
