@@ -53,10 +53,15 @@ public class JoyPatternListener : IJoyPatternListener
             .Concat(modificators.Select(m => m.Binding))
             .Distinct(new BindingComparer());
 
+        _ActionWorker = new();
         _BindingListener.StartListen(bindings);
     }
 
-    public void StopWatching() => _BindingListener.StopListen();
+    public void StopWatching()
+    {
+        _ActionWorker?.Dispose();
+        _BindingListener.StopListen();
+    }
 
     private void BindingChangesHandled(JoyBindingBase binding)
     {
@@ -64,18 +69,20 @@ public class JoyPatternListener : IJoyPatternListener
             .Where(p => p.Equals(binding))
             .ToArray();
 
-        var hasActiveModificator = patterns.Any(p => p.Modificator is {Binding.IsActive: true});
+        var hasActiveModificator = patterns.Any(p => p.Modificator is { Binding.IsActive: true });
 
         foreach (var patternModel in patterns)
         {
-            if(patternModel.Modificator == null && hasActiveModificator)
+            if (patternModel.Modificator == null && hasActiveModificator)
                 continue;
 
             if (patternModel.CanStateChange)
-                patternModel.Pattern.PatternAction.BindingStateChanged(binding.IsActive);
+                _ActionWorker.Add(patternModel.Pattern.PatternAction, binding.IsActive);
         }
 
     }
+
+    private ActionWorker _ActionWorker;
 
     #region Classes
 
@@ -85,7 +92,8 @@ public class JoyPatternListener : IJoyPatternListener
         public bool Equals(JoyBindingBase other) => Pattern.Binding.Equals(other);
     }
 
-    private class ActionWorker
+
+    private class ActionWorker : IDisposable
     {
         private readonly ConcurrentQueue<(PatternActionBase, bool)> _Queue = new();
 
@@ -112,14 +120,17 @@ public class JoyPatternListener : IJoyPatternListener
                 _TaskRunning = false;
             });
         }
+
+        public void Dispose() => _Queue.Clear();
     }
+
 
     private class BindingComparer : IEqualityComparer<JoyBindingBase>
     {
         public bool Equals(JoyBindingBase x, JoyBindingBase y) => x?.Equals(y) ?? false;
 
         public int GetHashCode(JoyBindingBase obj) => obj.Description.GetHashCode();
-    } 
+    }
 
     #endregion
 }

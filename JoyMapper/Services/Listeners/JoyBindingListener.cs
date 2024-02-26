@@ -68,7 +68,6 @@ public class JoyBindingListener : IJoyBindingListener
                     ChangesHandled?.Invoke(binding);
 
             }
-
             await Task.Delay(_PollingDelay, cancel);
         }
         _CancellationTokenSource.Dispose();
