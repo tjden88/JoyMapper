@@ -36,4 +36,9 @@ public interface IAudioStream : IDisposable, IEquatable<IAudioStream>
     /// Адрес источника
     /// </summary>
     string Source { get; }
+
+    /// <summary>
+    /// Укороченное имя
+    /// </summary>
+    string Name => Source.Length > 40 ? $"{Source[..40]}..." : Source;
 }

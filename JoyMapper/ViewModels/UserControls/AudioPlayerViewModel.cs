@@ -243,7 +243,7 @@ public class AudioPlayerViewModel : ViewModel
     {
         var src = SelectedSource;
 
-        var question = await WPRDialogHelper.QuestionAsync(App.ActiveWindow, $"Удалить источник {src.Source}?");
+        var question = await WPRDialogHelper.QuestionAsync(App.ActiveWindow, $"Удалить источник {src.ShortSource}?");
         if(!question) return;
 
         AudioStreams.Remove(src);
@@ -439,10 +439,12 @@ public class AudioPlayerViewModel : ViewModel
         public string Source
         {
             get => _Source;
-            set => Set(ref _Source, value);
+            set => IfSet(ref _Source, value).CallPropertyChanged(nameof(ShortSource));
         }
 
         #endregion
+
+        public string ShortSource => Source?.Length > 70 ? $"{Source[..70]}..." : Source;
 
         #region IsAvaliable : bool? - Доступность
 

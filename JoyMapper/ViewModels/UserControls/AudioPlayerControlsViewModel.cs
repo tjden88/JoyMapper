@@ -195,7 +195,11 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
             bindings.Add(radioSettings.PreviousBinding);
         if (radioSettings.VolumeBinding is AxisJoyBinding volBinding)
         {
-            volBinding.CurrentValueChanged += VolBindingOnCurrentValueChanged;
+            if (volBinding.ActivationType == JoyBindingBase.ActivationTypes.Normal)
+                volBinding.CurrentValueChanged += VolBindingOnCurrentValueChanged;
+            else
+                volBinding.CurrentValueChanged += VolReverseBindingOnCurrentValueChanged;
+
             bindings.Add(volBinding);
         }
 
@@ -205,7 +209,12 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
 
     private void VolBindingOnCurrentValueChanged(object sender, int e)
     {
-        var newVolume = (byte)(e / 65535.0 * 127);
+        var newVolume = (byte)(e * 127 / 65535.0);
+        Volume = newVolume;
+    }
+    private void VolReverseBindingOnCurrentValueChanged(object sender, int e)
+    {
+        var newVolume = (byte)(127 - e * 127 / 65535.0);
         Volume = newVolume;
     }
 
@@ -220,6 +229,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         if (_DataManager.RadioSettings.VolumeBinding is AxisJoyBinding volBinding)
         {
             volBinding.CurrentValueChanged -= VolBindingOnCurrentValueChanged;
+            volBinding.CurrentValueChanged -= VolReverseBindingOnCurrentValueChanged;
         }
         _JoyBindingListener.StopListen();
     }

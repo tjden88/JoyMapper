@@ -150,7 +150,7 @@
 
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <controls:WPRIconText Text="{Binding Source}"
+                                    <controls:WPRIconText Text="{Binding ShortSource}"
                                           IconSource="{Binding Status.Icon}"
                                           Margin="5"
                                           IconForeground="{Binding Status.Foreground}"

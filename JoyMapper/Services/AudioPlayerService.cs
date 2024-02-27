@@ -210,7 +210,7 @@ public class AudioPlayerService
             _CurrentStream = audioStream;
             audioStream.Play(_DataManager.RadioSettings.OutputDeviceId);
             audioStream.SetVolume(Volume);
-            CurrentSource = audioStream.Source;
+            CurrentSource = audioStream.Name;
         });
         _IsLoading = false;
         IsPlaying = true;
