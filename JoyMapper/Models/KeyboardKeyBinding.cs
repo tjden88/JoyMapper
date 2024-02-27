@@ -20,6 +20,10 @@ public class KeyboardKeyBinding
 
     public KeyboardAction Action { get; set; }
 
+    public int Delay { get; set; }
+
+    public bool HasDelay => Delay > 0;
+
     public override string ToString()
     {
         return Action switch

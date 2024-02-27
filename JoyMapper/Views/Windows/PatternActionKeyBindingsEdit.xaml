@@ -34,24 +34,86 @@
             </Button>
         </ToolBar>
         <Grid>
-            <ListBox ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding KeyBindings}"
+                     d:ItemsSource="{d:SampleData}"
+                     HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
                         <Grid Background="{StaticResource TransparentBrush}" Name="Grid">
 
-                            <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5"/>
-                            <Button HorizontalAlignment="Right" VerticalAlignment="Center"
-                                        Style="{StaticResource WPRToolButton}" Margin="0,0,10,0"
+                            <StackPanel>
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:WPRIcon Source="SubdirectoryArrowRight"
+                                                      VerticalAlignment="Center"
+                                                      Margin="5"
+                                                      Foreground="{DynamicResource AccentColorBrush}"/>
+                                    <TextBlock Text="Задержка: " VerticalAlignment="Center" Foreground="{DynamicResource SecondaryColorBrush}"/>
+                                    <controls:WPRNumericIntDecorator PlusMinusButtonsShowing="False"
+                                                                     Increment="10"
+                                                                     MinValue="1"
+                                                                     Value="{Binding Delay}"
+                                                                     MaxValue="100000">
+                                        <TextBox MinWidth="20" VerticalAlignment="Center"
+                                                 Foreground="{DynamicResource AccentColorBrush}"
+                                                 Style="{StaticResource WPRFlatTextBox}"/>
+                                    </controls:WPRNumericIntDecorator>
+
+                                    <Border Margin="5" Background="{DynamicResource TransparentBrush}">
+                                        <Border.ToolTip>
+                                            <StackPanel >
+                                                <TextBlock FontWeight="Bold" Margin="0,0,0,5" Text="Не рекомендуется устанавливать задержки более 300 мс."></TextBlock>
+                                                <TextBlock Foreground="{DynamicResource SecondaryBackgroundColorBrush}">
+                                                    Для обеспечения корректной отправки команд и предотвращения нежелательный ситуаций
+                                                    <LineBreak/>
+                                                    (напиример, "залипания" системных клавиш), команды действий отправляются по очереди.
+                                                    <LineBreak/>   
+                                                    Из-за этого обработка последующих команд (в том числе других паттернов) будет отложена
+                                                    <LineBreak/>
+                                                    до полной отработки текущих команд.
+                                                    <LineBreak/>
+                                                    Это может создать негативный игровой опыт
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Border.ToolTip>
+                                        <controls:WPRIcon Source="InfoCircleOutline" IconSize="18"
+                                                          Foreground="{DynamicResource DangerColorBrush}"/>
+                                    </Border>
+                                    <TextBlock Text=" мс." VerticalAlignment="Center" Foreground="{DynamicResource SecondaryColorBrush}"/>
+
+                                    <Button Style="{StaticResource WPRToolButton}"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource DangerColorBrush}"
+                                            ToolTip="Убрать задержку">
+                                        <Button.Content>
+                                            <controls:WPRIcon  Margin="3" Source="Close"></controls:WPRIcon>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                                         Visibility="{Binding ElementName=Grid, Path=IsMouseOver, Converter={StaticResource Bool2VisibilityConverter}}"
-                                        Foreground="Red"
+                                        VerticalAlignment="Center">
+                                <Button Style="{StaticResource WPRToolButton}" Margin="0,0,10,0"
+                                        Foreground="{DynamicResource PrimaryColorBrush}"
+                                        ToolTip="Задержка после действия"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" BorderThickness="0">
+                                    <Button.Content>
+                                        <controls:WPRIcon Source="TimerOutline"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource WPRToolButton}" Margin="0,0,10,0"
+                                        Foreground="{DynamicResource DangerColorBrush}"
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.RemoveKeyBindingCommand}"
                                         ToolTip="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.RemoveKeyBindingCommand}"
                                         CommandParameter="{Binding}"
                                         Background="Transparent" BorderThickness="0">
-                                <Button.Content>
-                                    <controls:WPRIcon Source="TrashOutline"/>
-                                </Button.Content>
-                            </Button>
+                                    <Button.Content>
+                                        <controls:WPRIcon Source="TrashOutline"/>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

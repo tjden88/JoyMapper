@@ -192,7 +192,7 @@ public partial class PatternActionKeyBindingsEdit : Window
 
         /// <summary>Удалить действие клавиши</summary>
         public Command RemoveKeyBindingCommand => _RemoveKeyBindingCommand
-            ??= new Command(OnRemoveKeyBindingCommandExecuted, CanRemoveKeyBindingCommandExecute, "Удалить действие клавиши");
+            ??= new Command(OnRemoveKeyBindingCommandExecuted, CanRemoveKeyBindingCommandExecute, "Удалить действие");
 
         /// <summary>Проверка возможности выполнения - Удалить действие клавиши</summary>
         private bool CanRemoveKeyBindingCommandExecute(object p) => p is KeyboardKeyBinding;
