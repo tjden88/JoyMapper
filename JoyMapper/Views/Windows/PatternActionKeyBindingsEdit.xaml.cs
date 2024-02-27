@@ -4,6 +4,7 @@ using JoyMapper.Models;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using JoyMapper.Interfaces;
 using WPR.MVVM.Commands.Base;
 using WPR.MVVM.ViewModels;
 
@@ -18,7 +19,11 @@ public partial class PatternActionKeyBindingsEdit : Window
 
     public PatternActionKeyBindingsEdit(IEnumerable<KeyboardKeyBinding> KeyBindings, string name)
     {
-        ViewModel = new() {KeyBindings = new (KeyBindings), Name = name};
+        ViewModel = new()
+        {
+            KeyBindings = new (KeyBindings.Select(b => new KeyBindingViewModel(b))),
+            Name = name
+        };
         InitializeComponent();
     }
 
@@ -34,11 +39,12 @@ public partial class PatternActionKeyBindingsEdit : Window
         if (!e.IsRepeat)
         {
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+            var kb = new KeyboardKeyBinding
             {
                 Action = KeyboardKeyBinding.KeyboardAction.KeyPress,
                 KeyCode = key
-            });
+            };
+            ViewModel.KeyBindings.Add(new KeyBindingViewModel(kb));
         }
         e.Handled = true;
     }
@@ -50,11 +56,12 @@ public partial class PatternActionKeyBindingsEdit : Window
         if (!e.IsRepeat)
         {
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+            var kb = new KeyboardKeyBinding
             {
                 Action = KeyboardKeyBinding.KeyboardAction.KeyUp,
                 KeyCode = key
-            });
+            };
+            ViewModel.KeyBindings.Add(new KeyBindingViewModel(kb));
         }
         e.Handled = true;
     }
@@ -62,21 +69,23 @@ public partial class PatternActionKeyBindingsEdit : Window
     private void UIElement_OnPreviewMouseDown(object Sender, MouseButtonEventArgs E)
     {
         if (!ViewModel.IsRecorded) return;
-        ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+        var kb = new KeyboardKeyBinding
         {
             Action = KeyboardKeyBinding.KeyboardAction.MousePress,
             MouseButton = E.ChangedButton
-        });
+        };
+        ViewModel.KeyBindings.Add(new KeyBindingViewModel(kb));
     }
 
     private void UIElement_OnPreviewMouseUp(object Sender, MouseButtonEventArgs E)
     {
         if (!ViewModel.IsRecorded) return;
-        ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+        var kb = new KeyboardKeyBinding
         {
             Action = KeyboardKeyBinding.KeyboardAction.MouseUp,
             MouseButton = E.ChangedButton
-        });
+        };
+        ViewModel.KeyBindings.Add(new KeyBindingViewModel(kb));
     }
 
     private void UIElement_OnMouseWheel(object Sender, MouseWheelEventArgs E)
@@ -85,21 +94,22 @@ public partial class PatternActionKeyBindingsEdit : Window
 
         var up = E.Delta > 0;
 
-        ViewModel.KeyBindings.Add(new KeyboardKeyBinding
+        var kb = new KeyboardKeyBinding
         {
             Action = up ? KeyboardKeyBinding.KeyboardAction.MouseScrollUp : KeyboardKeyBinding.KeyboardAction.MouseScrollDown,
-        });
+        };
+        ViewModel.KeyBindings.Add(new KeyBindingViewModel(kb));
     }
 
     public class PatternActionKeyBindingsEditViewModel : ViewModel
     {
-        #region KeyBindings : ObservableCollection<KeyboardKeyBinding> - Команды клавиатуры
+        #region KeyBindings : ObservableCollection<KeyBindingViewModel> - Команды клавиатуры
 
         /// <summary>Команды клавиатуры</summary>
-        private ObservableCollection<KeyboardKeyBinding> _KeyBindings;
+        private ObservableCollection<KeyBindingViewModel> _KeyBindings;
 
         /// <summary>Команды клавиатуры</summary>
-        public ObservableCollection<KeyboardKeyBinding> KeyBindings
+        public ObservableCollection<KeyBindingViewModel> KeyBindings
         {
             get => _KeyBindings;
             set => Set(ref _KeyBindings, value);
@@ -195,12 +205,64 @@ public partial class PatternActionKeyBindingsEdit : Window
             ??= new Command(OnRemoveKeyBindingCommandExecuted, CanRemoveKeyBindingCommandExecute, "Удалить действие");
 
         /// <summary>Проверка возможности выполнения - Удалить действие клавиши</summary>
-        private bool CanRemoveKeyBindingCommandExecute(object p) => p is KeyboardKeyBinding;
+        private bool CanRemoveKeyBindingCommandExecute(object p) => p is KeyBindingViewModel;
 
         /// <summary>Логика выполнения - Удалить действие клавиши</summary>
-        private void OnRemoveKeyBindingCommandExecuted(object p) => KeyBindings.Remove((KeyboardKeyBinding)p);
+        private void OnRemoveKeyBindingCommandExecuted(object p) => KeyBindings.Remove((KeyBindingViewModel)p);
 
         #endregion
     }
 
+    public class KeyBindingViewModel : ViewModel, IEditModel<KeyboardKeyBinding>
+    {
+        private KeyboardKeyBinding _Model;
+
+        private const int DangerDelay = 300;
+
+        public KeyboardKeyBinding GetModel() => _Model;
+
+        public void SetModel(KeyboardKeyBinding model) => _Model = model;
+
+        public KeyBindingViewModel(KeyboardKeyBinding model)
+        {
+            _Model = model;
+        }
+
+        #region Delay : int - Задержка
+
+        /// <summary>Задержка</summary>
+        public int Delay
+        {
+            get => _Model.Delay;
+            set
+            {
+                if(_Model.Delay == value)
+                    return;
+                _Model.Delay = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasDelay));
+                OnPropertyChanged(nameof(IsDangerDelay));
+            }
+        }
+
+        #endregion
+
+        #region HasDelay : bool - Задержка установлена
+
+        /// <summary>Задержка установлена</summary>
+        public bool HasDelay => Delay > 0;
+
+        #endregion
+
+
+        #region IsDangerDelay : bool - Долгая задержка
+
+
+        /// <summary>Долгая задержка</summary>
+        public bool IsDangerDelay => Delay > DangerDelay;
+
+        #endregion
+
+        public override string ToString() => _Model.ToString();
+    }
 }

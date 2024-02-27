@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Views.Windows;
 using WPR.MVVM.Commands.Base;
@@ -58,7 +59,7 @@ public class PatternActionKeysBindingViewModel : ViewModel
         };
         if (wnd.ShowDialog() != true) return;
 
-        KeyBindings=new(wnd.ViewModel.KeyBindings);
+        KeyBindings=new(wnd.ViewModel.KeyBindings.Select(b=>b.GetModel()));
     }
 
     #endregion
