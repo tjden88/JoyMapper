@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
 using JoyMapper.Services.Interfaces;
@@ -16,8 +17,12 @@ public class ProfileListener: IProfileListener
         _DataManager = DataManager;
     }
 
+    public event EventHandler<Profile> ProfileChanged;
+
     public void StartListenProfile(Profile Profile)
     {
+        _JoyPatternListener.StopWatching();
+
         var patterns = _DataManager.JoyPatterns
             .Where(p =>Profile.PatternGroups.Contains(p.GroupName) 
                        || Profile.PatternsIds.Contains(p.Id))
@@ -31,7 +36,12 @@ public class ProfileListener: IProfileListener
         }
         AppLog.LogMessage("Профиль запущен");
         _JoyPatternListener.StartWatching(patterns);
+        ProfileChanged?.Invoke(this, Profile);
     }
 
-    public void StopListenProfile() => _JoyPatternListener.StopWatching();
+    public void StopListenProfile()
+    {
+        _JoyPatternListener.StopWatching();
+        ProfileChanged?.Invoke(this, null);
+    }
 }

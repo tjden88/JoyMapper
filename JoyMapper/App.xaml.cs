@@ -74,7 +74,7 @@ public partial class App
             .AddTransient<IJoystickStateManager, JoystickStateManager>()
             .AddTransient<IJoyBindingListener, JoyBindingListener>()
             .AddTransient<IJoyPatternListener, JoyPatternListener>()
-            .AddTransient<IProfileListener, ProfileListener>()
+            .AddSingleton<IProfileListener, ProfileListener>()
             .AddSingleton<KeyboardSender>()
             ;
 

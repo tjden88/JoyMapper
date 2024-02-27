@@ -31,6 +31,7 @@ public partial class MainWindowViewModel : WindowViewModel
         _DataManager = DataManager;
         _AppUpdateService = AppUpdateService;
         _ProfileListener = ProfileListener;
+        _ProfileListener.ProfileChanged += ProfileListenerOnProfileChanged;
         _AppWindowsService = AppWindowsService;
         AppLog.Report += msg => LogMessages.Add(msg);
         Title = "JoyMapper " + _AppUpdateService.GetCurrentAppVersion();
