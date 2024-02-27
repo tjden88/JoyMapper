@@ -12,9 +12,11 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 {
     private readonly List<JoystickStateWatcher> _Joysticks = new();
 
+    private static readonly DirectInput _DirectInput = new();
+
     public IEnumerable<string> GetConnectedJoysticks()
     {
-        var connectedDevices = new DirectInput()
+        var connectedDevices = _DirectInput
             .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly);
 
         return connectedDevices.Select(cd => cd.InstanceName);
@@ -66,10 +68,10 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
     private Joystick TryGetJoystick(string name)
     {
-        var newJoy = new DirectInput()
+        var newJoy = _DirectInput
             .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
             .FirstOrDefault(d => d.InstanceName.Equals(name));
-        return newJoy is null ? null : new Joystick(new DirectInput(), newJoy.InstanceGuid);
+        return newJoy is null ? null : new Joystick(_DirectInput, newJoy.InstanceGuid);
     }
 
     public void Dispose()
