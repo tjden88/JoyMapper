@@ -1,5 +1,6 @@
 ﻿using JoyMapper.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -18,6 +19,60 @@ namespace JoyMapper.Services;
 /// </summary>
 public class KeyboardSender
 {
+
+    private readonly ConcurrentQueue<KeyboardKeyBinding> _Queue = new();
+
+    private bool _IsSending;
+
+    private async void StartSending()
+    {
+        if(_IsSending)
+            return;
+        await Task.Run(SendCommands).ConfigureAwait(false);
+    }
+    private Task SendCommands()
+    {
+        if (_IsSending)
+            return Task.CompletedTask;
+
+        _IsSending = true;
+        while (!_Queue.IsEmpty)
+        {
+            if (_Queue.TryDequeue(out var binding))
+            {
+                switch (binding.Action)
+                {
+                    case KeyboardKeyBinding.KeyboardAction.KeyPress:
+                        PressKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.KeyUp:
+                        ReleaseKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MousePress:
+                        MousePress(binding.MouseButton);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseUp:
+                        MouseRelease(binding.MouseButton);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
+                        MouseScroll(true);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
+                        MouseScroll(false);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        _IsSending = false;
+        return Task.CompletedTask;
+    }
+
+
+
+    #region Methods
     /// <summary> Эмулировать нажатие клавиши </summary>
     private void PressKey(Key key)
     {
@@ -49,44 +104,20 @@ public class KeyboardSender
     /// <summary> Эмулировать прокрутку мыши </summary>
     private void MouseScroll(bool Up)
     {
-        Mouse.Scroll(Up ? 1: -1);
+        Mouse.Scroll(Up ? 1 : -1);
         var up = Up ? "Вверх" : "Вниз";
         AppLog.LogKeyCommands($"Скролл мыши: {up}");
     }
 
+    #endregion
+
     /// <summary> Отправить клавиатурные команды в очередь команд </summary>
-    public async void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
+    public void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
     {
-        // Todo: сделать через очередь
-        await Task.Run(() =>
-        {
-            foreach (var binding in keyboardKeyBindings)
-            {
-                switch (binding.Action)
-                {
-                    case KeyboardKeyBinding.KeyboardAction.KeyPress:
-                        PressKey(binding.KeyCode);
-                        break;
-                    case KeyboardKeyBinding.KeyboardAction.KeyUp:
-                        ReleaseKey(binding.KeyCode);
-                        break;
-                    case KeyboardKeyBinding.KeyboardAction.MousePress:
-                        MousePress(binding.MouseButton);
-                        break;
-                    case KeyboardKeyBinding.KeyboardAction.MouseUp:
-                        MouseRelease(binding.MouseButton);
-                        break;
-                    case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
-                        MouseScroll(true);
-                        break;
-                    case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
-                        MouseScroll(false);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        });
+        foreach (var binding in keyboardKeyBindings)
+            _Queue.Enqueue(binding);
+
+        StartSending();
     }
 
 
