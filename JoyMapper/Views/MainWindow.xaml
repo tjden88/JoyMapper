@@ -11,7 +11,9 @@
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
         Name="Window"
         Style="{StaticResource ChromeWindow}"
-        Title="{Binding Title}" Height="650" Width="850">
+        Title="{Binding Title}"
+        MinHeight="600" MinWidth="800"
+        Height="650" Width="900">
     <Window.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>

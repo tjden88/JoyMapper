@@ -39,14 +39,16 @@
                               SelectedItem="{Binding SelectedDevice}"
                               DisplayMemberPath="Name"
                               Style="{StaticResource WPRBorderedComboBox}" 
-                              helpers:TextHelper.Hint="Устройство вывода звука" Margin="0,10"/>
+                              helpers:TextHelper.Hint="По умолчанию"
+                              helpers:TextHelper.Description="Устройство вывода звука"
+                              Margin="0,10"/>
                     <Button Grid.Column="1" 
                             Command="{Binding ClearSelectedDeviceCommand}"
                             Visibility="{Binding ClearSelectedDeviceCommand.Visibility}"
                             ToolTip="По умолчанию"
                             Style="{StaticResource WPRToolButton}"
                             VerticalAlignment="Center"
-                            Margin="10"
+                            Margin="10,20,10,0"
                             Foreground="{DynamicResource DangerColorBrush}">
                         <Button.Content>
                             <controls:WPRIcon Source="Close"></controls:WPRIcon>
@@ -61,13 +63,14 @@
                                 <Grid Margin="10,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="capt"/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition MinWidth="50"/>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="btn"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding Name, StringFormat={}{0}:}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                     <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding BindingBase, TargetNullValue='Не назначено'}" FontWeight="Bold"></TextBlock>
                                     <Button Grid.Column="2" 
-                        Style="{StaticResource WPRFlatButton}" BorderThickness="1"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource WPRFlatButton}" BorderThickness="1"
                         Content="{Binding ButtonCaption}" 
                         Command="{Binding DataContext.SetBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
                         CommandParameter="{Binding}"/>
