@@ -116,7 +116,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         ??= new Command(OnPlayStopCommandExecuted, CanPlayStopCommandExecute, "Начать воспроизведение");
 
     /// <summary>Проверка возможности выполнения - Начать воспроизведение</summary>
-    private bool CanPlayStopCommandExecute() => true;
+    private bool CanPlayStopCommandExecute() => _AudioPlayerService.CanPlay;
 
     /// <summary>Логика выполнения - Начать воспроизведение</summary>
     private void OnPlayStopCommandExecuted()
@@ -136,7 +136,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         ??= new Command(OnNextCommandExecuted, CanNextCommandExecute, "Следующий");
 
     /// <summary>Проверка возможности выполнения - Следующий</summary>
-    private bool CanNextCommandExecute() => true;
+    private bool CanNextCommandExecute() => _AudioPlayerService.CanNextPrevious;
 
     /// <summary>Логика выполнения - Следующий</summary>
     private void OnNextCommandExecuted()
@@ -156,7 +156,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         ??= new Command(OnPreviousCommandExecuted, CanPreviousCommandExecute, "Предыдущий");
 
     /// <summary>Проверка возможности выполнения - Предыдущий</summary>
-    private bool CanPreviousCommandExecute() => true;
+    private bool CanPreviousCommandExecute() => _AudioPlayerService.CanNextPrevious;
 
     /// <summary>Логика выполнения - Предыдущий</summary>
     private void OnPreviousCommandExecuted()
