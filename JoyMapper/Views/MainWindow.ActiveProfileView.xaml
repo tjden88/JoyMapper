@@ -25,7 +25,8 @@
                     </Button.Content>
                 </Button>
             </StackPanel>
-            <ScrollViewer Margin="10" Grid.Row="1" Foreground="{DynamicResource DarkPrimaryColorBrush}">
+            <ScrollViewer Margin="10" Grid.Row="1"
+                          Foreground="{DynamicResource DarkPrimaryColorBrush}">
                 <ItemsControl ItemsSource="{Binding LogMessages}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:LogMessage}">

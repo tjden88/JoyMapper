@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using JoyMapper.Models.PatternActions.Base;
-using JoyMapper.ViewModels;
+using JoyMapper.Services.Data;
+using JoyMapper.Services.Interfaces;
 using JoyMapper.ViewModels.PatternActions;
 using JoyMapper.ViewModels.PatternActions.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,44 +42,35 @@ public class ProfileSelectPatternAction : PatternActionBase
 
     private Profile _ReleaseProfile;
 
-    private MainWindowViewModel _MainWindowViewModel;
+    private IProfileListener _ProfileListener;
 
     protected override void Initialize(IServiceProvider Services)
     {
         if (LogReportMode) return;
         //_PreviousProfile = null;
-        var vm = Services.GetRequiredService<MainWindowViewModel>();
-        _MainWindowViewModel = vm;
+        var data = Services.GetRequiredService<DataManager>();
         if (PressProfileId > 0)
-            _PressProfile = _MainWindowViewModel.Profiles.FirstOrDefault(p => p.Id == PressProfileId);
+            _PressProfile = data.Profiles.FirstOrDefault(p => p.Id == PressProfileId);
 
         if (ReleaseProfileId > 0)
-            _ReleaseProfile = _MainWindowViewModel.Profiles.FirstOrDefault(p => p.Id == ReleaseProfileId);
+            _ReleaseProfile = data.Profiles.FirstOrDefault(p => p.Id == ReleaseProfileId);
 
+        _ProfileListener = Services.GetService<IProfileListener>();
     }
+
 
 
     protected override void DoWorkMode(bool newBindingState)
     {
-        if (newBindingState)
+        var newProfileId = newBindingState ? PressProfileId : ReleaseProfileId;
+        var prof = newBindingState ? _PressProfile : _ReleaseProfile;
+
+        if (newProfileId == PrevProfileId && _PreviousProfile != null)
+            _ProfileListener.StartListenProfile(_PreviousProfile);
+        else if (prof != null && _ProfileListener.CurrentProfile != prof)
         {
-            if(PressProfileId == PrevProfileId && _PreviousProfile != null)
-                _MainWindowViewModel.StartProfileCommand.Execute(_PreviousProfile);
-            else if (_PressProfile != null && _MainWindowViewModel.ActiveProfile != _PressProfile)
-            {
-                _PreviousProfile = _MainWindowViewModel.ActiveProfile;
-                _MainWindowViewModel.StartProfileCommand.Execute(_PressProfile);
-            }
-        }
-        else
-        {
-            if (ReleaseProfileId == PrevProfileId && _PreviousProfile != null)
-                _MainWindowViewModel.StartProfileCommand.Execute(_PreviousProfile);
-            else if (_ReleaseProfile != null && _MainWindowViewModel.ActiveProfile != _ReleaseProfile)
-            {
-                _PreviousProfile = _MainWindowViewModel.ActiveProfile;
-                _MainWindowViewModel.StartProfileCommand.Execute(_ReleaseProfile);
-            }
+            _PreviousProfile = _ProfileListener.CurrentProfile;
+            _ProfileListener.StartListenProfile(prof);
         }
     }
 

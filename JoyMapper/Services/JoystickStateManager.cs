@@ -127,7 +127,6 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
             {
                 Joystick.Poll();
                 var datas = Joystick.GetBufferedData();
-                Debug.WriteLine("zzz");
                 return GetData(datas);
             }
             catch (Exception e)
@@ -190,7 +189,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
         public void Dispose()
         {
-            Joystick?.Unacquire();
+            //Joystick?.Unacquire();
             Joystick?.Dispose();
             Joystick = null;
         }

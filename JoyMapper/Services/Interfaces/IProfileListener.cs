@@ -8,6 +8,8 @@ public interface IProfileListener
 {
     event EventHandler<Profile> ProfileChanged;
 
+    Profile CurrentProfile { get; }
+
     void StartListenProfile(Profile Profile);
 
     void StopListenProfile();
