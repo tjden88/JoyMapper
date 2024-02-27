@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 using JoyMapper.Models;
 using JoyMapper.Services.Interfaces;
 using SharpDX.DirectInput;
@@ -14,6 +15,8 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
     private static readonly DirectInput _DirectInput = new();
 
+    private bool _IsInAcqired;
+
     public IEnumerable<string> GetConnectedJoysticks()
     {
         var connectedDevices = _DirectInput
@@ -24,25 +27,40 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
     public void AcquireJoysticks(IEnumerable<string> JoysticksNames)
     {
-        Dispose();
-        foreach (var joysticksName in JoysticksNames)
+        _IsInAcqired = true;
+        var names = JoysticksNames.ToArray();
+
+        var toRemove = _Joysticks.Where(watcher => !names.Contains(watcher.JoyName)).ToArray();
+        foreach (var watcher in toRemove)
         {
-            var newJoy = TryGetJoystick(joysticksName);
+            watcher.Dispose();
+            _Joysticks.Remove(watcher);
+            Debug.WriteLine($"Прекращено отслеживание состояний джойстика: {watcher.JoyName}");
+        }
+
+
+        foreach (var name in names)
+        {
+            if (_Joysticks.Any(j => j.JoyName.Equals(name)))
+                continue;
+
+            var newJoy = TryGetJoystick(name);
             if (newJoy == null) // Не найден
             {
-                _Joysticks.Add(new JoystickStateWatcher(joysticksName) { IsFault = true });
-                AppLog.LogMessage($"Устройство {joysticksName} не найдено!", LogMessage.MessageType.Error);
+                _Joysticks.Add(new JoystickStateWatcher(name) { IsFault = true });
+                AppLog.LogMessage($"Устройство {name} не найдено!", LogMessage.MessageType.Error);
             }
             else // Найден
             {
-                _Joysticks.Add(new JoystickStateWatcher(joysticksName)
+                _Joysticks.Add(new JoystickStateWatcher(name)
                 {
                     Joystick = newJoy
                 });
-                Debug.WriteLine($"Начато отслеживание состояний джойстика: {joysticksName}");
+                Debug.WriteLine($"Начато отслеживание состояний джойстика: {name}");
             }
         }
 
+        _IsInAcqired = false;
     }
 
     public IEnumerable<JoyStateData> GetJoyStateChanges()
@@ -58,8 +76,14 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                     joy.IsFault = false;
                     AppLog.LogMessage($"Устройство восстановлено - {joy.JoyName}");
                 }
+                if (_IsInAcqired)
+                    yield break;
+
                 continue;
             }
+
+            if(_IsInAcqired)
+                yield break;
 
             foreach (var change in joy.GetChanges())
                 yield return change;

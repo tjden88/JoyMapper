@@ -38,9 +38,9 @@ public class ProfileListener: IProfileListener
             return;
         }
         AppLog.LogMessage($"Профиль {Profile.Name} запущен");
-        _JoyPatternListener.StartWatching(patterns);
         CurrentProfile = Profile;
         ProfileChanged?.Invoke(this, Profile);
+        _JoyPatternListener.StartWatching(patterns);
     }
 
     public void StopListenProfile()

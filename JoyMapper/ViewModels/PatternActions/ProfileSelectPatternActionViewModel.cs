@@ -28,7 +28,6 @@ public class ProfileSelectPatternActionViewModel : PatternActionViewModelBase
     {
         var data = App.Services.GetRequiredService<DataManager>();
         AllProfiles = data.Profiles;
-        IsBeta = true;
 
         if (model == null)
             return;

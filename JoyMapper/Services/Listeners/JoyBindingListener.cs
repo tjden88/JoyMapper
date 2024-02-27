@@ -68,8 +68,8 @@ public class JoyBindingListener : IJoyBindingListener
                 {
                     ChangesHandled?.Invoke(binding);
                 }
-                if (cancel.IsCancellationRequested)
-                    break;
+                //if (cancel.IsCancellationRequested)
+                //    break;
             }
             await Task.Delay(_PollingDelay, cancel);
         }
