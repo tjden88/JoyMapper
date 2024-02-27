@@ -24,7 +24,25 @@
                     <ItemsControl ItemsSource="{Binding KeyBindings}" HorizontalContentAlignment="Stretch">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:KeyboardKeyBinding}">
-                                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="5,3"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Delay}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <controls:WPRIcon Source="SubdirectoryArrowRight"
+                                                          VerticalAlignment="Center"
+                                                          Margin="5"
+                                                          Foreground="{DynamicResource AccentColorBrush}"/>
+                                        <TextBlock Text="{Binding Delay, StringFormat=Задержка: {0} мс.}" VerticalAlignment="Center" Foreground="{DynamicResource SecondaryColorBrush}"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

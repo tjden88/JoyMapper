@@ -218,6 +218,7 @@ public partial class PatternActionKeyBindingsEdit : Window
         private KeyboardKeyBinding _Model;
 
         private const int DangerDelay = 300;
+        private const int DefaultDelay = 50;
 
         public KeyboardKeyBinding GetModel() => _Model;
 
@@ -262,6 +263,51 @@ public partial class PatternActionKeyBindingsEdit : Window
         public bool IsDangerDelay => Delay > DangerDelay;
 
         #endregion
+
+        #region Commands
+
+        #region Command SetDefaultDelayCommand - Установить стандартную задержку
+
+        /// <summary>Установить стандартную задержку</summary>
+        private Command _SetDefaultDelayCommand;
+
+        /// <summary>Установить стандартную задержку</summary>
+        public Command SetDefaultDelayCommand => _SetDefaultDelayCommand
+            ??= new Command(OnSetDefaultDelayCommandExecuted, CanSetDefaultDelayCommandExecute, "Установить стандартную задержку");
+
+        /// <summary>Проверка возможности выполнения - Установить стандартную задержку</summary>
+        private bool CanSetDefaultDelayCommandExecute() => !HasDelay;
+
+        /// <summary>Логика выполнения - Установить стандартную задержку</summary>
+        private void OnSetDefaultDelayCommandExecuted()
+        {
+            Delay = DefaultDelay;
+        }
+
+        #endregion
+
+        #region Command ClearDelayCommand - Убрать задержку
+
+        /// <summary>Убрать задержку</summary>
+        private Command _ClearDelayCommand;
+
+        /// <summary>Убрать задержку</summary>
+        public Command ClearDelayCommand => _ClearDelayCommand
+            ??= new Command(OnClearDelayCommandExecuted, CanClearDelayCommandExecute, "Убрать задержку");
+
+        /// <summary>Проверка возможности выполнения - Убрать задержку</summary>
+        private bool CanClearDelayCommandExecute() => HasDelay;
+
+        /// <summary>Логика выполнения - Убрать задержку</summary>
+        private void OnClearDelayCommandExecuted()
+        {
+            Delay = 0;
+        }
+
+        #endregion
+
+        #endregion
+
 
         public override string ToString() => _Model.ToString();
     }
