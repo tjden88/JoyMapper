@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Security;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 #pragma warning disable SYSLIB0003
@@ -62,6 +63,11 @@ public class KeyboardSender
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
+                }
+
+                if (binding.Delay > 0)
+                {
+                    Thread.Sleep(binding.Delay);
                 }
             }
         }
