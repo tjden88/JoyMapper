@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -225,8 +226,8 @@ public class DataManager
     {
         ProfilesData.AppSettings.AppVersion = _AppUpdateService.GetCurrentAppVersion();
         _DataSerializer.SaveToFile(ProfilesData, _SettingsFileName);
+        Debug.WriteLine("Настройки сохранены");
     }
-
     #endregion
 
     private Data LoadData()

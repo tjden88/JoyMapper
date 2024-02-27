@@ -60,20 +60,52 @@
                     <ItemsControl ItemsSource="{Binding ButtonsConfigs}" d:ItemsSource="{d:SampleData}" Grid.IsSharedSizeScope="True">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="10,0">
+                                <Grid Margin="10,5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="capt"/>
                                         <ColumnDefinition MinWidth="50"/>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="btn"/>
                                     </Grid.ColumnDefinitions>
+                                    
                                     <TextBlock Text="{Binding Name, StringFormat={}{0}:}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding BindingBase, TargetNullValue='Не назначено'}" FontWeight="Bold"></TextBlock>
-                                    <Button Grid.Column="2" 
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{Binding BindingBase, TargetNullValue='Не назначено'}"
+                                                   FontWeight="Bold"/>
+
+                                        <Border>
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding BindingBase}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <WrapPanel>
+                                                <CheckBox Content="Инвертировать" IsChecked="{Binding IsInverted}" Margin="0,5"/>
+
+                                                <Button Style="{StaticResource WPRToolButton}"
+                                                        Command="{Binding DataContext.ClearBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
+                                                        CommandParameter="{Binding}"
+                                                        VerticalAlignment="Center"
+                                                        ToolTip="Удалить привязку"
+                                                        Foreground="{DynamicResource DangerColorBrush}">
+                                                    <Button.Content>
+                                                        <controls:WPRIcon Source="Close"></controls:WPRIcon>
+                                                    </Button.Content>
+                                                </Button>
+                                            </WrapPanel>
+                                        </Border>
+                                    </StackPanel>
+                                    <Button Grid.Row="0" Grid.Column="2" 
                                             VerticalAlignment="Center"
                                             Style="{StaticResource WPRFlatButton}" BorderThickness="1"
-                        Content="{Binding ButtonCaption}" 
-                        Command="{Binding DataContext.SetBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
-                        CommandParameter="{Binding}"/>
+                                            Content="{Binding ButtonCaption}" 
+                                            Command="{Binding DataContext.SetBindingCommand, RelativeSource={RelativeSource AncestorType=local:AudioPlayer}}"
+                                            CommandParameter="{Binding}"/>
+
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

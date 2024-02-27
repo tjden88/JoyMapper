@@ -149,7 +149,27 @@ public class AudioPlayerViewModel : ViewModel
         if (bind is null) return;
         p.BindingBase = bind;
         p.WriteBindingToRadioSettings?.Invoke(bind);
-        _DataManager.SaveData();
+    }
+
+    #endregion
+
+    #region Command ClearBindingCommand : ConfigButtonSetup - Очистить привязку кнопки
+
+    /// <summary>Очистить привязку кнопки</summary>
+    private Command<ConfigButtonSetup> _ClearBindingCommand;
+
+    /// <summary>Очистить привязку кнопки</summary>
+    public Command<ConfigButtonSetup> ClearBindingCommand => _ClearBindingCommand
+        ??= new Command<ConfigButtonSetup>(OnClearBindingCommandExecuted, CanClearBindingCommandExecute, "Очистить привязку кнопки");
+
+    /// <summary>Проверка возможности выполнения - Очистить привязку кнопки</summary>
+    private bool CanClearBindingCommandExecute(ConfigButtonSetup p) => true;
+
+    /// <summary>Проверка возможности выполнения - Очистить привязку кнопки</summary>
+    private void OnClearBindingCommandExecuted(ConfigButtonSetup p)
+    {
+        p.BindingBase = null;
+        p.WriteBindingToRadioSettings?.Invoke(null);
     }
 
     #endregion
@@ -289,10 +309,31 @@ public class AudioPlayerViewModel : ViewModel
         _IsEnabled = radioSettings.IsEnabled;
         ButtonsConfigs = new List<ConfigButtonSetup>
         {
-            new("Старт/Стоп воспроизведения", false) {BindingBase = radioSettings.PlayStopBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.PlayStopBinding = b },
-            new("Следующая радиостанция", false) {BindingBase = radioSettings.NextBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.NextBinding = b },
-            new("Предыдущая радиостанция", false) { BindingBase = radioSettings.PreviousBinding , WriteBindingToRadioSettings = b => _DataManager.RadioSettings.PreviousBinding = b },
-            new("Ось регулировки громкости", true) {BindingBase = radioSettings.VolumeBinding, WriteBindingToRadioSettings = b => _DataManager.RadioSettings.VolumeBinding = b },
+            new("Старт/Стоп воспроизведения", false) {BindingBase = radioSettings.PlayStopBinding, WriteBindingToRadioSettings = b =>
+                {
+                    _DataManager.RadioSettings.PlayStopBinding = b;
+                    _DataManager.SaveData();
+                }
+            },
+            new("Следующая радиостанция", false) {BindingBase = radioSettings.NextBinding, WriteBindingToRadioSettings = b =>
+                {
+                    _DataManager.RadioSettings.NextBinding = b;
+                    _DataManager.SaveData();
+                }
+            },
+            new("Предыдущая радиостанция", false) { BindingBase = radioSettings.PreviousBinding , WriteBindingToRadioSettings =
+                b =>
+                {
+                    _DataManager.RadioSettings.PreviousBinding = b; 
+                    _DataManager.SaveData(); 
+
+                } },
+            new("Ось регулировки громкости", true) {BindingBase = radioSettings.VolumeBinding, WriteBindingToRadioSettings = b =>
+                {
+                    _DataManager.RadioSettings.VolumeBinding = b;
+                    _DataManager.SaveData();
+                }
+            },
         };
         AudioStreams = new(radioSettings.Sources.Select(s => new AudioSourceViewModel(s)));
         DeviceOutputs = new(DirectSoundOut.Devices.Select(d => new AudioDeviceOutput(d.Description, d.Guid)));
@@ -352,10 +393,34 @@ public class AudioPlayerViewModel : ViewModel
         public JoyBindingBase BindingBase
         {
             get => _BindingBase;
-            set => Set(ref _BindingBase, value);
+            set => IfSet(ref _BindingBase, value)
+                .CallPropertyChanged(nameof(IsInverted));
         }
 
         #endregion
+
+        #region IsInverted : bool - Привязка инвертирована
+
+        /// <summary>Привязка инвертирована</summary>
+        public bool IsInverted
+        {
+            get => BindingBase?.ActivationType == JoyBindingBase.ActivationTypes.Reverse;
+            set
+            {
+                if(BindingBase is null) return;
+                var newActivation = value ? JoyBindingBase.ActivationTypes.Reverse : JoyBindingBase.ActivationTypes.Normal;
+                if(BindingBase.ActivationType == newActivation)
+                    return;
+
+                BindingBase.ActivationType = newActivation;
+                OnPropertyChanged();
+                WriteBindingToRadioSettings?.Invoke(BindingBase);
+            }
+        }
+
+        #endregion
+
+        
 
     }
 
