@@ -65,8 +65,11 @@ public class JoyBindingListener : IJoyBindingListener
             {
                 var changedBindings = _Bindings.Where(b => b.SetNewActiveStatus(change));
                 foreach (var binding in changedBindings)
+                {
                     ChangesHandled?.Invoke(binding);
-
+                }
+                if (cancel.IsCancellationRequested)
+                    break;
             }
             await Task.Delay(_PollingDelay, cancel);
         }

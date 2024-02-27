@@ -252,6 +252,7 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
         if (_PatternActionBase == null) return;
 
         _PatternActionBase.ReportMessage -= Action_OnReportMessage;
+        _BindingListener.StopListen();
         _PatternActionBase = null;
     }
 }

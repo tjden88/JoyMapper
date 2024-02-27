@@ -110,7 +110,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 {
                     newJoy.Properties.BufferSize = 128;
                     newJoy.Acquire();
-                    newJoy.Poll();
+                    //newJoy.Poll();
                 }
 
                 _Joystick = value;
@@ -126,6 +126,9 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
             try
             {
                 Joystick.Poll();
+                var datas = Joystick.GetBufferedData();
+                Debug.WriteLine("zzz");
+                return GetData(datas);
             }
             catch (Exception e)
             {
@@ -134,10 +137,6 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                 IsFault = true;
                 return Enumerable.Empty<JoyStateData>();
             }
-
-            var datas = Joystick.GetBufferedData();
-            return GetData(datas);
-
         }
 
         private IEnumerable<JoyStateData> GetData(IEnumerable<JoystickUpdate> updates)
@@ -145,7 +144,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
             foreach (var update in updates)
             {
                 var joyStateChange = SetJoyStateChange(update);
-                if(joyStateChange != null)
+                if (joyStateChange != null)
                     yield return joyStateChange;
             }
         }
