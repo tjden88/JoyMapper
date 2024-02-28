@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml.Linq;
 using JoyMapper.Models;
 using JoyMapper.Services.Interfaces;
 using SharpDX.DirectInput;
@@ -90,7 +89,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         }
     }
 
-    private Joystick TryGetJoystick(string name)
+    private static Joystick TryGetJoystick(string name)
     {
         var newJoy = _DirectInput
             .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using JoyMapper.Models;
 using JoyMapper.Services.Data;
@@ -18,8 +17,10 @@ public class ProfileListener: IProfileListener
         _DataManager = DataManager;
     }
 
+    /// <summary> Происходит при смене профиля </summary>
     public event EventHandler<Profile> ProfileChanged;
 
+    /// <summary> Текущий запущенный профиль </summary>
     public Profile CurrentProfile { get; private set; }
 
     public void StartListenProfile(Profile Profile)

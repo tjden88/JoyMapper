@@ -71,7 +71,8 @@ public class JoyPatternListener : IJoyPatternListener
             if (patternModel.Modificator == null && hasActiveModificator)
                 continue;
 
-            if (patternModel.CanStateChange) patternModel.Pattern.PatternAction.BindingStateChanged(binding.IsActive);
+            if (patternModel.CanStateChange) 
+                patternModel.Pattern.PatternAction.BindingStateChanged(binding.IsActive);
         }
 
     }
