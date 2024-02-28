@@ -12,7 +12,6 @@ namespace JoyMapper.Models.Radio;
 /// </summary>
 internal class AudioStreamFromUrl : IAudioStream
 {
-    private readonly string _Url;
     private WaveStream _Stream;
 
     public event EventHandler<string> PlaybackError;
@@ -20,7 +19,7 @@ internal class AudioStreamFromUrl : IAudioStream
 
     public AudioStreamFromUrl(string StreamUrl)
     {
-        _Url = StreamUrl;
+        Source = StreamUrl;
     }
 
 
@@ -30,7 +29,7 @@ internal class AudioStreamFromUrl : IAudioStream
         {
             using var http = new HttpClient();
             http.Timeout = TimeSpan.FromSeconds(5);
-            var response = await http.SendAsync(new HttpRequestMessage(HttpMethod.Head, _Url));
+            var response = await http.SendAsync(new HttpRequestMessage(HttpMethod.Head, Source));
             return response.IsSuccessStatusCode;
         }
         catch (Exception)
@@ -49,8 +48,8 @@ internal class AudioStreamFromUrl : IAudioStream
 
         try
         {
-            using var mf = new MediaFoundationReader(_Url);
-            var channel = new WaveChannel32(new MediaFoundationReader(_Url));
+            using var mf = new MediaFoundationReader(Source);
+            var channel = new WaveChannel32(new MediaFoundationReader(Source));
 
             var wo = OutputDeviceId is null ? new DirectSoundOut() : new DirectSoundOut((Guid)OutputDeviceId);
             wo.Init(channel);
@@ -66,7 +65,8 @@ internal class AudioStreamFromUrl : IAudioStream
 
     }
 
-    private void WoOnPlaybackStopped(object sender, StoppedEventArgs e) => PlaybackError?.Invoke(this, $"Ошибка воспроизведения: {_Url}");
+    private void WoOnPlaybackStopped(object sender, StoppedEventArgs e) => 
+        PlaybackError?.Invoke(this, $"Ошибка воспроизведения: {Source}");
 
     public void Stop() => Dispose();
 
@@ -78,7 +78,7 @@ internal class AudioStreamFromUrl : IAudioStream
         _Stream.Channel.Volume = value;
     }
 
-    public string Source => _Url;
+    public string Source { get; }
 
 
     public void Dispose()
@@ -93,7 +93,7 @@ internal class AudioStreamFromUrl : IAudioStream
         _Stream = null;
     }
 
-    public bool Equals(IAudioStream other) => other is AudioStreamFromUrl stream && stream._Url.Equals(_Url);
+    public bool Equals(IAudioStream other) => other is AudioStreamFromUrl stream && stream.Source.Equals(Source);
 
 
     private record WaveStream(DirectSoundOut SoundOut, WaveChannel32 Channel) : IDisposable
