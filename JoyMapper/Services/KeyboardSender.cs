@@ -1,5 +1,6 @@
 ﻿using JoyMapper.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -7,6 +8,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Security;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 #pragma warning disable SYSLIB0003
 
@@ -17,71 +20,110 @@ namespace JoyMapper.Services;
 /// </summary>
 public class KeyboardSender
 {
+
+    private readonly ConcurrentQueue<KeyboardKeyBinding> _Queue = new();
+
+    private bool _IsSending;
+
+    private async void StartSending()
+    {
+        if(_IsSending)
+            return;
+        await Task.Run(SendCommands).ConfigureAwait(false);
+    }
+    private Task SendCommands()
+    {
+        if (_IsSending)
+            return Task.CompletedTask;
+
+        _IsSending = true;
+        while (!_Queue.IsEmpty)
+        {
+            if (_Queue.TryDequeue(out var binding))
+            {
+                switch (binding.Action)
+                {
+                    case KeyboardKeyBinding.KeyboardAction.KeyPress:
+                        PressKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.KeyUp:
+                        ReleaseKey(binding.KeyCode);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MousePress:
+                        MousePress(binding.MouseButton);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseUp:
+                        MouseRelease(binding.MouseButton);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
+                        MouseScroll(true);
+                        break;
+                    case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
+                        MouseScroll(false);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                if (binding.Delay > 0)
+                {
+                    Thread.Sleep(binding.Delay);
+                }
+            }
+        }
+
+        _IsSending = false;
+        return Task.CompletedTask;
+    }
+
+
+
+    #region Methods
     /// <summary> Эмулировать нажатие клавиши </summary>
-    public void PressKey(Key key)
+    private void PressKey(Key key)
     {
         Keyboard.Press(key);
         AppLog.LogKeyCommands($"Нажатие кнопки: {key}");
     }
 
     /// <summary> Эмулировать отпускание клавиши </summary>
-    public void ReleaseKey(Key key)
+    private void ReleaseKey(Key key)
     {
         Keyboard.Release(key);
         AppLog.LogKeyCommands($"Отпускание кнопки: {key}");
     }
 
     /// <summary> Эмулировать нажатие мыши </summary>
-    public void MousePress(MouseButton button)
+    private void MousePress(MouseButton button)
     {
         Mouse.Down(button);
         AppLog.LogKeyCommands($"Нажатие кнопки мыши: {button}");
     }
 
     /// <summary> Эмулировать отпускание мыши </summary>
-    public void MouseRelease(MouseButton button)
+    private void MouseRelease(MouseButton button)
     {
         Mouse.Up(button);
         AppLog.LogKeyCommands($"Отпускание кнопки мыши: {button}");
     }
 
     /// <summary> Эмулировать прокрутку мыши </summary>
-    public void MouseScroll(bool Up)
+    private void MouseScroll(bool Up)
     {
-        Mouse.Scroll(Up ? 1: -1);
+        Mouse.Scroll(Up ? 1 : -1);
         var up = Up ? "Вверх" : "Вниз";
         AppLog.LogKeyCommands($"Скролл мыши: {up}");
     }
+
+    #endregion
 
     /// <summary> Отправить клавиатурные команды в очередь команд </summary>
     public void SendKeyboardCommands(IEnumerable<KeyboardKeyBinding> keyboardKeyBindings)
     {
         foreach (var binding in keyboardKeyBindings)
-        {
-            switch (binding.Action)
-            {
-                case KeyboardKeyBinding.KeyboardAction.KeyPress:
-                    PressKey(binding.KeyCode);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.KeyUp:
-                    ReleaseKey(binding.KeyCode);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MousePress:
-                    MousePress(binding.MouseButton);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MouseUp:
-                    MouseRelease(binding.MouseButton);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MouseScrollUp:
-                    MouseScroll(true);
-                    break;
-                case KeyboardKeyBinding.KeyboardAction.MouseScrollDown:
-                    MouseScroll(false);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+            _Queue.Enqueue(binding);
+
+        StartSending();
     }
 
 
@@ -200,13 +242,13 @@ public class KeyboardSender
     */
     /// </code>
     /// </example>
-    public static class Mouse
+    private static class Mouse
     {
         /// <summary>
         /// Clicks a mouse button.
         /// </summary>
         /// <param name="mouseButton">The mouse button to click.</param>
-        public static void Click(MouseButton mouseButton)
+        private static void Click(MouseButton mouseButton)
         {
             Down(mouseButton);
             Up(mouseButton);
@@ -416,7 +458,7 @@ public class KeyboardSender
     */
     /// </code>
     /// </example>
-    public static class Keyboard
+    private static class Keyboard
     {
         #region Public Members
 
@@ -456,7 +498,7 @@ public class KeyboardSender
         /// Performs a press-and-release operation for the specified key, which is effectively equivallent to typing.
         /// </summary>
         /// <param name="key">The key to press.</param>
-        public static void Type(Key key)
+        private static void Type(Key key)
         {
             Press(key);
             Release(key);
@@ -523,15 +565,17 @@ public class KeyboardSender
         [PermissionSet(SecurityAction.Assert, Name = "FullTrust")]
         private static void SendKeyboardInput(Key key, bool press)
         {
-            PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
+            var permissions = new PermissionSet(PermissionState.Unrestricted);
             permissions.Demand();
 
-            NativeMethods.INPUT ki = new NativeMethods.INPUT();
-            ki.type = NativeMethods.InputKeyboard;
+            var ki = new NativeMethods.INPUT
+            {
+                type = NativeMethods.InputKeyboard
+            };
             ki.union.keyboardInput.wVk = (short)KeyInterop.VirtualKeyFromKey(key);
             ki.union.keyboardInput.wScan = (short)NativeMethods.MapVirtualKey(ki.union.keyboardInput.wVk, 0);
 
-            int dwFlags = 0;
+            var dwFlags = 0;
 
             if (ki.union.keyboardInput.wScan > 0)
             {

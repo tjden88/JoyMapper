@@ -15,12 +15,17 @@ namespace JoyMapper.ViewModels.Windows;
 public class EditPatternViewModel : WindowViewModel, IDisposable
 {
     private readonly IServiceProvider _Services;
-    private readonly IJoystickStateManager _JoystickStateManager;
+    private readonly IJoyBindingListener _BindingListener;
 
-    public EditPatternViewModel(IServiceProvider Services, PatternActionViewModel PatternActionViewModel, DataManager DataManager, JoyBindingViewModel JoyBindingViewModel, IJoystickStateManager JoystickStateManager)
+    public EditPatternViewModel(IServiceProvider Services,
+        PatternActionViewModel PatternActionViewModel,
+        DataManager DataManager,
+        JoyBindingViewModel JoyBindingViewModel,
+        IJoyBindingListener bindingListener
+        )
     {
         _Services = Services;
-        _JoystickStateManager = JoystickStateManager;
+        _BindingListener = bindingListener;
         this.PatternActionViewModel = PatternActionViewModel;
         this.JoyBindingViewModel = JoyBindingViewModel;
 
@@ -30,13 +35,15 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
             .Where(p => p != null);
 
         Modificators = DataManager.Modificators;
+        _BindingListener.StartListen(Modificators.Select(m=>m.Binding));
 
         JoyBindingViewModel.BindingStateChanged += BindingStateChanged;
         PatternActionViewModel.PropertyChanged += PatternActionViewModelOnPropertyChanged;
         SetPatternAction(PatternActionViewModel.SelectedPatternAction.ToModel());
-
         Title = "Добавить паттерн";
     }
+
+
 
 
     #region Prop
@@ -194,7 +201,6 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
 
     #region ActionWatch
 
-
     private PatternActionBase _PatternActionBase;
 
     private void SetPatternAction(PatternActionBase pattern)
@@ -216,15 +222,9 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
 
     private void Action_OnReportMessage(string message)
     {
-        if (SelectedModificator != null)
-        {
-            var state = _JoystickStateManager.GetJoyState(SelectedModificator.Binding.JoyName);
-            if (state == null)
-                AppendLogText("Не удалось определить состояние выбранного модификатора!\n" +
-                              $"Убедитесь, что джойстик {SelectedModificator.Binding.JoyName} подключен\n");
-            else if (!SelectedModificator.Binding.UpdateIsActive(state))
-                return;
-        }
+        if (SelectedModificator is { Binding.IsActive: false })
+            return;
+
         AppendLogText(message);
     }
 
@@ -234,13 +234,13 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
         WatcherLogText = string.Concat(_WatcherLogText?.Replace(mark, string.Empty), Environment.NewLine, mark, message);
     }
 
-    private void BindingStateChanged(bool state) => 
+    private void BindingStateChanged(bool state) =>
         _PatternActionBase?.BindingStateChanged(state);
 
 
     private void PatternActionViewModelOnPropertyChanged(object Sender, PropertyChangedEventArgs E)
     {
-        if (E.PropertyName == nameof(PatternActionViewModel.SelectedPatternAction)) 
+        if (E.PropertyName == nameof(PatternActionViewModel.SelectedPatternAction))
             SetPatternAction(PatternActionViewModel.SelectedPatternAction.ToModel());
     }
 
@@ -252,6 +252,7 @@ public class EditPatternViewModel : WindowViewModel, IDisposable
         if (_PatternActionBase == null) return;
 
         _PatternActionBase.ReportMessage -= Action_OnReportMessage;
+        _BindingListener.StopListen();
         _PatternActionBase = null;
     }
 }

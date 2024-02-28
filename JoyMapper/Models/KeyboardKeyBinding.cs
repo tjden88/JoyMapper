@@ -20,6 +20,8 @@ public class KeyboardKeyBinding
 
     public KeyboardAction Action { get; set; }
 
+    public int Delay { get; set; }
+
     public override string ToString()
     {
         return Action switch

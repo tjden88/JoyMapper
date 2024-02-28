@@ -66,7 +66,10 @@ public class SeqKeySenderViewModel : PatternActionViewModelBase
         if (wnd.ShowDialog() != true || !wnd.ViewModel.KeyBindings.Any())
             return;
 
-        SeqKeysList.Add(new PatternActionKeysBindingViewModel(CollectionName) { KeyBindings = wnd.ViewModel.KeyBindings });
+        SeqKeysList.Add(new PatternActionKeysBindingViewModel(CollectionName)
+        {
+            KeyBindings = new(wnd.ViewModel.KeyBindings.Select(b => b.GetModel()))
+        });
     }
 
     #endregion
@@ -102,7 +105,7 @@ public class SeqKeySenderViewModel : PatternActionViewModelBase
             return;
         }
 
-        bindings.KeyBindings = new(wnd.ViewModel.KeyBindings);
+        bindings.KeyBindings = new(wnd.ViewModel.KeyBindings.Select(b => b.GetModel()));
     }
 
     #endregion

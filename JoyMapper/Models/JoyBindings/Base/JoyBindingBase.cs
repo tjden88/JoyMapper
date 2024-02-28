@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using WPR.MVVM.ViewModels;
 
@@ -20,6 +20,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
         Switch
     }
 
+    private bool _IsPressed;
 
     #region JoyName : string - Имя привязанного джойстика
 
@@ -46,7 +47,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     public bool IsActive
     {
         get => _IsActive;
-        private set => IfSet(ref _IsActive, value)
+        protected set => IfSet(ref _IsActive, value)
             .CallPropertyChanged(nameof(IsActiveText));
     }
 
@@ -66,7 +67,8 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     public ActivationTypes ActivationType
     {
         get => _ActivationType;
-        set => Set(ref _ActivationType, value);
+        set => IfSet(ref _ActivationType, value)
+            .Then(() => SetIsActive(_IsPressed));
     }
 
     #endregion
@@ -74,34 +76,42 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
 
     /// <summary>
     /// Обновить статус действия с учётом типа активации
+    /// Если статус ИЗМЕНИЛСЯ - возвращает true
     /// </summary>
     /// <param name="joyState">Статус джойстика</param>
-    public bool UpdateIsActive(JoyState joyState)
+    public bool SetNewActiveStatus( [NotNull] JoyStateData joyState)
     {
-        if (joyState == null)
-        {
-            Debug.WriteLine("Нет статуса джойстика!");
-            return IsActive;
-        }
+        if (!Equals(joyState.JoyName, JoyName) || !EqualsBindingState(joyState))
+            return false;
 
-        var pressed = IsPressed(joyState);
+        var oldStatus = IsActive;
+        _IsPressed = IsPressed(joyState);
+        SetIsActive(_IsPressed);
 
+        return IsActive != oldStatus;
+    }
+
+    protected void SetIsActive(bool isPressed)
+    {
         var result = ActivationType switch
         {
-            ActivationTypes.Normal => pressed,
-            ActivationTypes.Reverse => !pressed,
-            ActivationTypes.Switch => CheckSwitchStatus(pressed),
+            ActivationTypes.Normal => isPressed,
+            ActivationTypes.Reverse => !isPressed,
+            ActivationTypes.Switch => CheckSwitchStatus(isPressed),
             _ => throw new ArgumentOutOfRangeException(nameof(ActivationType))
         };
 
         IsActive = result;
-        return result;
     }
 
     #region Abstract
 
     /// <summary> Нажата ли кнопка или ось в назначенном диапазоне </summary>
-    protected abstract bool IsPressed(JoyState joyState);
+    protected abstract bool IsPressed(JoyStateData joyState);
+
+
+    /// <summary> Проверить, отностится ли статус джойстика к этой привязке</summary>
+    protected abstract bool EqualsBindingState(JoyStateData joyState);
 
 
     /// <summary>
@@ -115,6 +125,7 @@ public abstract class JoyBindingBase : ViewModel, IEquatable<JoyBindingBase>
     #region SwitchCheck
 
     private bool _IsNowPressed; // Для типа активации - переключатель
+
 
     /// <summary> Проверка переключателя </summary>
     private bool CheckSwitchStatus(bool pressed)

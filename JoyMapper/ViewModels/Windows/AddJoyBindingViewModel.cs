@@ -1,12 +1,12 @@
-﻿using JoyMapper.Models.JoyBindings.Base;
-using JoyMapper.Services.Interfaces;
+﻿using JoyMapper.Services.Interfaces;
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using JoyMapper.Models;
 using JoyMapper.Models.JoyBindings;
+using JoyMapper.Models.JoyBindings.Base;
 using WPR.MVVM.ViewModels;
 
 namespace JoyMapper.ViewModels.Windows;
@@ -108,9 +108,9 @@ public class AddJoyBindingViewModel : ViewModel
         Debug.WriteLine("Начато отслеживание всех кнопок всех джойстиков");
     }
 
-    private void Listener_OnChangesHandled(IEnumerable<JoyBindingBase> changes)
+    private void Listener_OnChangesHandled(JoyBindingBase change)
     {
-        if (changes.FirstOrDefault() is not {IsActive: true} change) return;
+        if (!change.IsActive) return;
 
         Debug.WriteLine(change.Description);
         JoyBinding = change;
@@ -168,7 +168,7 @@ public class AddJoyBindingViewModel : ViewModel
         if (Filter == BindingFilters.Buttons) return list;
 
         // Оси
-        foreach (AxisJoyBinding.Axises axis in Enum.GetValues(typeof(AxisJoyBinding.Axises)))
+        foreach (JoyAxises axis in Enum.GetValues(typeof(JoyAxises)))
         {
             list.Add(new AxisJoyBinding
             {

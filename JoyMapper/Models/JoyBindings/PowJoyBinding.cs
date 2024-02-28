@@ -44,12 +44,17 @@ public class PowJoyBinding : JoyBindingBase
     #endregion
 
 
-    protected override bool IsPressed(JoyState joyState) => PowNumber switch
+    protected override bool IsPressed(JoyStateData joyState) => joyState.Value == PowValue;
+
+    protected override bool EqualsBindingState(JoyStateData joyState)
     {
-        PowNumbers.Pow1 => joyState.Pow1Value == PowValue,
-        PowNumbers.Pow2 => joyState.Pow2Value == PowValue,
-        _ => throw new ArgumentOutOfRangeException(nameof(PowNumber))
-    };
+        return PowNumber switch
+        {
+            PowNumbers.Pow1 => joyState.IsPov1Data,
+            PowNumbers.Pow2 => joyState.IsPov2Data,
+            _ => throw new ArgumentOutOfRangeException(nameof(PowNumber))
+        };
+    }
 
 
     public override string Description => PowNumber switch

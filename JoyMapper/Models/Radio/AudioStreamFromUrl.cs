@@ -33,7 +33,7 @@ internal class AudioStreamFromUrl : IAudioStream
             var response = await http.SendAsync(new HttpRequestMessage(HttpMethod.Head, _Url));
             return response.IsSuccessStatusCode;
         }
-        catch(Exception )
+        catch (Exception)
         {
             return false;
         }
@@ -52,16 +52,16 @@ internal class AudioStreamFromUrl : IAudioStream
             using var mf = new MediaFoundationReader(_Url);
             var channel = new WaveChannel32(new MediaFoundationReader(_Url));
 
-            var wo = OutputDeviceId is null ? new DirectSoundOut() : new DirectSoundOut((Guid) OutputDeviceId);
+            var wo = OutputDeviceId is null ? new DirectSoundOut() : new DirectSoundOut((Guid)OutputDeviceId);
             wo.Init(channel);
-            
+
             _Stream = new WaveStream(wo, channel);
             wo.PlaybackStopped += WoOnPlaybackStopped;
             wo.Play();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            PlaybackError?.Invoke(this,  $"Ошибка запуска {_Url}.\n{e}");
+            PlaybackError?.Invoke(this, $"Ошибка запуска {((IAudioStream)this).Name}.\n{e}");
         }
 
     }
@@ -72,7 +72,7 @@ internal class AudioStreamFromUrl : IAudioStream
 
     public void SetVolume(byte volume)
     {
-        if(_Stream is null) return;
+        if (_Stream is null) return;
         var value = (float)volume / 127;
         Debug.WriteLine(value);
         _Stream.Channel.Volume = value;
@@ -96,7 +96,7 @@ internal class AudioStreamFromUrl : IAudioStream
     public bool Equals(IAudioStream other) => other is AudioStreamFromUrl stream && stream._Url.Equals(_Url);
 
 
-    private record WaveStream(DirectSoundOut SoundOut, WaveChannel32 Channel): IDisposable
+    private record WaveStream(DirectSoundOut SoundOut, WaveChannel32 Channel) : IDisposable
     {
         public void Dispose()
         {

@@ -41,9 +41,9 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         get => _AudioPlayerService.IsPlaying;
         private set
         {
-            if(Equals(_AudioPlayerService.IsPlaying, value))
+            if (Equals(_AudioPlayerService.IsPlaying, value))
                 return;
-            if(value)
+            if (value)
                 _AudioPlayerService.Play();
             else
                 _AudioPlayerService.Stop();
@@ -77,7 +77,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         get => _AudioPlayerService.Volume;
         set
         {
-            if(Equals(_AudioPlayerService.Volume, value))
+            if (Equals(_AudioPlayerService.Volume, value))
                 return;
 
             _AudioPlayerService.Volume = value;
@@ -88,22 +88,20 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
     #endregion
 
 
-    private void ChangesHandled(IEnumerable<JoyBindingBase> obj)
+    private void ChangesHandled(JoyBindingBase joyBindingBase)
     {
         var radioSettings = _DataManager.RadioSettings;
-        foreach (var joyBindingBase in obj)
-        {
-            if(!joyBindingBase.IsActive) continue;
 
-            if ( Equals(joyBindingBase, radioSettings.PlayStopBinding))
-                IsPlaying = !IsPlaying;
+        if (!joyBindingBase.IsActive) return;
 
-            if (Equals(joyBindingBase, radioSettings.NextBinding))
-                _AudioPlayerService.Next();
+        if (Equals(joyBindingBase, radioSettings.PlayStopBinding))
+            IsPlaying = !IsPlaying;
 
-            if (Equals(joyBindingBase, radioSettings.PreviousBinding))
-                _AudioPlayerService.Previous();
-        }
+        if (Equals(joyBindingBase, radioSettings.NextBinding))
+            _AudioPlayerService.Next();
+
+        if (Equals(joyBindingBase, radioSettings.PreviousBinding))
+            _AudioPlayerService.Previous();
 
     }
 
@@ -118,7 +116,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         ??= new Command(OnPlayStopCommandExecuted, CanPlayStopCommandExecute, "Начать воспроизведение");
 
     /// <summary>Проверка возможности выполнения - Начать воспроизведение</summary>
-    private bool CanPlayStopCommandExecute() => true;
+    private bool CanPlayStopCommandExecute() => _AudioPlayerService.CanPlay;
 
     /// <summary>Логика выполнения - Начать воспроизведение</summary>
     private void OnPlayStopCommandExecuted()
@@ -138,7 +136,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         ??= new Command(OnNextCommandExecuted, CanNextCommandExecute, "Следующий");
 
     /// <summary>Проверка возможности выполнения - Следующий</summary>
-    private bool CanNextCommandExecute() => true;
+    private bool CanNextCommandExecute() => _AudioPlayerService.CanNextPrevious;
 
     /// <summary>Логика выполнения - Следующий</summary>
     private void OnNextCommandExecuted()
@@ -158,7 +156,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         ??= new Command(OnPreviousCommandExecuted, CanPreviousCommandExecute, "Предыдущий");
 
     /// <summary>Проверка возможности выполнения - Предыдущий</summary>
-    private bool CanPreviousCommandExecute() => true;
+    private bool CanPreviousCommandExecute() => _AudioPlayerService.CanNextPrevious;
 
     /// <summary>Логика выполнения - Предыдущий</summary>
     private void OnPreviousCommandExecuted()
@@ -197,7 +195,11 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
             bindings.Add(radioSettings.PreviousBinding);
         if (radioSettings.VolumeBinding is AxisJoyBinding volBinding)
         {
-            volBinding.CurrentValueChanged += VolBindingOnCurrentValueChanged;
+            if (volBinding.ActivationType == JoyBindingBase.ActivationTypes.Normal)
+                volBinding.CurrentValueChanged += VolBindingOnCurrentValueChanged;
+            else
+                volBinding.CurrentValueChanged += VolReverseBindingOnCurrentValueChanged;
+
             bindings.Add(volBinding);
         }
 
@@ -207,7 +209,12 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
 
     private void VolBindingOnCurrentValueChanged(object sender, int e)
     {
-        var newVolume = (byte)(e/ 65535.0 * 127);
+        var newVolume = (byte)(e * 127 / 65535.0);
+        Volume = newVolume;
+    }
+    private void VolReverseBindingOnCurrentValueChanged(object sender, int e)
+    {
+        var newVolume = (byte)(127 - e * 127 / 65535.0);
         Volume = newVolume;
     }
 
@@ -222,6 +229,7 @@ public class AudioPlayerControlsViewModel : ViewModel, IDisposable
         if (_DataManager.RadioSettings.VolumeBinding is AxisJoyBinding volBinding)
         {
             volBinding.CurrentValueChanged -= VolBindingOnCurrentValueChanged;
+            volBinding.CurrentValueChanged -= VolReverseBindingOnCurrentValueChanged;
         }
         _JoyBindingListener.StopListen();
     }

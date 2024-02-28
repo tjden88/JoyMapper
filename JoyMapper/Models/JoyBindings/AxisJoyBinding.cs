@@ -9,26 +9,14 @@ namespace JoyMapper.Models.JoyBindings;
 public class AxisJoyBinding : JoyBindingBase
 {
     public event EventHandler<int> CurrentValueChanged;
-    
-    public enum Axises
-    {
-        X,
-        Y,
-        Z,
-        Rx,
-        Ry,
-        Rz,
-        Slider1,
-        Slider2,
-    }
 
-    #region Axis : Axises - Выбранная ось
+    #region Axis : JoyAxises - Выбранная ось
 
     /// <summary>Выбранная ось</summary>
-    private Axises _Axis;
+    private JoyAxises _Axis;
 
     /// <summary>Выбранная ось</summary>
-    public Axises Axis
+    public JoyAxises Axis
     {
         get => _Axis;
         set => IfSet(ref _Axis, value).CallPropertyChanged(nameof(Description));
@@ -53,6 +41,7 @@ public class AxisJoyBinding : JoyBindingBase
             EndValue = Math.Max(value, EndValue);
 
             OnPropertyChanged(nameof(StartValue));
+            SetIsActive(CurrentValue >= StartValue && CurrentValue <= EndValue);
         }
     }
 
@@ -75,6 +64,7 @@ public class AxisJoyBinding : JoyBindingBase
             StartValue = Math.Min(value, StartValue);
 
             OnPropertyChanged(nameof(EndValue));
+            SetIsActive(CurrentValue >= StartValue && CurrentValue <= EndValue);
         }
     }
 
@@ -84,7 +74,7 @@ public class AxisJoyBinding : JoyBindingBase
     #region CurrentValue : int - Текущее значение оси
 
     /// <summary>Текущее значение оси</summary>
-    private int _CurrentValue;
+    private int _CurrentValue = 32768;
 
     /// <summary>Текущее значение оси</summary>
     public int CurrentValue
@@ -97,23 +87,16 @@ public class AxisJoyBinding : JoyBindingBase
 
     
 
-    protected override bool IsPressed(JoyState joyState)
+    protected override bool IsPressed(JoyStateData joyState)
     {
-        var value = Axis switch
-        {
-            Axises.X => joyState.AxisValues.X,
-            Axises.Y => joyState.AxisValues.Y,
-            Axises.Z => joyState.AxisValues.Z,
-            Axises.Rx => joyState.AxisValues.Rx,
-            Axises.Ry => joyState.AxisValues.Ry,
-            Axises.Rz => joyState.AxisValues.Rz,
-            Axises.Slider1 => joyState.AxisValues.Slider1,
-            Axises.Slider2 => joyState.AxisValues.Slider2,
-            _ => throw new ArgumentOutOfRangeException(nameof(Axis))
-        };
+        var value = joyState.Value;
+
         CurrentValue = value;
         return value >= StartValue && value <= EndValue;
     }
+
+    protected override bool EqualsBindingState(JoyStateData joyState) => 
+        joyState.Axis is { } axis && axis == Axis;
 
     public override string Description => $"Ось {Axis}";
     public override bool Equals(JoyBindingBase other)

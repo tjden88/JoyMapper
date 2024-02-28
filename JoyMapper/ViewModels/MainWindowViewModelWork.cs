@@ -17,7 +17,6 @@ public partial class MainWindowViewModel
 
     #endregion
 
-    
 
     #region LogMessages : ObservableCollection<LogMessage> - Лог запущенного профиля
 
@@ -74,7 +73,7 @@ public partial class MainWindowViewModel
     {
         Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, () => LogMessages.Clear());
         var profile = (Profile)p;
-        ActiveProfile = profile;
+        //ActiveProfile = profile;
         OnPropertyChanged(nameof(IsRadioControlsShow));
         if (IsRadioControlsShow) AudioPlayerControlsViewModel.StartService();
         _ProfileListener.StartListenProfile(profile);
@@ -98,7 +97,7 @@ public partial class MainWindowViewModel
     /// <summary>Логика выполнения - Остановить профиль</summary>
     private void OnStopProfileCommandExecuted()
     {
-        ActiveProfile = null;
+        //ActiveProfile = null;
         _ProfileListener.StopListenProfile();
         AudioPlayerControlsViewModel.StopService();
     }
@@ -127,4 +126,9 @@ public partial class MainWindowViewModel
 
     #endregion
 
+
+    private void ProfileListenerOnProfileChanged(object sender, Profile e)
+    {
+        ActiveProfile = e;
+    }
 }

@@ -31,7 +31,7 @@ public class AudioPlayerService
         get => _IsPlaying;
         private set
         {
-            if(Equals(value, _IsPlaying))
+            if (Equals(value, _IsPlaying))
                 return;
             _IsPlaying = value;
             IsPlayingChanged?.Invoke(this, value);
@@ -77,6 +77,10 @@ public class AudioPlayerService
 
     #endregion
 
+    public bool CanPlay => _AudioStreams.Any();
+
+    public bool CanNextPrevious => _AudioStreams.Count > 1;
+
 
     private readonly List<IAudioStream> _AudioStreams = new();
 
@@ -101,7 +105,7 @@ public class AudioPlayerService
 
         var streams = sources
             .Select(CreateStream)
-            .Where(s=>s!=null);
+            .Where(s => s != null);
 
         foreach (var stream in streams)
         {
@@ -120,8 +124,8 @@ public class AudioPlayerService
 
     public void Play()
     {
-        if(IsPlaying) return;
-        if(!_AudioStreams.Any()) return;
+        if (IsPlaying) return;
+        if (!_AudioStreams.Any()) return;
 
         var stream = _CurrentStream;
         if (stream is null)
@@ -134,7 +138,7 @@ public class AudioPlayerService
 
     public void Stop()
     {
-        if(!IsPlaying) return;
+        if (!IsPlaying) return;
         _CurrentStream?.Stop();
         CurrentSource = null;
         IsPlaying = false;
@@ -149,6 +153,8 @@ public class AudioPlayerService
             Play();
             return;
         }
+        if (_AudioStreams.Count == 1)
+            return;
 
         var index = _AudioStreams.IndexOf(currentStream);
         if (index == _AudioStreams.Count - 1)
@@ -169,6 +175,8 @@ public class AudioPlayerService
             Play();
             return;
         }
+        if (_AudioStreams.Count == 1)
+            return;
 
         var index = _AudioStreams.IndexOf(currentStream);
         if (index == 0)
@@ -189,12 +197,22 @@ public class AudioPlayerService
 
     private IAudioStream CreateStream(string source) => new AudioStreamFromUrl(source);
 
-    private void Play(IAudioStream audioStream)
+    private bool _IsLoading;
+    private async void Play(IAudioStream audioStream)
     {
-        _CurrentStream = audioStream;
-        audioStream.Play(_DataManager.RadioSettings.OutputDeviceId);
-        audioStream.SetVolume(Volume);
-        CurrentSource = audioStream.Source;
+        if (_IsLoading)
+            return;
+
+        _IsLoading = true;
+        SourceChanged?.Invoke(this, "Загружается...");
+        await Task.Run(() =>
+        {
+            _CurrentStream = audioStream;
+            audioStream.Play(_DataManager.RadioSettings.OutputDeviceId);
+            audioStream.SetVolume(Volume);
+            CurrentSource = audioStream.Name;
+        });
+        _IsLoading = false;
         IsPlaying = true;
     }
 }

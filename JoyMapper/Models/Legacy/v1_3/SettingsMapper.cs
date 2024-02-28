@@ -97,7 +97,7 @@ public static class SettingsMapper
                     newBinding = new AxisJoyBinding
                     {
                         JoyName = oldDataKeyPattern.JoyName,
-                        Axis = (AxisJoyBinding.Axises) aa.Axis,
+                        Axis = (JoyAxises) aa.Axis,
                         StartValue = aa.StartValue,
                         EndValue = aa.EndValue,
                     };
