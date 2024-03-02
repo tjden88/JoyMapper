@@ -74,6 +74,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
                     joy.Joystick = newjoy;
                     joy.IsFault = false;
                     AppLog.LogMessage($"Устройство восстановлено - {joy.JoyName}");
+                    Debug.WriteLine($"Начато отслеживание состояний джойстика: {joy.JoyName}");
                 }
                 if (_IsInAcqired)
                     yield break;
@@ -214,8 +215,6 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
         public void Dispose()
         {
-            //Joystick?.Unacquire();
-            Joystick?.Dispose();
             Joystick = null;
         }
     }
