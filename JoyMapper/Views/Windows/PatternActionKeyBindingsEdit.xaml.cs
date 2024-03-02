@@ -22,8 +22,9 @@ public partial class PatternActionKeyBindingsEdit : Window
         ViewModel = new()
         {
             KeyBindings = new (KeyBindings.Select(b => new KeyBindingViewModel(b))),
-            Name = name
+            Name = name,
         };
+        ViewModel.IsRecorded = !ViewModel.KeyBindings.Any();
         InitializeComponent();
     }
 
@@ -136,7 +137,7 @@ public partial class PatternActionKeyBindingsEdit : Window
         #region IsRecorded : bool - Активна ли запись с клавиатуры
 
         /// <summary>Активна ли запись с клавиатуры</summary>
-        private bool _IsRecorded = true;
+        private bool _IsRecorded;
 
         /// <summary>Активна ли запись с клавиатуры</summary>
         public bool IsRecorded
