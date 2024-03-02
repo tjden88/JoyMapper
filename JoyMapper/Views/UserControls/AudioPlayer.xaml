@@ -51,7 +51,7 @@
                             Margin="10,20,10,0"
                             Foreground="{DynamicResource DangerColorBrush}">
                         <Button.Content>
-                            <controls:WPRIcon Source="Close"></controls:WPRIcon>
+                            <controls:WPRIcon Source="Close" />
                         </Button.Content>
                     </Button>
                 </Grid>
@@ -78,7 +78,7 @@
                                                 <Style TargetType="Border">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding BindingBase}" Value="{x:Null}">
-                                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                            <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -93,7 +93,7 @@
                                                         ToolTip="Удалить привязку"
                                                         Foreground="{DynamicResource DangerColorBrush}">
                                                     <Button.Content>
-                                                        <controls:WPRIcon Source="Close"></controls:WPRIcon>
+                                                        <controls:WPRIcon Source="Close" />
                                                     </Button.Content>
                                                 </Button>
                                             </WrapPanel>

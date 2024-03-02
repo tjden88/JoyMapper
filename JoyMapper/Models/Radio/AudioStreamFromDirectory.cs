@@ -10,6 +10,7 @@ namespace JoyMapper.Models.Radio;
 /// <summary>
 /// Радио из локальной папки
 /// </summary>
+[Obsolete("Не доделано")]
 internal class AudioStreamFromDirectory : IAudioStream
 {
     public AudioStreamFromDirectory(string Path)
