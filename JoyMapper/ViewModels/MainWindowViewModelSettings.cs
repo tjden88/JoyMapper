@@ -32,7 +32,7 @@ public partial class MainWindowViewModel
         get => _DataManager.AppSettings.DoublePressDelay;
         set
         {
-            if(Equals(_DataManager.AppSettings.DoublePressDelay, value)) return;
+            if (Equals(_DataManager.AppSettings.DoublePressDelay, value)) return;
             _DataManager.AppSettings.DoublePressDelay = value;
             _DataManager.SaveData();
             OnPropertyChanged(nameof(DoublePressDelay));
@@ -70,6 +70,8 @@ public partial class MainWindowViewModel
         set => IfSet(ref _CurrentColorTheme, value).Then(v =>
         {
             v.SetTheme();
+            if (_DataManager.AppSettings.CurrentColorCheme == v.Id) return;
+
             _DataManager.AppSettings.CurrentColorCheme = v.Id;
             _DataManager.SaveData();
         });
@@ -89,6 +91,7 @@ public partial class MainWindowViewModel
         set => IfSet(ref _IsDarkTheme, value).Then(v =>
         {
             StyleHelper.IsDarkTheme = v;
+            if (_DataManager.AppSettings.IsDarkColorTheme == v) return;
             _DataManager.AppSettings.IsDarkColorTheme = v;
             _DataManager.SaveData();
         });
@@ -120,7 +123,7 @@ public partial class MainWindowViewModel
             Id = 0,
             PrimaryColor = (Color) ColorConverter.ConvertFromString("#3F51B5")!,
             AccentColor = (Color) ColorConverter.ConvertFromString("#FF5722")!,
-        }, 
+        },
         new ()
         {
             Id = 1,
