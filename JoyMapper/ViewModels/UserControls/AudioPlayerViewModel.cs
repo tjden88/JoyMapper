@@ -343,7 +343,7 @@ public class AudioPlayerViewModel : ViewModel
 
     private async Task<AudioSourceViewModel> AddOrEditSource(string defaultSource = null)
     {
-        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите адрес источника аудиопотока", "Локальный путь или URL-адрес аудиопотока", defaultSource);
+        var streamUrl = await WPRDialogHelper.InputTextAsync(App.ActiveWindow, "Укажите адрес источника аудиопотока", "Введите URL-адрес аудиопотока", defaultSource);
         if (string.IsNullOrWhiteSpace(streamUrl) || Equals(streamUrl, defaultSource))
             return null;
 

@@ -30,6 +30,7 @@ public partial class App
     {
         base.OnStartup(e);
         var wnd = Services.GetRequiredService<MainWindow>();
+        wnd.Closed += (_, _) => Current.Shutdown();
         wnd.Show();
     }
 
