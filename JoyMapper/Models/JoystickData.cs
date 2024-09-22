@@ -1,4 +1,6 @@
-﻿namespace JoyMapper.Models
+﻿using System;
+
+namespace JoyMapper.Models
 {
     /// <summary>
     /// Данные устройства для определения привязок
@@ -6,7 +8,7 @@
     public record JoystickData
     {
         /// <summary>Идентификатор устройства</summary>
-        public string DeviceId { get; set; }
+        public Guid DeviceId { get; set; }
 
 
         /// <summary> Отображаемое имя </summary>

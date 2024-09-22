@@ -16,20 +16,42 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
     private bool _IsInAcqired;
 
-    public IEnumerable<string> GetConnectedJoysticks()
+    public IEnumerable<JoystickData> GetConnectedJoysticks()
     {
         var connectedDevices = _DirectInput
             .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly);
 
-        return connectedDevices.Select(cd => cd.InstanceName);
+        var joys = connectedDevices
+                .OrderBy(d=>d.InstanceGuid)
+                .Select(d => new JoystickData
+                {
+                    DeviceId = d.InstanceGuid,
+                    DeviceName = d.InstanceName
+                })
+            ;
+
+        var prevItems = new HashSet<string>();
+        foreach (var item in joys)
+        {
+            var index = 1;
+            var temp = item;
+            while (prevItems.Contains(temp.DeviceName))
+            {
+                index ++;
+                temp.DeviceName = $"{temp.DeviceName} #{index}";
+            }
+            prevItems.Add(temp.DeviceName);
+            yield return item;
+        }
     }
 
-    public void AcquireJoysticks(IEnumerable<string> JoysticksNames)
+    public void AcquireJoysticks(IEnumerable<JoystickData> Joysticks)
     {
         _IsInAcqired = true;
-        var names = JoysticksNames.ToArray();
 
-        var toRemove = _Joysticks.Where(watcher => !names.Contains(watcher.JoyName)).ToArray();
+        var joys = Joysticks.ToArray();
+
+        var toRemove = _Joysticks.Where(watcher => !joys.Select(j=>j.DeviceId).Contains(watcher.JoyGuid));
         foreach (var watcher in toRemove)
         {
             watcher.Dispose();
@@ -38,24 +60,24 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         }
 
 
-        foreach (var name in names)
+        foreach (var joy in joys)
         {
-            if (_Joysticks.Any(j => j.JoyName.Equals(name)))
+            if (_Joysticks.Any(j => j.JoyGuid.Equals(joy.DeviceId)))
                 continue;
 
-            var newJoy = TryGetJoystick(name);
+            var newJoy = TryGetJoystick(joy.DeviceId);
             if (newJoy == null) // Не найден
             {
-                _Joysticks.Add(new JoystickStateWatcher(name) { IsFault = true });
-                AppLog.LogMessage($"Устройство {name} не найдено!", LogMessage.MessageType.Error);
+                _Joysticks.Add(new JoystickStateWatcher(joy) { IsFault = true });
+                AppLog.LogMessage($"Устройство {joy.DeviceName} не найдено!", LogMessage.MessageType.Error);
             }
             else // Найден
             {
-                _Joysticks.Add(new JoystickStateWatcher(name)
+                _Joysticks.Add(new JoystickStateWatcher(joy)
                 {
                     Joystick = newJoy
                 });
-                Debug.WriteLine($"Начато отслеживание состояний джойстика: {name}");
+                Debug.WriteLine($"Начато отслеживание состояний джойстика: {joy.DeviceName}");
             }
         }
 
@@ -68,7 +90,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         {
             if (joy.IsFault)
             {
-                var newjoy = TryGetJoystick(joy.JoyName);
+                var newjoy = TryGetJoystick(joy.JoyGuid);
                 if (newjoy is not null)
                 {
                     joy.Joystick = newjoy;
@@ -90,11 +112,11 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         }
     }
 
-    private static Joystick TryGetJoystick(string name)
+    private static Joystick TryGetJoystick(Guid id)
     {
         var newJoy = _DirectInput
             .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-            .FirstOrDefault(d => d.InstanceName.Equals(name));
+            .FirstOrDefault(d => d.InstanceGuid.Equals(id));
         return newJoy is null ? null : new Joystick(_DirectInput, newJoy.InstanceGuid);
     }
 
@@ -109,18 +131,22 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
         _Joysticks.Clear();
     }
 
+
     private class JoystickStateWatcher : IDisposable
     {
         private Joystick _Joystick;
 
-        public JoystickStateWatcher(string Name)
+        public JoystickStateWatcher(JoystickData data)
         {
-            JoyName = Name;
+            JoyName = data.DeviceName;
+            JoyGuid = data.DeviceId;
         }
 
         public bool IsFault { get; set; }
 
         public string JoyName { get; }
+
+        public Guid JoyGuid { get; }
 
         public Joystick Joystick
         {
