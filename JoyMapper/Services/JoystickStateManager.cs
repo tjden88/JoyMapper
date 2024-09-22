@@ -51,7 +51,7 @@ public class JoystickStateManager : IJoystickStateManager, IDisposable
 
         var joys = Joysticks.ToArray();
 
-        var toRemove = _Joysticks.Where(watcher => !joys.Select(j=>j.DeviceId).Contains(watcher.JoyGuid));
+        var toRemove = _Joysticks.Where(watcher => !joys.Select(j=>j.DeviceId).Contains(watcher.JoyGuid)).ToArray();
         foreach (var watcher in toRemove)
         {
             watcher.Dispose();

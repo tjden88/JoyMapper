@@ -101,7 +101,7 @@ public class AddJoyBindingViewModel : ViewModel
         var connectedJoys = _JoystickStateManager.GetConnectedJoysticks();
 
         foreach (var connectedJoy in connectedJoys) 
-            allBindings.AddRange(AllJoyBindings(connectedJoy));
+            allBindings.AddRange(AllJoyBindings(connectedJoy.DeviceName));
 
         _JoyBindingListener.ChangesHandled += Listener_OnChangesHandled;
         _JoyBindingListener.StartListen(allBindings);
@@ -128,7 +128,7 @@ public class AddJoyBindingViewModel : ViewModel
 
     #region AllBindings
 
-    private List<JoyBindingBase> AllJoyBindings(string JoyName)
+    private List<JoyBindingBase> AllJoyBindings(string joyName)
     {
         var list = new List<JoyBindingBase>();
         if (Filter != BindingFilters.Axes)
@@ -138,7 +138,7 @@ public class AddJoyBindingViewModel : ViewModel
             {
                 list.Add(new ButtonJoyBinding
                 {
-                    JoyName = JoyName,
+                    JoyName = joyName,
                     ButtonNumber = i
                 });
             }
@@ -150,14 +150,14 @@ public class AddJoyBindingViewModel : ViewModel
             {
                 list.Add(new PowJoyBinding
                 {
-                    JoyName = JoyName,
+                    JoyName = joyName,
                     PowNumber = PowJoyBinding.PowNumbers.Pow1,
                     PowValue = powValue
                 });
 
                 list.Add(new PowJoyBinding
                 {
-                    JoyName = JoyName,
+                    JoyName = joyName,
                     PowNumber = PowJoyBinding.PowNumbers.Pow2,
                     PowValue = powValue
                 });
@@ -175,14 +175,14 @@ public class AddJoyBindingViewModel : ViewModel
                 Axis = axis,
                 StartValue = 0,
                 EndValue = 20000,
-                JoyName = JoyName
+                JoyName = joyName
             });
             list.Add(new AxisJoyBinding
             {
                 Axis = axis,
                 StartValue = 45000,
                 EndValue = 65535,
-                JoyName = JoyName
+                JoyName = joyName
             });
         }
 

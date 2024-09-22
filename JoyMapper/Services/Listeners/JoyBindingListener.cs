@@ -34,7 +34,9 @@ public class JoyBindingListener : IJoyBindingListener
         _Bindings = new(bindings);
 
         var usedJoysticks = _Bindings.Select(b => b.JoyName).Distinct();
-        _JoystickStateManager.AcquireJoysticks(usedJoysticks);
+        var devices = _JoystickStateManager.GetConnectedJoysticks().Where(j => usedJoysticks.Contains(j.DeviceName));
+
+        _JoystickStateManager.AcquireJoysticks(devices);
 
         var cancel = new CancellationTokenSource();
 
